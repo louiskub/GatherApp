@@ -8,6 +8,7 @@ classDiagram
         - applyHistory โพสที่สมัครไปแล้ว : Application[]
         - likedPost โพสที่หัวใจ : Post[]
         - notification แจ้งเตือน : String[]
+        - description
         
         + CreatePost()
         + LikePost()
