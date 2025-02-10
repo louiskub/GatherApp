@@ -1,0 +1,51 @@
+classDiagram
+    class User{
+        - profileImg รูปโปรไฟล์  : String Base 64 Encoded
+        - name  ชื่อ
+        - email อีเมล
+        - password รหัสผ่าน
+        - createdPost โพสที่สร้าง : Post[]
+        - applyHistory โพสที่สมัครไปแล้ว : Application[]
+        - likedPost โพสที่หัวใจ : Post[]
+        - notification แจ้งเตือน : String[]
+        
+        + CreatePost()
+        + LikePost()
+        + AddApplyHistory() โพสที่กดสมัครไป
+    }
+
+    class Post{
+        - user ผู้สร้าง
+        - openDate วันเปิดรับสมัคร : Datetime
+        - closeDate วันปิดรับสมัคร
+        - status สถานะ : Enum or String
+
+        - name ชื่อโพสท์ : String 
+        - detail รายละเอียด : String
+        - isAttached แนบไฟล์ได้ไหม : Boolean 
+        - image รูปภาพ : String Base 64 Encoded 
+        - like หัวใจ : int
+        - application : Application[] 
+
+        + AcceptParticipant(User) กดรับเข้า Activity
+        + RejectPerson(User)
+        + ChangeEvertything()   เปลี่ยนข้อมูลไรก็ได้ใน post
+    }
+
+    class Activity{
+        - actType หมวดหมู่ : String
+        - actDate วันทำกิจกรรม
+        - location : ละติจูด,ลองจูด
+        - totalApplicants จำนวนคนที่สมัครมาทั้งหมด
+        - maxApplicants  จำนวนคนที่รับ
+        - curApplicants  จำนวนคนที่รับแล้ว
+    }
+
+
+    class Application{
+        - user ที่สมัคร
+        - Post ที่สมัคร : Post
+        - appliedDate วันที่สมัคร
+        - status สถานะการสมัคร
+        - fileAttached : String Base64 Encoded
+    }
