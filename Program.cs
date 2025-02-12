@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 const string secretKey = "bee3d44a29a875c6352443f6a53db29d";
 var key = Encoding.UTF8.GetBytes(secretKey);
 
+
 // Add Sql
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(

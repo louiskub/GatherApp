@@ -10,7 +10,6 @@ classDiagram
         - likedPost โพสที่หัวใจ : Post[]
         - notification แจ้งเตือน : String[]
         - description
-        - userScore
         
         + CreatePost()
         + LikePost()

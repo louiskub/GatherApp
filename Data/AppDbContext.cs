@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using GatherApp.Models;
 
+
 namespace GatherApp.Data;
 public class AppDbContext : DbContext
 {
     // public DbSet<Student> Students { get; set; }  
+
     public DbSet<User> Users { get; set; }
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<Post> Posts { get; set; }
@@ -16,6 +18,7 @@ public class AppDbContext : DbContext
     {
         options.UseMySql(
             "server=localhost;port=3306;database=gatherapp;user=root;password=root;",
+
             new MySqlServerVersion(new Version(9, 1, 0))  // Change based on your MySQL version
         );
     }
@@ -94,5 +97,6 @@ public class AppDbContext : DbContext
         {
             entity.HasKey(e => new { e.UserId, e.CreatedAt });
         });
+
     }
 }
