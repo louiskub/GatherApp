@@ -19,8 +19,8 @@ namespace GatherApp.Migrations
                 name: "ActivityTypes",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ActType = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
@@ -45,9 +45,6 @@ namespace GatherApp.Migrations
                     ProfileImg = table.Column<string>(type: "longtext", maxLength: 4000000, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Bio = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UserScore = table.Column<int>(type: "int", nullable: false),
-                    Notifications = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -57,16 +54,39 @@ namespace GatherApp.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Notifications",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "varchar(36)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Content = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notifications", x => new { x.UserId, x.CreatedAt });
+                    table.ForeignKey(
+                        name: "FK_Notifications_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Posts",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CreateAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Status = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PostName = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Detail = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false)
+                    Detail = table.Column<string>(type: "varchar(10000)", maxLength: 10000, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     IsAttached = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CoverPageImg = table.Column<string>(type: "longtext", maxLength: 4000000, nullable: true)
@@ -174,8 +194,7 @@ namespace GatherApp.Migrations
                 name: "ActivityActivityType",
                 columns: table => new
                 {
-                    ActTypesId = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ActTypesId = table.Column<int>(type: "int", nullable: false),
                     ActivityPostId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -237,6 +256,9 @@ namespace GatherApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "Applications");
+
+            migrationBuilder.DropTable(
+                name: "Notifications");
 
             migrationBuilder.DropTable(
                 name: "PostUser");

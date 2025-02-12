@@ -6,6 +6,7 @@ public class AppDbContext : DbContext
 {
     // public DbSet<Student> Students { get; set; }  
     public DbSet<User> Users { get; set; }
+    public DbSet<Notification> Notifications { get; set; }
     public DbSet<Post> Posts { get; set; }
     public DbSet<Application> Applications { get; set; }
     public DbSet<Activity> Activities { get; set; }
@@ -39,28 +40,35 @@ public class AppDbContext : DbContext
                 .WithOne(e => e.User)
                 .HasForeignKey(e => e.UserId);
 
-            // One to Many Relationship     AppliedPost
-            entity.HasMany(e => e.AppliedPosts)
+            // One to Many Relationship     AppliedHistory
+            entity.HasMany(e => e.ApplyHistories)
                 .WithOne(e => e.User)
                 .HasForeignKey(e => e.UserId);
+
+            // One to Many Relationship     Notification
+            entity.HasMany(e => e.Notifications)
+                .WithOne()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);;     
 
             // Many to Many
             entity.HasMany(e => e.LikedPosts)
                 .WithMany();
-
-            // Notification
-            // entity.HasMany(e => e.Notification)
-            //     .WithOne()
-            //     .HasForeignKey("UserId");            
         });
 
 
         modelBuilder.Entity<Post>(entity =>
         {
+
             // 1-1 Relationship  Post-Activity
             entity.HasOne(e => e.Activity)
                 .WithOne(e => e.Post)
                 .HasForeignKey<Activity>(e => e.PostId);
+            
+                        // 1-N User-Post
+            entity.HasOne(e => e.User)
+                .WithMany(e => e.CreatedPosts)
+                .HasForeignKey(e => e.UserId);
             
             entity.HasMany(e => e.Applications)
                 .WithOne(e => e.Post)
@@ -75,10 +83,16 @@ public class AppDbContext : DbContext
                 .WithMany();
         });
 
-        
+
         modelBuilder.Entity<Application>(entity =>
         {
             entity.HasKey(e => new { e.UserId, e.PostId });
+        });
+
+
+        modelBuilder.Entity<Notification>(entity =>
+        {
+            entity.HasKey(e => new { e.UserId, e.CreatedAt });
         });
     }
 }

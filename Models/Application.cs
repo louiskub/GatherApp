@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace GatherApp.Models;
 
@@ -7,7 +8,7 @@ namespace GatherApp.Models;
 public class Application{
 
     [Required]
-    public DateTime AppliedDateTime { get; set; }
+    public DateTime AppliedDateTime { get; set; } = DateTime.Now;
 
     [DefaultValue(false)]
     public bool AppliedStatus { get; set; } // pending accepted rejected
@@ -17,7 +18,6 @@ public class Application{
 
 
     // Relationship
-
     public User User { get; set; }  //
     public string UserId { get; set; }  // FK
     public Post Post { get; set; } //

@@ -2,9 +2,9 @@ classDiagram
     class User{
         - id
         - profileImg รูปโปรไฟล์  : String Base 64 Encoded
-        - username  ชื่อ
-        - email อีเมล
-        - password รหัสผ่าน
+        - Username  ชื่อ
+        - Email อีเมล
+        - Password รหัสผ่าน
         - createdPost โพสที่สร้าง : Post[]
         - applyHistory โพสที่สมัครไปแล้ว : Application[]
         - likedPost โพสที่หัวใจ : Post[]

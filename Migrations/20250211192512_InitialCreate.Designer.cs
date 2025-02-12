@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GatherApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250211063632_InitialCreate")]
+    [Migration("20250211192512_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -27,8 +27,8 @@ namespace GatherApp.Migrations
 
             modelBuilder.Entity("ActivityActivityType", b =>
                 {
-                    b.Property<string>("ActTypesId")
-                        .HasColumnType("varchar(255)");
+                    b.Property<int>("ActTypesId")
+                        .HasColumnType("int");
 
                     b.Property<int>("ActivityPostId")
                         .HasColumnType("int");
@@ -42,7 +42,7 @@ namespace GatherApp.Migrations
 
             modelBuilder.Entity("GatherApp.Models.Activity", b =>
                 {
-                    b.Property<int>("PostId")
+                    b.Property<int?>("PostId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ActDatetime")
@@ -67,8 +67,11 @@ namespace GatherApp.Migrations
 
             modelBuilder.Entity("GatherApp.Models.ActivityType", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(255)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ActType")
                         .IsRequired()
@@ -104,6 +107,24 @@ namespace GatherApp.Migrations
                     b.ToTable("Applications");
                 });
 
+            modelBuilder.Entity("GatherApp.Models.Notification", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.HasKey("UserId", "CreatedAt");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("GatherApp.Models.Post", b =>
                 {
                     b.Property<int>("Id")
@@ -116,13 +137,16 @@ namespace GatherApp.Migrations
                         .HasMaxLength(4000000)
                         .HasColumnType("longtext");
 
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<int>("CurParticipant")
                         .HasColumnType("int");
 
                     b.Property<string>("Detail")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("varchar(1000)");
+                        .HasMaxLength(10000)
+                        .HasColumnType("varchar(10000)");
 
                     b.Property<bool>("IsAttached")
                         .HasColumnType("tinyint(1)");
@@ -169,10 +193,6 @@ namespace GatherApp.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<string>("Notifications")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -181,9 +201,6 @@ namespace GatherApp.Migrations
                     b.Property<string>("ProfileImg")
                         .HasMaxLength(4000000)
                         .HasColumnType("longtext");
-
-                    b.Property<int>("UserScore")
-                        .HasColumnType("int");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -251,7 +268,7 @@ namespace GatherApp.Migrations
                         .IsRequired();
 
                     b.HasOne("GatherApp.Models.User", "User")
-                        .WithMany("AppliedPosts")
+                        .WithMany("ApplyHistories")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -259,6 +276,15 @@ namespace GatherApp.Migrations
                     b.Navigation("Post");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("GatherApp.Models.Notification", b =>
+                {
+                    b.HasOne("GatherApp.Models.User", null)
+                        .WithMany("Notifications")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("GatherApp.Models.Post", b =>
@@ -297,9 +323,11 @@ namespace GatherApp.Migrations
 
             modelBuilder.Entity("GatherApp.Models.User", b =>
                 {
-                    b.Navigation("AppliedPosts");
+                    b.Navigation("ApplyHistories");
 
                     b.Navigation("CreatedPosts");
+
+                    b.Navigation("Notifications");
                 });
 #pragma warning restore 612, 618
         }

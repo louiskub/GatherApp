@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace GatherApp.Models;
 
@@ -24,14 +25,20 @@ public class Activity
 
     [Required]
     [Key]
-    public int PostId { get; set; } // Fk
+    public int? PostId { get; set; } // Fk
+
     public List<ActivityType> ActTypes { get; set; } = new List<ActivityType>(); //
+
+    // Method
+    public void AddActType(ActivityType actType) => ActTypes.Add(actType);
+    public void RemoveActType(ActivityType actType) => ActTypes.Remove(actType);
 
 }
 
 
 public class ActivityType
 {
-    public string Id { get; set; }
+    public int Id { get; set; }
     public string ActType { get; set; }
 }
+

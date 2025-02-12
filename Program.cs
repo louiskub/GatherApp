@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using GatherApp.Data;
 
-
 var builder = WebApplication.CreateBuilder(args);
 const string secretKey = "bee3d44a29a875c6352443f6a53db29d";
 var key = Encoding.UTF8.GetBytes(secretKey);
@@ -34,6 +33,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
 
 var app = builder.Build();
 
