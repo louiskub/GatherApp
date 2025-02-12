@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GatherApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250211192512_InitialCreate")]
+    [Migration("20250212085246_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

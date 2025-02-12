@@ -15,7 +15,7 @@ public class AppDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder options) 
     {
         options.UseMySql(
-            "server=localhost;port=3306;database=testdb3;user=root;password=root;",
+            "server=localhost;port=3306;database=gatherapp;user=root;password=root;",
             new MySqlServerVersion(new Version(9, 1, 0))  // Change based on your MySQL version
         );
     }

@@ -9,3 +9,7 @@ dotnet run
 dotnet watch run
 ```
 
+# Connect Database
+```
+docker compose up -d
+```
