@@ -1,0 +1,40 @@
+/* CSS HEX */
+:root {
+    /* --rose-pompadour: #e27396ff;
+    --amaranth-pink: #ea9ab2ff;
+    --mimi-pink: #efcfe3ff;
+    --beige: #eaf2d7ff;
+    --light-blue: #b3dee2ff; */
+
+    --chocolate-cosmos: #590d22ff;
+    --claret: #800f2fff;
+    --amaranth-purple: #a4133cff;
+    --rose-red: #c9184aff;
+    --bright-pink-crayola: #ff4d6dff;
+    --bright-pink-crayola-2: #ff758fff;
+    --salmon-pink: #ff8fa3ff;
+    --cherry-blossom-pink: #ffb3c1ff;
+    --pink: #ffccd5ff;
+    --lavender-blush: #fff0f3ff;
+
+    --seasalt: #f8f9faff;
+    --antiflash-white: #e9ecefff;
+    --platinum: #dee2e6ff;
+    --french-gray: #ced4daff;
+    --french-gray-2: #adb5bdff;
+    --slate-gray: #6c757dff;
+    --outer-space: #495057ff;
+    --onyx: #343a40ff;
+    --eerie-black: #212529ff;
+
+    --thistle: #cdb4dbff;
+    --fairy-tale: #ffc8ddff;
+    --carnation-pink: #ffafccff;
+    --uranian-blue: #bde0feff;
+    --light-sky-blue: #a2d2ffff;
+}
+
+@font-face {
+    font-family: 'Genty';
+    src: url('/fonts/GentyDemo-Regular.ttf') format('truetype');
+}
