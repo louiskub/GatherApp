@@ -1,3 +1,8 @@
 @{
     ViewData["Title"] = "Gather-Login";
 }
+@await Html.PartialAsync("_NavUnAuth")
+
+<div class="main">
+    <h2><a href="/home/auth">Login Here!</a></h2>
+</div>
