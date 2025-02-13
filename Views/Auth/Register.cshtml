@@ -1,0 +1,57 @@
+@model GatherApp.Models.User
+
+@{
+    ViewData["Title"] = "Register Page";
+}
+
+<h1>Register Page</h1>
+
+<form id="registerForm">
+    <input type="text" name="Username" placeholder="Username" required />
+    <input type="email" name="Email" placeholder="Email" required />
+    <input type="password" name="Password" placeholder="Password" required />
+    <button type="submit">Register</button>
+</form>
+
+<script>
+    document.getElementById("registerForm").addEventListener("submit", function(event) {
+        event.preventDefault();  // Prevent page refresh
+
+        // Gather form data
+        const formData = new FormData(event.target);
+        const data = {
+            Username: formData.get('Username'),
+            Email: formData.get('Email'),
+            Password: formData.get('Password')
+        };
+
+        // Send POST request via fetch
+        fetch('/api/auth/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => {
+        if (response.ok) {
+            return response.json();  
+        } else {
+            return response.json().then(errData => { 
+                throw new Error(errData.message || 'Registration failed');
+            });
+        }
+        })
+        .then(data => {
+            if (data.token) {
+                localStorage.setItem('jwt_token', data.token);
+                alert('Registration successful.');
+                window.location.href = '/auth/login';
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            alert('Registration failed: ' + error.message);  // เพิ่มข้อความข้อผิดพลาดที่เกิดขึ้น
+        });
+    });
+</script>
