@@ -8,7 +8,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./mysql-data:/var/lib/mysql
+      - mysql_data_gatherapp:/var/lib/mysql
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     container_name: phpmyadmin
@@ -21,3 +21,6 @@ services:
       - "8888:80"
     depends_on:
       - db
+volumes:
+  mysql_data_gatherapp: # กำหนด volume สำหรับเก็บข้อมูลของ mysql
+    driver: local

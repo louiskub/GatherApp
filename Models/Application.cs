@@ -10,7 +10,6 @@ public class Application{
     [Required]
     public DateTime AppliedDateTime { get; set; } = DateTime.Now;
 
-    [DefaultValue(false)]
     public bool AppliedStatus { get; set; } // pending accepted rejected
 
     [MaxLength(4000000)]
