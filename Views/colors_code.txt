@@ -14,3 +14,14 @@
 --outer-space: #495057ff;
 --onyx: #343a40ff;
 --eerie-black: #212529ff;
+
+--chocolate-cosmos: #590d22ff;
+--claret: #800f2fff;
+--amaranth-purple: #a4133cff;
+--rose-red: #c9184aff;
+--bright-pink-crayola: #ff4d6dff;
+--bright-pink-crayola-2: #ff758fff;
+--salmon-pink: #ff8fa3ff;
+--cherry-blossom-pink: #ffb3c1ff;
+--pink: #ffccd5ff;
+--lavender-blush: #fff0f3ff;
