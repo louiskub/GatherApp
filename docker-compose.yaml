@@ -4,13 +4,11 @@ services:
     container_name: db
     environment:
       MYSQL_ROOT_PASSWORD: root # กำหนด user ของ root mysql
-      MYSQL_DATABASE: tutorial # กำหนด database เริ่มต้นของ mysql
+      MYSQL_DATABASE: gatherapp # กำหนด database เริ่มต้นของ mysql
     ports:
       - "3306:3306"
     volumes:
-      # - ./db_backup.sql:/docker-entrypoint-initdb.d/db_backup.sql
-      # - ./db_init:/docker-entrypoint-initdb.d
-      - ./mysql-data:/var/lib/mysql
+      - mysql_data_gatherapp:/var/lib/mysql
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     container_name: phpmyadmin
@@ -23,3 +21,6 @@ services:
       - "8888:80"
     depends_on:
       - db
+volumes:
+  mysql_data_gatherapp: # กำหนด volume สำหรับเก็บข้อมูลของ mysql
+    driver: local

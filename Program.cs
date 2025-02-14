@@ -5,10 +5,19 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using GatherApp.Data;
 
-
 var builder = WebApplication.CreateBuilder(args);
 const string secretKey = "bee3d44a29a875c6352443f6a53db29d";
 var key = Encoding.UTF8.GetBytes(secretKey);
+
+
+// Add Sql
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        new MySqlServerVersion(new Version(9, 1, 0))
+    )
+);
+
 
 // Add JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -23,16 +32,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddScoped<GatherApp.Services.JwtService>();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
-// Add Sql
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        new MySqlServerVersion(new Version(9, 1, 0))
-    )
-);
 
 
 var app = builder.Build();

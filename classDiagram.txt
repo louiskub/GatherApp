@@ -1,9 +1,10 @@
 classDiagram
     class User{
+        - id
         - profileImg รูปโปรไฟล์  : String Base 64 Encoded
-        - name  ชื่อ
-        - email อีเมล
-        - password รหัสผ่าน
+        - Username  ชื่อ
+        - Email อีเมล
+        - Password รหัสผ่าน
         - createdPost โพสที่สร้าง : Post[]
         - applyHistory โพสที่สมัครไปแล้ว : Application[]
         - likedPost โพสที่หัวใจ : Post[]
@@ -16,15 +17,17 @@ classDiagram
     }
 
     class Post{
+        - id
         - user ผู้สร้าง
-        - openDate วันเปิดรับสมัคร : Datetime
-        - closeDate วันปิดรับสมัคร
+        - openDateTime วันเปิดรับสมัคร : Datetime
+        - closeDateTime วันปิดรับสมัคร
         - status สถานะ : Enum or String
 
-        - name ชื่อโพสท์ : String 
+        - activity : Activity
+        - postName ชื่อโพสท์ : String 
         - detail รายละเอียด : String
         - isAttached แนบไฟล์ได้ไหม : Boolean 
-        - image รูปภาพ : String Base 64 Encoded 
+        - imgCoverPage รูปภาพ : String Base 64 Encoded 
         - like หัวใจ : int
         - application : Application[] 
 
@@ -46,7 +49,7 @@ classDiagram
     class Application{
         - user ที่สมัคร
         - Post ที่สมัคร : Post
-        - appliedDate วันที่สมัคร
-        - status สถานะการสมัคร
+        - appliedDateTime : Datetime วันที่สมัคร
+        - appliedStatus : bool สถานะการสมัคร
         - fileAttached : String Base64 Encoded
     }

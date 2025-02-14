@@ -2,6 +2,6 @@ obj/
 bin/
 
 
-mysql-data/#innodb_temp
-mysql-data/auto.cnf
+# mysql-data/#innodb_temp
+# mysql-data/auto.cnf
 mysql-data/mysql.sock*

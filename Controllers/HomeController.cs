@@ -81,6 +81,13 @@ public class HomeController : Controller
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        return View(new ErrorViewModel { RequestId = System.Diagnostics.Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+
+        [Route("download")]
+    public IActionResult GetFile()
+    {
+        var content = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAZFJREFUeF7tW0EOQTEQbZduQOIEElsOwh1sWLoIq7+wtsBB2EpcgVt8qSDy0aem8k37/koynf7Omzdv+tOyBjzltleiMT677e+sxP/XvnBxBIAMYAlQAyRCRBFkF/jzNihtc5LycL51l4glAB/2edvfmXLbuyT88Xc2DMgeAGmm3/mr0QAy4Fr7LpM3LYjBCjUMiBHsqzlqB6C6qMmm6937zwd77yd0c1iIvh1O65F3ftS2QwF9ehkBIAMyKwFEeSR+q+UYDRHZj9OFyB9pgv01AMfD6B5Aq1MEB5MEAC5wB0S2ALi0fxO88yMDtGtAcNFXHNQzgAAIESADqAHKN0LCCtDfBv8eAOkCtfvD+wHaA0TrJwAIodTtZEDqGUbxkQEIodTtZEDqGUbxkQEIodTtZEDqGUbxkQEIodTt0RmAjtrQ/YLY5/8ogQQAIRRqJwOEFyzUlQDKOGLQrN1AQ7x2dP6PJhdrAAEAlEcZIANYAtQAVCUUQR8C7ALCP2WxDYoK0BjDfQD3Af67xYhhdW+EziMSO1DMcr4NAAAAAElFTkSuQmCC");
+        return File(content, "application/octet-stream", "image.png");
     }
 }
