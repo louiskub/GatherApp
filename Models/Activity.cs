@@ -16,9 +16,15 @@ public class Activity
     [Required]
     public DateTime ActDatetime { get; set; }
 
-    public string? Latitude { get; set; }
-    public string? Longitude { get; set; }
 
+    [MaxLength(200)]
+    public string? Province { get; set; }
+
+    public string? District { get; set; } 
+
+    public bool? Online { get; set; } 
+
+    public string? GoogleMapLink { get; set; }
 
     // Relationship
     public Post Post { get; set; }  //
@@ -41,4 +47,3 @@ public class ActivityType
     public int Id { get; set; }
     public string ActType { get; set; }
 }
-

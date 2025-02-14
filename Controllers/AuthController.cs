@@ -4,6 +4,9 @@ using GatherApp.Data;
 using System.Security.Cryptography;
 using System.Text;
 using GatherApp.Services;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 
 namespace GatherApp.Controllers;
@@ -73,6 +76,7 @@ public class AuthController : Controller
 
     public IActionResult Register()
     {
+
         return View();
     }
 
@@ -116,4 +120,5 @@ public class AuthController : Controller
                                     .Select(e => e.ErrorMessage);
         return BadRequest(new {obj});
     }
+
 }

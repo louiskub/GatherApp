@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GatherApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250212183333_UpdateApplication")]
-    partial class UpdateApplication
+    [Migration("20250213093100_TestDB2")]
+    partial class TestDB2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,10 +51,7 @@ namespace GatherApp.Migrations
                     b.Property<DateTime>("CloseDateTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Latitude")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Longitude")
+                    b.Property<string>("Locations")
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("OpenDateTime")

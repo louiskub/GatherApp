@@ -4,6 +4,7 @@ using GatherApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GatherApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250213104936_TestDb3")]
+    partial class TestDb3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,21 +51,11 @@ namespace GatherApp.Migrations
                     b.Property<DateTime>("CloseDateTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("District")
+                    b.Property<string>("Locations")
                         .HasColumnType("longtext");
-
-                    b.Property<string>("GoogleMapLink")
-                        .HasColumnType("longtext");
-
-                    b.Property<bool?>("Online")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime>("OpenDateTime")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Province")
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
 
                     b.HasKey("PostId");
 
@@ -155,9 +148,6 @@ namespace GatherApp.Migrations
                     b.Property<bool>("IsAttached")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<bool>("IsOpened")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<int>("Like")
                         .HasColumnType("int");
 
@@ -168,6 +158,11 @@ namespace GatherApp.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
 
                     b.Property<string>("UserId")
                         .IsRequired()

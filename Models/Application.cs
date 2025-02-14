@@ -22,3 +22,8 @@ public class Application{
     public Post Post { get; set; } //
     public int PostId { get; set; }  // FK
 }
+
+public class DtoApplyPost
+{
+    public string? FileAttached { get; set; }
+}

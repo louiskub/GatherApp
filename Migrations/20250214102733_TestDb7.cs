@@ -5,7 +5,7 @@
 namespace GatherApp.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateApplication : Migration
+    public partial class TestDb7 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
