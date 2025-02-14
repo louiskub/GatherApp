@@ -36,5 +36,6 @@
 
 @font-face {
     font-family: 'Genty';
-    src: url('/fonts/GentyDemo-Regular.ttf') format('truetype');
+    /* src: url('/wwwroot/fonts/GentyDemo-Regular.ttf') format('truetype'); */
+    src: url('../fonts/GentyDemo-Regular.ttf') format('truetype');
 }
