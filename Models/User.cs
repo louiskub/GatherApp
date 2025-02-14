@@ -62,6 +62,7 @@ public class User{
     {
         Password = newPassword;
     }
+    
     public void ChangeProfile(string img, string bio)
     {
         ProfileImg = img;
