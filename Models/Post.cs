@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http.HttpResults;
 namespace GatherApp.Models;
 
 
@@ -13,7 +14,7 @@ public class Post{
 
     [Required]
     [DefaultValue(true)]
-    public bool IsOpened { get; set; }
+    public bool IsOpened { get; set; } = true;
 
     [Required]
     [MaxLength(50)]
@@ -57,15 +58,49 @@ public class Post{
 
 
     // Method
-    public void ChangeEverything(string name, string detail) 
-    { 
-        // Name = name; 
-        // Detail = detail; 
-    }
 
     public void AcceptParticipant(User user) { /* Logic here */ }
     public void RejectPerson(User user) { /* Logic here */ }
     public void AddApplication(Application application) => Applications.Add(application);
+
+    public string? IsPostAvailable()
+    {
+        if (IsOpened == false)
+            return "Post is closed";
+
+        if (Activity == null) 
+            return "Activity information is missing";
+
+        if (DateTime.Now < Activity.OpenDateTime)
+            return "Post is not available yet";
+
+        if (DateTime.Now > Activity.CloseDateTime)
+            return "Post is already closed";
+
+        if (CurParticipant >= MaxParticipant)
+            return "Post is already full";
+
+        if (DateTime.Now > Activity.ActDatetime)
+            return "Post is already past";
+
+        return null;
+    }
+
+    public void ChangeEverything(DtoCreatePost dtopost) 
+    { 
+        PostName = dtopost.PostName;    
+        Detail = dtopost.Detail;
+        IsAttached = dtopost.IsAttached;
+        MaxParticipant = dtopost.MaxParticipant;
+        CoverPageImg = dtopost.CoverPageImg;
+        Activity.OpenDateTime = dtopost.OpenDateTime;
+        Activity.CloseDateTime = dtopost.CloseDateTime;
+        Activity.ActDatetime = dtopost.ActDatetime;
+        Activity.Province = dtopost.Province;
+        Activity.District = dtopost.District;
+        Activity.Online = dtopost.Online;
+        Activity.GoogleMapLink = dtopost.GoogleMapLink;
+    }
 }
 
 
@@ -104,6 +139,7 @@ public class DtoCreatePost
 
     public string? GoogleMapLink { get; set; }
 
-    public List<int> ActTypes { get; set; } = new List<int>();
+    public List<string> ActTypes { get; set; } = new List<string>();
 
 }
+

@@ -47,11 +47,11 @@ public class PostController : Controller
         var actTypes = new List<ActivityType>();
         if (dtopost.ActTypes != null && dtopost.ActTypes.Any())
         {
-            foreach (var id in dtopost.ActTypes)
+            foreach (var actType in dtopost.ActTypes)
             {   
-                var actType = await _db.ActivityTypes.Where(a => a.Id == id).FirstOrDefaultAsync();
-                if (actType != null)
-                    actTypes.Add(actType);
+                var temp = await _db.ActivityTypes.Where(a => a.ActType == actType).FirstOrDefaultAsync();
+                if (temp != null)
+                    actTypes.Add(temp);
             }
         }
 
@@ -63,6 +63,7 @@ public class PostController : Controller
             Province = dtopost.Province,
             District = dtopost.District,
             Online = dtopost.Online,
+            GoogleMapLink = dtopost.GoogleMapLink,
             ActTypes = actTypes
         };
 
@@ -82,7 +83,7 @@ public class PostController : Controller
         {
             _db.Posts.Add(post);
             await _db.SaveChangesAsync();  // ใช้ SaveChangesAsync เพื่อทำงานไม่บล็อก
-            return Json(post);
+            return Json(post.Activity);
         }
         catch (Exception ex)
         {
@@ -152,5 +153,157 @@ public class PostController : Controller
         await _db.SaveChangesAsync();
         return Ok(post.Like); // ส่งจำนวนไลก์กลับไป
     }
+
+    [HttpDelete]
+    [Route("api/post")]
+    [Authorize]
+    public IActionResult DeletePost(int postId)
+    {
+        var ownerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var post = _db.Posts.Where(p => p.Id == postId)
+                            .Include(p => p.User)
+                            .FirstOrDefault();
+        if (post == null)
+            return NotFound("Post not found");
+        // check if the user is the owner of the post
+        if (post.User.Id != ownerId)
+            return Unauthorized("User Unauthorized");
+
+        try
+        {
+            _db.Posts.Remove(post);
+            _db.SaveChanges();
+            return Json(new{status = "deleted"});
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+
+    // แก้ไขโพสต์ที่ตัวเองสร้าง
+    [HttpPut]
+    [Route("api/post/edit")]
+    [Authorize]
+    public IActionResult EditPost(int postId, [FromBody] DtoCreatePost dtopost)
+    {
+        var ownerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var post = _db.Posts.Include(p => p.User)
+                            .Include(p => p.Activity)
+                            .ThenInclude(a => a.ActTypes)
+                            .Where(p => p.Id == postId)
+                            .FirstOrDefault();
+        if (post == null)
+            return NotFound("Post not found");
+        // check if the user is the owner of the post
+        if (post.User.Id != ownerId)
+            return Unauthorized("User Unauthorized");
+
+        var actTypes = new List<ActivityType>();
+        foreach (var actType in dtopost.ActTypes)
+        {   
+            var temp = _db.ActivityTypes.Where(a => a.ActType == actType)
+                                        .FirstOrDefault();
+            if (temp != null)
+                actTypes.Add(temp);
+        }
+
+        try
+        {
+            post.ChangeEverything(dtopost);
+            post.Activity.ActTypes = actTypes;
+            _db.SaveChanges();
+            return Json(new{status =  "updated"});
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+
+    [HttpPatch]
+    [Route("api/post/close")]
+    [Authorize]
+    public IActionResult Close(int postId)
+    {
+        var ownerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var post = _db.Posts.Include(p => p.User)
+                            .Where(p => p.Id == postId)
+                            .FirstOrDefault();
+        if (post == null)
+        {
+            return NotFound("Post not found");
+        }
+        // check if the user is the owner of the post
+        if (post.User.Id != ownerId)
+        {
+            return Unauthorized("User Unauthorized");
+        }
+
+        try
+        {
+            post.IsOpened = false;
+            _db.SaveChanges();
+            return Json(new{status =  "closed"});
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+
+    [HttpPost]
+    [Route("api/post/accept")]
+    [Authorize]
+    public IActionResult AcceptParticipant(int postId, string user_name)
+    {
+        var postOwner = User.FindFirst(ClaimTypes.Name)?.Value;
+        var application = _db.Applications.Include(a => a.User)
+                            .Include(a => a.Post)
+                            .Where(a => a.PostId == postId && a.User.Username == user_name)
+                            .FirstOrDefault();
+        if (application == null)
+        {
+            return NotFound("Application not found");
+        }
+        // check if the user is the owner of the post
+        if (application.User.Username != postOwner)
+        {
+            return Unauthorized("User Unauthorized");
+        }
+        application.AppliedStatus = true;
+        _db.SaveChanges();
+        return Json(new {status = "accepted"});
+    }
+
+
+    [HttpPost]
+    [Route("api/post/reject")]
+    [Authorize]
+    public IActionResult RejectParticipant(int postId, string user_name)
+    {
+        var postOwner = User.FindFirst(ClaimTypes.Name)?.Value;
+        var application = _db.Applications.Include(a => a.User)
+                            .Include(a => a.Post)
+                            .Where(a => a.PostId == postId && a.User.Username == user_name)
+                            .FirstOrDefault();
+        if (application == null)
+        {
+            return NotFound("Application not found");
+        }
+        // check if the user is the owner of the post
+        if (application.User.Username != postOwner)
+        {
+            return Unauthorized("User Unauthorized");
+        }
+        
+        application.AppliedStatus = false;
+        _db.SaveChanges();
+        return Json(new {status = "rejected"});
+    }
+    
 
 }
