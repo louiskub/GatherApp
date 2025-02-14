@@ -1,0 +1,231 @@
+@import url('/css/src.css');
+
+/* 1. Global Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 2. Body */
+body {
+    font-family: 'Jost', sans-serif;
+    background-color: #f8f9fa;
+    color: var(--eerie-black);
+    width: 100%;
+}
+/* Dark Mode styles */
+body.dark-mode {
+    background-color: #212529;
+    color: white;
+}
+
+/* 3. Navbar */
+.navbar {
+    display: flex;
+    position: fixed;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 60px;
+    padding: 10px 4%;
+    background-color: var(--carnation-pink);
+    box-shadow: 0 2px 2px var(--chocolate-cosmos);
+}
+body.dark-mode .navbar { /* Dark Mode styles */
+    background-color: var(--chocolate-cosmos); 
+}
+body.light-mode .navbar { /* Light Mode styles */
+    background-color: var(--carnation-pink); 
+}
+
+/* 4. Logo */
+.navbar .logo {
+    font-family: "Genty", sans-serif;
+    font-size: 1.8rem;
+    color: var(--chocolate-cosmos);
+    text-decoration: none;
+}
+
+.navbar .logo:hover {
+    color: var(--bright-pink-crayola); /* สีใหม่เมื่อ Hover */
+}
+
+/* 5. Dark/Light Mode Icon */
+.theme-toggle {
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+.theme-toggle:hover {
+    color: var(--bright-pink-crayola);
+}
+
+body.dark-mode .theme-toggle { /* Dark Mode styles */
+    color: white; 
+}
+body.dark-mode .fa-sun {
+    display: none;
+}
+
+body.light-mode .theme-toggle { /* Light Mode styles */
+    color: var(--chocolate-cosmos); 
+}
+body.light-mode .fa-moon {
+    display: none;
+}
+
+/* 6. Navbar Links */
+.navbar a {
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: 0.3s ease;
+    color: var(--chocolate-cosmos); 
+    font-weight: 500; 
+    text-shadow: 0 0.5px 1px black; /* เพิ่มเงาเล็กน้อย */
+}
+
+body.dark-mode .navbar a { /* Dark Mode styles */
+    color: white; 
+}
+
+body.light-mode .navbar a { /* Light Mode styles */
+    color: var(--chocolate-cosmos); 
+}
+
+
+/* 7. Menu */
+.menu {
+    display: flex;
+    flex-wrap: nowrap;
+    /* align-items: center; */
+    gap: 10px;
+}
+.menu a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.menu a:hover {
+    color: white; 
+    background-color: var(--bright-pink-crayola);
+}
+.menu .active:hover {
+    background-color: var(--bright-pink-crayola);
+}
+
+body.dark-mode .menu { /* Dark Mode styles */
+    background-color: var(--chocolate-cosmos); 
+    color: white;
+}
+body.dark-mode .menu a {
+    color: white; 
+}
+body.dark-mode .menu a:hover {
+    background-color: var(--bright-pink-crayola);
+}
+
+body.light-mode .menur a { /* Light Mode styles */
+    color: var(--chocolate-cosmos); 
+}
+body.light-mode .menu a:hover {
+    background-color: var(--bright-pink-crayola-2);
+}
+body.light-mode .menu .active { 
+    background-color: var(--chocolate-cosmos); 
+    color: white;
+}
+
+
+/* 8. Search Bar */
+.search-bar {
+    display: flex;
+    align-items: center;
+    width: 300px;
+    background-color: white;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1.5px solid var(--chocolate-cosmos);
+}
+.search-bar input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    outline: none;
+    font-size: 0.9rem;
+}
+.search-bar button {
+    background: none;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    color: var(--chocolate-cosmos);
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+.search-bar button:hover {
+    transform: scale(1.5); 
+}
+
+body.dark-mode .search-bar { /* Dark Mode styles */
+    background-color: var(--slate-gray); 
+    border-color: var(--french-gray); 
+}
+body.dark-mode .search-bar input {
+    color: white; 
+    background-color: var(--outer-space); 
+}
+body.dark-mode .search-bar button {
+    color: white; 
+}
+
+/* 9. Hamburger Menu */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+}
+.menu-toggle .close-icon {
+    display: none;
+    padding: 3.5px;
+}
+
+body.dark-mode .menu-toggle { /* Dark Mode styles */
+    color: white; 
+}
+
+body.light-mode .menu-toggle { /* Light Mode styles */
+    color: var(--chocolate-cosmos);
+}
+
+/* 11. Responsive */
+@media (max-width: 768px) {
+    .menu {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        background-color: var(--carnation-pink);
+        gap: 1px;
+        text-align: center;
+    }
+
+    .menu a {
+        border-radius: 0;
+        padding: 10px 30px;
+    }
+
+    .menu.active {
+        display: flex;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+}

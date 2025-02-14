@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using GatherApp.Models;
 using GatherApp.Data;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace GatherApp.Controllers;
 
@@ -25,8 +27,21 @@ public class PostController : Controller
      }   
 
 
+    [Route("/api/getpost")]
+    public IActionResult GetPost()
+    {
+        var post = _db.Posts.Include(p => p.User).Where(p => p.Id == 1).FirstOrDefault();   // ดึงข้อมูล post+user
+        if (post == null)
+        {
+            return NotFound();
+        }
+        return Json(new { post, post.User});
+    }
+
+
 
     [HttpPost]
+
     [Route("api/post/createpost")]
     public async Task<IActionResult> CreatePost([FromBody] DtoCreatePost dtopost)
     {   
@@ -38,6 +53,7 @@ public class PostController : Controller
         }
 
         var user = await _db.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
+        
         if (user == null)
         {
             return NotFound("User not found");
@@ -45,6 +61,7 @@ public class PostController : Controller
 
         // ตรวจสอบว่า dtopost.ActTypes ไม่เป็น null หรือว่าง
         var actTypes = new List<ActivityType>();
+
         if (dtopost.ActTypes != null && dtopost.ActTypes.Any())
         {
             foreach (var actType in dtopost.ActTypes)
@@ -195,6 +212,7 @@ public class PostController : Controller
                             .Where(p => p.Id == postId)
                             .FirstOrDefault();
         if (post == null)
+
             return NotFound("Post not found");
         // check if the user is the owner of the post
         if (post.User.Id != ownerId)
@@ -207,12 +225,26 @@ public class PostController : Controller
                                         .FirstOrDefault();
             if (temp != null)
                 actTypes.Add(temp);
+
         }
 
         try
         {
+        
             post.ChangeEverything(dtopost);
             post.Activity.ActTypes = actTypes;
+            post.PostName = dtopost.PostName;
+            post.Detail = dtopost.Detail;
+            post.IsAttached = dtopost.IsAttached;
+            post.MaxParticipant = dtopost.MaxParticipant;
+            post.CoverPageImg = dtopost.CoverPageImg;
+            post.Activity.OpenDateTime = dtopost.OpenDateTime;
+            post.Activity.CloseDateTime = dtopost.CloseDateTime;
+            post.Activity.ActDatetime = dtopost.ActDatetime;
+            post.Activity.Latitude = dtopost.Latitude;
+            post.Activity.Longitude = dtopost.Longitude;
+            post.Activity.ActTypes = actTypes;
+            
             _db.SaveChanges();
             return Json(new{status =  "updated"});
         }
@@ -258,6 +290,7 @@ public class PostController : Controller
     [HttpPost]
     [Route("api/post/accept")]
     [Authorize]
+
     public IActionResult AcceptParticipant(int postId, string user_name)
     {
         var postOwner = User.FindFirst(ClaimTypes.Name)?.Value;
@@ -307,3 +340,4 @@ public class PostController : Controller
     
 
 }
+
