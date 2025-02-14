@@ -45,31 +45,18 @@ public class User{
     [JsonIgnore]
     public List<Notification> Notifications { get; set; } = new List<Notification>(); //
 
-    // Method
-    public void CreatePost(Post post) => CreatedPosts.Add(post);
-    public void RemoveCreatedPost(Post post) => CreatedPosts.Remove(post);
-    public void LikePost(Post post) => LikedPosts.Add(post);
-    public void RemoveLikePost(Post post) => LikedPosts.Remove(post);
-    public void AddAplyHistory(Application application) => ApplyHistories.Add(application);
-    public void RemoveAplyHistory(Application application) => ApplyHistories.Remove(application);
-    public void AddNotification(Notification notification) => Notifications.Add(notification);
-    public void ChangeUsernameEmail(string username, string email)
-    {
-        Username = username;
-        Email = email;
-    }
-    public void ChangePassword(string newPassword)
-    {
-        Password = newPassword;
-    }
-    public void ChangeProfile(string img, string bio)
-    {
-        ProfileImg = img;
-        Bio = bio;
-    }
 }
 
+public class ChangePasswordRequest
+{
+    [Required]
+    [StringLength(100, MinimumLength = 6)]
+    public string OldPassword { get; set; }
 
+    [Required]
+    [StringLength(100, MinimumLength = 6)]
+    public string NewPassword { get; set; }
+}
 public class Notification
 {
     [Required]

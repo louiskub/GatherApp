@@ -232,18 +232,6 @@ public class PostController : Controller
         {
         
             post.ChangeEverything(dtopost);
-            post.Activity.ActTypes = actTypes;
-            post.PostName = dtopost.PostName;
-            post.Detail = dtopost.Detail;
-            post.IsAttached = dtopost.IsAttached;
-            post.MaxParticipant = dtopost.MaxParticipant;
-            post.CoverPageImg = dtopost.CoverPageImg;
-            post.Activity.OpenDateTime = dtopost.OpenDateTime;
-            post.Activity.CloseDateTime = dtopost.CloseDateTime;
-            post.Activity.ActDatetime = dtopost.ActDatetime;
-            post.Activity.Latitude = dtopost.Latitude;
-            post.Activity.Longitude = dtopost.Longitude;
-            post.Activity.ActTypes = actTypes;
             
             _db.SaveChanges();
             return Json(new{status =  "updated"});
