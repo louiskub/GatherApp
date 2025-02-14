@@ -12,8 +12,8 @@ public class Post{
     public DateTime CreateAt { get; set; } = DateTime.Now;
 
     [Required]
-    [MaxLength(10)]
-    public string Status { get; set; }  // open closeApp full close     เปิด ปิดรับสมัคร เต็ม ปิด(ทำกิจกจรรมแล้ว)
+    [DefaultValue(true)]
+    public bool IsOpened { get; set; }
 
     [Required]
     [MaxLength(50)]
@@ -33,6 +33,7 @@ public class Post{
     public int Like { get; set; }
 
     [Required]
+    [Range(1, 1000, ErrorMessage = "MaxParticipant must be between 1 and 1000.")]
     public int MaxParticipant { get; set; }
 
     [DefaultValue(0)]
@@ -47,10 +48,12 @@ public class Post{
 
     [JsonIgnore]
     public Activity Activity { get; set; }  //
+
     
     [JsonIgnore]
     public List<Application> Applications { get; set; } = new List<Application>(); //
-
+    
+    public List<PostLike> PostLikes { get; set; } = new List<PostLike>();  // ความสัมพันธ์กับ PostLike
 
 
     // Method
@@ -67,19 +70,39 @@ public class Post{
 
 
 
+public class PostLike
+{
+    public int Id { get; set; }
+    public int PostId { get; set; }
+    public Post Post { get; set; }
+
+    public string UserId { get; set; }  // ใช้ UserId จาก JWT
+    public User User { get; set; }
+}
+
+
 public class DtoCreatePost
 {
     public string PostName { get; set; }
     public string Detail { get; set; }
     public bool IsAttached { get; set; }
     public string? CoverPageImg { get; set; }
+
+    [Range(1,1000)]
     public int MaxParticipant { get; set; }
 
     public DateTime OpenDateTime { get; set; }
     public DateTime CloseDateTime { get; set; }
     public DateTime ActDatetime { get; set; }
-    public string? Latitude { get; set; }
-    public string? Longitude { get; set; }
+
+    [MaxLength(200)]
+    public string? Province { get; set; }
+
+    public string? District { get; set; } 
+
+    public bool? Online { get; set; }
+
+    public string? GoogleMapLink { get; set; }
 
     public List<int> ActTypes { get; set; } = new List<int>();
 

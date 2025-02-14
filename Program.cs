@@ -6,9 +6,12 @@ using System.Text;
 using GatherApp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
-const string secretKey = "bee3d44a29a875c6352443f6a53db29d";
+var secretKey = builder.Configuration["JwtSettings:SecretKey"];
+if (string.IsNullOrEmpty(secretKey))
+{
+    throw new InvalidOperationException("JWT SecretKey is not configured.");
+}
 var key = Encoding.UTF8.GetBytes(secretKey);
-
 
 // Add Sql
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -30,12 +33,24 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = false,
             ValidateLifetime = true
         };
+    options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                if (context.Request.Cookies.ContainsKey("token"))
+                {
+                    context.Token = context.Request.Cookies["token"];
+                }
+                return Task.CompletedTask;
+            }
+        };
     });
 
 builder.Services.AddScoped<GatherApp.Services.JwtService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
 
 
 var app = builder.Build();
@@ -47,6 +62,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

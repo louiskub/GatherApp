@@ -48,14 +48,21 @@ namespace GatherApp.Migrations
                     b.Property<DateTime>("CloseDateTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Latitude")
+                    b.Property<string>("District")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Longitude")
+                    b.Property<string>("GoogleMapLink")
                         .HasColumnType("longtext");
+
+                    b.Property<bool?>("Online")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime>("OpenDateTime")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Province")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.HasKey("PostId");
 
@@ -148,6 +155,9 @@ namespace GatherApp.Migrations
                     b.Property<bool>("IsAttached")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("IsOpened")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<int>("Like")
                         .HasColumnType("int");
 
@@ -159,11 +169,6 @@ namespace GatherApp.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("varchar(10)");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("varchar(36)");
@@ -173,6 +178,30 @@ namespace GatherApp.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("GatherApp.Models.PostLike", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PostLikes");
                 });
 
             modelBuilder.Entity("GatherApp.Models.User", b =>
@@ -295,6 +324,25 @@ namespace GatherApp.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("GatherApp.Models.PostLike", b =>
+                {
+                    b.HasOne("GatherApp.Models.Post", "Post")
+                        .WithMany("PostLikes")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GatherApp.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("PostUser", b =>
                 {
                     b.HasOne("GatherApp.Models.Post", null)
@@ -316,6 +364,8 @@ namespace GatherApp.Migrations
                         .IsRequired();
 
                     b.Navigation("Applications");
+
+                    b.Navigation("PostLikes");
                 });
 
             modelBuilder.Entity("GatherApp.Models.User", b =>

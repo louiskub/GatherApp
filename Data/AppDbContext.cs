@@ -14,6 +14,8 @@ public class AppDbContext : DbContext
     public DbSet<Activity> Activities { get; set; }
     public DbSet<ActivityType> ActivityTypes { get; set; }
 
+    public DbSet<PostLike> PostLikes { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder options) 
     {
         options.UseMySql(
@@ -57,6 +59,9 @@ public class AppDbContext : DbContext
             // Many to Many
             entity.HasMany(e => e.LikedPosts)
                 .WithMany();
+
+            modelBuilder.Entity<PostLike>()
+            .HasKey(pl => pl.Id);
         });
 
 

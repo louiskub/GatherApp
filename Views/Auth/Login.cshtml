@@ -40,8 +40,8 @@
                     password: password 
                 }),
                 success: function (response) {
-                    localStorage.setItem("token", response.token);
-                    window.location.href = "/home";
+                    document.cookie = `token=${response.token}; path=/; secure; samesite=strict`;
+                    window.location.href = "/post/aboutpost";
                 },
                 error: function (xhr) {
                     let errorMessage = xhr.responseJSON?.message || "Login failed";
