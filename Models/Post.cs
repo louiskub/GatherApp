@@ -103,17 +103,47 @@ public class Post{
         Activity.Online = dtopost.Online;
         Activity.GoogleMapLink = dtopost.GoogleMapLink;
     }
+
+    public object ToJson()
+    {
+        return new {
+            owner = new {
+                User.Username,
+                User.ProfileImg,
+            },
+            post = new {
+                Id,
+                CreateAt,
+                IsOpened,
+                PostName,
+                Detail,
+                IsAttached,
+                CoverPageImg,
+                Like,
+                MaxParticipant,
+                CurParticipant,
+                totalApplicant = Applications.Count,
+            },
+            activity = Activity,
+            actTypes = Activity.ActTypes.Select(x => x.ActType),
+        };
+    }
 }
 
 
 
 public class PostLike
 {
+    [JsonIgnore]
     public int Id { get; set; }
+
+    [JsonIgnore]
     public int PostId { get; set; }
     public Post Post { get; set; }
 
+    [JsonIgnore]
     public string UserId { get; set; }  // ใช้ UserId จาก JWT
+    [JsonIgnore]
     public User User { get; set; }
 }
 

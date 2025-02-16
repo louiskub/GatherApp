@@ -18,25 +18,6 @@ public class ApplicationController : Controller
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // เกี่ยวกับการสมัครเข้าร่วมกิจกรรม
     
-    // ดู ไฟล์ที่เราส่งไป
-    [Route("api/user/applypost/file")]
-    [Authorize]
-    public IActionResult GetFile(int postId)
-    {
-        var ownerName = User.FindFirst(ClaimTypes.Name)?.Value;
-        var application = _db.Applications.Include(a => a.Post)
-                            .Where(a => a.PostId == postId && a.User.Username == ownerName)
-                            .FirstOrDefault();
-        if (application == null)
-            return NotFound("Application not found");
-        if (application.Post.IsAttached == false)
-            return BadRequest("File not attached");
-        if (application.FileAttached == null)
-            return NotFound("File not found");
-        var fileResult = application.GetFile();
-        return File(fileResult.Item1, "application/octet-stream", $"archieve.{fileResult.Item2}");
-    }
-
 
     // สมัครโพส
     [HttpPost]
@@ -64,13 +45,16 @@ public class ApplicationController : Controller
         if (isAvilable != null)
             return BadRequest(isAvilable);
         
+        if (post.IsAttached && (dtoApplyPost == null || string.IsNullOrEmpty(dtoApplyPost.FileAttached)))
+            return BadRequest("This post required file attached");
+
         var application = new Application
         {
             User = user,
             Post = post
         };
         
-        if (post.IsAttached && dtoApplyPost != null)
+        if (post.IsAttached)
             application.FileAttached = dtoApplyPost.FileAttached;
         try 
         {
@@ -118,10 +102,10 @@ public class ApplicationController : Controller
     [Authorize]
     public IActionResult EditMyApplyHistory(int postId, [FromBody] DtoApplyPost dtoApplyPost)
     {
-        var username = User.FindFirst(ClaimTypes.Name)?.Value;
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var user = _db.Users.Include(u => u.ApplyHistories)
                             .ThenInclude(a => a.Post)
-                            .Where(u => u.Username == username).FirstOrDefault();
+                            .Where(u => u.Id == userId).FirstOrDefault();
 
         if (user == null) 
             return NotFound("User not found" );

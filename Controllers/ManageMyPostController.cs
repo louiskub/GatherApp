@@ -18,82 +18,13 @@ public class ManageMyPostController : Controller
         _db = db;
     }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // ดูโพสต์ที่สร้าง
         // get my created post
-    [Route("/api/user/mycreatedpost")]
-    [Authorize]
-    public IActionResult GetMyCreatedPost()
-    {
-        var username = User.FindFirst(ClaimTypes.Name)?.Value;
-        var user = _db.Users.Where(u => u.Username == username).FirstOrDefault();
-
-        if (user == null) 
-            return NotFound("User not found");
-        
-        var posts = _db.Posts.Include(p => p.Activity)
-                            .Where(p => p.UserId == user.Id)
-                            .OrderByDescending(p => p.CreateAt)
-                            .ToList();
-
-        if (posts == null || posts.Count == 0) 
-            return NotFound("Post not found" );
-        var result = posts.Select(p => 
-            new {
-                post = new {
-                    p.Id, p.CreateAt, p.PostName,  
-                    p.Like, p.IsOpened, 
-                    p.MaxParticipant,
-                    CurParticipant = p.Applications.Count(a => a.AppliedStatus == true), 
-                    totalApplicant = p.Applications.Count,
-                },
-                activity = p.Activity
-            }
-        );
-        return Json(posts);
-    }
-
-
-    // get All Applicant my created post
-    [Route("/api/user/mycreatedpost/{postId}")]
-    [Authorize]
-    public IActionResult GetAllApplicantMyCreatedPost(int postId)
-    {
-        var username = User.FindFirst(ClaimTypes.Name)?.Value;
-        var user = _db.Users.Include(u => u.CreatedPosts)
-                            .ThenInclude(p => p.Applications)
-                            .Where(u => u.Username == username)
-                            .FirstOrDefault();
-
-        if (user == null) 
-            return NotFound("User not found");
-        
-        var post = user.CreatedPosts.Where(p => p.Id == postId).FirstOrDefault();
-
-        if (post == null) 
-            return NotFound("Post not found");
-        
-        var applications = post.Applications;
-        if (applications == null || applications.Count == 0) 
-            return NotFound("Applicant not found");
-
-        var result = applications.OrderBy(a => a.AppliedStatus == null)
-                                .ThenByDescending(a => a.AppliedStatus)
-                                .ThenByDescending(a => a.AppliedDateTime)
-                                .Select(a => 
-                                new {
-                                    a.User.Username,
-                                    a.User.ProfileImg,
-                                    a.AppliedDateTime,
-                                    a.AppliedStatus,
-                                    a.FileAttached
-                                }
-        ).ToList();
-        return Json(result);
-    }
-
 
 
     [HttpPost]
-    [Route("api/post/createpost")]
+    [Route("api/post")]
     [Authorize]
     public async Task<IActionResult> CreatePost([FromBody] DtoCreatePost dtopost)
     {   
@@ -152,7 +83,7 @@ public class ManageMyPostController : Controller
         {
             _db.Posts.Add(post);
             await _db.SaveChangesAsync();  // ใช้ SaveChangesAsync เพื่อทำงานไม่บล็อก
-            return Json(post.Activity);
+            return Json(new {status = "created"});
         }
         catch (Exception ex)
         {
@@ -191,7 +122,7 @@ public class ManageMyPostController : Controller
 
     // แก้ไขโพสต์ที่ตัวเองสร้าง
     [HttpPut]
-    [Route("api/post/edit")]
+    [Route("api/post")]
     [Authorize]
     public IActionResult EditPost(int postId, [FromBody] DtoCreatePost dtopost)
     {
@@ -256,7 +187,7 @@ public class ManageMyPostController : Controller
         {
             post.IsOpened = !post.IsOpened;
             _db.SaveChanges();
-            return Json(new{status =  "toggle"});
+            return Json(new{status =  post.IsOpened});
         }
         catch (Exception ex)
         {
@@ -264,46 +195,69 @@ public class ManageMyPostController : Controller
         }
     }
 
-
-    [HttpPost]
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // จัดการคนสมัครเข้าร่วมโพสต์
+    [HttpPatch]
     [Route("api/post/accept")]
     [Authorize]
 
-    public IActionResult AcceptParticipant(int postId, string user_name)
+    public IActionResult AcceptParticipant(int postId, string username)
     {
-        var postOwner = User.FindFirst(ClaimTypes.Name)?.Value;
+        var postOwnerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var application = _db.Applications.Include(a => a.User)
                             .Include(a => a.Post)
-                            .Where(a => a.PostId == postId && a.User.Username == user_name)
+                            .ThenInclude(p => p.User)
+                            .Include(a => a.Post.Applications)
+                            .Where(a => a.PostId == postId && a.User.Username == username)
                             .FirstOrDefault();
         if (application == null)
             return NotFound("Application not found");
         // check if the user is the owner of the post
-        if (application.User.Username != postOwner)
+        if (application.Post.User.Id != postOwnerId)
             return Unauthorized("User Unauthorized");
+        
+        var post = application.Post;
         application.AppliedStatus = true;
+        _db.Notifications.Add(new Notification
+        {
+            UserId = application.User.Id,
+            Content = $"Your application({application.Post.PostName}) has been accepted"
+        });
+        _db.SaveChanges();
+        post.CurParticipant = post.Applications.Count(a => a.AppliedStatus == true);
         _db.SaveChanges();
         return Json(new {status = "accepted"});
     }
 
 
-    [HttpPost]
+    [HttpPatch]
     [Route("api/post/reject")]
     [Authorize]
-    public IActionResult RejectParticipant(int postId, string user_name)
+    public IActionResult RejectParticipant(int postId, string username)
     {
-        var postOwner = User.FindFirst(ClaimTypes.Name)?.Value;
+        var postOwnerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var application = _db.Applications.Include(a => a.User)
                             .Include(a => a.Post)
-                            .Where(a => a.PostId == postId && a.User.Username == user_name)
+                            .ThenInclude(p => p.User)
+                            .Include(a => a.Post.Applications)
+                            .Where(a => a.PostId == postId && a.User.Username == username)
                             .FirstOrDefault();
         if (application == null)
             return NotFound("Application not found");
         // check if the user is the owner of the post
-        if (application.User.Username != postOwner)
+        if (application.Post.User.Id != postOwnerId)
             return Unauthorized("User Unauthorized");
         
+        var post = application.Post;
         application.AppliedStatus = false;
+        _db.Notifications.Add(new Notification
+        {
+            UserId = application.User.Id,
+            Content = $"Your application({application.Post.PostName}) has been rejected"
+        });
+        post.CurParticipant = post.Applications.Count(a => a.AppliedStatus == true);
+        _db.SaveChanges();
+        post.CurParticipant = post.Applications.Count(a => a.AppliedStatus == true);
         _db.SaveChanges();
         return Json(new {status = "rejected"});
     }
@@ -314,7 +268,7 @@ public class ManageMyPostController : Controller
     [Authorize]
     public IActionResult GetFile(int postId, string participantName)
     {
-        var ownerName = User.FindFirst(ClaimTypes.Name)?.Value;
+        var ownerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var application = _db.Applications.Include(a => a.Post)
                             .ThenInclude(p => p.User)
                             .Where(a => a.PostId == postId && a.User.Username == participantName)
@@ -322,7 +276,7 @@ public class ManageMyPostController : Controller
         if (application == null)
             return NotFound("Application not found");
         // ต้องเป็นเจ้าของโพส
-        if (application.Post.User.Username != ownerName)
+        if (application.Post.User.Id != ownerId)
             return Unauthorized("User Unauthorized");
         if (application.Post.IsAttached == false)
             return BadRequest("File not attached");

@@ -35,10 +35,17 @@ public class PostController : Controller
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // เกี่ยวกับการดึงโพส
 
-    [Route("/api/post")]
+    [Route("api/actype")]
+    public async Task<ActionResult> GetActType()
+    {
+        var actTypes = await _db.ActivityTypes.ToListAsync();
+        return Json(actTypes);
+    }
+
+    [Route("api/post")]
     public IActionResult GetPost(int postId)
     {
-        var reqUser = User.FindFirst(ClaimTypes.Name)?.Value;
+        var reqUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var post = _db.Posts.Include(p => p.User)
                             .Include(p => p.Activity)
                             .ThenInclude(a => a.ActTypes)
@@ -48,7 +55,7 @@ public class PostController : Controller
         if (post == null)
             return NotFound();
 
-        bool authorize = post.User.Username == reqUser;
+        bool authorize = post.User.Id == reqUserId;
 
         var applications = post.Applications.Where(a => a.AppliedStatus == true)
                             .Select(a => new
@@ -82,37 +89,25 @@ public class PostController : Controller
                             .Where(p => p.CurParticipant < p.MaxParticipant)
                             .Where(p => p.Activity.OpenDateTime < DateTime.Now)
                             .Where(p => p.Activity.CloseDateTime > DateTime.Now)
+                            .Where(p => p.Activity.ActDatetime > DateTime.Now)
+                            .OrderByDescending(p => p.Like)
+                            .ThenByDescending(p => p.Applications.Count)
                             .ToListAsync();   // ดึงข้อมูล post+user
                             
         if(posts == null || !posts.Any())   
             return NotFound();
 
-        var groupedPosts = posts.GroupBy(p => p.Activity.CloseDateTime.Date)
-                                .OrderBy(g => g.Key)
+        var groupedPosts = posts.GroupBy(p => p.Activity.ActDatetime.Date)
                                 .Select(g => new {
                                     date = g.Key,  
-                                    posts = g.Select(p => new
-                                    {   
-                                        owner = new {
-                                            p.User.Username,
-                                            p.User.ProfileImg
-                                        },
-                                        post = new {
-                                            p.Id, p.CreateAt, p.PostName, p.Detail, 
-                                            p.IsAttached, p.CoverPageImg, p.Like,
-                                            p.MaxParticipant, p.CurParticipant, 
-                                            totalApplicant = p.Applications.Count,
-                                        },
-                                        activity = p.Activity,
-                                        actTypes = p.Activity.ActTypes.Select(a => a.ActType)
-                                    })})
+                                    posts = g.Select(p => p.ToJson())})
                                 .ToList();
         return Json(groupedPosts);
     }
-
+    
     // Filter วันที่ทำกิจกรรม
     [Route("api/post/filter")]
-    public async Task<ActionResult> FilterPost(string date, string actType, string category)
+    public async Task<ActionResult> FilterPost(string? date, string? actType, string? category)
     {   
         // รวมข้อมูล User ที่เกี่ยวข้องกับ Post
         var posts = await _db.Posts.Include(p => p.User)
@@ -123,6 +118,9 @@ public class PostController : Controller
                             .Where(p => p.CurParticipant < p.MaxParticipant)
                             .Where(p => p.Activity.OpenDateTime < DateTime.Now)
                             .Where(p => p.Activity.CloseDateTime > DateTime.Now)
+                            .Where(p => p.Activity.ActDatetime > DateTime.Now)
+                            .OrderByDescending(p => p.Like)
+                            .ThenByDescending(p => p.Applications.Count)
                             .ToListAsync();   // ดึงข้อมูล post+user
                             
         if(posts == null || !posts.Any())   
@@ -153,25 +151,10 @@ public class PostController : Controller
         if (posts.Count == 0)
             return NotFound("No post found");
 
-        var groupedPosts = posts.GroupBy(p => p.Activity.CloseDateTime.Date)
-                                .OrderBy(g => g.Key)
+        var groupedPosts = posts.GroupBy(p => p.Activity.ActDatetime.Date)
                                 .Select(g => new {
                                     date = g.Key,  
-                                    posts = g.Select(p => new
-                                    {   
-                                        owner = new {
-                                            p.User.Username,
-                                            p.User.ProfileImg
-                                        },
-                                        post = new {
-                                            p.Id, p.CreateAt, p.PostName, p.Detail, 
-                                            p.IsAttached, p.CoverPageImg, p.Like,
-                                            p.MaxParticipant, p.CurParticipant, 
-                                            totalApplicant = p.Applications.Count,
-                                        },
-                                        activity = p.Activity,
-                                        actTypes = p.Activity.ActTypes.Select(a => a.ActType)
-                                    })})
+                                    posts = g.Select(p => p.ToJson())})
                                 .ToList();
         return Json(groupedPosts);
     }
@@ -192,32 +175,20 @@ public class PostController : Controller
                             .Where(p => p.Activity.OpenDateTime < DateTime.Now)
                             .Where(p => p.Activity.CloseDateTime > DateTime.Now)
                             .Where(p => EF.Functions.Like(p.PostName, $"%{keyword}%"))
+                            .Where(p => p.Activity.ActDatetime > DateTime.Now)
+                            .OrderByDescending(p => p.Like)
+                            .ThenByDescending(p => p.Applications.Count)
                             .ToListAsync();   // ดึงข้อมูล post+user
                             
         if((posts == null || !posts.Any()) && (users == null || !users.Any()))   
             return NotFound("User and Post not found");
 
-        var groupedPosts = posts.GroupBy(p => p.Activity.CloseDateTime.Date)
-                                .OrderBy(g => g.Key)
+        var groupedPosts = posts.GroupBy(p => p.Activity.ActDatetime.Date)
                                 .Select(g => new {
                                     date = g.Key,  
-                                    posts = g.Select(p => new
-                                    {   
-                                        owner = new {
-                                            p.User.Username,
-                                            p.User.ProfileImg
-                                        },
-                                        post = new {
-                                            p.Id, p.CreateAt, p.PostName, p.Detail, 
-                                            p.IsAttached, p.CoverPageImg, p.Like,
-                                            p.MaxParticipant, p.CurParticipant, 
-                                            totalApplicant = p.Applications.Count,
-                                        },
-                                        activity = p.Activity,
-                                        actTypes = p.Activity.ActTypes.Select(a => a.ActType)
-                                    })})
+                                    posts = g.Select(p => p.ToJson())})
                                 .ToList();
-        return Json(new {groupedPosts, users});
+        return Json(new {posts = groupedPosts, users});
     }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

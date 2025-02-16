@@ -60,6 +60,7 @@ public class ChangePasswordRequest
 public class Notification
 {
     [Required]
+    [JsonIgnore]
     public string UserId { get; set; }
 
     [Required]

@@ -41,7 +41,6 @@ public class Activity
     // Method
     public void AddActType(ActivityType actType) => ActTypes.Add(actType);
     public void RemoveActType(ActivityType actType) => ActTypes.Remove(actType);
-
 }
 
 
@@ -49,4 +48,5 @@ public class ActivityType
 {
     public int Id { get; set; }
     public string ActType { get; set; }
+    
 }

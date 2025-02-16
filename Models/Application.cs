@@ -10,7 +10,7 @@ public class Application{
     [Required]
     public DateTime AppliedDateTime { get; set; } = DateTime.Now;
 
-    public bool AppliedStatus { get; set; } // pending accepted rejected
+    public bool? AppliedStatus { get; set; } = null; // pending accepted rejected
 
     [MaxLength(4000000)]
     public string? FileAttached { get; set; }
@@ -32,6 +32,16 @@ public class Application{
         var content = Convert.FromBase64String(FileAttached);
         var fileType = GetFileType(content);
         return (content, fileType);
+    }
+
+    public object ToJson()
+    {
+        return new {
+            User.Username,
+            User.ProfileImg,
+            AppliedDateTime,
+            AppliedStatus
+        };
     }
 
     public string GetFileType(byte[] fileBytes)
