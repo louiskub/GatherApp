@@ -45,6 +45,7 @@ public class Post{
     public User User { get; set; }  //
 
     [Required]
+    [JsonIgnore]
     public string? UserId { get; set; } //
 
     [JsonIgnore]
@@ -54,6 +55,7 @@ public class Post{
     [JsonIgnore]
     public List<Application> Applications { get; set; } = new List<Application>(); //
     
+    [JsonIgnore]
     public List<PostLike> PostLikes { get; set; } = new List<PostLike>();  // ความสัมพันธ์กับ PostLike
 
 
@@ -135,7 +137,7 @@ public class DtoCreatePost
 
     public string? District { get; set; } 
 
-    public bool? Online { get; set; }
+    public bool Online { get; set; } = false;
 
     public string? GoogleMapLink { get; set; }
 

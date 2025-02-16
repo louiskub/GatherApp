@@ -4,12 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using GatherApp.Models;
 using GatherApp.Data;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 
 namespace GatherApp.Controllers;
 
-[Authorize]
 public class PostController : Controller
 {
     private readonly AppDbContext _db;
@@ -21,92 +18,10 @@ public class PostController : Controller
 
 
     [Route("post/aboutpost")]
-        public IActionResult AboutPost()
-     {
-        return View();
-     }   
-
-
-    [Route("/api/getpost")]
-    public IActionResult GetPost()
+    public IActionResult AboutPost()
     {
-        var post = _db.Posts.Include(p => p.User).Where(p => p.Id == 1).FirstOrDefault();   // ดึงข้อมูล post+user
-        if (post == null)
-        {
-            return NotFound();
-        }
-        return Json(new { post, post.User});
-    }
-
-
-
-    [HttpPost]
-
-    [Route("api/post/createpost")]
-    public async Task<IActionResult> CreatePost([FromBody] DtoCreatePost dtopost)
-    {   
-        // ดึง UserId จาก JWT
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrEmpty(userId))
-        {
-            return Unauthorized("Invalid token");
-        }
-
-        var user = await _db.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
-        
-        if (user == null)
-        {
-            return NotFound("User not found");
-        }
-
-        // ตรวจสอบว่า dtopost.ActTypes ไม่เป็น null หรือว่าง
-        var actTypes = new List<ActivityType>();
-
-        if (dtopost.ActTypes != null && dtopost.ActTypes.Any())
-        {
-            foreach (var actType in dtopost.ActTypes)
-            {   
-                var temp = await _db.ActivityTypes.Where(a => a.ActType == actType).FirstOrDefaultAsync();
-                if (temp != null)
-                    actTypes.Add(temp);
-            }
-        }
-
-        var activity = new Activity
-        {
-            OpenDateTime = dtopost.OpenDateTime,
-            CloseDateTime = dtopost.CloseDateTime,
-            ActDatetime = dtopost.ActDatetime,
-            Province = dtopost.Province,
-            District = dtopost.District,
-            Online = dtopost.Online,
-            GoogleMapLink = dtopost.GoogleMapLink,
-            ActTypes = actTypes
-        };
-
-        var post = new Post
-        {
-            PostName = dtopost.PostName,
-            Detail = dtopost.Detail,
-            IsAttached = dtopost.IsAttached,
-            MaxParticipant = dtopost.MaxParticipant,
-            CoverPageImg = dtopost.CoverPageImg,
-            Activity = activity,
-            UserId = user.Id,  // ระบุ User ที่โพสต์
-            User = user
-        };
-
-        try 
-        {
-            _db.Posts.Add(post);
-            await _db.SaveChangesAsync();  // ใช้ SaveChangesAsync เพื่อทำงานไม่บล็อก
-            return Json(post.Activity);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
+        return View();
+    }   
 
     [Route("post/allpost")]
     public async Task<IActionResult> GetAllPost()
@@ -116,36 +31,215 @@ public class PostController : Controller
         // ส่งข้อมูลไปยัง View
         return View(posts);
     }
+    
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // เกี่ยวกับการดึงโพส
 
-    [Route("api/post/allposts")]
-    public async Task<ActionResult<IEnumerable<Post>>> GetAllPosts()
+    [Route("/api/post")]
+    public IActionResult GetPost(int postId)
     {
-        // รวมข้อมูล User ที่เกี่ยวข้องกับ Post
-        var posts = await _db.Posts.Include(p => p.User).ToListAsync();
-        if(posts == null || !posts.Any())   
-        {
+        var reqUser = User.FindFirst(ClaimTypes.Name)?.Value;
+        var post = _db.Posts.Include(p => p.User)
+                            .Include(p => p.Activity)
+                            .ThenInclude(a => a.ActTypes)
+                            .Include(p => p.Applications)
+                            .ThenInclude(a => a.User)
+                            .Where(p => p.Id == postId).FirstOrDefault();   // ดึงข้อมูล post+user
+        if (post == null)
             return NotFound();
-        }
-        return Ok(posts);
+
+        bool authorize = post.User.Username == reqUser;
+
+        var applications = post.Applications.Where(a => a.AppliedStatus == true)
+                            .Select(a => new
+                            {
+                                a.User.Username,
+                                a.User.ProfileImg
+                            }).ToList();
+
+        return Json(new {
+            owner = new {
+                post.User.Username,
+                post.User.ProfileImg
+            },
+            post,
+            activity = post.Activity,
+            actTypes = post.Activity.ActTypes.Select(a => a.ActType),
+            participant = applications,
+            authorize
+        });
     }
 
+    [Route("api/post/allposts")]
+    public async Task<ActionResult> GetAllPosts()
+    {
+        // รวมข้อมูล User ที่เกี่ยวข้องกับ Post
+        var posts = await _db.Posts.Include(p => p.User)
+                            .Include(p => p.Activity)
+                            .ThenInclude(a => a.ActTypes)
+                            .Include(p => p.Applications)
+                            .Where(p => p.IsOpened == true)
+                            .Where(p => p.CurParticipant < p.MaxParticipant)
+                            .Where(p => p.Activity.OpenDateTime < DateTime.Now)
+                            .Where(p => p.Activity.CloseDateTime > DateTime.Now)
+                            .ToListAsync();   // ดึงข้อมูล post+user
+                            
+        if(posts == null || !posts.Any())   
+            return NotFound();
+
+        var groupedPosts = posts.GroupBy(p => p.Activity.CloseDateTime.Date)
+                                .OrderBy(g => g.Key)
+                                .Select(g => new {
+                                    date = g.Key,  
+                                    posts = g.Select(p => new
+                                    {   
+                                        owner = new {
+                                            p.User.Username,
+                                            p.User.ProfileImg
+                                        },
+                                        post = new {
+                                            p.Id, p.CreateAt, p.PostName, p.Detail, 
+                                            p.IsAttached, p.CoverPageImg, p.Like,
+                                            p.MaxParticipant, p.CurParticipant, 
+                                            totalApplicant = p.Applications.Count,
+                                        },
+                                        activity = p.Activity,
+                                        actTypes = p.Activity.ActTypes.Select(a => a.ActType)
+                                    })})
+                                .ToList();
+        return Json(groupedPosts);
+    }
+
+    // Filter วันที่ทำกิจกรรม
+    [Route("api/post/filter")]
+    public async Task<ActionResult> FilterPost(string date, string actType, string category)
+    {   
+        // รวมข้อมูล User ที่เกี่ยวข้องกับ Post
+        var posts = await _db.Posts.Include(p => p.User)
+                            .Include(p => p.Activity)
+                            .ThenInclude(a => a.ActTypes)
+                            .Include(p => p.Applications)
+                            .Where(p => p.IsOpened == true)
+                            .Where(p => p.CurParticipant < p.MaxParticipant)
+                            .Where(p => p.Activity.OpenDateTime < DateTime.Now)
+                            .Where(p => p.Activity.CloseDateTime > DateTime.Now)
+                            .ToListAsync();   // ดึงข้อมูล post+user
+                            
+        if(posts == null || !posts.Any())   
+            return NotFound("No post found");
+
+        if (date == "Today")
+            posts = posts.Where(p => p.Activity.ActDatetime.Date == DateTime.Now.Date).ToList();
+        else if (date == "Tomorrow")
+            posts = posts.Where(p =>  p.Activity.ActDatetime.Date == DateTime.Now.Date.AddDays(1)).ToList();
+        else if (date == "This week")
+            posts = posts.Where(p => p.Activity.ActDatetime.Date <= DateTime.Now.Date.AddDays(7)).ToList();
+        else if (date == "Next week")
+            posts = posts.Where(p =>  DateTime.Now.Date.AddDays(7) <= p.Activity.ActDatetime.Date 
+                            && p.Activity.ActDatetime.Date <= DateTime.Now.Date.AddDays(14)).ToList();
+        
+        bool? actTypeFilter = null;
+        if (actType == "Online") 
+            actTypeFilter = true;
+        else if (actType == "In Person") 
+            actTypeFilter = false;
+
+        if (actTypeFilter.HasValue)
+            posts = posts.Where(p => p.Activity.Online == actTypeFilter).ToList();
+        
+        if (!string.IsNullOrEmpty(category))
+            posts = posts.Where(p => p.Activity.ActTypes.Any(a => a.ActType == category)).ToList();
+        
+        if (posts.Count == 0)
+            return NotFound("No post found");
+
+        var groupedPosts = posts.GroupBy(p => p.Activity.CloseDateTime.Date)
+                                .OrderBy(g => g.Key)
+                                .Select(g => new {
+                                    date = g.Key,  
+                                    posts = g.Select(p => new
+                                    {   
+                                        owner = new {
+                                            p.User.Username,
+                                            p.User.ProfileImg
+                                        },
+                                        post = new {
+                                            p.Id, p.CreateAt, p.PostName, p.Detail, 
+                                            p.IsAttached, p.CoverPageImg, p.Like,
+                                            p.MaxParticipant, p.CurParticipant, 
+                                            totalApplicant = p.Applications.Count,
+                                        },
+                                        activity = p.Activity,
+                                        actTypes = p.Activity.ActTypes.Select(a => a.ActType)
+                                    })})
+                                .ToList();
+        return Json(groupedPosts);
+    }
+
+
+    [Route("api/search")]
+    public async Task<ActionResult> SearchKeyword(string keyword)
+    {   
+        var users = await _db.Users.Where(u => EF.Functions.Like(u.Username, $"{keyword}%")).ToListAsync();
+
+        // รวมข้อมูล User ที่เกี่ยวข้องกับ Post
+        var posts = await _db.Posts.Include(p => p.User)
+                            .Include(p => p.Activity)
+                            .ThenInclude(a => a.ActTypes)
+                            .Include(p => p.Applications)
+                            .Where(p => p.IsOpened == true)
+                            .Where(p => p.CurParticipant < p.MaxParticipant)
+                            .Where(p => p.Activity.OpenDateTime < DateTime.Now)
+                            .Where(p => p.Activity.CloseDateTime > DateTime.Now)
+                            .Where(p => EF.Functions.Like(p.PostName, $"%{keyword}%"))
+                            .ToListAsync();   // ดึงข้อมูล post+user
+                            
+        if((posts == null || !posts.Any()) && (users == null || !users.Any()))   
+            return NotFound("User and Post not found");
+
+        var groupedPosts = posts.GroupBy(p => p.Activity.CloseDateTime.Date)
+                                .OrderBy(g => g.Key)
+                                .Select(g => new {
+                                    date = g.Key,  
+                                    posts = g.Select(p => new
+                                    {   
+                                        owner = new {
+                                            p.User.Username,
+                                            p.User.ProfileImg
+                                        },
+                                        post = new {
+                                            p.Id, p.CreateAt, p.PostName, p.Detail, 
+                                            p.IsAttached, p.CoverPageImg, p.Like,
+                                            p.MaxParticipant, p.CurParticipant, 
+                                            totalApplicant = p.Applications.Count,
+                                        },
+                                        activity = p.Activity,
+                                        actTypes = p.Activity.ActTypes.Select(a => a.ActType)
+                                    })})
+                                .ToList();
+        return Json(new {groupedPosts, users});
+    }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // เกี่ยวกับการสร้างโพสต์
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    // กดไลค์โพสต์
     [HttpPost]
     [Route("api/post/togglelike/{postId}")]
-
     public async Task<IActionResult> ToggleLike(int postId)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId))
-        {
             return Unauthorized("Invalid token");
-        }
-
+        
         var post = await _db.Posts.Include(p => p.PostLikes)
                                 .FirstOrDefaultAsync(p => p.Id == postId);
         if (post == null)
-        {
             return NotFound("Post not found");
-        }
+        
 
         var existingLike = post.PostLikes.FirstOrDefault(pl => pl.UserId == userId);
         
@@ -168,164 +262,7 @@ public class PostController : Controller
         }
 
         await _db.SaveChangesAsync();
-        return Ok(post.Like); // ส่งจำนวนไลก์กลับไป
+        return Json(new{like = post.Like}); // ส่งจำนวนไลก์กลับไป
     }
-
-    [HttpDelete]
-    [Route("api/post")]
-    [Authorize]
-    public IActionResult DeletePost(int postId)
-    {
-        var ownerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var post = _db.Posts.Where(p => p.Id == postId)
-                            .Include(p => p.User)
-                            .FirstOrDefault();
-        if (post == null)
-            return NotFound("Post not found");
-        // check if the user is the owner of the post
-        if (post.User.Id != ownerId)
-            return Unauthorized("User Unauthorized");
-
-        try
-        {
-            _db.Posts.Remove(post);
-            _db.SaveChanges();
-            return Json(new{status = "deleted"});
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
-
-
-    // แก้ไขโพสต์ที่ตัวเองสร้าง
-    [HttpPut]
-    [Route("api/post/edit")]
-    [Authorize]
-    public IActionResult EditPost(int postId, [FromBody] DtoCreatePost dtopost)
-    {
-        var ownerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var post = _db.Posts.Include(p => p.User)
-                            .Include(p => p.Activity)
-                            .ThenInclude(a => a.ActTypes)
-                            .Where(p => p.Id == postId)
-                            .FirstOrDefault();
-        if (post == null)
-
-            return NotFound("Post not found");
-        // check if the user is the owner of the post
-        if (post.User.Id != ownerId)
-            return Unauthorized("User Unauthorized");
-
-        var actTypes = new List<ActivityType>();
-        foreach (var actType in dtopost.ActTypes)
-        {   
-            var temp = _db.ActivityTypes.Where(a => a.ActType == actType)
-                                        .FirstOrDefault();
-            if (temp != null)
-                actTypes.Add(temp);
-
-        }
-
-        try
-        {
-        
-            post.ChangeEverything(dtopost);
-            
-            _db.SaveChanges();
-            return Json(new{status =  "updated"});
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
-
-
-    [HttpPatch]
-    [Route("api/post/close")]
-    [Authorize]
-    public IActionResult Close(int postId)
-    {
-        var ownerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var post = _db.Posts.Include(p => p.User)
-                            .Where(p => p.Id == postId)
-                            .FirstOrDefault();
-        if (post == null)
-        {
-            return NotFound("Post not found");
-        }
-        // check if the user is the owner of the post
-        if (post.User.Id != ownerId)
-        {
-            return Unauthorized("User Unauthorized");
-        }
-
-        try
-        {
-            post.IsOpened = false;
-            _db.SaveChanges();
-            return Json(new{status =  "closed"});
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
-
-
-    [HttpPost]
-    [Route("api/post/accept")]
-    [Authorize]
-
-    public IActionResult AcceptParticipant(int postId, string user_name)
-    {
-        var postOwner = User.FindFirst(ClaimTypes.Name)?.Value;
-        var application = _db.Applications.Include(a => a.User)
-                            .Include(a => a.Post)
-                            .Where(a => a.PostId == postId && a.User.Username == user_name)
-                            .FirstOrDefault();
-        if (application == null)
-        {
-            return NotFound("Application not found");
-        }
-        // check if the user is the owner of the post
-        if (application.User.Username != postOwner)
-        {
-            return Unauthorized("User Unauthorized");
-        }
-        application.AppliedStatus = true;
-        _db.SaveChanges();
-        return Json(new {status = "accepted"});
-    }
-
-
-    [HttpPost]
-    [Route("api/post/reject")]
-    [Authorize]
-    public IActionResult RejectParticipant(int postId, string user_name)
-    {
-        var postOwner = User.FindFirst(ClaimTypes.Name)?.Value;
-        var application = _db.Applications.Include(a => a.User)
-                            .Include(a => a.Post)
-                            .Where(a => a.PostId == postId && a.User.Username == user_name)
-                            .FirstOrDefault();
-        if (application == null)
-        {
-            return NotFound("Application not found");
-        }
-        // check if the user is the owner of the post
-        if (application.User.Username != postOwner)
-        {
-            return Unauthorized("User Unauthorized");
-        }
-        
-        application.AppliedStatus = false;
-        _db.SaveChanges();
-        return Json(new {status = "rejected"});
-    }
-    
-
 }
 
