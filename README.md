@@ -1,15 +1,18 @@
 ## How to Run it
 ```
 dotnet restore 
+dotnet ef database update
 dotnet run
 ```
 
-# reload everychange 
+### reload everychange 
 ```
 dotnet watch run
 ```
 
-# Connect Database
+### Connect Database
 ```
 docker compose up -d
 ```
+
+#### Database Manager = localhost:8888
