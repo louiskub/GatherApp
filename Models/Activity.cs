@@ -27,18 +27,20 @@ public class Activity
     public string? GoogleMapLink { get; set; }
 
     // Relationship
+    [JsonIgnore]
     public Post Post { get; set; }  //
 
     [Required]
     [Key]
+    [JsonIgnore]
     public int? PostId { get; set; } // Fk
 
+    [JsonIgnore]
     public List<ActivityType> ActTypes { get; set; } = new List<ActivityType>(); //
 
     // Method
     public void AddActType(ActivityType actType) => ActTypes.Add(actType);
     public void RemoveActType(ActivityType actType) => ActTypes.Remove(actType);
-
 }
 
 
@@ -46,4 +48,5 @@ public class ActivityType
 {
     public int Id { get; set; }
     public string ActType { get; set; }
+    
 }

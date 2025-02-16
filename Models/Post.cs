@@ -45,6 +45,7 @@ public class Post{
     public User User { get; set; }  //
 
     [Required]
+    [JsonIgnore]
     public string? UserId { get; set; } //
 
     [JsonIgnore]
@@ -54,6 +55,7 @@ public class Post{
     [JsonIgnore]
     public List<Application> Applications { get; set; } = new List<Application>(); //
     
+    [JsonIgnore]
     public List<PostLike> PostLikes { get; set; } = new List<PostLike>();  // ความสัมพันธ์กับ PostLike
 
 
@@ -101,17 +103,47 @@ public class Post{
         Activity.Online = dtopost.Online;
         Activity.GoogleMapLink = dtopost.GoogleMapLink;
     }
+
+    public object ToJson()
+    {
+        return new {
+            owner = new {
+                User.Username,
+                User.ProfileImg,
+            },
+            post = new {
+                Id,
+                CreateAt,
+                IsOpened,
+                PostName,
+                Detail,
+                IsAttached,
+                CoverPageImg,
+                Like,
+                MaxParticipant,
+                CurParticipant,
+                totalApplicant = Applications.Count,
+            },
+            activity = Activity,
+            actTypes = Activity.ActTypes.Select(x => x.ActType),
+        };
+    }
 }
 
 
 
 public class PostLike
 {
+    [JsonIgnore]
     public int Id { get; set; }
+
+    [JsonIgnore]
     public int PostId { get; set; }
     public Post Post { get; set; }
 
+    [JsonIgnore]
     public string UserId { get; set; }  // ใช้ UserId จาก JWT
+    [JsonIgnore]
     public User User { get; set; }
 }
 
@@ -135,7 +167,7 @@ public class DtoCreatePost
 
     public string? District { get; set; } 
 
-    public bool? Online { get; set; }
+    public bool Online { get; set; } = false;
 
     public string? GoogleMapLink { get; set; }
 

@@ -97,7 +97,7 @@ namespace GatherApp.Migrations
                     b.Property<DateTime>("AppliedDateTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<bool>("AppliedStatus")
+                    b.Property<bool?>("AppliedStatus")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("FileAttached")
