@@ -15,9 +15,41 @@ public class ApplicationController : Controller
     {
         _db = db;
     }
+
+
+    // แสดงประวัติการสมัครโพสของ user คนนั้น
+    [Route("api/application/user")]
+    public IActionResult GetMyApplyHistory(string username)
+    {
+        var reqUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var user = _db.Users.Where(u => u.Username == username).FirstOrDefault();
+
+        if (user == null) 
+            return NotFound("User not found" );
+        
+        bool isOwner = user.Id == reqUserId;
+        
+        var applications = _db.Applications.Include(a => a.Post)
+                                        .ThenInclude(p => p.Activity)
+                                        .Include(a => a.Post.Activity.ActTypes)
+                                        .Include(a => a.Post.User)
+                                        .Include(a => a.Post.Applications)
+                                        .Where(a => a.UserId == user.Id)
+                                        .OrderByDescending(a => a.AppliedDateTime).ToList();
+        if (applications == null || applications.Count == 0)
+            return NotFound("Application not found");
+        var result = applications.Select(a => 
+            new {
+                a.AppliedDateTime,
+                a.AppliedStatus,
+                post = a.Post.ToJson(),
+            }
+        );
+        return Json(new{applications=result, isOwner});
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // เกี่ยวกับการสมัครเข้าร่วมกิจกรรม
-    
 
     // สมัครโพส
     [HttpPost]
@@ -60,7 +92,7 @@ public class ApplicationController : Controller
         {
             _db.Applications.Add(application);
             _db.SaveChanges();
-            return Json(new { status = "ok" });
+            return Json(new { status = "applied" });
         }
         catch (Exception e)
         {
@@ -88,7 +120,7 @@ public class ApplicationController : Controller
         {
             _db.Applications.Remove(application);
             _db.SaveChanges();
-            return Json(new { status = "ok" });
+            return Json(new { status = "deleted" });
         }
         catch (Exception e)
         {
@@ -121,7 +153,7 @@ public class ApplicationController : Controller
                 application.FileAttached = dtoApplyPost.FileAttached;
                 _db.SaveChanges();
             }
-            return Json(new { status = "ok" });
+            return Json(new { status = "updated" });
         }
         catch (Exception e)
         {
@@ -129,4 +161,6 @@ public class ApplicationController : Controller
         }
         
     }
+
+
 }

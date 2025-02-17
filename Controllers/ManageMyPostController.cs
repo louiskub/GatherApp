@@ -20,9 +20,7 @@ public class ManageMyPostController : Controller
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // ดูโพสต์ที่สร้าง
-        // get my created post
-
-
+    // create post
     [HttpPost]
     [Route("api/post")]
     [Authorize]
@@ -49,7 +47,8 @@ public class ManageMyPostController : Controller
 
         if (actTypes.Count == 0)
             return BadRequest("Invalid ActTypes");
-
+        
+        dtopost.Online = dtopost.Online || false;
         if (dtopost.Online == true)
         {
             dtopost.Province = null;
@@ -187,7 +186,7 @@ public class ManageMyPostController : Controller
         {
             post.IsOpened = !post.IsOpened;
             _db.SaveChanges();
-            return Json(new{status =  post.IsOpened});
+            return Json(new{status = post.IsOpened});
         }
         catch (Exception ex)
         {
@@ -197,6 +196,35 @@ public class ManageMyPostController : Controller
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // จัดการคนสมัครเข้าร่วมโพสต์
+    
+    // ดูรายชื่อคนสมัคร post ของเราโพสนั้นๆ
+    [Route("api/post/application")]
+    [Authorize]
+    public IActionResult GetAllApplicantsMyPost(int postId)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var user = _db.Users.Where(u => u.Id == userId).FirstOrDefault();
+        if (user == null) 
+            return NotFound("User not found");
+        
+        var post = _db.Posts.Where(p => p.Id == postId && p.UserId == user.Id).FirstOrDefault();
+        if (post == null) 
+            return NotFound("Post not found");
+
+        var applications = _db.Applications.Include(a => a.User)
+                                        .Where(a => a.PostId == postId).ToList();
+        if (applications == null || applications.Count == 0) 
+            return NotFound("Applicant not found");
+        
+        var result = applications.OrderBy(a => a.AppliedStatus == null)
+                                .ThenByDescending(a => a.AppliedStatus)
+                                .ThenByDescending(a => a.AppliedDateTime)
+                                .Select(a => a.ToJson()
+                                ).ToList();
+        return Json(result);
+    }
+
+    
     [HttpPatch]
     [Route("api/post/accept")]
     [Authorize]

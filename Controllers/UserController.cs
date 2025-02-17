@@ -4,6 +4,7 @@ using GatherApp.Models;
 using GatherApp.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using GatherApp.Services;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 #pragma warning disable CS0472 
 
@@ -12,17 +13,18 @@ namespace GatherApp.Controllers;
 public class UserController : Controller
 {
     private readonly AppDbContext _db;
-
-    public UserController(AppDbContext db)
+    private readonly JwtService _jwtService;
+    public UserController(AppDbContext db, JwtService jwtService)
     {
         _db = db;
+        _jwtService = jwtService;
     }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // เกี่ยวกับ user profile
     // ดู user คนไหนก็ได้
-    [Route("api/user/profile")]
     [HttpGet]
+    [Route("api/user/profile")]
     public IActionResult GetUserProfile([FromQuery] string username)
     {
         var reqUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -31,14 +33,14 @@ public class UserController : Controller
         if (user == null) 
             return NotFound("User not found");
 
-        bool authorize = user.Id == reqUserId;
+        bool isOwner = user.Id == reqUserId;
         return Json(new
         {
             username = user.Username,
             email = user.Email,
             profileImg = user.ProfileImg,
             bio = user.Bio,
-            authorize
+            isOwner
         });
     }
 
@@ -78,12 +80,18 @@ public class UserController : Controller
             return NotFound("User not found");
 
         try
-        {
-            if (myuser.Username != null) user.Username = myuser.Username;
+        {                
+            string? token = null; 
             if (myuser.Email != null) user.Email = myuser.Email;
             if (myuser.ProfileImg != null) user.ProfileImg = myuser.ProfileImg;
             if (myuser.Bio != null) user.Bio = myuser.Bio;
-            
+            if (myuser.Username != null) 
+            {
+                user.Username = myuser.Username;
+                Console.WriteLine("Login success");
+                string stId = user.Id.ToString();
+                token = _jwtService.GenerateToken(stId, user.Username);
+            }
             _db.SaveChanges();
             return Json(new 
             {
@@ -91,7 +99,8 @@ public class UserController : Controller
                 email = user.Email,
                 profileImg = user.ProfileImg,
                 bio = user.Bio,
-                status = "updated"
+                status = "updated",
+                token
             });
         }
         catch (Exception e)
@@ -102,10 +111,10 @@ public class UserController : Controller
     }
     
 
-    [Route("api/user/myprofile/changepassword")]
     [HttpPatch]
+    [Route("api/user/myprofile/changepassword")]
     [Authorize]
-    public IActionResult ChangePassword([FromBody] ChangePasswordRequest changePasswordRequest)
+    public IActionResult ChangeMyPassword([FromBody] ChangePasswordRequest changePasswordRequest)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var user = _db.Users.Where(u => u.Id == userId).FirstOrDefault();
@@ -129,59 +138,7 @@ public class UserController : Controller
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // เกี่ยวกับ post หรือ app ของเรา
-
-    [Route("api/user/mypost")]
-    [Authorize]
-    public IActionResult GetMyPost()
-    {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var user = _db.Users.Where(u => u.Id == userId).FirstOrDefault();
-
-        if (user == null) 
-            return NotFound("User not found");
-        
-        var posts = _db.Posts.Include(p => p.Activity)
-                            .Include(p => p.Applications)
-                            .Where(p => p.UserId == user.Id)
-                            .OrderByDescending(p => p.CreateAt)
-                            .ToList();
-
-        if (posts == null || posts.Count == 0) 
-            return NotFound("Post not found" );
-        var result = posts.Select(p => p.ToJson());
-        return Json(result);
-    }
-
-
-    // get All Applicant my created post
-    [Route("api/user/mypost/{postId}")]
-    [Authorize]
-    public IActionResult GetAllApplicantMyPost(int postId)
-    {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var user = _db.Users.Where(u => u.Id == userId).FirstOrDefault();
-        if (user == null) 
-            return NotFound("User not found");
-        
-        var post = _db.Posts.Where(p => p.Id == postId && p.UserId == user.Id).FirstOrDefault();
-        if (post == null) 
-            return NotFound("Post not found");
-
-        var applications = _db.Applications.Include(a => a.User)
-                                        .Where(a => a.PostId == postId).ToList();
-        if (applications == null || applications.Count == 0) 
-            return NotFound("Applicant not found");
-        
-        var result = applications.OrderBy(a => a.AppliedStatus == null)
-                                .ThenByDescending(a => a.AppliedStatus)
-                                .ThenByDescending(a => a.AppliedDateTime)
-                                .Select(a => a.ToJson()
-                                ).ToList();
-        return Json(result);
-    }
-
-
+    // เกี่ยวกับ post ที่เรา like ซึ่งเราดูได้คนเดียว
 
     [Route("api/user/mylikedpost")]
     [Authorize]
@@ -205,51 +162,36 @@ public class UserController : Controller
 
     }
 
-    [Route("api/user/myapplypost")]
+
+    [Route("api/user/incomingevent")]
     [Authorize]
-    public IActionResult GetMyApplyHistory()
+    public IActionResult GetInComingEvent()
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var user = _db.Users.Where(u => u.Id == userId).FirstOrDefault();
-
+        var user = _db.Users.Include(u => u.CreatedPosts)
+                            .ThenInclude(p => p.Activity)
+                            .Include(u => u.ApplyHistories)
+                            .ThenInclude(ap => ap.Post)
+                            .ThenInclude(p => p.Activity)
+                            .Where(u => u.Id == userId).FirstOrDefault();
         if (user == null) 
-            return NotFound("User not found" );
+            return NotFound("User not found");
         
-        var applications = _db.Applications.Include(a => a.Post)
-                                        .ThenInclude(p => p.Activity)
-                                        .Include(a => a.Post.Activity.ActTypes)
-                                        .Include(a => a.Post.User)
-                                        .Include(a => a.Post.Applications)
-                                        .Where(a => a.UserId == user.Id)
-                                        .OrderByDescending(a => a.AppliedDateTime).ToList();
-        if (applications == null || applications.Count == 0)
-            return NotFound("Application not found");
-        var result = applications.Select(a => 
-            new {
-                a.AppliedDateTime,
-                a.AppliedStatus,
-                post = a.Post.ToJson(),
-            }
-        );
-        return Json(result);
+        var createdPost = user.CreatedPosts.OrderBy(p => p.Activity.ActDatetime)
+                                    .Where(p => p.Activity.ActDatetime > DateTime.Now)
+                                    .GroupBy(p => p.Activity.ActDatetime.Date)
+                                    .ToList();
+
+        var applyPosts = user.ApplyHistories.OrderBy(ap => ap.Post.Activity.ActDatetime)
+                                            .Where(ap => ap.Post.Activity.ActDatetime > DateTime.Now)
+                                            .GroupBy(ap => ap.Post.Activity.ActDatetime.Date)
+                                            .ToList();
+        
+        return Json(new {
+            createdPost, applyPosts
+        });
+    
     }
 
-    // ดู ไฟล์ที่เราส่งไป
-    [Route("api/user/myapplypost/file")]
-    [Authorize]
-    public IActionResult GetFile(int postId)
-    {
-        var ownerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var application = _db.Applications.Where(a => a.PostId == postId && a.User.Id == ownerId)
-                                        .FirstOrDefault();
-        if (application == null)
-            return NotFound("Application not found");
-        if (application.FileAttached == null)
-            return NotFound("File not found");
-        var fileResult = application.GetFile();
-        return File(fileResult.Item1, "application/octet-stream", $"archieve.{fileResult.Item2}");
-    }
-
-
-
+    
 }

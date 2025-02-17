@@ -70,7 +70,7 @@ public class AuthController : Controller
         var token = _jwtService.GenerateToken(stId, userDTO.Username);
         Console.WriteLine($"token : {token}");
         
-        return Json(new { status = "Login success", Token = token });
+        return Json(new { status = "Login success", token = token });
     }
 
 
@@ -88,13 +88,13 @@ public class AuthController : Controller
         {
             if (_db.Users.Any(s => s.Username == obj.Username))
             {
-                return BadRequest(new { message = "Username already exists" });
+                return BadRequest(new { status = "Username already exists" });
             }
             
 
             if (_db.Users.Any(s => s.Email == obj.Email))
             {
-                return BadRequest(new { message = "Email already exists" });
+                return BadRequest(new { status = "Email already exists" });
             }
             else
             {
@@ -113,7 +113,7 @@ public class AuthController : Controller
                 string stId = user.Id.ToString();
                 var token = _jwtService.GenerateToken(stId, user.Username); 
 
-                return Ok(new { message = "Registration successful", token = token });
+                return Ok(new { status = "Registration successful", token = token });
             }
         }
         var errors = ModelState.Values.SelectMany(v => v.Errors)
