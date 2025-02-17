@@ -36,14 +36,17 @@ public class PostController : Controller
     // เกี่ยวกับการดึงโพส
 
     [Route("api/actype")]
-    public async Task<ActionResult> GetActType()
+    public async Task<ActionResult> GetAllActTypes()
     {
         var actTypes = await _db.ActivityTypes.ToListAsync();
+        if (actTypes == null || actTypes.Count == 0)
+            return NotFound("Activity type not found");
         return Json(actTypes);
     }
 
+    // ถ้าเป็นเจ้าของ return isOwner = true
     [Route("api/post")]
-    public IActionResult GetPost(int postId)
+    public IActionResult GetPostFromId(int postId)
     {
         var reqUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var post = _db.Posts.Include(p => p.User)
@@ -55,7 +58,7 @@ public class PostController : Controller
         if (post == null)
             return NotFound();
 
-        bool authorize = post.User.Id == reqUserId;
+        bool isOwner = post.User.Id == reqUserId;
 
         var applications = post.Applications.Where(a => a.AppliedStatus == true)
                             .Select(a => new
@@ -73,9 +76,34 @@ public class PostController : Controller
             activity = post.Activity,
             actTypes = post.Activity.ActTypes.Select(a => a.ActType),
             participant = applications,
-            authorize
+            isOwner
         });
     }
+
+    // ถ้าเป็นเจ้าของ return isOwner = true
+    [Route("api/post/user")]
+    public IActionResult GetPostsFromUsername(string username)
+    {
+        var reqUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var user = _db.Users.Where(u => u.Username == username).FirstOrDefault();
+
+        if (user == null) 
+            return NotFound("User not found");
+
+        bool isOwner = user.Id == reqUserId;
+        
+        var posts = _db.Posts.Include(p => p.Activity)
+                            .Include(p => p.Applications)
+                            .Where(p => p.UserId == user.Id)
+                            .OrderByDescending(p => p.CreateAt)
+                            .ToList();
+
+        if (posts == null || posts.Count == 0) 
+            return NotFound("Post not found" );
+        var result = posts.Select(p => p.ToJson());
+        return Json(new{posts = result, isOwner});
+    }
+
 
     [Route("api/post/allposts")]
     public async Task<ActionResult> GetAllPosts()
@@ -107,7 +135,8 @@ public class PostController : Controller
     
     // Filter วันที่ทำกิจกรรม
     [Route("api/post/filter")]
-    public async Task<ActionResult> FilterPost(string? date, string? actType, string? category)
+    public async Task<ActionResult> FilterPosts
+    (string? date, string? category, string? actType, string? province, string? district)
     {   
         // รวมข้อมูล User ที่เกี่ยวข้องกับ Post
         var posts = await _db.Posts.Include(p => p.User)
@@ -135,19 +164,26 @@ public class PostController : Controller
         else if (date == "Next week")
             posts = posts.Where(p =>  DateTime.Now.Date.AddDays(7) <= p.Activity.ActDatetime.Date 
                             && p.Activity.ActDatetime.Date <= DateTime.Now.Date.AddDays(14)).ToList();
-        
+
+        if (!string.IsNullOrEmpty(category))
+            posts = posts.Where(p => p.Activity.ActTypes.Any(a => a.ActType == category)).ToList();
+
         bool? actTypeFilter = null;
         if (actType == "Online") 
             actTypeFilter = true;
         else if (actType == "In Person") 
             actTypeFilter = false;
-
+        
         if (actTypeFilter.HasValue)
             posts = posts.Where(p => p.Activity.Online == actTypeFilter).ToList();
-        
-        if (!string.IsNullOrEmpty(category))
-            posts = posts.Where(p => p.Activity.ActTypes.Any(a => a.ActType == category)).ToList();
-        
+        if (actTypeFilter == false)
+        {
+            if (!string.IsNullOrEmpty(province))
+                posts = posts.Where(p => p.Activity.Province == province).ToList();
+            if (!string.IsNullOrEmpty(district))
+                posts = posts.Where(p => p.Activity.District == district).ToList();
+        }
+
         if (posts.Count == 0)
             return NotFound("No post found");
 
@@ -159,7 +195,7 @@ public class PostController : Controller
         return Json(groupedPosts);
     }
 
-
+    // ค้นหาโพสต์ และผู้ใช้
     [Route("api/search")]
     public async Task<ActionResult> SearchKeyword(string keyword)
     {   
@@ -190,9 +226,6 @@ public class PostController : Controller
                                 .ToList();
         return Json(new {posts = groupedPosts, users});
     }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // เกี่ยวกับการสร้างโพสต์
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
