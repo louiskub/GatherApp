@@ -16,6 +16,10 @@ public class AppDbContext : DbContext
 
     public DbSet<PostLike> PostLikes { get; set; }
 
+    public DbSet<BehaviorScore> BehaviorScores { get; set; }
+
+    public DbSet<Report> Reports { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder options) 
     {
         options.UseMySql(

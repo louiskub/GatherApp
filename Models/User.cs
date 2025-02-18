@@ -45,6 +45,8 @@ public class User{
     [JsonIgnore]
     public List<Notification> Notifications { get; set; } = new List<Notification>(); //
 
+    public ICollection<BehaviorScore> BehaviorScores { get; set; } 
+
 }
 
 public class ChangePasswordRequest

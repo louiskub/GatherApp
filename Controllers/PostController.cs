@@ -7,6 +7,7 @@ using GatherApp.Data;
 
 namespace GatherApp.Controllers;
 
+[Authorize]
 public class PostController : Controller
 {
     private readonly AppDbContext _db;
@@ -105,11 +106,13 @@ public class PostController : Controller
     }
 
 
+    [HttpGet]
     [Route("api/post/allposts")]
     public async Task<ActionResult> GetAllPosts()
     {
         // รวมข้อมูล User ที่เกี่ยวข้องกับ Post
-        var posts = await _db.Posts.Include(p => p.User)
+        var posts = await _db.Posts
+                            .Include(p => p.User)
                             .Include(p => p.Activity)
                             .ThenInclude(a => a.ActTypes)
                             .Include(p => p.Applications)
@@ -120,14 +123,16 @@ public class PostController : Controller
                             .Where(p => p.Activity.ActDatetime > DateTime.Now)
                             .OrderByDescending(p => p.Like)
                             .ThenByDescending(p => p.Applications.Count)
-                            .ToListAsync();   // ดึงข้อมูล post+user
+                            .ToListAsync();
                             
-        if(posts == null || !posts.Any())   
+        if(posts == null || !posts.Any()) 
+        {
+            Console.WriteLine("No posts found");  
             return NotFound();
-
+        }
         var groupedPosts = posts.GroupBy(p => p.Activity.ActDatetime.Date)
                                 .Select(g => new {
-                                    date = g.Key,  
+                                       date = g.Key,  
                                     posts = g.Select(p => p.ToJson())})
                                 .ToList();
         return Json(groupedPosts);

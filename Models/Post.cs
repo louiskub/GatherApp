@@ -40,6 +40,7 @@ public class Post{
     [DefaultValue(0)]
     public int CurParticipant { get; set; }
 
+
     // Relationship
     [JsonIgnore]
     public User User { get; set; }  //

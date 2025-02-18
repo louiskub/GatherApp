@@ -34,6 +34,12 @@ public class ManageMyPostController : Controller
         var user = await _db.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
         if (user == null)
             return NotFound("User not found");
+
+        if (dtopost.ActTypes == null || dtopost.ActTypes.Count == 0)
+        {
+            return BadRequest("Invalid ActTypes.");
+        }
+
         
         // ตรวจสอบว่า dtopost.ActTypes ไม่เป็น null หรือว่าง
         var actTypes = new List<ActivityType>();
@@ -81,7 +87,7 @@ public class ManageMyPostController : Controller
         try 
         {
             _db.Posts.Add(post);
-            await _db.SaveChangesAsync();  // ใช้ SaveChangesAsync เพื่อทำงานไม่บล็อก
+            await _db.SaveChangesAsync();
             return Json(new {status = "created"});
         }
         catch (Exception ex)
@@ -246,11 +252,29 @@ public class ManageMyPostController : Controller
         
         var post = application.Post;
         application.AppliedStatus = true;
+
+
         _db.Notifications.Add(new Notification
         {
             UserId = application.User.Id,
             Content = $"Your application({application.Post.PostName}) has been accepted"
         });
+
+        var userScore = _db.BehaviorScores.Where(bs => bs.UserId == application.User.Id).FirstOrDefault();
+        if (userScore == null)
+        {
+            userScore = new BehaviorScore
+            {
+                UserId = application.User.Id,
+                Score = 10,
+            };
+            _db.BehaviorScores.Add(userScore);
+        }
+        else
+        {
+            userScore.Score += 10;
+        }   
+
         _db.SaveChanges();
         post.CurParticipant = post.Applications.Count(a => a.AppliedStatus == true);
         _db.SaveChanges();
