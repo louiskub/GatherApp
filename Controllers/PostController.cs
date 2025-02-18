@@ -7,7 +7,6 @@ using GatherApp.Data;
 
 namespace GatherApp.Controllers;
 
-[Authorize]
 public class PostController : Controller
 {
     private readonly AppDbContext _db;
@@ -235,7 +234,7 @@ public class PostController : Controller
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
-    // กดไลค์โพสต์
+    [Authorize]
     [HttpPost]
     [Route("api/post/togglelike/{postId}")]
     public async Task<IActionResult> ToggleLike(int postId)
