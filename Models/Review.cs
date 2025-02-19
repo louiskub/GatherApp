@@ -31,4 +31,6 @@ namespace GatherApp.Models
 
         public virtual User Rater { get; set; }
     }
+
+    
 }

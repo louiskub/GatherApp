@@ -24,6 +24,9 @@ public class Report
     public string Reason { get; set; }  
 
     [Required]
+    public ReportType ReportType { get; set; }
+    
+    [Required]
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 
     [ForeignKey("BehaviorScore")]
@@ -33,4 +36,10 @@ public class Report
     public User ReportedUser { get; set; }
 
     public BehaviorScore BehaviorScore { get; set; }
+}
+
+public enum ReportType
+{
+    Owner,   
+    User    
 }

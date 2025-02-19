@@ -68,10 +68,58 @@ public async Task<IActionResult> CreateReport([FromBody] Report report)
         ReporterId = reporterId,
         ReportedUserId = report.ReportedUserId,
         PostId = report.PostId,
-        Reason = report.Reason
+        Reason = report.Reason,
+        ReportType = report.ReportedUserId == post.UserId ? ReportType.Owner : ReportType.User,
     };
 
     _db.Reports.Add(newReport);
+
+    var participantCount = await _db.Posts.CountAsync(p => p.Id == report.PostId);
+    var reportCount = await _db.Reports.CountAsync(r => r.PostId == report.PostId && r.ReportType == ReportType.Owner);
+    
+    if (reportCount >= participantCount /2)
+    {
+
+        var reportedPostOwner = await _db.BehaviorScores.FirstOrDefaultAsync(s => s.UserId == post.UserId);
+        if (reportedPostOwner != null )
+        {
+            reportedPostOwner.Score -= 20;
+
+            _db.Notifications.Add(new Notification
+            {
+                UserId = report.ReportedUserId,
+                Content = "Your behavior score has been reduced by 20 due to a report."
+            });
+
+            if (reportedPostOwner.Score < 50 && !reportedPostOwner.IsBanned)
+            {
+                reportedPostOwner.IsBanned = true;
+                reportedPostOwner.BannedUntil = DateTime.Now.AddDays(7);
+
+                _db.Notifications.Add(new Notification
+                {
+                    UserId = report.ReportedUserId,
+                    Content = "Your behavior score is below 50, and you have been temporarily banned for 7 days."
+                });
+            }
+
+            if (reportedPostOwner.Score <= 0)
+            {
+                reportedPostOwner.IsBanned = true;
+                reportedPostOwner.BannedUntil = null;
+
+                _db.Notifications.Add(new Notification
+                {
+                    UserId = report.ReportedUserId,
+                    Content = "Your behavior score has reached 0, and you have been permanently banned."
+                });
+            }
+        }
+    }
+
+
+
+
 
     var reportedUserScore = await _db.BehaviorScores.FirstOrDefaultAsync(s => s.UserId == report.ReportedUserId);
 
