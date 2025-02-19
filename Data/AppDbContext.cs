@@ -20,6 +20,8 @@ public class AppDbContext : DbContext
 
     public DbSet<Report> Reports { get; set; }
 
+    public DbSet<RatingScore> RatingScores { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder options) 
     {
         options.UseMySql(
@@ -68,6 +70,21 @@ public class AppDbContext : DbContext
             .HasKey(pl => pl.Id);
         });
 
+
+         modelBuilder.Entity<RatingScore>()
+            .HasOne(rs => rs.Rater) 
+            .WithMany(u => u.GivenRatings) 
+            .HasForeignKey(rs => rs.RaterId) 
+
+            .OnDelete(DeleteBehavior.Restrict);  
+
+
+        modelBuilder.Entity<RatingScore>()
+            .HasOne(rs => rs.RatedUser) 
+            .WithMany(u => u.ReceivedRatings)  
+            .HasForeignKey(rs => rs.RatedUserId)  
+
+            .OnDelete(DeleteBehavior.Restrict);  
 
         modelBuilder.Entity<Post>(entity =>
         {

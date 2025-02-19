@@ -9,6 +9,11 @@ namespace GatherApp.Models
         [Key]
         public int Id { get; set; }
 
+        [ForeignKey("User")]
+        public string UserId { get; set; }
+
+        public User User { get; set; }
+
         [Required]
         [ForeignKey("RatedUser")]
         public string RatedUserId { get; set; }
@@ -27,9 +32,9 @@ namespace GatherApp.Models
         [Required]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public virtual User RatedUser { get; set; }
+        public User RatedUser { get; set; }
 
-        public virtual User Rater { get; set; }
+        public User Rater { get; set; }
     }
 
     
