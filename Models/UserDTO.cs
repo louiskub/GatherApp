@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
 
 namespace GatherApp.Models;
 
@@ -19,6 +20,18 @@ public class UserDTO
     [Required]
     [StringLength(100, MinimumLength = 6)]
     public string Password { get; set; }
+
+    [Required]
+    
+    public string FirstName { get; set; }
+    
+    [Required]
+    public string LastName { get; set; }
+
+    [Required]
+    public string DateOfBirth { get; set; }
+
+
 }
 
 public class UpdateProfileRequest

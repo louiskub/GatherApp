@@ -88,6 +88,13 @@ public class AppDbContext : DbContext
         });
 
 
+         modelBuilder.Entity<User>(entity =>
+        {
+            // Many to Many
+            entity.HasMany(e => e.ActTypeProfile)
+                .WithMany();
+        });
+
         modelBuilder.Entity<Activity>(entity =>
         {
             // Many to Many

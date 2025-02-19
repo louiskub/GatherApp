@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using GatherApp.Models;
 using GatherApp.Data;
+using System.Net.NetworkInformation;
 
 namespace GatherApp.Controllers;
 
@@ -16,6 +17,8 @@ public class ReportController : ControllerBase
     {
         _db = db;
     }
+
+
 
 [HttpPost]
 [Route("api/reports/create")]

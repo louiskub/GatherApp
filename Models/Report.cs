@@ -10,18 +10,18 @@ public class Report
 
     [Required]
     [ForeignKey("Reporter")]
-    public string ReporterId { get; set; }  // คนที่ส่งรีพอร์ต
+    public string ReporterId { get; set; }  
 
     [Required]
     [ForeignKey("ReportedUser")]
-    public string ReportedUserId { get; set; }  // คนที่ถูกรีพอร์ต
+    public string ReportedUserId { get; set; } 
 
     [Required]
-    public int PostId { get; set; } // โพสต์ที่เกี่ยวข้อง
+    public int PostId { get; set; } 
 
     [Required]
     [MaxLength(500)]
-    public string Reason { get; set; }  // เหตุผลที่รีพอร์ต
+    public string Reason { get; set; }  
 
     [Required]
     public DateTime CreatedAt { get; set; } = DateTime.Now;
@@ -29,7 +29,6 @@ public class Report
     [ForeignKey("BehaviorScore")]
     public int? BehaviorScoreId { get; set; }
 
-    // เชื่อมกับ User
     public User Reporter { get; set; }
     public User ReportedUser { get; set; }
 

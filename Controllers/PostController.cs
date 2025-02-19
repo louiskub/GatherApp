@@ -79,7 +79,7 @@ public class PostController : Controller
             isOwner
         });
     }
-
+    
     // ถ้าเป็นเจ้าของ return isOwner = true
     [Route("api/post/user")]
     public IActionResult GetPostsFromUsername(string username)

@@ -25,7 +25,7 @@ public class ManageMyPostController : Controller
     [Route("api/post")]
     [Authorize]
     public async Task<IActionResult> CreatePost([FromBody] DtoCreatePost dtopost)
-    {   
+    {
         // ดึง UserId จาก JWT
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId))
@@ -259,21 +259,28 @@ public class ManageMyPostController : Controller
             UserId = application.User.Id,
             Content = $"Your application({application.Post.PostName}) has been accepted"
         });
-
-        var userScore = _db.BehaviorScores.Where(bs => bs.UserId == application.User.Id).FirstOrDefault();
-        if (userScore == null)
+        if (post.Activity.ActDatetime < DateTime.Now)
         {
-            userScore = new BehaviorScore
+            
+            var userScore = _db.BehaviorScores.Where(bs => bs.UserId == application.User.Id).FirstOrDefault();
+            if (userScore == null)
             {
-                UserId = application.User.Id,
-                Score = 10,
-            };
-            _db.BehaviorScores.Add(userScore);
-        }
-        else
-        {
-            userScore.Score += 10;
-        }   
+                userScore = new BehaviorScore
+                {
+                    UserId = application.User.Id,
+                    Score = 10,
+                };
+                _db.BehaviorScores.Add(userScore);
+            }
+            else
+            {
+                userScore.Score += 10;
+                if(userScore.Score > 100)
+                {
+                    userScore.Score = 100;
+                }
+            } 
+        }  
 
         _db.SaveChanges();
         post.CurParticipant = post.Applications.Count(a => a.AppliedStatus == true);
