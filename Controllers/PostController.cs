@@ -35,7 +35,7 @@ public class PostController : Controller
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // เกี่ยวกับการดึงโพส
 
-    [Route("api/actype")]
+    [Route("api/acttype")]
     public async Task<ActionResult> GetAllActTypes()
     {
         var actTypes = await _db.ActivityTypes.ToListAsync();
