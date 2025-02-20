@@ -102,7 +102,7 @@ public class AuthController : Controller
 
     [HttpPost]
     [Route("api/auth/register")]
-    public IActionResult Register([FromBody] UserDTO obj)
+    public async Task<IActionResult> Register([FromBody] UserDTO obj)
     {
         if (ModelState.IsValid)
         {
@@ -136,8 +136,25 @@ public class AuthController : Controller
                     IsBanned = false   
                 };
 
+
             _db.BehaviorScores.Add(behaviorScore);
             _db.SaveChanges();
+
+            var existingRating = await _db.RatingScores.FirstOrDefaultAsync(r => r.RaterId == user.Id && r.RatedUserId == user.Id);
+            if (existingRating == null)
+            {
+                var ratingscore = new RatingScore
+                {
+                    RaterId = user.Id,
+                    RatedUserId = user.Id,
+                    Score = 0,
+                    Comment = "Welcome to GatherApp"
+                };
+            
+            
+                _db.RatingScores.Add(ratingscore);
+                _db.SaveChanges();
+            }
 
                 string stId = user.Id.ToString();
                 var token = _jwtService.GenerateToken(stId, user.Username); 

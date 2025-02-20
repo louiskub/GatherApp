@@ -23,7 +23,7 @@ namespace GatherApp.Models
         public string RaterId { get; set; } 
 
         [Required]
-        [Range(1, 5, ErrorMessage = "คะแนนต้องอยู่ระหว่าง 1 ถึง 5")]
+        [Range(0, 5, ErrorMessage = "คะแนนต้องอยู่ระหว่าง 0 ถึง 5")]
         public int Score { get; set; } 
 
         [MaxLength(300)]
