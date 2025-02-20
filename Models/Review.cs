@@ -15,6 +15,12 @@ namespace GatherApp.Models
         public User User { get; set; }
 
         [Required]
+        [ForeignKey("Post")]
+        public int PostId { get; set; }
+
+        public Post Post { get; set; }
+
+        [Required]
         [ForeignKey("RatedUser")]
         public string RatedUserId { get; set; }
 

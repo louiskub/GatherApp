@@ -35,7 +35,18 @@ namespace GatherApp.Controllers
 
             if (rating.Score < 0 || rating.Score > 5)
             {
-                return BadRequest("Score must be between 1 and 5.");
+                return BadRequest("Score must be between 0 and 5.");
+            }
+
+            var post = await _db.Activities.FindAsync(rating.PostId);
+            if (post == null)
+            {
+                return BadRequest("Invalid post.");
+            }
+
+            if (post.ActDatetime > DateTime.UtcNow)
+            {
+                return BadRequest("You can only rate after the event has ended.");
             }
 
             var commonPost = await _db.Applications
@@ -54,7 +65,7 @@ namespace GatherApp.Controllers
 
 
             var existingRating = await _db.RatingScores
-                .AnyAsync(r => r.RaterId == raterId && r.RatedUserId == rating.RatedUserId);
+                .AnyAsync(r => r.RaterId == raterId && r.RatedUserId == rating.RatedUserId && r.PostId == rating.PostId);
 
             if (existingRating)
             {

@@ -70,6 +70,8 @@ public class Post{
     [JsonIgnore]
     public List<PostLike> PostLikes { get; set; } = new List<PostLike>();  // ความสัมพันธ์กับ PostLike
 
+    public ICollection<RatingScore> RatingScores { get; set; } = new List<RatingScore>();
+
 
     // Method
 
