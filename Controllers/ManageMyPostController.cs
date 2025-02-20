@@ -242,7 +242,7 @@ public class ManageMyPostController : Controller
             return NotFound("Applicant not found");
         
         var result = applications.OrderBy(a => a.AppliedStatus == null)
-                                .ThenByDescending(a => a.AppliedStatus)
+                                .ThenBy(a => a.AppliedStatus)
                                 .ThenBy(a => a.AppliedDateTime)
                                 .Select(a => a.ToJson()
                                 ).ToList();
