@@ -7,6 +7,8 @@ using GatherApp.Services;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace GatherApp.Controllers;
@@ -35,7 +37,7 @@ public class AuthController : Controller
 
     [HttpPost]
     [Route("api/auth/login")]
-    public IActionResult Login([FromBody] UserDTO obj)
+    public async Task<IActionResult> Login([FromBody] UserDTO obj)
     {
         if (!ModelState.IsValid)
         {   
@@ -57,7 +59,25 @@ public class AuthController : Controller
             return Json(new { status = "Invalid username or password" });
         }
 
-        // ตรวจสอบรหัสผ่านโดยใช้ BCrypt.Verify
+        var userScore = await _db.BehaviorScores.FirstOrDefaultAsync(s => s.UserId == userDTO.Id);
+        if (userScore != null && userScore.IsBanned)
+        {
+            if (userScore.BannedUntil.HasValue && userScore.BannedUntil > DateTime.Now)
+        {
+            return Unauthorized($"You are banned until {userScore.BannedUntil.Value}");
+        }
+
+        if (!userScore.BannedUntil.HasValue) // แบนถาวร
+        {
+            return Unauthorized("You have been permanently banned.");
+        }
+
+        // ถ้าครบ 7 วันแล้ว ให้ยกเลิกการแบน
+        userScore.IsBanned = false;
+        userScore.BannedUntil = null;
+        await _db.SaveChangesAsync();
+        }
+
         if (!BCrypt.Net.BCrypt.Verify(obj.Password, userDTO.Password))
         {
             Console.WriteLine("Error login - Incorrect password");
@@ -82,7 +102,7 @@ public class AuthController : Controller
 
     [HttpPost]
     [Route("api/auth/register")]
-    public IActionResult Register([FromBody] UserDTO obj)
+    public async Task<IActionResult> Register([FromBody] UserDTO obj)
     {
         if (ModelState.IsValid)
         {
@@ -109,7 +129,33 @@ public class AuthController : Controller
                 _db.Users.Add(user);
                 _db.SaveChanges();
 
-                // สร้าง JWT Token หลังจากสมัครสำเร็จ
+                var behaviorScore = new BehaviorScore
+                {
+                    UserId = user.Id,  
+                    Score = 100,     
+                    IsBanned = false   
+                };
+
+
+            _db.BehaviorScores.Add(behaviorScore);
+            _db.SaveChanges();
+
+            var existingRating = await _db.RatingScores.FirstOrDefaultAsync(r => r.RaterId == user.Id && r.RatedUserId == user.Id);
+            if (existingRating == null)
+            {
+                var ratingscore = new RatingScore
+                {
+                    RaterId = user.Id,
+                    RatedUserId = user.Id,
+                    Score = 0,
+                    Comment = "Welcome to GatherApp"
+                };
+            
+            
+                _db.RatingScores.Add(ratingscore);
+                _db.SaveChanges();
+            }
+
                 string stId = user.Id.ToString();
                 var token = _jwtService.GenerateToken(stId, user.Username); 
 

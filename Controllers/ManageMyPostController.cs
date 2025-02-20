@@ -25,7 +25,7 @@ public class ManageMyPostController : Controller
     [Route("api/post")]
     [Authorize]
     public async Task<IActionResult> CreatePost([FromBody] DtoCreatePost dtopost)
-    {   
+    {
         // ดึง UserId จาก JWT
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId))
@@ -34,6 +34,12 @@ public class ManageMyPostController : Controller
         var user = await _db.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
         if (user == null)
             return NotFound("User not found");
+
+        if (dtopost.ActTypes == null || dtopost.ActTypes.Count == 0)
+        {
+            return BadRequest("Invalid ActTypes.");
+        }
+
         
         // ตรวจสอบว่า dtopost.ActTypes ไม่เป็น null หรือว่าง
         var actTypes = new List<ActivityType>();
@@ -54,6 +60,22 @@ public class ManageMyPostController : Controller
             dtopost.Province = null;
             dtopost.District = null;
         }
+
+        if (dtopost.AgeLimit)
+        {
+            if (dtopost.MinAge == null || dtopost.MaxAge == null || dtopost.MinAge > dtopost.MaxAge)
+            {
+                return BadRequest("Invalid age range.");
+            }
+
+            if (user.Age < dtopost.MinAge || user.Age > dtopost.MaxAge)
+            {
+                return BadRequest("User does not meet the age requirements.");
+            }
+        }
+
+
+
         var activity = new Activity
         {
             OpenDateTime = dtopost.OpenDateTime,
@@ -74,6 +96,9 @@ public class ManageMyPostController : Controller
             MaxParticipant = dtopost.MaxParticipant,
             CoverPageImg = dtopost.CoverPageImg,
             Activity = activity,
+            AgeLimit = dtopost.AgeLimit ? 1 : 0,
+            MinAge = dtopost.MinAge,
+            MaxAge = dtopost.MaxAge,
             UserId = user.Id,  // ระบุ User ที่โพสต์
             User = user
         };
@@ -81,7 +106,7 @@ public class ManageMyPostController : Controller
         try 
         {
             _db.Posts.Add(post);
-            await _db.SaveChangesAsync();  // ใช้ SaveChangesAsync เพื่อทำงานไม่บล็อก
+            await _db.SaveChangesAsync();
             return Json(new {status = "created"});
         }
         catch (Exception ex)
@@ -217,8 +242,8 @@ public class ManageMyPostController : Controller
             return NotFound("Applicant not found");
         
         var result = applications.OrderBy(a => a.AppliedStatus == null)
-                                .ThenByDescending(a => a.AppliedStatus)
-                                .ThenByDescending(a => a.AppliedDateTime)
+                                .ThenBy(a => a.AppliedStatus)
+                                .ThenBy(a => a.AppliedDateTime)
                                 .Select(a => a.ToJson()
                                 ).ToList();
         return Json(result);
@@ -246,11 +271,36 @@ public class ManageMyPostController : Controller
         
         var post = application.Post;
         application.AppliedStatus = true;
+
+
         _db.Notifications.Add(new Notification
         {
             UserId = application.User.Id,
             Content = $"Your application({application.Post.PostName}) has been accepted"
         });
+        if (post.Activity.ActDatetime < DateTime.Now)
+        {
+            
+            var userScore = _db.BehaviorScores.Where(bs => bs.UserId == application.User.Id).FirstOrDefault();
+            if (userScore == null)
+            {
+                userScore = new BehaviorScore
+                {
+                    UserId = application.User.Id,
+                    Score = 10,
+                };
+                _db.BehaviorScores.Add(userScore);
+            }
+            else
+            {
+                userScore.Score += 10;
+                if(userScore.Score > 100)
+                {
+                    userScore.Score = 100;
+                }
+            } 
+        }  
+
         _db.SaveChanges();
         post.CurParticipant = post.Applications.Count(a => a.AppliedStatus == true);
         _db.SaveChanges();

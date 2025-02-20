@@ -58,7 +58,8 @@ public class ApplicationController : Controller
     public IActionResult ApplyPost(int postId, [FromBody] DtoApplyPost? dtoApplyPost)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var user = _db.Users.Where(u => u.Id == userId).FirstOrDefault();
+        var user = _db.Users.Include(u => u.BehaviorScores)
+                            .Where(u => u.Id == userId).FirstOrDefault();
         if (user == null)
             return NotFound("User not found");
 
@@ -91,6 +92,17 @@ public class ApplicationController : Controller
         try 
         {
             _db.Applications.Add(application);
+
+            var newBehaviorScore = new BehaviorScore
+            {
+                User = user,
+                Score = 10, 
+                IsBanned = false,
+                BannedUntil = null
+            };
+            _db.BehaviorScores.Add(newBehaviorScore);
+
+
             _db.SaveChanges();
             return Json(new { status = "applied" });
         }

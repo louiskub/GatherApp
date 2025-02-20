@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GatherApp.Migrations
 {
     /// <inheritdoc />
-    public partial class CreatePostLike : Migration
+    public partial class TestDb14 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -50,6 +50,30 @@ namespace GatherApp.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "BehaviorScores",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<string>(type: "varchar(36)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Score = table.Column<int>(type: "int", nullable: false),
+                    IsBanned = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    BannedUntil = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BehaviorScores", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BehaviorScores_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -109,6 +133,45 @@ namespace GatherApp.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Reports",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ReporterId = table.Column<string>(type: "varchar(36)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ReportedUserId = table.Column<string>(type: "varchar(36)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    PostId = table.Column<int>(type: "int", nullable: false),
+                    Reason = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    BehaviorScoreId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reports", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reports_BehaviorScores_BehaviorScoreId",
+                        column: x => x.BehaviorScoreId,
+                        principalTable: "BehaviorScores",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Reports_Users_ReportedUserId",
+                        column: x => x.ReportedUserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Reports_Users_ReporterId",
+                        column: x => x.ReporterId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Activities",
                 columns: table => new
                 {
@@ -144,7 +207,7 @@ namespace GatherApp.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PostId = table.Column<int>(type: "int", nullable: false),
                     AppliedDateTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    AppliedStatus = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    AppliedStatus = table.Column<bool>(type: "tinyint(1)", nullable: true),
                     FileAttached = table.Column<string>(type: "longtext", maxLength: 4000000, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
@@ -256,6 +319,11 @@ namespace GatherApp.Migrations
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BehaviorScores_UserId",
+                table: "BehaviorScores",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PostLikes_PostId",
                 table: "PostLikes",
                 column: "PostId");
@@ -274,6 +342,21 @@ namespace GatherApp.Migrations
                 name: "IX_PostUser_User1Id",
                 table: "PostUser",
                 column: "User1Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reports_BehaviorScoreId",
+                table: "Reports",
+                column: "BehaviorScoreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reports_ReportedUserId",
+                table: "Reports",
+                column: "ReportedUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reports_ReporterId",
+                table: "Reports",
+                column: "ReporterId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
@@ -307,10 +390,16 @@ namespace GatherApp.Migrations
                 name: "PostUser");
 
             migrationBuilder.DropTable(
+                name: "Reports");
+
+            migrationBuilder.DropTable(
                 name: "Activities");
 
             migrationBuilder.DropTable(
                 name: "ActivityTypes");
+
+            migrationBuilder.DropTable(
+                name: "BehaviorScores");
 
             migrationBuilder.DropTable(
                 name: "Posts");

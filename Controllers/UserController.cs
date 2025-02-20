@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using GatherApp.Services;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-#pragma warning disable CS0472 
 
 namespace GatherApp.Controllers;
 
@@ -52,19 +51,26 @@ public class UserController : Controller
     public IActionResult GetMyProfile()
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var user = _db.Users.Where(u => u.Id == userId).FirstOrDefault();
+        var user = _db.Users
+              .Include(u => u.BehaviorScores)
+              .FirstOrDefault(u => u.Id == userId); 
+              
+        var totalScore = _db.BehaviorScores.Where(b => b.UserId == user.Id)
+                                   .Sum(b => b.Score);
+
 
         if (user == null) 
             return NotFound("User not found");
         var notifications = _db.Notifications.OrderByDescending(n => n.CreatedAt)
                                             .Where(n => n.UserId == user.Id).ToList();
-        
-        return Json(new
+       return Json(new
         {
             username = user.Username,
             profileImg = user.ProfileImg,
-            notification = user.Notifications
+            notification = user.Notifications,
+            totalBehaviorScore = user.BehaviorScores.Sum(b => b.Score),
         });
+
     }
 
     // edit my profile
