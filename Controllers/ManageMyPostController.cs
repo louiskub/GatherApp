@@ -60,6 +60,22 @@ public class ManageMyPostController : Controller
             dtopost.Province = null;
             dtopost.District = null;
         }
+
+        if (dtopost.AgeLimit)
+        {
+            if (dtopost.MinAge == null || dtopost.MaxAge == null || dtopost.MinAge > dtopost.MaxAge)
+            {
+                return BadRequest("Invalid age range.");
+            }
+
+            if (user.Age < dtopost.MinAge || user.Age > dtopost.MaxAge)
+            {
+                return BadRequest("User does not meet the age requirements.");
+            }
+        }
+
+
+
         var activity = new Activity
         {
             OpenDateTime = dtopost.OpenDateTime,
@@ -80,6 +96,9 @@ public class ManageMyPostController : Controller
             MaxParticipant = dtopost.MaxParticipant,
             CoverPageImg = dtopost.CoverPageImg,
             Activity = activity,
+            AgeLimit = dtopost.AgeLimit ? 1 : 0,
+            MinAge = dtopost.MinAge,
+            MaxAge = dtopost.MaxAge,
             UserId = user.Id,  // ระบุ User ที่โพสต์
             User = user
         };

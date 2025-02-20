@@ -44,6 +44,19 @@ public class User{
     [Required]
     public DateTime DateOfBirth { get; set; }
 
+    [JsonIgnore]
+    [Range(0, 100, ErrorMessage = "Age must be between 0 and 100.")]   
+    public int Age 
+    { 
+        get 
+        {
+            var today = DateTime.Today;
+            var age = today.Year - DateOfBirth.Year;
+            if (DateOfBirth.Date > today.AddYears(-age)) age--;
+            return age;
+        }
+    }
+
     public List<ActivityType> ActTypeProfile { get; set; } = new List<ActivityType>();
 
     // Relationship

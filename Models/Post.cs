@@ -30,6 +30,9 @@ public class Post{
     [MaxLength(4000000)]
     public string? CoverPageImg { get; set; }
 
+    [Range(0, 100, ErrorMessage = "AgeLimit must be between 0 and 100.")]
+    public int? AgeLimit { get; set; }
+
     [DefaultValue(0)]
     public int Like { get; set; }
 
@@ -51,6 +54,14 @@ public class Post{
 
     [JsonIgnore]
     public Activity Activity { get; set; }  //
+
+    [Required]
+    [Range(0, 100, ErrorMessage = "MinAge must be between 0 and 100]")]
+    public int? MinAge { get; set; }
+
+    [Required]
+    [Range(0, 100, ErrorMessage = "MaxAge must be between 0 and 100.")]
+    public int? MaxAge { get; set; }
 
     
     [JsonIgnore]
@@ -163,6 +174,16 @@ public class DtoCreatePost
     public DateTime CloseDateTime { get; set; }
     public DateTime ActDatetime { get; set; }
 
+
+    [DefaultValue(false)]
+    public bool AgeLimit { get; set; } = false;
+
+    [Range(0, 100, ErrorMessage = "MinAge must be between 0 and 100.")]
+    public int? MinAge { get; set; }
+
+    [Range(0, 100, ErrorMessage = "MaxAge must be between 0 and 100.")]
+    public int? MaxAge { get; set; }
+
     [MaxLength(200)]
     public string? Province { get; set; }
 
@@ -175,4 +196,3 @@ public class DtoCreatePost
     public List<string> ActTypes { get; set; } = new List<string>();
 
 }
-
