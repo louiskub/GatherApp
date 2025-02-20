@@ -224,7 +224,7 @@ public class ManageMyPostController : Controller
         
         var result = applications.OrderBy(a => a.AppliedStatus == null)
                                 .ThenByDescending(a => a.AppliedStatus)
-                                .ThenByDescending(a => a.AppliedDateTime)
+                                .ThenBy(a => a.AppliedDateTime)
                                 .Select(a => a.ToJson()
                                 ).ToList();
         return Json(result);

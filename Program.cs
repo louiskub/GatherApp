@@ -13,6 +13,16 @@ if (string.IsNullOrEmpty(secretKey))
 }
 var key = Encoding.UTF8.GetBytes(secretKey);
 
+// Add cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy => policy.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+});
+
+
 // Add Sql
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(
@@ -52,9 +62,8 @@ builder.Services.AddScoped<GatherApp.Services.JwtService>();
 builder.Services.AddControllersWithViews();
 
 
-
 var app = builder.Build();
-
+app.UseCors("AllowAll");
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
