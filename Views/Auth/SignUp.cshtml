@@ -1,7 +1,132 @@
+@model GatherApp.Models.User
+
 @{
     ViewData["Title"] = "Gather-SignUp";
 }
-@await Html.PartialAsync("_NavUnAuth")
+
+<head>
+    <link rel="stylesheet" href="~/css/Auth/Signup.css" />
+    <title>Signup Page</title>
+</head>
+<div>
+    <h1 class="top">Sign Up</h1>
+    <div class="page">
+        <div class="containerStyle">
+            <label class="label" for="email">E-mail :</label>
+            <input
+                type="email"
+                id="email"
+                class="inputBox"
+                placeholder="Enter your email"
+                required
+            />
+        </div>
+
+        <div class="containerStyle">
+            <label class="label" for="password">Password :</label>
+            <div class="inputWrapper">
+                <input
+                type="password"
+                id="password"
+                class="inputBox"
+                placeholder="Enter your password"
+                required
+                />
+                <button type="button" id="togglePassword" class="visibleButton">
+                <img
+                    src="https://cdn-icons-png.flaticon.com/512/6405/6405909.png"
+                    alt="Show"
+                    id="icon"
+                />
+                </button>
+            </div>
+        </div>
+
+        <div class="containerStyle">
+            <label class="label" for="password">Repeat Password :</label>
+
+            <!-- <div class="inputWrapper"> -->
+
+                <input
+                type="password"
+                id="password"
+                class="inputBox"
+                placeholder="Repeat your password"
+                required
+                />
+
+                
+                <!-- <button type="button" id="togglePassword" class="nonVisibleButton">
+                <img
+                    src="https://cdn-icons-png.flaticon.com/512/6803/6803345.png"
+                    alt="Hide"
+                    id="icon"
+                />
+                </button>
+            </div> -->
+
+
+        </div>
+
+
+        <div class="buttonContainer">
+            <div class="containerStyle">
+                <button class="buttonStyle">Sign Up</button>
+            </div>
+
+            <div class="containerStyle">
+                <p class="textStyle">Already a member?</p>
+                <a href="/login" class="link">Log In</a>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/Auth/Login.js"></script>
+</div>
+
+
+<script>
+    document.getElementById("registerForm").addEventListener("submit", function(event) {
+        event.preventDefault();  // Prevent page refresh
+
+        // Gather form data
+        const formData = new FormData(event.target);
+        const data = {
+            Username: formData.get('Username'),
+            Email: formData.get('Email'),
+            Password: formData.get('Password')
+        };
+
+        // Send POST request via fetch
+        fetch('/api/auth/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => {
+        if (response.ok) {
+            return response.json();  
+        } else {
+            return response.json().then(errData => { 
+                throw new Error(errData.message || 'Registration failed');
+            });
+        }
+        })
+        .then(data => {
+            if (data.token) {
+                localStorage.setItem('jwt_token', data.token);
+                alert('Registration successful.');
+                window.location.href = '/auth/login';
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            alert('Registration failed: ' + error.message);  // เพิ่มข้อความข้อผิดพลาดที่เกิดขึ้น
+        });
+    });
+</script>
+
 
 <div class="main">
     <h2><a href="/home/auth">Sign up Here!</a></h2>

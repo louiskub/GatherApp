@@ -7,8 +7,6 @@ using System.Security.Claims;
 using GatherApp.Services;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
-#pragma warning disable CS0472 
-
 namespace GatherApp.Controllers;
 
 public class UserController : Controller
