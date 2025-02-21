@@ -45,13 +45,13 @@ public class HomeController : Controller
     [Route("history/post")]
     public IActionResult PostHistory()
     {
-        return View("~/Views/Home/PostHistory.cshtml");
+        return View("~/Views/Home/History/PostHistory.cshtml");
     }
 
     [Route("history/application")]
     public IActionResult ApplicationHistory()
     {
-        return View("~/Views/Home/ApplicationHistory.cshtml");
+        return View("~/Views/Home/History/ApplicationHistory.cshtml");
     }
 
     [Route("post")]
