@@ -1,8 +1,62 @@
 @{
-    ViewData["Title"] = "Gather-Post History";
+    ViewData["Title"] = "Gather-PostHistory";
 }
 @await Html.PartialAsync("_NavAuth")
 
-<div class="main">
-    <h1> This is Post History page</h1>
+@{
+    ViewData["Title"] = "Gather-ApplicationHistory";
+}
+@await Html.PartialAsync("_NavAuth")
+
+
+<div class="pageContainer">
+<h1 class="top">Post History</h1>
+
+<div class="containerStyle">
+  <div class="indicator success"></div>
+  <div class="innerContainer">
+    <div class="contentStyle">
+      <h2>Activity Name 1</h2>
+      <p>Date: Thu, Jan 30, 6:30 PM - 9:30 PM</p>
+    </div>
+
+    <div class="buttonContainer">
+      <button class="buttonStyle review">Review</button>
+      <button class="buttonStyle report">Report</button>
+    </div>
+  </div>
+</div>
+
+<div class="containerStyle">
+  <div class="indicator process"></div>
+  <div class="innerContainer">
+    <div class="contentStyle">
+      <h2>Activity Name 1</h2>
+      <p>Date: Thu, Jan 30, 6:30 PM - 9:30 PM</p>
+    </div>
+
+    <div class="statusContainer">
+      <p class="textStyle">Pending</p>
+      <div class="buttonContainer" id="process">
+        <button class="buttonStyle report">Report</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="containerStyle">
+  <div class="indicator cancel"></div>
+  <div class="innerContainer">
+    <div class="contentStyle">
+      <h2>Activity Name 1</h2>
+      <p>Date: Thu, Jan 30, 6:30 PM - 9:30 PM</p>
+    </div>
+
+    <div class="statusContainer" id="cancel">
+      <p class="textStyle">Canceled</p>
+    </div>
+  </div>
+</div>
+
+
 </div>
