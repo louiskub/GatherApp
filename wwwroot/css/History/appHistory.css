@@ -1,18 +1,11 @@
 @import url("../src.css");
 
-/* * {
-  padding: 0;
-  margin: 0;
-} */
-
 .top {
-  /* background-color: blue; */
   margin-bottom: 1rem;
 }
 
 .pageContainer {
   background-color: var(--lavender-blush);
-  /* padding: 100px; */
   padding: 100px 100px 60px 100px;
   height: auto;
   display: flex;
@@ -32,7 +25,6 @@
 }
 
 .innerContainer {
-  /* background-color: lightcoral; */
   width: 98.5%;
   display: flex;
   flex-wrap: wrap;
@@ -62,18 +54,14 @@
 }
 
 .contentStyle {
-  /* background-color: blueviolet; */
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 5px;
-  /* margin: 1rem; */
   width: 18rem;
-  /* align-self: flex-start; */
 }
 
 .statusContainer {
-  /* background-color: sandybrown; */
   padding: 1rem;
   gap: 1.5rem;
   display: flex;
@@ -90,11 +78,8 @@
 }
 
 .buttonContainer {
-  /* background-color: aquamarine; */
   display: flex;
   align-items: center;
-  /* padding: 0.7rem; */
-  /* margin-left: 2rem; */
   gap: 1rem;
 }
 
@@ -139,7 +124,6 @@
   border-color: var(--carnation-pink) !important;
 }
 
-/* Active (Click) Effect */
 .buttonStyle:active {
   transform: scale(0.98);
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
