@@ -3,51 +3,73 @@
 }
 @await Html.PartialAsync("_NavAuth")
 
-<head>
-    <link rel="stylesheet" href="history.css" />
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>History Page</title>
-  </head>
-  <body class="page">
-    <h1 class="top">Application History</h1>
+<div class="pageContainer">
+<h1 class="top">Application History</h1>
 
-    <div class="containerStyle">
-      <div class="indicator"></div>
-      <div class="contentStyle">
-        <h2>Activity Name 1</h2>
-        <p>Date: Thu, Jan 30, 6:30 PM - 9:30 PM</p>
-      </div>
-
-      <div class="buttonContainer" id="finished">
-        <button class="buttonStyle" id="review">Review</button>
-        <button class="buttonStyle" id="report">Report</button>
-      </div>
+<div class="containerStyle">
+  <div class="indicator finish"></div>
+  <div class="innerContainer">
+    <div class="contentStyle">
+      <h2>Activity Name 1</h2>
+      <p>Date: Thu, Jan 30, 6:30 PM - 9:30 PM</p>
     </div>
 
-    <!-- <div class="containerStyle">
-      <div class="indicator"></div>
-      <div class="contentStyle">
-        <h2>Activity Name 1</h2>
-        <p>Date: Thu, Jan 30, 6:30 PM - 9:30 PM</p>
-      </div>
+    <div class="buttonContainer">
+      <button class="buttonStyle review">Review</button>
+      <button class="buttonStyle report">Report</button>
+    </div>
+  </div>
+</div>
 
-      <div class="buttonContainer">
-        <button class="buttonStyle" id="review">Review</button>
-        <button class="buttonStyle" id="report">Report</button>
-      </div>
+
+<div class="containerStyle">
+  <div class="indicator accept"></div>
+  <div class="innerContainer">
+    <div class="contentStyle">
+      <h2>Activity Name 1</h2>
+      <p>Date: Thu, Jan 30, 6:30 PM - 9:30 PM</p>
     </div>
 
-    <div class="containerStyle">
-      <div class="indicator" id="reject"></div>
-      <div class="contentStyle">
-        <h2>Activity Name 1</h2>
-        <p>Date: Thu, Jan 30, 6:30 PM - 9:30 PM</p>
+    <div class="statusContainer">
+      <p class="textStyle">Accepted</p>
+      <div class="buttonContainer" id="accept">
+        <button class="buttonStyle report">Report</button>
       </div>
+    </div>
+  </div>
+</div>
 
-      <div class="buttonContainer">
-        <button class="buttonStyle" id="review">Review</button>
-        <button class="buttonStyle" id="report">Report</button>
+
+<div class="containerStyle">
+  <div class="indicator pending"></div>
+  <div class="innerContainer">
+    <div class="contentStyle">
+      <h2>Activity Name 1</h2>
+      <p>Date: Thu, Jan 30, 6:30 PM - 9:30 PM</p>
+    </div>
+
+    <div class="statusContainer">
+      <p class="textStyle">Pending</p>
+      <div class="buttonContainer" id="pending">
+        <button class="buttonStyle report">Report</button>
       </div>
-    </div> -->
-  </body>
+    </div>
+  </div>
+</div>
+
+<div class="containerStyle">
+  <div class="indicator reject"></div>
+  <div class="innerContainer">
+    <div class="contentStyle">
+      <h2>Activity Name 1</h2>
+      <p>Date: Thu, Jan 30, 6:30 PM - 9:30 PM</p>
+    </div>
+
+    <div class="statusContainer" id="reject">
+      <p class="textStyle">Rejected</p>
+    </div>
+  </div>
+</div>
+
+
+</div>
