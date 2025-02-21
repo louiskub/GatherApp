@@ -5,5 +5,73 @@
 }
 
 <div class="main">
-    <h2><a href="/home/auth">Login Here!</a></h2>
+    <h1 class="top">Log In</h1>
+    <div class="page">
+        <div class="containerStyle">
+            <label class="label" for="email">E-mail :</label>
+            <input type="email" id="email" class="inputBox" placeholder="Enter your email" required />
+        </div>
+
+        <div class="containerStyle">
+            <label class="label" for="password">Password :</label>
+            <div class="inputWrapper">
+                <input type="password" id="password" class="inputBox" placeholder="Enter your password" required />
+                <button type="button" id="togglePassword" class="showButton">
+                    <img src="https://cdn-icons-png.flaticon.com/512/6405/6405909.png" alt="Show/Hide" id="icon" />
+                </button>
+            </div>
+        </div>
+
+        <div class="buttonContainer">
+            <div class="containerStyle">
+                <button class="buttonStyle">Log In</button>
+            </div>
+
+            <div class="containerStyle">
+                <p class="textStyle">Not a Member yet?</p>
+                <a href="/signup" class="link">Sign Up</a>
+            </div>
+        </div>
+    </div>
 </div>
+<script src="~/js/Auth/Login.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    async function buttonClick() {
+        let username = $("#username").val();
+        let password = $("#password").val();
+
+        if (!username || !password) {
+            $("#error").text("Please enter username and password.");
+            return;
+        }
+
+        try {
+            await $.ajax({
+                url: '/api/auth/login',
+                type: 'POST',
+                contentType: "application/json",
+                data: JSON.stringify({
+                    username: username,
+                    password: password
+                }),
+                success: function (response) {
+                    document.cookie = `token=${response.token}; path=/; secure; samesite=strict`;
+                    window.location.href = "/post/aboutpost";
+                },
+                error: function (xhr) {
+                    let errorMessage = xhr.responseJSON?.message || "Login failed";
+                    $("#error").text(errorMessage);
+                }
+            });
+        } catch (err) {
+            $("#error").text("An unexpected error occurred.");
+        }
+    }
+</script>
+<script>
+    loginButton = document.querySelector('.login-button');
+    loginButton.addEventListener('click', () => {
+        localStorage.setItem('authorized', true);
+    });
+</script>

@@ -12,15 +12,33 @@
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 } */
 
-/* html {
+html {
   position: relative;
   min-height: 100%;
-} */
+}
 
-/* body {
+body {
   margin-bottom: 60px;
-} */
+}
 
 .main {
   padding-top: 60px;
+}
+
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+.footer {
+  position: absolute;
+  white-space: nowrap;
+  bottom: 0;
+  width: 100%;
+  line-height: 60px;
+  padding-left: 30px;
+}
+
+.border-top {
+  border-top: 1px solid #e5e5e5;
 }
