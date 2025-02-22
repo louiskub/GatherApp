@@ -12,7 +12,7 @@
     border-radius: 10px;
 }
 .post-in-date h1 {
-    border-bottom: 2px solid var(--pink);
+    border-bottom: 2px solid var(--border-bottom-color);
 }
 
 .all-post-container {
@@ -23,10 +23,8 @@
 
     /* ทำให้สามารถเลื่อนภายในกรอบ */
     max-width: 100%; /* กำหนดความสูงของ Scroll Frame */
-    overflow-x: auto; /* ให้เลื่อนเฉพาะแนวตั้ง */
+    overflow-x: auto;
     padding: 1rem;
-    
-    /* ทำให้ Scroll Bar ดูสวยขึ้น */
     scrollbar-width: thin; /* สำหรับ Firefox */
     scrollbar-color: var(--pink) #f1f1f1;
 }
