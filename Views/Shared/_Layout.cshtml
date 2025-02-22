@@ -43,9 +43,9 @@
                 <i class="fa fa-search"></i>
             </button>
             <div class="search-container">
-                <form class="search-bar">
-                    <input type="text" placeholder="Search.." name="search" aria-label="Search">
-                    <button type="submit" href="#"><i class="fa fa-search"></i></button>
+                <form class="search-bar" id="search-bar" action="/search" method="get">
+                    <input type="text" placeholder="Search.." name="keyword" aria-label="Search">
+                    <button type="submit"><i class="fa fa-search"></i></button>
                 </form>
             </div>
 
@@ -125,26 +125,12 @@
 
     @RenderBody()
 
-    <footer class="border-top footer">
-        <div class="container">
+    <footer class="footer-container">
+        <div class="footer-content">
             &copy; 2025 - GatherApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-
 </html>
-
-
-<head>
-
-</head>
-<body>
-    <head>
-
-    </head>
-    <body>
-        
-    </body>
-</body>

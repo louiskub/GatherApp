@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const menu = document.querySelector(".menu");
     const openIcon = document.querySelector(".open-icon");
     const closeIcon = document.querySelector(".close-icon");
-    const themeToggle = document.getElementById("theme-toggle");
+    const themeToggle = document.querySelector(".theme-switch");
     const logoutButton = document.querySelector(".log-out");
 
     // Menu Toggle

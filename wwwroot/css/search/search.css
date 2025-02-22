@@ -1,17 +1,16 @@
 @import url('/css/src.css');
 /* @import url('/wwwroot/css/src.css'); */
 
-/* Sidebar (Sidenav) */
 :root {
     --sidebar-width: 17.5rem;
 
-    --sidenav-bg: var(--pink);
+    /* Light Mode */
+    --sidenav-bg: var(--cherry-blossom-pink);
     --sidenav-text: var(--chocolate-cosmos);
     --sidenav-hover-bg: var(--bright-pink-crayola);
     --sidenav-hover-text: var(--seasalt);
     --sidenav-border: var(--rose-red);
 
-    /* 🎨 Light Mode */
     --dropdown-btn-bg: var(--bright-pink-crayola-2);
     --dropdown-btn-text: var(--eerie-black);
     --dropdown-btn-border: var(--rose-red);
@@ -25,7 +24,22 @@
     --write-button-hover-text: var(--seasalt);
     --write-button-shadow: var(--chocolate-cosmos);
 
+    /* Element backgrounds และ texts สำหรับเนื้อหาหลัก */
+    --main-bg: var(--lavender-blush);
+    --main-text: var(--eerie-black);
+
+    /* Search filter */
+    --search-text: var(--eerie-black);
+    --search-border: var(--chocolate-cosmos);
+    --search-filter-bg: var(--cherry-blossom-pink);
+
+    /* Hover สำหรับ Search */
+    --hover-bg-1: var(--bright-pink-crayola);
+    --hover-bg-2: var(--bright-pink-crayola-2);
+    --hover-text: white;
+    --hover--user-bg: var(--pink);
 }
+
 /* Dark Mode */
 [data-theme="dark"] {
     --sidenav-bg: var(--eerie-black);
@@ -46,22 +60,33 @@
     --write-button-hover-bg: var(--amaranth-purple);
     --write-button-hover-text: var(--seasalt);
     --write-button-shadow: var(--outer-space);
+
+    --main-bg: var(--outer-space);
+    --main-text: var(--seasalt);
+
+    --search-text: var(--seasalt);
+    --search-border: var(--platinum);
+    --search-filter-bg: var(--slate-gray);
+
+    --hover-bg-1: var(--rose-red);
+    --hover-bg-2: var(--amaranth-purple);
+    --hover-text: var(--antiflash-white);
+    --hover--user-bg: var(--claret);
 }
 
-/* body.menu-open {
-    overflow: hidden;
-} */
-
-/* Main Content */
-.main {
+/* Layout และ Main Content */
+/* .main {
     width: 100%;
     padding-top: 60px;
+    background: var(--bg-color);
+    color: var(--text-color);
     transition: all 0.3s ease;
-}
+} */
 .main.shifted {
     padding-left: var(--sidebar-width);
 }
 
+/* Sidebar (Sidenav) */
 .sidenav {
     display: none;
     height: 100%;
@@ -74,34 +99,36 @@
     left: 0;
     background-color: var(--sidenav-bg);
     border-right: 2px solid var(--sidenav-border);
-    padding: 1rem 1rem 7rem;
+    padding: 1rem;
+    gap: 1rem;
 }
 .sidenav.active {
     display: flex;
 }
 .sidenav a {
     color: var(--sidenav-text);
-    /* padding: 10px 15px; */
     text-decoration: none;
     font-weight: bold;
-    transition: all 0.3s ease-in-out;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 .sidenav a:hover {
     background-color: var(--sidenav-hover-bg);
     color: var(--sidenav-hover-text);
-    border-radius: 8px;
-    padding-left: 20px;
+    padding-left: 1.5rem;
 }
 
-
-
-/* 5. Dropdown Icon */
+/* Dropdown Button */
 .dropdown-toggle {
     display: flex;
     align-items: center;
+    justify-content: center;
+    width: 120px;
     gap: 1rem;
     padding: 0.5rem 1rem;
-    margin: 1.5rem 2rem 0rem;
+    margin: 0rem 1.5rem;
     font-size: 1.2rem;
     color: var(--dropdown-btn-text);
     background: var(--dropdown-btn-bg);
@@ -117,7 +144,6 @@
     transform: scale(1.05);
     border-color: var(--dropdown-btn-hover-bg);
 }
-
 .dropdown-icon {
     font-size: 1.5rem;
     transition: transform 0.3s ease;
@@ -127,8 +153,7 @@
     transform: rotate(180deg);
 }
 
-
-/* 6. Write Button */
+/* Write Button */
 .write-button {
     position: fixed;
     bottom: 20px;
@@ -157,27 +182,91 @@
     transform: scale(1.1);
 }
 
-/* .close-filter-icon {
+/* Search Content และ Filter */
+.search-content {
+    padding: 1rem 2.5rem;
+}
+.search-filter {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    font-size: 1.5rem;
+    padding: 1.2rem 0;
+    text-align: center;
+    border-bottom: 2px solid var(--search-border);
+    color: var(--search-text);
+}
+.search-filter button {
+    flex: 1;
+    margin: 0 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1.5px solid var(--search-border);
+    background-color: var(--search-filter-bg);
+    color: var(--search-text);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: background 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+}
+.search-filter button.active {
+    background-color: var(--hover-bg-1);
+    color: var(--hover-text);
+}
+.search-filter button:hover {
+    background-color: var(--hover-bg-2);
+    color: var(--hover-text);
+}
+
+/* Search Results */
+.search-results-user,
+.search-results-post {
     display: none;
-    position: fixed;
-    top: 20px;
-    right: 20px;
-} */
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 2px solid var(--search-border);
+}
+.search-results-user.active,
+.search-results-post.active {
+    display: flex;
+}
+.search-user-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+}
+.search-user-info {
+    display: flex;
+    align-items: center;
+    background-color: var(--post-bg);
+    border-radius: 8px;
+    padding: 0.5rem 1.5rem;
+    box-shadow: 2px 2px 10px var(--dropdown-btn-shadow);
+    transition: all 0.3s ease;
+}
+.search-user-info:hover {
+    background-color: var(--hover--user-bg);
+    transform: scale(1.03);
+}
+.search-user-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 1rem;
+    cursor: pointer;
+    object-fit: cover;
+}
 
-/* Responsive */
+/* Responsive adjustments */
 @media (max-width: 768px) {
-
     .sidenav {
         width: 85%;
-        /* flex-direction: row; */
-        z-index: 30;
-        transition: left 0.3s ease-in-out;
+        padding: 1rem;
     }
-
     .sidenav a {
         padding: 0.5rem 1rem;
     }
-
     .main.shifted {
         padding-left: 0;
     }
