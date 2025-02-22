@@ -18,24 +18,6 @@ public class HomeController : Controller
         return View();
     }
 
-    [Route("home/unauth")]
-    public IActionResult HomeUnAuth()
-    {
-        return View("~/Views/Home/HomeUnAuth.cshtml");
-    }
-
-    [Route("home/auth")]
-    public IActionResult HomeAuth()
-    {
-        return View("~/Views/Home/HomeAuth.cshtml");
-    }
-
-    // [Route("nav")]
-    // public IActionResult Nav()
-    // {
-    //     return View("~/Views/Navbar/NavAuth.cshtml");
-    // }
-
     [Route("aboutus")]
     public IActionResult AboutUs()
     {

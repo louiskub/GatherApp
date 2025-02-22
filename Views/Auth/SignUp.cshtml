@@ -129,5 +129,11 @@
 
 
 <div class="main">
-    <h2><a href="/home/auth">Sign up Here!</a></h2>
+    <h2 class="signup-button"><a href="/">Sign up Here!</a></h2>
 </div>
+<script>
+    signUpButton = document.querySelector('.signup-button');
+    signUpButton.addEventListener('click', () => {
+        localStorage.setItem('authorized', true);
+    });
+</script>
