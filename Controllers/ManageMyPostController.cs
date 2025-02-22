@@ -5,6 +5,7 @@ using GatherApp.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 
 namespace GatherApp.Controllers;
@@ -35,6 +36,9 @@ public class ManageMyPostController : Controller
         if (user == null)
             return NotFound("User not found");
 
+        if (!ModelState.IsValid)
+            return BadRequest("Invalid input");
+
         if (dtopost.ActTypes == null || dtopost.ActTypes.Count == 0)
         {
             return BadRequest("Invalid ActTypes.");
@@ -61,21 +65,6 @@ public class ManageMyPostController : Controller
             dtopost.District = null;
         }
 
-        if (dtopost.AgeLimit)
-        {
-            if (dtopost.MinAge == null || dtopost.MaxAge == null || dtopost.MinAge > dtopost.MaxAge)
-            {
-                return BadRequest("Invalid age range.");
-            }
-
-            if (user.Age < dtopost.MinAge || user.Age > dtopost.MaxAge)
-            {
-                return BadRequest("User does not meet the age requirements.");
-            }
-        }
-
-
-
         var activity = new Activity
         {
             OpenDateTime = dtopost.OpenDateTime,
@@ -96,9 +85,6 @@ public class ManageMyPostController : Controller
             MaxParticipant = dtopost.MaxParticipant,
             CoverPageImg = dtopost.CoverPageImg,
             Activity = activity,
-            AgeLimit = dtopost.AgeLimit ? 1 : 0,
-            MinAge = dtopost.MinAge,
-            MaxAge = dtopost.MaxAge,
             UserId = user.Id,  // ระบุ User ที่โพสต์
             User = user
         };
@@ -347,17 +333,18 @@ public class ManageMyPostController : Controller
     public IActionResult GetFile(int postId, string participantName)
     {
         var ownerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var application = _db.Applications.Include(a => a.Post)
+        var application = _db.Applications.Include(a => a.User)
+                            .Include(a => a.Post)
                             .ThenInclude(p => p.User)
                             .Where(a => a.PostId == postId && a.User.Username == participantName)
                             .FirstOrDefault();
         if (application == null)
             return NotFound("Application not found");
-        // ต้องเป็นเจ้าของโพส
-        if (application.Post.User.Id != ownerId)
+        // ต้องเป็นเจ้าของโพส  หรือ คนส่งไฟล์
+        if (!(application.Post.User.Id == ownerId || application.User.Id == ownerId))
             return Unauthorized("User Unauthorized");
-        if (application.Post.IsAttached == false)
-            return BadRequest("File not attached");
+        // if (application.Post.IsAttached == false)
+        //     return BadRequest("File not attached");
         if (application.FileAttached == null)
             return NotFound("File not found");
         var fileResult = application.GetFile();
