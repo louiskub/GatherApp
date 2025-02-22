@@ -94,5 +94,32 @@
 </script>
 =======
 <div class="main">
-    <h2><a href="/home/auth">Login Here!</a></h2>
+    <h1 class="top">Log In</h1>
+    <div class="page">
+        <div class="containerStyle">
+            <label class="label" for="email">E-mail :</label>
+            <input type="email" id="email" class="inputBox" placeholder="Enter your email" required />
+        </div>
+
+        <div class="containerStyle">
+            <label class="label" for="password">Password :</label>
+            <div class="inputWrapper">
+                <input type="password" id="password" class="inputBox" placeholder="Enter your password" required />
+                <button type="button" id="togglePassword" class="showButton">
+                    <img src="https://cdn-icons-png.flaticon.com/512/6405/6405909.png" alt="Show/Hide" id="icon" />
+                </button>
+            </div>
+        </div>
+
+        <div class="buttonContainer">
+            <div class="containerStyle">
+                <button class="buttonStyle">Log In</button>
+            </div>
+
+            <div class="containerStyle">
+                <p class="textStyle">Not a Member yet?</p>
+                <a href="/signup" class="link">Sign Up</a>
+            </div>
+        </div>
+    </div>
 </div>

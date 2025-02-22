@@ -1,0 +1,310 @@
+[
+    {
+        "id": 26,
+        "eng": "Amnat Charoen"
+    },
+    {
+        "id": 6,
+        "eng": "Ang Thong"
+    },
+    {
+        "id": 1,
+        "eng": "Bangkok"
+    },
+    {
+        "id": 77,
+        "eng": "Buengkan"
+    },
+    {
+        "id": 20,
+        "eng": "Buri Ram"
+    },
+    {
+        "id": 15,
+        "eng": "Chachoengsao"
+    },
+    {
+        "id": 9,
+        "eng": "Chai Nat"
+    },
+    {
+        "id": 25,
+        "eng": "Chaiyaphum"
+    },
+    {
+        "id": 13,
+        "eng": "Chanthaburi"
+    },
+    {
+        "id": 38,
+        "eng": "Chiang Mai"
+    },
+    {
+        "id": 45,
+        "eng": "Chiang Rai"
+    },
+    {
+        "id": 11,
+        "eng": "Chon Buri"
+    },
+    {
+        "id": 69,
+        "eng": "Chumphon"
+    },
+    {
+        "id": 34,
+        "eng": "Kalasin"
+    },
+    {
+        "id": 49,
+        "eng": "Kamphaeng Phet"
+    },
+    {
+        "id": 56,
+        "eng": "Kanchanaburi"
+    },
+    {
+        "id": 28,
+        "eng": "Khon Kaen"
+    },
+    {
+        "id": 64,
+        "eng": "Krabi"
+    },
+    {
+        "id": 40,
+        "eng": "Lampang"
+    },
+    {
+        "id": 39,
+        "eng": "Lamphun"
+    },
+    {
+        "id": 7,
+        "eng": "Loburi"
+    },
+    {
+        "id": 30,
+        "eng": "Loei"
+    },
+    {
+        "id": 46,
+        "eng": "Mae Hong Son"
+    },
+    {
+        "id": 32,
+        "eng": "Maha Sarakham"
+    },
+    {
+        "id": 37,
+        "eng": "Mukdahan"
+    },
+    {
+        "id": 17,
+        "eng": "Nakhon Nayok"
+    },
+    {
+        "id": 58,
+        "eng": "Nakhon Pathom"
+    },
+    {
+        "id": 36,
+        "eng": "Nakhon Phanom"
+    },
+    {
+        "id": 19,
+        "eng": "Nakhon Ratchasima"
+    },
+    {
+        "id": 47,
+        "eng": "Nakhon Sawan"
+    },
+    {
+        "id": 63,
+        "eng": "Nakhon Si Thammarat"
+    },
+    {
+        "id": 43,
+        "eng": "Nan"
+    },
+    {
+        "id": 76,
+        "eng": "Narathiwat"
+    },
+    {
+        "id": 27,
+        "eng": "Nong Bua Lam Phu"
+    },
+    {
+        "id": 31,
+        "eng": "Nong Khai"
+    },
+    {
+        "id": 3,
+        "eng": "Nonthaburi"
+    },
+    {
+        "id": 4,
+        "eng": "Pathum Thani"
+    },
+    {
+        "id": 74,
+        "eng": "Pattani"
+    },
+    {
+        "id": 65,
+        "eng": "Phangnga"
+    },
+    {
+        "id": 73,
+        "eng": "Phatthalung"
+    },
+    {
+        "id": 44,
+        "eng": "Phayao"
+    },
+    {
+        "id": 54,
+        "eng": "Phetchabun"
+    },
+    {
+        "id": 61,
+        "eng": "Phetchaburi"
+    },
+    {
+        "id": 53,
+        "eng": "Phichit"
+    },
+    {
+        "id": 52,
+        "eng": "Phitsanulok"
+    },
+    {
+        "id": 5,
+        "eng": "Phra Nakhon Si Ayutthaya"
+    },
+    {
+        "id": 42,
+        "eng": "Phrae"
+    },
+    {
+        "id": 66,
+        "eng": "Phuket"
+    },
+    {
+        "id": 16,
+        "eng": "Prachin Buri"
+    },
+    {
+        "id": 62,
+        "eng": "Prachuap Khiri Khan"
+    },
+    {
+        "id": 68,
+        "eng": "Ranong"
+    },
+    {
+        "id": 55,
+        "eng": "Ratchaburi"
+    },
+    {
+        "id": 12,
+        "eng": "Rayong"
+    },
+    {
+        "id": 33,
+        "eng": "Roi Et"
+    },
+    {
+        "id": 18,
+        "eng": "Sa Kaeo"
+    },
+    {
+        "id": 35,
+        "eng": "Sakon Nakhon"
+    },
+    {
+        "id": 2,
+        "eng": "Samut Prakan"
+    },
+    {
+        "id": 59,
+        "eng": "Samut Sakhon"
+    },
+    {
+        "id": 60,
+        "eng": "Samut Songkhram"
+    },
+    {
+        "id": 10,
+        "eng": "Saraburi"
+    },
+    {
+        "id": 71,
+        "eng": "Satun"
+    },
+    {
+        "id": 22,
+        "eng": "Si Sa Ket"
+    },
+    {
+        "id": 8,
+        "eng": "Sing Buri"
+    },
+    {
+        "id": 70,
+        "eng": "Songkhla"
+    },
+    {
+        "id": 51,
+        "eng": "Sukhothai"
+    },
+    {
+        "id": 57,
+        "eng": "Suphan Buri"
+    },
+    {
+        "id": 67,
+        "eng": "Surat Thani"
+    },
+    {
+        "id": 21,
+        "eng": "Surin"
+    },
+    {
+        "id": 50,
+        "eng": "Tak"
+    },
+    {
+        "id": 72,
+        "eng": "Trang"
+    },
+    {
+        "id": 14,
+        "eng": "Trat"
+    },
+    {
+        "id": 23,
+        "eng": "Ubon Ratchathani"
+    },
+    {
+        "id": 29,
+        "eng": "Udon Thani"
+    },
+    {
+        "id": 48,
+        "eng": "Uthai Thani"
+    },
+    {
+        "id": 41,
+        "eng": "Uttaradit"
+    },
+    {
+        "id": 75,
+        "eng": "Yala"
+    },
+    {
+        "id": 24,
+        "eng": "Yasothon"
+    }
+]

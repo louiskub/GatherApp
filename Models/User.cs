@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.DataProtection;
 
 
 namespace GatherApp.Models;
@@ -9,6 +10,7 @@ public class User{
     [Key]
     [Required]
     [MaxLength(36)]
+    [JsonIgnore]
     public string Id { get; set; }     // uuid
     
     [Required]
@@ -25,6 +27,7 @@ public class User{
     [Required]
     [StringLength(100, MinimumLength = 8)]
     [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$", ErrorMessage = "Password must have at least one uppercase letter, one lowercase letter, one number, and one special character.")]
+    [JsonIgnore]
     public string Password { get; set; }
 
 
@@ -79,6 +82,37 @@ public class User{
     [JsonIgnore]
     public ICollection<RatingScore> ReceivedRatings { get; set; } = new List<RatingScore>();
 
+    public object ToJson(bool isOwner)
+    {
+        var obj = new Dictionary<string, object>
+        {
+            { "username", Username },
+            { "email", Email },
+            { "sex", Sex },
+            { "profileImg", ProfileImg },
+            { "bio", Bio },
+            { "firstName", FirstName },
+            { "lastName", LastName },
+            { "dateOfBirth", DateOfBirth },
+            { "actTypeProfile", ActTypeProfile.Select(a => a.ActType).ToList() },
+            { "behaviorScores", BehaviorScores.Sum(b => b.Score) },
+            { "receivedRatings", ReceivedRatings }
+        };
+        if (isOwner == true)
+            obj.Add("GivenRatings", GivenRatings);
+        return obj;
+    }
+
+    public void UpdateMyProfile(UpdateProfileRequest user)
+    {
+        if (!string.IsNullOrEmpty(user.Email))  Email = user.Email;
+        if (!string.IsNullOrEmpty(user.Sex))    Sex = user.Sex;
+        if (!string.IsNullOrEmpty(user.ProfileImg)) ProfileImg = user.ProfileImg;
+        if (!string.IsNullOrEmpty(user.Bio))   Bio = user.Bio;
+        if (!string.IsNullOrEmpty(user.FirstName)) FirstName = user.FirstName;
+        if (!string.IsNullOrEmpty(user.LastName))   LastName = user.LastName;
+        if (user.DateOfBirth != null) DateOfBirth = user.DateOfBirth.Value;
+    }
 }
 
 public class ChangePasswordRequest

@@ -35,13 +35,13 @@ public class PostController : Controller
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // เกี่ยวกับการดึงโพส
 
-    [Route("api/actype")]
+    [Route("api/acttype")]
     public async Task<ActionResult> GetAllActTypes()
     {
         var actTypes = await _db.ActivityTypes.ToListAsync();
         if (actTypes == null || actTypes.Count == 0)
             return NotFound("Activity type not found");
-        return Json(actTypes);
+        return Json(actTypes.Select(a => a.ActType));
     }
 
     // ถ้าเป็นเจ้าของ return isOwner = true
@@ -66,18 +66,9 @@ public class PostController : Controller
                                 a.User.Username,
                                 a.User.ProfileImg
                             }).ToList();
-
-        return Json(new {
-            owner = new {
-                post.User.Username,
-                post.User.ProfileImg
-            },
-            post,
-            activity = post.Activity,
-            actTypes = post.Activity.ActTypes.Select(a => a.ActType),
-            participant = applications,
-            isOwner
-        });
+        var result = post.ToJson();
+        result["participants"] = applications;
+        return Json(new{post = result, isOwner});
     }
     
     // ถ้าเป็นเจ้าของ return isOwner = true
@@ -93,6 +84,7 @@ public class PostController : Controller
         bool isOwner = user.Id == reqUserId;
         
         var posts = _db.Posts.Include(p => p.Activity)
+                            .ThenInclude(a => a.ActTypes)
                             .Include(p => p.Applications)
                             .Where(p => p.UserId == user.Id)
                             .OrderByDescending(p => p.CreateAt)
@@ -203,7 +195,10 @@ public class PostController : Controller
     [Route("api/search")]
     public async Task<ActionResult> SearchKeyword(string keyword)
     {   
-        var users = await _db.Users.Where(u => EF.Functions.Like(u.Username, $"{keyword}%")).ToListAsync();
+        var users = await _db.Users.Where(u => EF.Functions.Like(u.Username, $"{keyword}%"))
+                                .OrderByDescending(u => u.Username == keyword)
+                                .ThenBy(u => u.Username)
+                                .ToListAsync();
 
         // รวมข้อมูล User ที่เกี่ยวข้องกับ Post
         var posts = await _db.Posts.Include(p => p.User)
@@ -228,7 +223,82 @@ public class PostController : Controller
                                     date = g.Key,  
                                     posts = g.Select(p => p.ToJson())})
                                 .ToList();
-        return Json(new {posts = groupedPosts, users});
+        var groupedUsers = users.Select(u => new {
+            u.Username,
+            u.ProfileImg
+        }).ToList();
+        return Json(new {posts = groupedPosts, users = groupedUsers});
+    }
+
+    // ค้นหาโพสต์ และผู้ใช้ พร้อมกับ Filter
+    [Route("api/searchAndFilter")]
+    public async Task<ActionResult> SearchAndFilter
+    (string? date, string? category, string? actType, string? province, string? district, string? keyword)
+    {   
+        var users = await _db.Users.Where(u => EF.Functions.Like(u.Username, $"{keyword}%"))
+                                .OrderByDescending(u => u.Username == keyword)
+                                .ThenBy(u => u.Username)
+                                .ToListAsync();
+
+        // รวมข้อมูล User ที่เกี่ยวข้องกับ Post
+
+        var posts = await _db.Posts.Include(p => p.User)
+                            .Include(p => p.Activity)
+                            .ThenInclude(a => a.ActTypes)
+                            .Include(p => p.Applications)
+                            .Where(p => p.IsOpened == true)
+                            .Where(p => p.CurParticipant < p.MaxParticipant)
+                            .Where(p => p.Activity.OpenDateTime < DateTime.Now)
+                            .Where(p => p.Activity.CloseDateTime > DateTime.Now)
+                            .Where(p => EF.Functions.Like(p.PostName, $"%{keyword}%"))
+                            .Where(p => p.Activity.ActDatetime > DateTime.Now)
+                            .OrderByDescending(p => p.Like)
+                            .ThenByDescending(p => p.Applications.Count)
+                            .ToListAsync();   // ดึงข้อมูล post+user
+                            
+        if((posts == null || !posts.Any()) && (users == null || !users.Any()))   
+            return NotFound("User and Post not found");
+
+        if (date == "Today")
+            posts = posts.Where(p => p.Activity.ActDatetime.Date == DateTime.Now.Date).ToList();
+        else if (date == "Tomorrow")
+            posts = posts.Where(p =>  p.Activity.ActDatetime.Date == DateTime.Now.Date.AddDays(1)).ToList();
+        else if (date == "This week")
+            posts = posts.Where(p => p.Activity.ActDatetime.Date <= DateTime.Now.Date.AddDays(7)).ToList();
+        else if (date == "Next week")
+            posts = posts.Where(p =>  DateTime.Now.Date.AddDays(7) <= p.Activity.ActDatetime.Date 
+                            && p.Activity.ActDatetime.Date <= DateTime.Now.Date.AddDays(14)).ToList();
+
+        if (!string.IsNullOrEmpty(category))
+            posts = posts.Where(p => p.Activity.ActTypes.Any(a => a.ActType == category)).ToList();
+
+        bool? actTypeFilter = null;
+        if (actType == "Online") 
+            actTypeFilter = true;
+        else if (actType == "In Person") 
+            actTypeFilter = false;
+        
+        if (actTypeFilter.HasValue)
+            posts = posts.Where(p => p.Activity.Online == actTypeFilter).ToList();
+        if (actTypeFilter == false)
+        {
+            if (!string.IsNullOrEmpty(province))
+                posts = posts.Where(p => p.Activity.Province == province).ToList();
+            if (!string.IsNullOrEmpty(district))
+                posts = posts.Where(p => p.Activity.District == district).ToList();
+        }
+
+        var groupedPosts = posts.GroupBy(p => p.Activity.ActDatetime.Date)
+                                .Select(g => new {
+                                    date = g.Key,  
+                                    posts = g.Select(p => p.ToJson())})
+                                .ToList();
+
+        var groupedUsers = users.Select(u => new {
+            u.Username,
+            u.ProfileImg
+        }).ToList();
+        return Json(new {posts = groupedPosts, users = groupedUsers});
     }
 
 

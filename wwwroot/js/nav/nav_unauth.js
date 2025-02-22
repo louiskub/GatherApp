@@ -1,49 +1,29 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // 📌 Menu Toggle สำหรับมือถือ
     const menuToggle = document.querySelector(".menu-toggle");
     const menu = document.querySelector(".menu");
     const openIcon = document.querySelector(".open-icon");
     const closeIcon = document.querySelector(".close-icon");
 
-    menuToggle.addEventListener("click", function () {
-        menu.classList.toggle("active");
-        
-        if (menu.classList.contains("active")) {
-            openIcon.style.display = "none";
-            closeIcon.style.display = "inline";
-        } else {
-            openIcon.style.display = "inline";
-            closeIcon.style.display = "none";
+
+    menuToggle.addEventListener("click", function (event) {
+        event.stopPropagation();
+        const isActive = menu.classList.toggle("active");
+        if (isActive) {
+            document.body.style.overflow = "hidden";
         }
+        else {
+            document.body.style.overflow = "";
+        }
+
+        // แสดง/ซ่อนไอคอน
+        openIcon.style.display = isActive ? "none" : "inline";
+        closeIcon.style.display = isActive ? "inline" : "none";
     });
 
-    // ตรวจสอบให้แน่ใจว่าไอคอนเปิดปิดถูกต้องเมื่อโหลดหน้าเว็บ
-    if (menu.classList.contains("active")) {
-        openIcon.style.display = "none";
-        closeIcon.style.display = "inline";
-    } else {
-        openIcon.style.display = "inline";
-        closeIcon.style.display = "none";
-    }
-
-    
-    // Function to toggle between Dark and Light Mode
-    const themeToggle = document.getElementById('theme-toggle');
-    const body = document.body;
-    const storedTheme = localStorage.getItem('theme');
-    if (storedTheme) {
-        body.classList.add(storedTheme); // Apply the saved theme
-    }
-
-    // Toggle theme when the icon is clicked
-    themeToggle.addEventListener('click', function () {
-        if (body.classList.contains('dark-mode')) {
-            body.classList.remove('dark-mode');
-            body.classList.add('light-mode');
-            localStorage.setItem('theme', 'light-mode'); // Save light mode preference
-        } else {
-            body.classList.remove('light-mode');
-            body.classList.add('dark-mode');
-            localStorage.setItem('theme', 'dark-mode'); // Save dark mode preference
-        }
-    });
+    // ตั้งค่าไอคอนให้ถูกต้องเมื่อโหลดหน้าเว็บ
+    const isMenuActive = menu.classList.contains("active");
+    document.body.classList.toggle("no-scroll", isMenuActive);
+    openIcon.style.display = isMenuActive ? "none" : "inline";
+    closeIcon.style.display = isMenuActive ? "inline" : "none";
 });

@@ -39,7 +39,7 @@ public class AuthController : Controller
     [Route("api/auth/login")]
     public async Task<IActionResult> Login([FromBody] UserDTO obj)
     {
-        if (!ModelState.IsValid)
+        if (obj.Password == null || obj.Username == null)
         {   
             Console.WriteLine("Invalid request body");
             return BadRequest("Invalid request body");

@@ -1,7 +1,24 @@
 ﻿@{
     ViewData["Title"] = "Gather-Home";
 }
+    <link rel="stylesheet" href="~/css/components/dropdown.css">
+    <link rel="stylesheet" href="~/css/components/post.css">
+    <link rel="stylesheet" href="~/css/components/post_in_date.css">
 
-<div class="main">
-    <h1> Go to path /home/unauth</h1>
-</div>
+    @* @await Html.PartialAsync("_NavUnAuth") *@
+    <link rel="stylesheet" href="~/css/home/home.css">
+
+    <div class="main">
+        <button class="dropdown-toggle" href="#">
+            <i class="fas fa-sliders dropdown-icon"></i> Filter
+        </button>
+
+        <div class="sidenav"></div>
+        <div class="home-content">
+            <div class="write-button">
+                <img src="https://cdn-icons-png.flaticon.com/512/84/84380.png" alt="Write">
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="~/js/home/home.js"></script>

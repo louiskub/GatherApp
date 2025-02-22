@@ -1,0 +1,189 @@
+@import url('/css/src.css');
+/* @import url('/wwwroot/css/src.css'); */
+
+/* Sidebar (Sidenav) */
+:root {
+    --sidebar-width: 17.5rem;
+
+    --sidenav-bg: var(--pink);
+    --sidenav-text: var(--chocolate-cosmos);
+    --sidenav-hover-bg: var(--bright-pink-crayola);
+    --sidenav-hover-text: var(--seasalt);
+    --sidenav-border: var(--rose-red);
+
+    /* 🎨 Light Mode */
+    --dropdown-btn-bg: var(--bright-pink-crayola-2);
+    --dropdown-btn-text: var(--eerie-black);
+    --dropdown-btn-border: var(--rose-red);
+    --dropdown-btn-hover-bg: var(--bright-pink-crayola);
+    --dropdown-btn-hover-text: var(--seasalt);
+    --dropdown-btn-shadow: var(--french-gray);
+
+    --write-button-bg: var(--rose-red);
+    --write-button-text: var(--seasalt);
+    --write-button-hover-bg: var(--bright-pink-crayola);
+    --write-button-hover-text: var(--seasalt);
+    --write-button-shadow: var(--chocolate-cosmos);
+
+}
+/* Dark Mode */
+[data-theme="dark"] {
+    --sidenav-bg: var(--eerie-black);
+    --sidenav-text: var(--seasalt);
+    --sidenav-hover-bg: var(--rose-red);
+    --sidenav-hover-text: var(--seasalt);
+    --sidenav-border: var(--outer-space);
+
+    --dropdown-btn-bg: var(--eerie-black);
+    --dropdown-btn-text: var(--seasalt);
+    --dropdown-btn-border: var(--amaranth-purple);
+    --dropdown-btn-hover-bg: var(--rose-red);
+    --dropdown-btn-hover-text: var(--antiflash-white);
+    --dropdown-btn-shadow: var(--outer-space);
+
+    --write-button-bg: var(--claret);
+    --write-button-text: var(--seasalt);
+    --write-button-hover-bg: var(--amaranth-purple);
+    --write-button-hover-text: var(--seasalt);
+    --write-button-shadow: var(--outer-space);
+}
+
+/* body.menu-open {
+    overflow: hidden;
+} */
+
+/* Main Content */
+.main {
+    width: 100%;
+    padding-top: 60px;
+    transition: all 0.3s ease;
+}
+.main.shifted {
+    padding-left: var(--sidebar-width);
+}
+
+.sidenav {
+    display: none;
+    height: 100%;
+    position: fixed;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    width: var(--sidebar-width);
+    top: 60px;
+    left: 0;
+    background-color: var(--sidenav-bg);
+    border-right: 2px solid var(--sidenav-border);
+    padding: 1rem 1rem 7rem;
+}
+.sidenav.active {
+    display: flex;
+}
+.sidenav a {
+    color: var(--sidenav-text);
+    /* padding: 10px 15px; */
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+}
+.sidenav a:hover {
+    background-color: var(--sidenav-hover-bg);
+    color: var(--sidenav-hover-text);
+    border-radius: 8px;
+    padding-left: 20px;
+}
+
+
+
+/* 5. Dropdown Icon */
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+    margin: 1.5rem 2rem 0rem;
+    font-size: 1.2rem;
+    color: var(--dropdown-btn-text);
+    background: var(--dropdown-btn-bg);
+    border: 2px solid var(--dropdown-btn-border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s, border-color 0.3s ease;
+    box-shadow: 2px 2px 10px var(--dropdown-btn-shadow);
+}
+
+.dropdown-toggle:hover {
+    background: var(--dropdown-btn-hover-bg);
+    color: var(--dropdown-btn-hover-text);
+    transform: scale(1.05);
+    border-color: var(--dropdown-btn-hover-bg);
+}
+
+.dropdown-icon {
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.dropdown-toggle.active,
+.dropdown-icon:hover {
+    transform: rotate(180deg);
+}
+
+
+/* 6. Write Button */
+
+.write-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: var(--write-button-bg);
+    color: var(--write-button-text);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    box-shadow: 2px 2px 10px var(--write-button-shadow);
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
+}
+
+.write-button img {
+    width: 30px;
+    height: 30px;
+    filter: brightness(0) invert(1);
+}
+
+.write-button:hover {
+    background: var(--write-button-hover-bg);
+    color: var(--write-button-hover-text);
+    transform: scale(1.1);
+}
+
+/* .close-filter-icon {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+} */
+
+/* Responsive */
+@media (max-width: 768px) {
+
+    .sidenav {
+        width: 85%;
+        /* flex-direction: row; */
+        z-index: 30;
+        transition: left 0.3s ease-in-out;
+    }
+
+    .sidenav a {
+        padding: 0.5rem 1rem;
+    }
+
+    .main.shifted {
+        padding-left: 0;
+    }
+}
