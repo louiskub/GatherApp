@@ -123,38 +123,33 @@ public class AuthController : Controller
                     Id = Guid.NewGuid().ToString(),
                     Username = obj.Username,
                     Email = obj.Email,
-                    Password = BCrypt.Net.BCrypt.HashPassword(obj.Password), 
+                    Password = BCrypt.Net.BCrypt.HashPassword(obj.Password),
+                    FirstName = obj.FirstName  ?? "Unknown",
+                    LastName = obj.LastName ?? "Unknown",
+                    DateOfBirth = (DateTime)obj.DateOfBirth
                 };
 
                 _db.Users.Add(user);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
+
+
+                if (string.IsNullOrEmpty(user.Id))
+                {
+                    return BadRequest("User ID is null or empty.");
+                }
+
 
                 var behaviorScore = new BehaviorScore
                 {
                     UserId = user.Id,  
                     Score = 100,     
-                    IsBanned = false   
+                    IsBanned = false,
+                    BannedUntil = null
                 };
 
 
-            _db.BehaviorScores.Add(behaviorScore);
-            _db.SaveChanges();
-
-            var existingRating = await _db.RatingScores.FirstOrDefaultAsync(r => r.RaterId == user.Id && r.RatedUserId == user.Id);
-            if (existingRating == null)
-            {
-                var ratingscore = new RatingScore
-                {
-                    RaterId = user.Id,
-                    RatedUserId = user.Id,
-                    Score = 0,
-                    Comment = "Welcome to GatherApp"
-                };
-            
-            
-                _db.RatingScores.Add(ratingscore);
-                _db.SaveChanges();
-            }
+                _db.BehaviorScores.Add(behaviorScore);
+                await _db.SaveChangesAsync();
 
                 string stId = user.Id.ToString();
                 var token = _jwtService.GenerateToken(stId, user.Username); 

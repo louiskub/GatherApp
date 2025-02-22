@@ -76,6 +76,7 @@ public class User{
 
     public ICollection<RatingScore> GivenRatings { get; set; } = new List<RatingScore>();
 
+    [JsonIgnore]
     public ICollection<RatingScore> ReceivedRatings { get; set; } = new List<RatingScore>();
 
 }

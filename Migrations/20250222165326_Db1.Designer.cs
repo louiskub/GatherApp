@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GatherApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250219122448_TestDb16")]
-    partial class TestDb16
+    [Migration("20250222165326_Db1")]
+    partial class Db1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -183,6 +183,9 @@ namespace GatherApp.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("AgeLimit")
+                        .HasColumnType("int");
+
                     b.Property<string>("CoverPageImg")
                         .HasMaxLength(4000000)
                         .HasColumnType("longtext");
@@ -207,7 +210,15 @@ namespace GatherApp.Migrations
                     b.Property<int>("Like")
                         .HasColumnType("int");
 
+                    b.Property<int?>("MaxAge")
+                        .IsRequired()
+                        .HasColumnType("int");
+
                     b.Property<int>("MaxParticipant")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MinAge")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("PostName")
@@ -266,6 +277,9 @@ namespace GatherApp.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
                     b.Property<string>("RatedUserId")
                         .IsRequired()
                         .HasColumnType("varchar(36)");
@@ -282,6 +296,8 @@ namespace GatherApp.Migrations
                         .HasColumnType("varchar(36)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PostId");
 
                     b.HasIndex("RatedUserId");
 
@@ -516,6 +532,12 @@ namespace GatherApp.Migrations
 
             modelBuilder.Entity("GatherApp.Models.RatingScore", b =>
                 {
+                    b.HasOne("GatherApp.Models.Post", "Post")
+                        .WithMany("RatingScores")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("GatherApp.Models.User", "RatedUser")
                         .WithMany("ReceivedRatings")
                         .HasForeignKey("RatedUserId")
@@ -533,6 +555,8 @@ namespace GatherApp.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Post");
 
                     b.Navigation("RatedUser");
 
@@ -589,6 +613,8 @@ namespace GatherApp.Migrations
                     b.Navigation("Applications");
 
                     b.Navigation("PostLikes");
+
+                    b.Navigation("RatingScores");
                 });
 
             modelBuilder.Entity("GatherApp.Models.User", b =>

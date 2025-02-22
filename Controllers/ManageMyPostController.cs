@@ -257,21 +257,38 @@ public class ManageMyPostController : Controller
     public IActionResult AcceptParticipant(int postId, string username)
     {
         var postOwnerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (postOwnerId == null)
+        {
+            return Unauthorized("Invalid token. User ID not found.");
+        }
+
         var application = _db.Applications.Include(a => a.User)
                             .Include(a => a.Post)
                             .ThenInclude(p => p.User)
+                            .Include(a => a.Post)
+                            .ThenInclude(p => p.Activity)
                             .Include(a => a.Post.Applications)
                             .Where(a => a.PostId == postId && a.User.Username == username)
                             .FirstOrDefault();
         if (application == null)
             return NotFound("Application not found");
         // check if the user is the owner of the post
+
+
+        if (application.Post.User == null)
+        {
+            return NotFound("Post owner not found.");
+        }
         if (application.Post.User.Id != postOwnerId)
             return Unauthorized("User Unauthorized");
         
         var post = application.Post;
         application.AppliedStatus = true;
 
+        if (post.Activity == null)
+        {
+            return NotFound("Activity data is missing for this post.");
+        }
 
         _db.Notifications.Add(new Notification
         {
