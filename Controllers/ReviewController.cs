@@ -122,23 +122,6 @@ namespace GatherApp.Controllers
             }
         }
 
-        
-        [HttpGet]
-        [Route("api/user/viewrate")]
-        public async Task<IActionResult> GetRatingsForUser(string userId)
-        {
-            var ratings = await _db.RatingScores
-                .Where(r => r.RatedUserId == userId)
-                .Include(r => r.Rater)
-                .ToListAsync();
-
-            if (ratings == null || ratings.Count == 0)
-            {
-                return NotFound("No ratings found for this user.");
-            }
-
-            return Ok(ratings);
-        }
 
         [HttpPut]
         [Route("api/reviews/update/{id}")]
