@@ -1,45 +1,23 @@
 class Post {
-    constructor(date, title, location, accepted, registered, categories, imageUrl, like=0) {
-        this.date = date;
-        this.title = title;
-        this.location = location;
-        this.accepted = accepted;
-        this.registered = registered;
-        this.categories = categories;
-        this.imageUrl = imageUrl;
+    constructor(date, title, location, accepted, registered, categories = [], imageUrl, like = 0) {
+        this.date = date ?? "Unknown Date";
+        this.title = title ?? "Untitled";
+        this.location = location ?? "Unknown Location";
+        this.accepted = accepted ?? 0;
+        this.registered = registered ?? 0;
+        this.categories = Array.isArray(categories) ? categories : [];
+        this.imageUrl = imageUrl ?? "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg";
         this.like = like;
-
-        // โหลด CSS
-        // this.loadCSS("/wwwroot/css/components/post.css");
     }
 
-    loadCSS(url) {
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = url;
-        link.type = "text/css";
-        document.head.appendChild(link);
-    }
-
-    render() {
-        // Create main post container
-        const postContainer = document.createElement("div");
-        postContainer.classList.add("post-container");
-        const postContent = document.createElement("div");
-        // postContent.href = "/home/auth";
-        postContent.classList.add("post");
-
-        // Create post image
+    createPostImage() {
         const postImage = document.createElement("img");
         postImage.src = this.imageUrl;
         postImage.alt = this.title;
-        postContent.appendChild(postImage);
+        return postImage;
+    }
 
-        // Create post info container
-        const postInfo = document.createElement("div");
-        postInfo.classList.add("post-info");
-
-        // Create post header
+    createPostHeader() {
         const postHeader = document.createElement("div");
         postHeader.classList.add("post-header");
 
@@ -50,6 +28,7 @@ class Post {
         const postTitle = document.createElement("h3");
         postTitle.classList.add("post-title");
         postTitle.textContent = this.title;
+
         const postTitleLink = document.createElement("a");
         postTitleLink.href = "#";
         postTitleLink.appendChild(postTitle);
@@ -57,43 +36,33 @@ class Post {
         postHeader.appendChild(postDate);
         postHeader.appendChild(postTitleLink);
 
-        // Create post details
+        return postHeader;
+    }
+
+    createPostDetails() {
         const postDetail = document.createElement("div");
         postDetail.classList.add("post-detail");
 
-        const postLocation = document.createElement("div");
-        postLocation.classList.add("post-location");
-        postLocation.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${this.location}`;
+        postDetail.innerHTML = `
+            <div class="post-location"><i class="fa-solid fa-location-dot"></i> ${this.location}</div>
+            <p class="post-accepted">Accepted: ${this.accepted}/10</p>
+            <p class="post-registered">Registered: ${this.registered}</p>
+        `;
 
-        const postAccepted = document.createElement("p");
-        postAccepted.classList.add("post-accepted");
-        postAccepted.textContent = `Accepted: ${this.accepted}/10`;
-
-        const postRegistered = document.createElement("p");
-        postRegistered.classList.add("post-registered");
-        postRegistered.textContent = `Registered: ${this.registered}`;
-
-        // Create post category links
         const postCategory = document.createElement("div");
         postCategory.classList.add("post-category");
-
         this.categories.forEach(category => {
             const categoryLink = document.createElement("a");
             categoryLink.href = "#";
             categoryLink.textContent = `#${category}`;
             postCategory.appendChild(categoryLink);
         });
-
-        postDetail.appendChild(postLocation);
-        postDetail.appendChild(postAccepted);
-        postDetail.appendChild(postRegistered);
         postDetail.appendChild(postCategory);
+        
+        return postDetail;
+    }
 
-        // Append header and details to post info
-        postInfo.appendChild(postHeader);
-        postInfo.appendChild(postDetail);
-
-        // Create like button section
+    createLikeButton() {
         const postLike = document.createElement("div");
         postLike.classList.add("post-like");
 
@@ -102,34 +71,62 @@ class Post {
 
         const likeButton = document.createElement("button");
         likeButton.classList.add("like-btn");
+        
         const likeIcon = document.createElement("i");
         likeIcon.classList.add("fa-regular", "fa-heart");
         likeButton.appendChild(likeIcon);
-        likeButton.addEventListener("click", function (event) {
+
+        likeButton.addEventListener("click", (event) => {
             event.stopPropagation();
-            const icon = this.querySelector("i");
-            if (icon.classList.contains("fa-regular")) {
-                icon.classList.remove("fa-regular");
-                icon.classList.add("fa-solid"); // เปลี่ยนเป็นไอคอนหัวใจเต็ม ❤️
-                this.previousElementSibling.textContent++; // เพิ่มจำนวนไลค์
+            event.preventDefault();
+
+            if (likeIcon.classList.contains("fa-regular")) {
+                likeIcon.classList.replace("fa-regular", "fa-solid");
+                this.like++;
             } else {
-                icon.classList.remove("fa-solid");
-                icon.classList.add("fa-regular"); // เปลี่ยนกลับเป็นหัวใจเปล่า 🤍
-                this.previousElementSibling.textContent--; // ลดจำนวนไลค์
+                likeIcon.classList.replace("fa-solid", "fa-regular");
+                this.like--;
             }
+            likeCount.textContent = this.like;
         });
+
         postLike.appendChild(likeCount);
         postLike.appendChild(likeButton);
+        return postLike;
+    }
 
-        // Append everything to post container
+    render() {
+        const postContainer = document.createElement("a");
+        postContainer.href = "/post";
+        postContainer.classList.add("post-container");
+    
+        const postContent = document.createElement("div");
+        postContent.classList.add("post");
+    
+        postContent.appendChild(this.createPostImage());
+    
+        const postInfo = document.createElement("div");
+        postInfo.classList.add("post-info");
+        postInfo.appendChild(this.createPostHeader());
+        postInfo.appendChild(this.createPostDetails());
+    
         postContent.appendChild(postInfo);
-        postContent.appendChild(postLike);
-
+        const likeButtonSection = this.createLikeButton();
+        postContent.appendChild(likeButtonSection);
+    
         postContainer.appendChild(postContent);
-
+    
+        // ให้แน่ใจว่าเมื่อคลิกที่ postContainer จะนำทางไปยังลิงก์ที่กำหนด
+        postContainer.addEventListener("click", (event) => {
+            // ตรวจสอบว่าไม่ได้คลิกที่ปุ่มไลค์
+            if (!event.target.closest(".like-btn")) {
+                window.location.href = postContainer.href;
+            }
+        });
+    
         return postContainer;
     }
+    
 }
 
-// Making Post class global
 export default Post;
