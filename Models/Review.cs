@@ -31,7 +31,7 @@ public class RatingScore
     public string RaterId { get; set; }
 
     [Required]
-    [Range(0, 5, ErrorMessage = "คะแนนต้องอยู่ระหว่าง 0 ถึง 5")]
+    [Range(0, 5, ErrorMessage = "Score should be 0 to 5")]
     public int Score { get; set; }
 
     [MaxLength(300)]
