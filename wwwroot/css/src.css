@@ -1,6 +1,6 @@
 /* CSS HEX */
 :root {
-    /* --rose-pompadour: #e27396ff;
+  /* --rose-pompadour: #e27396ff;
     --amaranth-pink: #ea9ab2ff;
     --mimi-pink: #efcfe3ff;
     --beige: #eaf2d7ff;
@@ -11,6 +11,17 @@
     --carnation-pink: #ffafccff;
     --uranian-blue: #bde0feff;
     --light-sky-blue: #a2d2ffff; 
+
+    --chocolate-cosmos: #590d22ff;
+    --claret: #800f2fff;
+    --amaranth-purple: #a4133cff;
+    --rose-red: #c9184aff;
+    --bright-pink-crayola: #ff4d6dff;
+    --bright-pink-crayola-2: #ff758fff;
+    --salmon-pink: #ff8fa3ff;
+    --cherry-blossom-pink: #ffb3c1ff;
+    --pink: #ffccd5ff;
+    --lavender-blush: #fff0f3ff;
 
     --chocolate-cosmos: #590d22ff;
     --claret: #800f2fff;
@@ -106,10 +117,21 @@
     --post-category-text: white;
     --post-like-btn: white;
     --scroll-bar-bg: var(--slate-gray);
+
+    --thistle: #cdb4dbff;
+    --fairy-tale: #ffc8ddff;
+    --carnation-pink: #ffafccff;
+    --uranian-blue: #bde0feff;
+    --light-sky-blue: #a2d2ffff;
+
+    --sky-blue: #8ac3f8;
+    --mint-green: #65c09d;
+    --deep-fern-green: #3f6b50;
+    --sea-pink: #d17a74;
 }
 
 @font-face {
-    font-family: 'Genty';
-    /* src: url('/wwwroot/fonts/GentyDemo-Regular.ttf') format('truetype'); */
-    src: url('../fonts/GentyDemo-Regular.ttf') format('truetype');
+  font-family: "Genty";
+  /* src: url('/wwwroot/fonts/GentyDemo-Regular.ttf') format('truetype'); */
+  src: url("../fonts/GentyDemo-Regular.ttf") format("truetype");
 }

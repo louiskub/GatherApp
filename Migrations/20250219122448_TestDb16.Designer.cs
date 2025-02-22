@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GatherApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250212085246_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250219122448_TestDb16")]
+    partial class TestDb16
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,6 +40,21 @@ namespace GatherApp.Migrations
                     b.ToTable("ActivityActivityType");
                 });
 
+            modelBuilder.Entity("ActivityTypeUser", b =>
+                {
+                    b.Property<int>("ActTypeProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(36)");
+
+                    b.HasKey("ActTypeProfileId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ActivityTypeUser");
+                });
+
             modelBuilder.Entity("GatherApp.Models.Activity", b =>
                 {
                     b.Property<int?>("PostId")
@@ -51,14 +66,21 @@ namespace GatherApp.Migrations
                     b.Property<DateTime>("CloseDateTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Latitude")
+                    b.Property<string>("District")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Longitude")
+                    b.Property<string>("GoogleMapLink")
                         .HasColumnType("longtext");
+
+                    b.Property<bool?>("Online")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime>("OpenDateTime")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Province")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.HasKey("PostId");
 
@@ -93,7 +115,7 @@ namespace GatherApp.Migrations
                     b.Property<DateTime>("AppliedDateTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<bool>("AppliedStatus")
+                    b.Property<bool?>("AppliedStatus")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("FileAttached")
@@ -105,6 +127,34 @@ namespace GatherApp.Migrations
                     b.HasIndex("PostId");
 
                     b.ToTable("Applications");
+                });
+
+            modelBuilder.Entity("GatherApp.Models.BehaviorScore", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("BannedUntil")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsBanned")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BehaviorScores");
                 });
 
             modelBuilder.Entity("GatherApp.Models.Notification", b =>
@@ -151,6 +201,9 @@ namespace GatherApp.Migrations
                     b.Property<bool>("IsAttached")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("IsOpened")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<int>("Like")
                         .HasColumnType("int");
 
@@ -161,11 +214,6 @@ namespace GatherApp.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("varchar(10)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -178,6 +226,116 @@ namespace GatherApp.Migrations
                     b.ToTable("Posts");
                 });
 
+            modelBuilder.Entity("GatherApp.Models.PostLike", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PostLikes");
+                });
+
+            modelBuilder.Entity("GatherApp.Models.RatingScore", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("RatedUserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(36)");
+
+                    b.Property<string>("RaterId")
+                        .IsRequired()
+                        .HasColumnType("varchar(36)");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RatedUserId");
+
+                    b.HasIndex("RaterId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RatingScores");
+                });
+
+            modelBuilder.Entity("GatherApp.Models.Report", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("BehaviorScoreId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<int>("ReportType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReportedUserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(36)");
+
+                    b.Property<string>("ReporterId")
+                        .IsRequired()
+                        .HasColumnType("varchar(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BehaviorScoreId");
+
+                    b.HasIndex("ReportedUserId");
+
+                    b.HasIndex("ReporterId");
+
+                    b.ToTable("Reports");
+                });
+
             modelBuilder.Entity("GatherApp.Models.User", b =>
                 {
                     b.Property<string>("Id")
@@ -188,10 +346,21 @@ namespace GatherApp.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
 
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -199,7 +368,9 @@ namespace GatherApp.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("ProfileImg")
-                        .HasMaxLength(4000000)
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Sex")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Username")
@@ -248,6 +419,21 @@ namespace GatherApp.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ActivityTypeUser", b =>
+                {
+                    b.HasOne("GatherApp.Models.ActivityType", null)
+                        .WithMany()
+                        .HasForeignKey("ActTypeProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GatherApp.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("GatherApp.Models.Activity", b =>
                 {
                     b.HasOne("GatherApp.Models.Post", "Post")
@@ -278,6 +464,17 @@ namespace GatherApp.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("GatherApp.Models.BehaviorScore", b =>
+                {
+                    b.HasOne("GatherApp.Models.User", "User")
+                        .WithMany("BehaviorScores")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("GatherApp.Models.Notification", b =>
                 {
                     b.HasOne("GatherApp.Models.User", null)
@@ -296,6 +493,77 @@ namespace GatherApp.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("GatherApp.Models.PostLike", b =>
+                {
+                    b.HasOne("GatherApp.Models.Post", "Post")
+                        .WithMany("PostLikes")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GatherApp.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("GatherApp.Models.RatingScore", b =>
+                {
+                    b.HasOne("GatherApp.Models.User", "RatedUser")
+                        .WithMany("ReceivedRatings")
+                        .HasForeignKey("RatedUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("GatherApp.Models.User", "Rater")
+                        .WithMany("GivenRatings")
+                        .HasForeignKey("RaterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("GatherApp.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RatedUser");
+
+                    b.Navigation("Rater");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("GatherApp.Models.Report", b =>
+                {
+                    b.HasOne("GatherApp.Models.BehaviorScore", "BehaviorScore")
+                        .WithMany()
+                        .HasForeignKey("BehaviorScoreId");
+
+                    b.HasOne("GatherApp.Models.User", "ReportedUser")
+                        .WithMany()
+                        .HasForeignKey("ReportedUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GatherApp.Models.User", "Reporter")
+                        .WithMany()
+                        .HasForeignKey("ReporterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BehaviorScore");
+
+                    b.Navigation("ReportedUser");
+
+                    b.Navigation("Reporter");
                 });
 
             modelBuilder.Entity("PostUser", b =>
@@ -319,15 +587,23 @@ namespace GatherApp.Migrations
                         .IsRequired();
 
                     b.Navigation("Applications");
+
+                    b.Navigation("PostLikes");
                 });
 
             modelBuilder.Entity("GatherApp.Models.User", b =>
                 {
                     b.Navigation("ApplyHistories");
 
+                    b.Navigation("BehaviorScores");
+
                     b.Navigation("CreatedPosts");
 
+                    b.Navigation("GivenRatings");
+
                     b.Navigation("Notifications");
+
+                    b.Navigation("ReceivedRatings");
                 });
 #pragma warning restore 612, 618
         }

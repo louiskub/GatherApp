@@ -10,7 +10,6 @@ public class JwtService
 {
     private readonly string _secretKey;
     private readonly int _tokenExpiryTime = 60*24; //Minutes
-
     public JwtService()
     {
         _secretKey = "bee3d44a29a875c6352443f6a53db29d";

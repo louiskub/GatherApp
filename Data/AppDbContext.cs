@@ -14,6 +14,14 @@ public class AppDbContext : DbContext
     public DbSet<Activity> Activities { get; set; }
     public DbSet<ActivityType> ActivityTypes { get; set; }
 
+    public DbSet<PostLike> PostLikes { get; set; }
+
+    public DbSet<BehaviorScore> BehaviorScores { get; set; }
+
+    public DbSet<Report> Reports { get; set; }
+
+    public DbSet<RatingScore> RatingScores { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder options) 
     {
         options.UseMySql(
@@ -57,8 +65,26 @@ public class AppDbContext : DbContext
             // Many to Many
             entity.HasMany(e => e.LikedPosts)
                 .WithMany();
+
+            modelBuilder.Entity<PostLike>()
+            .HasKey(pl => pl.Id);
         });
 
+
+         modelBuilder.Entity<RatingScore>()
+            .HasOne(rs => rs.Rater) 
+            .WithMany(u => u.GivenRatings) 
+            .HasForeignKey(rs => rs.RaterId) 
+
+            .OnDelete(DeleteBehavior.Restrict);  
+
+
+        modelBuilder.Entity<RatingScore>()
+            .HasOne(rs => rs.RatedUser) 
+            .WithMany(u => u.ReceivedRatings)  
+            .HasForeignKey(rs => rs.RatedUserId)  
+
+            .OnDelete(DeleteBehavior.Restrict);  
 
         modelBuilder.Entity<Post>(entity =>
         {
@@ -78,6 +104,13 @@ public class AppDbContext : DbContext
                 .HasForeignKey(e => e.PostId);
         });
 
+
+         modelBuilder.Entity<User>(entity =>
+        {
+            // Many to Many
+            entity.HasMany(e => e.ActTypeProfile)
+                .WithMany();
+        });
 
         modelBuilder.Entity<Activity>(entity =>
         {
