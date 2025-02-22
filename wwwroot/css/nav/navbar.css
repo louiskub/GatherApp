@@ -62,7 +62,7 @@ body.no-scroll {
 .left-navbar .logo:hover,
 .theme-switch:hover {
     transform: scale(1.1);
-    color: var(--hover-bg-2);
+    color: var(--hover-bg-1);
     transition: 0.3s ease transform, 0.3s ease color;
 }
 
@@ -153,7 +153,7 @@ input:checked + .switch .dark-text {
     color: var(--bg-text);
 }
 .search-icon:hover {
-    color: var(--hover-bg-2);
+    color: var(--hover-bg-1);
     transform: scale(1.1);
 }
 .search-container {

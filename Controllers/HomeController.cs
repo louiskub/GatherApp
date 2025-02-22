@@ -18,6 +18,12 @@ public class HomeController : Controller
         return View();
     }
 
+    [Route("search")]
+    public IActionResult Search()
+    {
+        return View("~/Views/Home/Search.cshtml");
+    }
+
     [Route("aboutus")]
     public IActionResult AboutUs()
     {
