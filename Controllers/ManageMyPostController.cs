@@ -247,6 +247,7 @@ public class ManageMyPostController : Controller
                             .Include(a => a.Post)
                             .ThenInclude(p => p.User)
                             .Include(a => a.Post.Applications)
+                            .Include(a => a.Post.Activity)
                             .Where(a => a.PostId == postId && a.User.Username == username)
                             .FirstOrDefault();
         if (application == null)
