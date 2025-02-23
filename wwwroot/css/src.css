@@ -32,10 +32,91 @@
     --carnation-pink: #ffafccff;
     --uranian-blue: #bde0feff;
     --light-sky-blue: #a2d2ffff;
+
+    --sky-blue: #8ac3f8;
+    --mint-green: #65c09d;
+    --deep-fern-green: #3f6b50;
+    --sea-pink: #d17a74;
+
+    /* 🎨 Light Mode */
+
+    /* Navbar */
+    --bg-color: white;
+    --text-color: var(--eerie-black);
+    --bg-image: '/img/web_bg.png';
+
+    --hover-bg-1: var(--bright-pink-crayola);
+    --hover-bg-2: var(--bright-pink-crayola-2);
+    --hover-text: white;
+
+    --navbar-bg: var(--salmon-pink);
+    --navbar-text: var(--chocolate-cosmos);
+
+    --menu-bg: var(--cherry-blossom-pink);
+    --menu-text: var(--chocolate-cosmos);
+
+    --search-bg: white;
+    --search-border: var(--chocolate-cosmos);
+    --search-text: var(--eerie-black);
+
+    --btn-color: var(--chocolate-cosmos);
+    --active-btn-text: white;
+    --active-btn-bg: var(--chocolate-cosmos);
+
+    /* Post */
+    --post-border: 1px solid var(--pink);
+    --post-bg: var(--lavender-blush);
+    --post-hover-bg: var(--seasalt);
+    --post-title-hover: var(--amaranth-purple);
+    --post-location-text: var(--rose-red);
+    --post-category-bg: var(--cherry-blossom-pink);
+    --post-category-text: var(--amaranth-purple);
+    --post-like-btn: var(--rose-red);
+    --scroll-bar-bg: var(--pink);
+    --border-bottom-color: var(--pink);
+}
+
+/* 🌓 2. Dark Mode Variables */
+[data-theme="dark"] {
+
+    /* Navbar */
+    --bg-color: var(--eerie-black);
+    --text-color: white;
+    --bg-image: '/img/web_bg_dark.png';
+
+    --hover-bg-1: var(--bright-pink-crayola);
+    --hover-bg-2: var(--bright-pink-crayola-2);
+    --hover-text: white;
+
+    --navbar-bg: var(--chocolate-cosmos);
+    --navbar-text: white;
+
+    --menu-bg: var(--chocolate-cosmos);
+    --menu-text: white;
+
+    --search-bg: var(--outer-space);
+    --search-border: var(--french-gray);
+    --search-text: white;
+
+    --btn-color: white;
+    --active-btn-text: white;
+    --active-btn-bg: var(--rose-red);
+
+    /* Post */
+    --post-border: 1px solid var(--pink);
+    --post-bg: var(--outer-space);
+    --post-hover-bg: var(--slate-gray);
+    --post-title-hover: var(--pink);
+    --post-location-text: var(--cherry-blossom-pink);
+    --post-category-bg: var(--salmon-pink);
+    --post-category-text: white;
+    --post-like-btn: white;
+    --scroll-bar-bg: var(--slate-gray);
+    --border-bottom-color: var(--pink);
 }
 
 @font-face {
-    font-family: 'Genty';
+    font-family: "Genty";
     /* src: url('/wwwroot/fonts/GentyDemo-Regular.ttf') format('truetype'); */
-    src: url('../fonts/GentyDemo-Regular.ttf') format('truetype');
+    src: url("../fonts/GentyDemo-Regular.ttf") format("truetype");
 }

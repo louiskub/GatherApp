@@ -1,169 +1,32 @@
 @import url('/css/src.css');
 
-/* 1. Global Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Jost', sans-serif;
+:root {
+    --user-menu-bg: var(--cherry-blossom-pink);
+    --user-menu-a-bg: var(--lavender-blush);
+    --logout-btn-bg: var(--chocolate-cosmos);
+}
+[data-theme="dark"] {
+    --user-menu-bg: var(--chocolate-cosmos);
+    --user-menu-a-bg: var(--slate-gray);
+    --logout-btn-bg: var(--outer-space);
 }
 
-/* 2. Body */
-body {
-    background-color: white;
-    text-decoration: none;
-    color: var(--eerie-black);
-    width: 100%;
-}
-body.dark-mode {
-    background-color: var(--eerie-black);
-    color: white;
-}
-
-/* 3. Navbar */
-.navbar {
-    display: flex;
-    position: fixed;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    height: 60px;
-    padding: 1rem 4%;
-    background-color: var(--carnation-pink);
-    box-shadow: 0 1px 2px var(--chocolate-cosmos);
-}
-
-body.dark-mode .navbar {
-    background-color: var(--chocolate-cosmos);
-    box-shadow: 0 1px 2px var(--eerie-black);
-}
-
-
-.left-navbar,
-.right-navbar {
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-}
-.navbar a {
-    text-decoration: none;
-    transition: 0.3s ease;
-    color: var(--chocolate-cosmos);
-    text-shadow: 0 0.5px 1px black;
-}
-
-/* 4. Logo */
-.left-navbar .logo {
-    color: var(--chocolate-cosmos);
-    font-family: "Genty", sans-serif;
-    font-size: 2rem;
-    padding: 0px 15px;
-}
-.left-navbar .logo:hover,
-.left-navbar .theme-toggle:hover,
-.navbar .search-icon:hover {
-    color: var(--bright-pink-crayola);
-    scale: 1.1;
-}
-
-/* 5. Dark/Light Mode Icon */
-.left-navbar .theme-toggle {
-    cursor: pointer;
+/* 1. Noti */
+.noti {
     border: none;
     background: none;
-    display: flex;
+    cursor: pointer;
     font-size: 1rem;
-    color: var(--chocolate-cosmos);
-    transition: ease 0.3s;
-}
-body.dark-mode .fa-sun,
-body.light-mode .fa-moon {
-    display: none;
+    padding: 1rem;
+    color: var(--navbar-text);
 }
 
-/* 6. Search */
-.search-icon {
-    font-size: 18px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    transition: ease 0.3s;
-    color: var(--chocolate-cosmos);
-}
-.search-container {
-    display: flex;
-    position: fixed;
-    visibility: hidden;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 50px;
-    left: 0;
-    top: 60px;
-    background-color: var(--carnation-pink);
-}
-.search-container.active {
-    visibility: visible;
-    transition: top 0.3s ease-in-out;
-}
-.search-bar {
-    display: flex;
-    width: 35%;
-    height: 40px;
-    background-color: white;
-    border-radius: 20px;
-    overflow: hidden;
-    border: 2px solid var(--chocolate-cosmos);
-    transition: top 0.3s ease-in-out;
-}
-.search-bar.active {
-    display: flex;
-}
-.search-bar input {
-    border: none;
-    outline: none;
-    flex: 1;
-    padding: 10px;
-    font-size: 0.9rem;
-}
-.search-bar button {
-    background: none;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    color: var(--chocolate-cosmos);
-    transition: color 0.3s ease, transform 0.3s ease;
-}
-.search-bar button:hover {
-    transform: scale(1.5);
-}
-body.dark-mode .search-container {
-    background-color: var(--chocolate-cosmos);
-}
-body.dark-mode .search-bar {
-    background-color: var(--slate-gray);
-    border-color: var(--french-gray);
-}
-body.dark-mode .search-bar input {
-    color: white;
-    background-color: var(--outer-space);
-}
-
-/* 7. Hamburger Menu */
+/* 2. Hamburger Menu */
 .menu-toggle {
     display: flex;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.8rem;
-    color: var(--chocolate-cosmos);
-}
-.menu-toggle .close-icon {
-    display: none;
-    padding: 3.5px;
 }
 
-/* 8. Menu Styles */
+/* 3. Menu Styles */
 .menu {
     display: none;
     flex-direction: column;
@@ -174,29 +37,28 @@ body.dark-mode .search-bar input {
     padding: 1rem;
     border-radius: 15px;
     z-index: 1000;
-    background-color: var(--carnation-pink);
-    border: 1.5px solid var(--chocolate-cosmos);
-    box-shadow: 0 2px 2px var(--chocolate-cosmos);
+    background-color: var(--user-menu-bg);
+    border: 1.5px solid var(--navbar-text);
+    box-shadow: 0 2px 2px var(--navbar-text);
 }
 .menu.active {
     display: flex;
     position: fixed;
-    float: right;
-    top: 2.7rem;
+    top: 2.8rem;
     right: 1rem;
 }
 .menu a {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     text-decoration: none;
     width: 100%;
     padding: 8px 12px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    gap: 20px;
+    font-size: 1rem;
+    font-weight: 400;
+    gap: 2rem;
     border-radius: 10px;
-    color: var(--chocolate-cosmos);
+    background-color: var(--user-menu-a-bg);
+    color: var(--navbar-text);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
@@ -204,53 +66,45 @@ body.dark-mode .search-bar input {
     font-size: 1.4rem;
     transition: color 0.3s ease;
 }
-.menu a:hover {
-    color: white;
-    background-color: var(--bright-pink-crayola);
-    transform: scale(1.08);
-}
-body.dark-mode .menu {
-    color: white;
-    background-color: var(--chocolate-cosmos);
-    border: 1.5px solid var(--platinum);
-    box-shadow: 0 2px 2px var(--platinum);
+.menu-list a:hover {
+    color: var(--hover-text);
+    background-color: var(--hover-bg-1);
+    transform: scale(1.05);
 }
 
-/* 9. Menu List */
+/* 4. Menu List */
 .menu-list {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     gap: 10px;
-    list-style: none;
 }
-.menu-list a {
+/* .menu-list a {
     border: 1px solid white;
-}
+} */
 
-/* 10. Logout Button */
+/* 5. Logout Button */
 .menu .log-out {
-    color: white;
-    background-color: var(--chocolate-cosmos);
+    color: var(--active-btn-text);
+    background-color: var(--logout-btn-bg);
     text-decoration: none;
 }
 .menu .log-out i {
     font-size: 1.2rem;
-    color: white;
+    color: var(--active-btn-text);
     transition: color 0.3s ease;
 }
-body.dark-mode .log-out {
-    background-color: var(--rose-red);
-}
 
-/* 11. Profile */
+/* 6. Profile */
 .menu .profile {
     display: flex;
     align-items: center;
     gap: 15px;
     padding: 0.2rem;
     margin-bottom: 1rem;
-    color: var(--chocolate-cosmos);
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    color: var(--navbar-text);
+    /* text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); */
 }
 .menu .profile p {
     font-size: 1.2rem;
@@ -264,8 +118,8 @@ body.dark-mode .log-out {
     border-radius: 50%;
     cursor: pointer;
     transition: 0.3s ease;
-    border: 2px solid var(--chocolate-cosmos);
-    box-shadow: 2px 2px 6px var(--chocolate-cosmos);
+    border: 2px solid var(--navbar-text);
+    box-shadow: 2px 2px 6px var(--navbar-text);
 }
 .menu .profile a{
     display: flex;
@@ -276,26 +130,6 @@ body.dark-mode .log-out {
 }
 .menu .profile img:hover {
     scale: 1.2;
-}
-body.dark-mode .menu .profile img {
-    border: 2px solid white;
-    box-shadow: 2px 2px 6px white;
-}
-
-body.dark-mode .navbar a,
-body.dark-mode .search-icon,
-body.dark-mode .search-bar button,
-body.dark-mode .menu-toggle,
-body.dark-mode .menu a,
-body.dark-mode .menu a i,
-body.dark-mode .menu p {
-    color: white;
-}
-
-body.dark-mode .menu a:hover,
-.menu .log-out:hover,
-body.dark-mode .menu .log-out:hover {
-    background-color: var(--bright-pink-crayola);
 }
 
 /* Responsive Design */
@@ -311,24 +145,18 @@ body.dark-mode .menu .log-out:hover {
         width: 100%;
         height: 95vh;
         z-index: 1000;
-        background-color: var(--carnation-pink);
         transition: opacity 0.3s ease, transform 0.3s ease;
     }
     .menu.active {
-        opacity: 0.9;
-        top: 51px;
+        opacity: 0.95;
+        top: 60px;
         right: 0;
         left: 0;
-        transform: translateY(0);
     }
     .menu a {
         font-size: 1rem;
         padding: 1rem 6.5rem;
         width: 100%;
-    }
-    body.dark-mode .menu {
-        border: none;
-        box-shadow: none;
     }
 
     .menu .profile {
@@ -339,8 +167,7 @@ body.dark-mode .menu .log-out:hover {
         margin: 1rem 0;
     }
     .menu .profile img {
-        width: 60px;
-        height: 60px;
+        width: 65px;
+        height: 65px;
     }
 }
-

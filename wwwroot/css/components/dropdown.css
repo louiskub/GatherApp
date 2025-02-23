@@ -1,0 +1,171 @@
+@import url(/css/src.css);
+/* @import url(/wwwroot/css/src.css); */
+
+/* Dropdown Variables */
+:root {
+    --dropdown-bg: var(--lavender-blush);
+    --dropdown-text: var(--chocolate-cosmos);
+    --dropdown-border: var(--rose-red);
+    --dropdown-hover-bg: var(--cherry-blossom-pink); /* เปลี่ยนเป็นสีที่อ่อนลง */
+    --dropdown-hover-text: var(--seasalt);
+    --dropdown-shadow: var(--slate-gray);
+    --dropdown-arrow: var(--rose-red); /* สีสามเหลี่ยม */
+}
+
+/* Dark Mode */
+[data-theme="dark"] {
+    --dropdown-bg: var(--onyx);
+    --dropdown-text: var(--seasalt);
+    --dropdown-border: var(--amaranth-purple);
+    --dropdown-hover-bg: var(--amaranth-purple); /* ใช้สีม่วงให้ชัดขึ้น */
+    --dropdown-hover-text: var(--antiflash-white);
+    --dropdown-shadow: var(--outer-space);
+    --dropdown-arrow: var(--bright-pink-crayola); /* ใช้สีชมพูสดขึ้น */
+}
+
+/* Dropdown Container*/
+.dropdown {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    padding: 1rem 0.3rem;
+    width: 100%;
+
+    /* Dropdown Button */
+    .dropdown-btn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        padding: 0.8rem 1rem;
+        width: 100%;
+        border-radius: 15px;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--dropdown-text);
+        border: 2px solid var(--dropdown-border);
+        background: var(--dropdown-bg);
+        box-shadow: 0 4px 8px var(--dropdown-shadow);
+        transition: all 0.3s ease-in-out;
+    }
+    .dropdown-btn:hover {
+        background: var(--dropdown-hover-bg);
+        color: var(--dropdown-hover-text);
+        transform: translateY(-2px);
+    }
+    .dropdown-btn.active {
+        background: var(--rose-red);
+        color: var(--seasalt);
+    }
+    .dropdown-btn .down,
+    .dropdown-btn .up {
+        float: right;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    /* Dropdown Content */
+    .dropdown-content {
+        display: none;
+        position: relative;
+        flex-direction: column;
+        width: 95%;
+        border-radius: 15px;
+        padding: 0.8rem 0rem;
+        background: var(--dropdown-bg);
+        box-shadow: 0 4px 10px var(--dropdown-shadow);
+        max-height: 200px;  
+        overflow-y: auto;   
+    }
+    .dropdown-content.active {
+        display: flex;
+        animation: dropdownFadeIn 0.3s ease-in-out;
+    }
+
+    .dropdown-content a {
+        cursor: pointer;
+        font-size: 13px;
+        padding: 8px 30px;
+        transition: all 0.3s ease-in-out;
+        color: var(--dropdown-text);
+    }
+    .dropdown-content a:hover,
+    .dropdown-content a.active {
+        background: var(--dropdown-hover-bg);
+        color: var(--dropdown-hover-text);
+        border-radius: 0;
+        padding-left: 40px;
+    }
+    .dropdown-content a::before {
+        content: "▶";
+        position: absolute;
+        left: 10px;
+        opacity: 0;
+        color: var(--dropdown-arrow); /* ใช้ตัวแปรสีใหม่ */
+        transition: opacity 0.3s ease-in-out, left 0.3s ease-in-out;
+    }
+    .dropdown-content a:hover::before {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .dropdown {
+        width: 75%;
+    }
+}
+
+/* Mobile Styles */
+/* @media (max-width: 768px) {
+    .dropdown {
+        width: 100%;
+        min-width: 180px;  
+        padding: 0;
+        text-wrap: nowrap;
+        text-align: center;
+
+
+        .dropdown-btn {
+            width: 90%;
+            text-align: center;
+            position: relative;
+            border-radius: 10px;  
+            background: var(--dropdown-bg);
+            box-shadow: 0 4px 6px var(--dropdown-shadow);
+            color: var(--dropdown-text);
+            border: 2px solid var(--dropdown-border);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .dropdown-btn:hover {
+            background: var(--dropdown-hover-bg);
+            color: var(--dropdown-hover-text);
+            transform: translateY(-2px);
+        }
+
+        .dropdown-content {
+            text-wrap: wrap;
+            position: absolute;
+            top: 20%;
+            width: 80%;
+            min-width: 140px; 
+            max-height: 90%; 
+            background: var(--dropdown-bg);
+            box-shadow: 0 4px 10px var(--dropdown-shadow);
+            border-radius: 10px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .dropdown-content.active {
+            display: flex;
+        }
+
+        .dropdown-content a {
+            text-align: center;
+        }
+
+        .dropdown-content a.active {
+            padding-left: 0px;
+        }
+    }
+} */

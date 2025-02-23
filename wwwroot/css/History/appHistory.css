@@ -1,0 +1,158 @@
+@import url("../src.css");
+
+.top {
+  margin-bottom: 1rem;
+}
+
+.pageContainer {
+  background-color: var(--lavender-blush);
+  padding: 100px 100px 60px 100px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.containerStyle {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: row;
+  min-width: 335px;
+  margin: 5px;
+  align-self: center;
+  width: 90%;
+}
+
+.innerContainer {
+  width: 98.5%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.indicator {
+  border-radius: 0.5rem 0 0 0.5rem;
+  width: 1rem;
+}
+
+.indicator.finish {
+  background-color: var(--deep-fern-green);
+}
+
+.indicator.accept {
+  background-color: var(--mint-green);
+}
+
+.indicator.pending {
+  background-color: var(--sky-blue);
+}
+
+.indicator.reject {
+  background-color: var(--sea-pink);
+}
+
+.contentStyle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5px;
+  width: 18rem;
+}
+
+.statusContainer {
+  padding: 1rem;
+  gap: 1.5rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 20vw;
+  min-width: 230px;
+  justify-content: end;
+}
+
+.textStyle {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.buttonContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.buttonStyle {
+  border: solid 2px;
+  border-radius: 8px;
+  width: 6.6rem;
+  min-width: fit-content;
+  height: 3.2rem;
+  font-size: 1.1rem;
+  padding: 0.6rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.15);
+  color: var(--eerie-black);
+}
+
+.buttonStyle:hover {
+  transform: translateY(-3px);
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.buttonStyle.review {
+  background-color: var(--fairy-tale) !important;
+  border-color: rgb(248, 197, 216) !important;
+}
+
+.buttonStyle.report {
+  background-color: var(--bright-pink-crayola-2) !important;
+  border-color: rgb(253, 110, 136) !important;
+  color: white;
+}
+
+.buttonStyle.review:hover {
+  background-color: var(--carnation-pink) !important;
+  border-color: var(--fairy-tale) !important;
+}
+
+.buttonStyle.report:hover {
+  background-color: var(--bright-pink-crayola) !important;
+  border-color: var(--carnation-pink) !important;
+}
+
+.buttonStyle:active {
+  transform: scale(0.98);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .top {
+    margin-left: 0.2rem;
+  }
+
+  .contentStyle {
+    width: 100%;
+  }
+
+  .statusContainer {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .buttonContainer {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .buttonStyle {
+    width: 1rem;
+  }
+
+  .textStyle {
+    font-size: 1.2rem;
+  }
+}

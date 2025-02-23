@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http.HttpResults;
 namespace GatherApp.Models;
 
 
@@ -12,8 +13,8 @@ public class Post{
     public DateTime CreateAt { get; set; } = DateTime.Now;
 
     [Required]
-    [MaxLength(10)]
-    public string Status { get; set; }  // open closeApp full close     เปิด ปิดรับสมัคร เต็ม ปิด(ทำกิจกจรรมแล้ว)
+    [DefaultValue(true)]
+    public bool IsOpened { get; set; } = true;
 
     [Required]
     [MaxLength(50)]
@@ -33,38 +34,122 @@ public class Post{
     public int Like { get; set; }
 
     [Required]
+    [Range(1, 1000, ErrorMessage = "MaxParticipant must be between 1 and 1000.")]
     public int MaxParticipant { get; set; }
 
     [DefaultValue(0)]
     public int CurParticipant { get; set; }
+
 
     // Relationship
     [JsonIgnore]
     public User User { get; set; }  //
 
     [Required]
+    [JsonIgnore]
     public string? UserId { get; set; } //
 
     [JsonIgnore]
     public Activity Activity { get; set; }  //
+
     
     [JsonIgnore]
     public List<Application> Applications { get; set; } = new List<Application>(); //
+    
+    [JsonIgnore]
+    public List<PostLike> PostLikes { get; set; } = new List<PostLike>();  // ความสัมพันธ์กับ PostLike
 
+    public ICollection<RatingScore> RatingScores { get; set; } = new List<RatingScore>();
 
 
     // Method
-    public void ChangeEverything(string name, string detail) 
-    { 
-        // Name = name; 
-        // Detail = detail; 
-    }
 
     public void AcceptParticipant(User user) { /* Logic here */ }
     public void RejectPerson(User user) { /* Logic here */ }
     public void AddApplication(Application application) => Applications.Add(application);
+
+    public string? IsPostAvailable()
+    {
+        if (IsOpened == false)
+            return "Post is closed";
+
+        if (Activity == null) 
+            return "Activity information is missing";
+
+        if (DateTime.Now < Activity.OpenDateTime)
+            return "Post is not available yet";
+
+        if (DateTime.Now > Activity.CloseDateTime)
+            return "Post is already closed";
+
+        if (CurParticipant >= MaxParticipant)
+            return "Post is already full";
+
+        if (DateTime.Now > Activity.ActDatetime)
+            return "Post is already past";
+
+        return null;
+    }
+
+    public void ChangeEverything(DtoCreatePost dtopost) 
+    { 
+        PostName = dtopost.PostName;    
+        Detail = dtopost.Detail;
+        IsAttached = dtopost.IsAttached;
+        MaxParticipant = dtopost.MaxParticipant;
+        CoverPageImg = dtopost.CoverPageImg;
+        Activity.OpenDateTime = dtopost.OpenDateTime;
+        Activity.CloseDateTime = dtopost.CloseDateTime;
+        Activity.ActDatetime = dtopost.ActDatetime;
+        Activity.Province = dtopost.Province;
+        Activity.District = dtopost.District;
+        Activity.Online = dtopost.Online;
+        Activity.GoogleMapLink = dtopost.GoogleMapLink;
+    }
+
+    public Dictionary<string, object> ToJson()
+    {
+        CurParticipant = Applications.Count(a => a.AppliedStatus == true);
+        return new Dictionary<string, object> {
+            { "owner", new Dictionary<string, object> {
+                { "username", User.Username },
+                { "profileImg", User.ProfileImg }
+            }},
+            { "post", new Dictionary<string, object> {
+                { "id", Id },
+                { "createAt", CreateAt },
+                { "isOpened", IsOpened },
+                { "postName", PostName },
+                { "detail", Detail },
+                { "isAttached", IsAttached },
+                { "coverPageImg", CoverPageImg },
+                { "like", Like },
+                { "maxParticipant", MaxParticipant },
+                { "curParticipant", CurParticipant },
+                { "totalApplicant", Applications.Count }
+            }},
+            { "activity", Activity },
+            { "actTypes", Activity.ActTypes.Select(x => x.ActType).ToList() }
+        };
+    }
 }
 
+
+
+public class PostLike
+{
+    [JsonIgnore]
+    public int Id { get; set; }
+
+    [JsonIgnore]
+    public int PostId { get; set; }
+    public Post Post { get; set; }
+
+    [JsonIgnore]
+    public string UserId { get; set; }  // ใช้ UserId จาก JWT
+    [JsonIgnore]
+    public User User { get; set; }
+}
 
 
 public class DtoCreatePost
@@ -73,14 +158,23 @@ public class DtoCreatePost
     public string Detail { get; set; }
     public bool IsAttached { get; set; }
     public string? CoverPageImg { get; set; }
+
+    [Range(1,1000)]
     public int MaxParticipant { get; set; }
 
     public DateTime OpenDateTime { get; set; }
     public DateTime CloseDateTime { get; set; }
     public DateTime ActDatetime { get; set; }
-    public string? Latitude { get; set; }
-    public string? Longitude { get; set; }
 
-    public List<int> ActTypes { get; set; } = new List<int>();
+    [MaxLength(200)]
+    public string? Province { get; set; }
+
+    public string? District { get; set; } 
+
+    public bool Online { get; set; } = false;
+
+    public string? GoogleMapLink { get; set; }
+
+    public List<string> ActTypes { get; set; } = new List<string>();
 
 }
