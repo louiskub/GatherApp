@@ -6,7 +6,7 @@ class Post {
         this.accepted = accepted ?? 0;
         this.registered = registered ?? 0;
         this.categories = Array.isArray(categories) ? categories : [];
-        this.imageUrl = imageUrl ?? "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg";
+        this.imageUrl = imageUrl ?? "https://neilpatel.com/wp-content/uploads/2017/09/blog-post-image-guide.jpg";
         this.like = like;
     }
 
