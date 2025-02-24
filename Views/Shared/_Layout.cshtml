@@ -58,7 +58,7 @@
     </header>
     <script>
 
-        Headers = document.querySelector("header");
+        @* Headers = document.querySelector("header"); *@
         Head = document.querySelector("head");
         Body = document.querySelector("body");
         RightNavbar = document.querySelector(".right-navbar");
@@ -66,16 +66,15 @@
 
         const link = document.createElement("link");
         link.rel = "stylesheet";
-        const script = document.createElement("script");
 
         if (localStorage.getItem('authorized') === null) {
             console.log("Unauthorized");
 
             link.href = "/css/nav/nav_unauth.css";
-            script.src = "/js/nav/nav_unauth.js";
+            @* script.src = "/js/nav/nav_unauth.js"; *@
 
             Head.appendChild(link);
-            Body.appendChild(script);
+            @* Body.appendChild(script); *@
 
             RightNavbar.innerHTML = `
             <!-- Hamburger Menu -->
@@ -93,7 +92,9 @@
         }
         else {
             console.log('Authorized');
+            const script = document.createElement("script");
             link.href = "/css/nav/nav_auth.css";
+            script.type = "module";
             script.src = "/js/nav/nav_auth.js";
 
             Head.appendChild(link);

@@ -12,6 +12,17 @@
     <h1 class="top">Sign Up</h1>
     <div class="page">
         <div class="containerStyle">
+            <label class="label" for="username">Username :</label>
+            <input
+                type="text"
+                id="username"
+                class="inputBox"
+                placeholder="Enter your username"
+                required
+            />
+        </div>
+
+        <div class="containerStyle">
             <label class="label" for="email">E-mail :</label>
             <input
                 type="email"
@@ -23,55 +34,73 @@
         </div>
 
         <div class="containerStyle">
+            <label class="label" for="firstName">First Name :</label>
+            <input
+                type="text"
+                id="firstName"
+                class="inputBox"
+                placeholder="Enter your first name"
+                required
+            />
+        </div>
+
+        <div class="containerStyle">
+            <label class="label" for="lastName">Last Name :</label>
+            <input
+                type="text"
+                id="lastName"
+                class="inputBox"
+                placeholder="Enter your last name"
+                required
+            />
+        </div>
+
+        <div class="containerStyle">
+            <label class="label" for="dob">Date of Birth :</label>
+            <input
+                type="date"
+                id="dob"
+                class="inputBox"
+                required
+            />
+        </div>
+
+        <div class="containerStyle">
             <label class="label" for="password">Password :</label>
             <div class="inputWrapper">
                 <input
-                type="password"
-                id="password"
-                class="inputBox"
-                placeholder="Enter your password"
-                required
+                    type="password"
+                    id="password"
+                    class="inputBox"
+                    placeholder="Enter your password"
+                    required
                 />
                 <button type="button" id="togglePassword" class="visibleButton">
-                <img
-                    src="https://cdn-icons-png.flaticon.com/512/6405/6405909.png"
-                    alt="Show"
-                    id="icon"
-                />
+                    <img
+                        src="https://cdn-icons-png.flaticon.com/512/6405/6405909.png"
+                        alt="Show"
+                        id="icon"
+                    />
                 </button>
             </div>
         </div>
 
         <div class="containerStyle">
-            <label class="label" for="password">Repeat Password :</label>
-
-            <!-- <div class="inputWrapper"> -->
-
+            <label class="label" for="confirmPassword">Repeat Password :</label>
+            <div class="inputWrapper">
                 <input
-                type="password"
-                id="password"
-                class="inputBox"
-                placeholder="Repeat your password"
-                required
+                    type="password"
+                    id="confirmPassword"
+                    class="inputBox"
+                    placeholder="Repeat your password"
+                    required
                 />
-
-                
-                <!-- <button type="button" id="togglePassword" class="nonVisibleButton">
-                <img
-                    src="https://cdn-icons-png.flaticon.com/512/6803/6803345.png"
-                    alt="Hide"
-                    id="icon"
-                />
-                </button>
-            </div> -->
-
-
+            </div>
         </div>
-
 
         <div class="buttonContainer">
             <div class="containerStyle">
-                <button class="buttonStyle">Sign Up</button>
+                <button class="buttonStyle" id="signupButton">Sign Up</button>
             </div>
 
             <div class="containerStyle">
@@ -80,23 +109,38 @@
             </div>
         </div>
     </div>
-    <script src="~/js/Auth/Login.js"></script>
+    <script src="~/js/Auth/Signup.js"></script>
 </div>
 
-
 <script>
-    document.getElementById("registerForm").addEventListener("submit", function(event) {
-        event.preventDefault();  // Prevent page refresh
+    document.getElementById("signupButton").addEventListener("click", function (event) {
+        event.preventDefault();  // Prevent form submission
 
-        // Gather form data
-        const formData = new FormData(event.target);
+        // Get input values
+        const username = document.getElementById("username").value;
+        const email = document.getElementById("email").value;
+        const firstName = document.getElementById("firstName").value;
+        const lastName = document.getElementById("lastName").value;
+        const dob = document.getElementById("dob").value;
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+
+        // Validate the passwords match
+        if (password !== confirmPassword) {
+            alert("Passwords do not match!");
+            return;
+        }
+
         const data = {
-            Username: formData.get('Username'),
-            Email: formData.get('Email'),
-            Password: formData.get('Password')
+            Username: username,
+            Email: email,
+            FirstName: firstName,
+            LastName: lastName,
+            DateOfBirth: dob,
+            Password: password
         };
 
-        // Send POST request via fetch
+        // Send registration request to the backend
         fetch('/api/auth/register', {
             method: 'POST',
             headers: {
@@ -104,36 +148,18 @@
             },
             body: JSON.stringify(data),
         })
-        .then(response => {
-        if (response.ok) {
-            return response.json();  
-        } else {
-            return response.json().then(errData => { 
-                throw new Error(errData.message || 'Registration failed');
-            });
-        }
-        })
+        .then(response => response.json())
         .then(data => {
-            if (data.token) {
-                localStorage.setItem('jwt_token', data.token);
+            if (data.status === "Registration successful") {
                 alert('Registration successful.');
                 window.location.href = '/auth/login';
+            } else {
+                alert('Registration failed: ' + data.status);
             }
         })
         .catch(error => {
             console.error(error);
-            alert('Registration failed: ' + error.message);  // เพิ่มข้อความข้อผิดพลาดที่เกิดขึ้น
+            alert('Registration failed: ' + error.message);
         });
-    });
-</script>
-
-
-<div class="main">
-    <h2 class="signup-button"><a href="/">Sign up Here!</a></h2>
-</div>
-<script>
-    signUpButton = document.querySelector('.signup-button');
-    signUpButton.addEventListener('click', () => {
-        localStorage.setItem('authorized', true);
     });
 </script>

@@ -12,12 +12,12 @@
     <h1 class="top">Log In</h1>
     <div class="page">
         <div class="containerStyle">
-            <label class="label" for="email">E-mail :</label>
+            <label class="label" for="username">Username :</label>
             <input
-                type="email"
-                id="email"
+                type="text"
+                id="username"
                 class="inputBox"
-                placeholder="Enter your email"
+                placeholder="Enter your username"
                 required
             />
         </div>
@@ -26,25 +26,25 @@
             <label class="label" for="password">Password :</label>
             <div class="inputWrapper">
                 <input
-                type="password"
-                id="password"
-                class="inputBox"
-                placeholder="Enter your password"
-                required
+                    type="password"
+                    id="password"
+                    class="inputBox"
+                    placeholder="Enter your password"
+                    required
                 />
                 <button type="button" id="togglePassword" class="showButton">
-                <img
-                    src="https://cdn-icons-png.flaticon.com/512/6405/6405909.png"
-                    alt="Show/Hide"
-                    id="icon"
-                />
+                    <img
+                        src="https://cdn-icons-png.flaticon.com/512/6405/6405909.png"
+                        alt="Show/Hide"
+                        id="icon"
+                    />
                 </button>
             </div>
         </div>
 
         <div class="buttonContainer">
             <div class="containerStyle">
-                <button class="buttonStyle">Log In</button>
+                <button class="buttonStyle" onclick="buttonClick()">Log In</button>
             </div>
 
             <div class="containerStyle">
@@ -53,21 +53,23 @@
             </div>
         </div>
     </div>
+
     <script src="~/js/Auth/Login.js"></script>
 </body>
 
-
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+
     async function buttonClick() {
         let username = $("#username").val();
         let password = $("#password").val();
 
+
         if (!username || !password) {
-            $("#error").text("Please enter username and password.");
+            alert("Please enter both username and password.");
             return;
         }
+
 
         try {
             await $.ajax({
@@ -76,50 +78,21 @@
                 contentType: "application/json",
                 data: JSON.stringify({ 
                     username: username, 
-                    password: password 
+                    password: password
                 }),
                 success: function (response) {
-                    document.cookie = `token=${response.token}; path=/; secure; samesite=strict`;
-                    window.location.href = "/post/aboutpost";
+                if(response.status == "Login success") {
+                    window.location.href = "/home"; 
+                } else {
+                    alert(response.status);}
                 },
                 error: function (xhr) {
-                    let errorMessage = xhr.responseJSON?.message || "Login failed";
-                    $("#error").text(errorMessage);
+                    let errorMessage = xhr.responseJSON?.status || "Login failed";
+                    alert(errorMessage);  
                 }
             });
         } catch (err) {
-            $("#error").text("An unexpected error occurred.");
+            alert("An unexpected error occurred.");
         }
     }
 </script>
-=======
-<div class="main">
-    <h1 class="top">Log In</h1>
-    <div class="page">
-        <div class="containerStyle">
-            <label class="label" for="email">E-mail :</label>
-            <input type="email" id="email" class="inputBox" placeholder="Enter your email" required />
-        </div>
-
-        <div class="containerStyle">
-            <label class="label" for="password">Password :</label>
-            <div class="inputWrapper">
-                <input type="password" id="password" class="inputBox" placeholder="Enter your password" required />
-                <button type="button" id="togglePassword" class="showButton">
-                    <img src="https://cdn-icons-png.flaticon.com/512/6405/6405909.png" alt="Show/Hide" id="icon" />
-                </button>
-            </div>
-        </div>
-
-        <div class="buttonContainer">
-            <div class="containerStyle">
-                <button class="buttonStyle">Log In</button>
-            </div>
-
-            <div class="containerStyle">
-                <p class="textStyle">Not a Member yet?</p>
-                <a href="/signup" class="link">Sign Up</a>
-            </div>
-        </div>
-    </div>
-</div>

@@ -45,10 +45,18 @@ document.addEventListener("DOMContentLoaded", function () {
         updateBodyScroll(); // ตรวจสอบการปิดการเลื่อน
     });
 
+    document.addEventListener("toggleSidebar", function () {
+        sidenav.classList.remove("active");
+        main.classList.remove("shifted", sidenav.classList.contains("active"));
+    
+        updateBodyScroll(); // ปรับการ scroll
+    });
+
     // ตรวจจับการคลิกที่ body เพื่อปิด sidenav ถ้าคลิกนอกพื้นที่ที่ต้องการ
     document.addEventListener("click", function (event) {
         // ถ้าคลิกไม่อยู่ภายใน sidenav และไม่อยู่ใน dropdownToggle
-        if (!sidenav.contains(event.target) && 
+        if ( sidenav.classList.contains("active") && 
+            !sidenav.contains(event.target) && 
             !dropdownToggle.contains(event.target) &&
             !themeToggle.contains(event.target)
         ) {
