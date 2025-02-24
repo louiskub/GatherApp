@@ -150,8 +150,7 @@
         })
         .then(response => response.json())
         .then(data => {
-            if (data.token) {
-                localStorage.setItem('jwt_token', data.token);
+            if (data.status === "Registration successful") {
                 alert('Registration successful.');
                 window.location.href = '/auth/login';
             } else {

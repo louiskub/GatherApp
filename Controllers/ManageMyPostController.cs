@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.AspNetCore.SignalR;
 
 
 namespace GatherApp.Controllers;
@@ -13,10 +14,12 @@ namespace GatherApp.Controllers;
 public class ManageMyPostController : Controller
 {
     private readonly AppDbContext _db;
+    private readonly IHubContext<ChatHub> _chathubContext;
 
-    public ManageMyPostController(AppDbContext db)
+    public ManageMyPostController(AppDbContext db, IHubContext<ChatHub> chathubContext)
     {
         _db = db;
+        _chathubContext = chathubContext;
     }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -25,7 +28,7 @@ public class ManageMyPostController : Controller
     [HttpPost]
     [Route("api/post")]
     [Authorize]
-    public async Task<IActionResult> CreatePost([FromBody] DtoCreatePost dtopost)
+    public async Task<IActionResult> CreatePost([FromBody] DtoCreatePost dtopost, [FromServices] IHubContext<ChatHub> chathubContext)
     {
         // ดึง UserId จาก JWT
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -93,8 +96,14 @@ public class ManageMyPostController : Controller
         {
             _db.Posts.Add(post);
             await _db.SaveChangesAsync();
+
+            await chathubContext.Clients.All.SendAsync("ReceiveMessage", "Post", "New post has been created");
+
+            await chathubContext.Clients.Group(post.Id.ToString()).SendAsync("ReceiveMessage", "System", $"User {userId} joined chat.");
+
             return Json(new {status = "created"});
         }
+
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
@@ -306,6 +315,7 @@ public class ManageMyPostController : Controller
         }  
 
         _db.SaveChanges();
+        _chathubContext.Clients.Group(postId.ToString()).SendAsync("ReceiveMessage", "Post", $"User {username} has been accepted to join the chat.",DateTime.UtcNow);
         post.CurParticipant = post.Applications.Count(a => a.AppliedStatus == true);
         _db.SaveChanges();
         return Json(new {status = "accepted"});
@@ -369,6 +379,17 @@ public class ManageMyPostController : Controller
         return File(fileResult.Item1, "application/octet-stream", $"archieve.{fileResult.Item2}");
     }
 
+        [HttpGet]
+        [Route("api/chat/{postId}")]
+        public async Task<IActionResult> GetChatHistory(string postId)
+        {
+            var messages = await _db.ChatMessages
+                .Where(m => m.PostId == postId)
+                .OrderBy(m => m.SentAt)
+                .ToListAsync();
+
+            return Ok(messages);
+        }
 
 
 }

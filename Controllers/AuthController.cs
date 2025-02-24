@@ -41,21 +41,13 @@ public class AuthController : Controller
     {
         if (obj.Password == null || obj.Username == null)
         {   
-            Console.WriteLine("Invalid request body");
             return BadRequest("Invalid request body");
         }
         
-        Console.WriteLine(obj.Username, obj.Password);
-        
-        // ค้นหาผู้ใช้จากฐานข้อมูล
-        var userDTO = _db.Users.Where(
-            s => s.Username == obj.Username
-        ).FirstOrDefault();
+        var userDTO = await _db.Users.FirstOrDefaultAsync(s=> s.Username == obj.Username);
 
-        // ตรวจสอบหากไม่พบผู้ใช้
         if (userDTO == null)
         {
-            Console.WriteLine("Error login");
             return Json(new { status = "Invalid username or password" });
         }
 
@@ -63,14 +55,14 @@ public class AuthController : Controller
         if (userScore != null && userScore.IsBanned)
         {
             if (userScore.BannedUntil.HasValue && userScore.BannedUntil > DateTime.Now)
-        {
+            {
             return Unauthorized($"You are banned until {userScore.BannedUntil.Value}");
-        }
+            }
 
         if (!userScore.BannedUntil.HasValue) // แบนถาวร
-        {
+            {
             return Unauthorized("You have been permanently banned.");
-        }
+            }
 
         // ถ้าครบ 7 วันแล้ว ให้ยกเลิกการแบน
         userScore.IsBanned = false;
@@ -80,15 +72,19 @@ public class AuthController : Controller
 
         if (!BCrypt.Net.BCrypt.Verify(obj.Password, userDTO.Password))
         {
-            Console.WriteLine("Error login - Incorrect password");
             return Json(new { status = "Invalid username or password" });
         }
 
-        // หากล็อกอินสำเร็จ
-        Console.WriteLine("Login success");
         string stId = userDTO.Id.ToString();
         var token = _jwtService.GenerateToken(stId, userDTO.Username);
-        Console.WriteLine($"token : {token}");
+
+        Response.Cookies.Append("token", token, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTime.UtcNow.AddDays(1)
+        });
         
         return Json(new { status = "Login success", token = token });
     }
@@ -104,8 +100,17 @@ public class AuthController : Controller
     [Route("api/auth/register")]
     public async Task<IActionResult> Register([FromBody] UserDTO obj)
     {
-        if (ModelState.IsValid)
-        {
+
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                            // .Select(e => e.ErrorMessage)
+                                            .ToList();
+
+                return BadRequest(new { status = "Invalid request body" + errors, errors});
+            }
+
+
             if (_db.Users.Any(s => s.Username == obj.Username))
             {
                 return BadRequest(new { status = "Username already exists" });
@@ -154,12 +159,15 @@ public class AuthController : Controller
                 string stId = user.Id.ToString();
                 var token = _jwtService.GenerateToken(stId, user.Username); 
 
+                Response.Cookies.Append("token", token, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.UtcNow.AddDays(1)
+                });
+
                 return Ok(new { status = "Registration successful", token = token });
             }
-        }
-        var errors = ModelState.Values.SelectMany(v => v.Errors)
-                                    .Select(e => e.ErrorMessage);
-        return BadRequest(new {obj});
     }
-
 }

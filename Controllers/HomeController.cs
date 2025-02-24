@@ -66,6 +66,13 @@ public class HomeController : Controller
         return View("~/Views/Auth/SignUp.cshtml");
     }
 
+    [Route("Chat")]
+
+    public IActionResult Chat()
+    {
+        return View("~/Views/Home/ChatHub.cshtml");
+    }
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
