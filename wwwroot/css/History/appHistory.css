@@ -2,6 +2,7 @@
 
 .top {
   margin-bottom: 1rem;
+  font-size: 2.3rem;
 }
 
 .pageContainer {
@@ -73,7 +74,7 @@
 }
 
 .textStyle {
-  font-size: 1.4rem;
+  font-size: 1.8rem;
   font-weight: bold;
 }
 
@@ -89,7 +90,7 @@
   width: 6.6rem;
   min-width: fit-content;
   height: 3.2rem;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   padding: 0.6rem;
   cursor: pointer;
   font-weight: bold;
