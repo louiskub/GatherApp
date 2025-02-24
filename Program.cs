@@ -43,7 +43,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = false,
             ValidateLifetime = true
         };
-    options.Events = new JwtBearerEvents
+
+        options.Events = new JwtBearerEvents
         {
             OnMessageReceived = context =>
             {
@@ -52,12 +53,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     context.Token = context.Request.Cookies["token"];
                 }
                 return Task.CompletedTask;
+            },
+            OnChallenge = context =>
+            {
+                context.HandleResponse();
+                context.Response.Redirect("/login");  // Redirect unauthorized users to login page
+                return Task.CompletedTask;
             }
         };
     });
 
-builder.Services.AddSignalR();
-builder.Services.AddScoped<ChatHub>();
 builder.Services.AddScoped<GatherApp.Services.JwtService>();
 
 // Add services to the container.
@@ -65,7 +70,6 @@ builder.Services.AddControllersWithViews();
 
 
 var app = builder.Build();
-
 app.UseCors("AllowAll");
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -74,7 +78,6 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-app.MapHub<ChatHub>("/chatHub");
 
 
 app.UseHttpsRedirection();
@@ -83,6 +86,16 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.Use(async (context, next) =>
+{
+    await next();
+
+    if (context.Response.StatusCode == 404) // If page not found
+    {
+        context.Response.Redirect("/home");
+    }
+});
 
 app.MapControllerRoute(
     name: "default",
