@@ -196,12 +196,12 @@ async function ProvincesAndAmphures(){
     let province, filteredAmp, amphure 
 
     async function GetProvincesAndAmphures(){
-        await fetch("~/json/provinces.json").then(response => response.json())
+        await fetch("/js/GOLF/provinces.json").then(response => response.json())
                         .then(data => {
                             province = data
                         })
                         .catch(error => console.error("Error loading JSON:", error));
-        await fetch("~/json/amphures.json")
+        await fetch("/js/GOLF/amphures.json")
                         .then(response => response.json())
                         .then(data => {
                             amphure = data
