@@ -28,6 +28,11 @@ namespace GatherApp.Controllers
                 return Unauthorized("Invalid token");
             }
 
+            if (rating.RaterId == null || rating.RatedUserId == null)
+            {
+                return BadRequest("RaterId or RatedUserId cannot be null");
+            }
+
             if (rating.RatedUserId == raterId)
             {
                 return BadRequest("You cannot rate yourself.");
@@ -49,20 +54,14 @@ namespace GatherApp.Controllers
                 return BadRequest("You can only rate after the event has ended.");
             }
 
-            var commonPost = await _db.Applications
-                .Where(a => a.UserId == raterId)
-                .Select(a => a.PostId)
-                .Intersect(_db.Applications
-                    .Where(a => a.UserId == rating.RatedUserId)
-                    .Select(a => a.PostId)
-                    )
-                .AnyAsync();
+            bool commonPost = await _db.Applications
+                .AnyAsync(a1 => a1.UserId == raterId &&
+                                _db.Applications.Any(a2 => a2.UserId == rating.RatedUserId && a1.PostId == a2.PostId));
 
             if (!commonPost)
             {
                 return BadRequest("You can only rate users who applied to the same post.");
             }
-
 
             var existingRating = await _db.RatingScores
                 .AnyAsync(r => r.RaterId == raterId && r.RatedUserId == rating.RatedUserId && r.PostId == rating.PostId);
@@ -72,35 +71,48 @@ namespace GatherApp.Controllers
                 return BadRequest("You have already rated this user.");
             }
 
-            var newRating = new RatingScore
+            var rater = await _db.Users.FindAsync(rating.RaterId);
+            if (rater == null)
             {
-                RaterId = raterId,
-                RatedUserId = rating.RatedUserId,
-                Score = rating.Score,
-                Comment = rating.Comment,   
-                CreatedAt = DateTime.UtcNow
-            };
-
-            _db.RatingScores.Add(newRating);
-            await _db.SaveChangesAsync();
-            return Ok(new { message = "Rating submitted successfully." });
-        }
-
-        [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetRatingsForUser(string userId)
-        {
-            var ratings = await _db.RatingScores
-                .Where(r => r.RatedUserId == userId)
-                .Include(r => r.Rater)
-                .ToListAsync();
-
-            if (ratings == null || ratings.Count == 0)
-            {
-                return NotFound("No ratings found for this user.");
+                return BadRequest("Rater user does not exist.");
             }
 
-            return Ok(ratings);
+            var ratedUser = await _db.Users.FindAsync(rating.RatedUserId);
+            if (ratedUser == null)
+            {
+                return BadRequest("Rated user does not exist.");
+            }
+
+            var newRating = new RatingScore
+            {
+                PostId = rating.PostId,
+                RaterId = raterId,
+                RatedUserId = rating.RatedUserId,
+                UserId = raterId,
+                Score = rating.Score,
+                Comment = rating.Comment,
+                CreatedAt = DateTime.UtcNow
+            };
+            _ = _db.Notifications.Add(new Notification
+            {
+                UserId = ratedUser.Id,
+                Content = $"You have received a new rating for the post"
+            });
+
+            try
+            {
+                // เพิ่ม Rating ใหม่ไปยังฐานข้อมูล
+                _db.RatingScores.Add(newRating);
+                await _db.SaveChangesAsync();
+                return Ok(new { message = "Rating submitted successfully." });
+            }
+            catch (DbUpdateException ex)
+            {
+                var innerExceptionMessage = ex.InnerException?.Message ?? "No inner exception message available.";
+                return StatusCode(500, $"An error while saving the rating: {ex.Message}. Inner Exception: {innerExceptionMessage}");
+            }
         }
+
 
         [HttpPut]
         [Route("api/reviews/update/{id}")]

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using GatherApp.Services;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace GatherApp.Controllers;
 
@@ -27,18 +28,18 @@ public class UserController : Controller
     public IActionResult GetUserProfile([FromQuery] string username)
     {
         var reqUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var user = _db.Users.Where(u => u.Username == username).FirstOrDefault();
-
+        var user = _db.Users.Include(u => u.BehaviorScores)
+                            .Include(u => u.ActTypeProfile)
+                            .Include(u => u.ReceivedRatings)
+                            .Include(u => u.GivenRatings)
+                            .Where(u => u.Username == username).FirstOrDefault();
         if (user == null) 
             return NotFound("User not found");
 
         bool isOwner = user.Id == reqUserId;
         return Json(new
         {
-            username = user.Username,
-            email = user.Email,
-            profileImg = user.ProfileImg,
-            bio = user.Bio,
+            user = user.ToJson(isOwner),
             isOwner
         });
     }
@@ -61,16 +62,14 @@ public class UserController : Controller
 
         if (user == null) 
             return NotFound("User not found");
-        var notifications = _db.Notifications.OrderByDescending(n => n.CreatedAt)
-                                            .Where(n => n.UserId == user.Id).ToList();
-       return Json(new
+        var notifications = user.Notifications.OrderByDescending(n => n.CreatedAt).ToList();
+        return Json(new
         {
             username = user.Username,
             profileImg = user.ProfileImg,
             notification = user.Notifications,
             totalBehaviorScore = user.BehaviorScores.Sum(b => b.Score),
         });
-
     }
 
     // edit my profile
@@ -80,31 +79,44 @@ public class UserController : Controller
     public IActionResult UpdateMyProfile([FromBody] UpdateProfileRequest myuser)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var user = _db.Users.Where(u => u.Id == userId).FirstOrDefault();
+        var user = _db.Users.Include(u => u.BehaviorScores)
+                            .Include(u => u.ActTypeProfile)
+                            .Include(u => u.ReceivedRatings)
+                            .Include(u => u.GivenRatings)
+                            .Where(u => u.Id == userId)
+                            .FirstOrDefault();
 
         if (user == null) 
             return NotFound("User not found");
-
         try
         {                
             string? token = null; 
-            if (myuser.Email != null) user.Email = myuser.Email;
-            if (myuser.ProfileImg != null) user.ProfileImg = myuser.ProfileImg;
-            if (myuser.Bio != null) user.Bio = myuser.Bio;
+            user.UpdateMyProfile(myuser);
+
+            var actTypes = new List<ActivityType>();
+            foreach (var actType in myuser.ActTypeProfile)
+            {
+                var actTypeProfile = _db.ActivityTypes.Where(at => at.ActType == actType).FirstOrDefault();
+                if (actTypeProfile != null)
+                    actTypes.Add(actTypeProfile);
+            }
+            if (actTypes.Count != 0)
+                user.ActTypeProfile = actTypes;
+            else 
+                user.ActTypeProfile = new List<ActivityType>();
+
             if (myuser.Username != null) 
             {
                 user.Username = myuser.Username;
-                Console.WriteLine("Login success");
+                Console.WriteLine("Change username success");
                 string stId = user.Id.ToString();
                 token = _jwtService.GenerateToken(stId, user.Username);
             }
             _db.SaveChanges();
+
             return Json(new 
             {
-                username = user.Username,
-                email = user.Email,
-                profileImg = user.ProfileImg,
-                bio = user.Bio,
+                user = user.ToJson(true),
                 status = "updated",
                 token
             });
@@ -169,6 +181,38 @@ public class UserController : Controller
     }
 
 
+    // แสดงประวัติการสมัครโพสของ user คนนั้น
+    [Route("api/user/myapplication")]
+    [Authorize]
+    public IActionResult GetMyApplyHistory()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var user = _db.Users.Where(u => u.Id == userId).FirstOrDefault();
+
+        if (user == null) 
+            return NotFound("User not found" );
+
+        var applications = _db.Applications.Include(a => a.Post)
+                                        .ThenInclude(p => p.Activity)
+                                        .Include(a => a.Post.Activity.ActTypes)
+                                        .Include(a => a.Post.User)
+                                        .Include(a => a.Post.Applications)
+                                        .Where(a => a.UserId == user.Id)
+                                        .OrderByDescending(a => a.AppliedDateTime).ToList();
+        if (applications == null || applications.Count == 0)
+            return NotFound("Application not found");
+        var result = applications.Select(a => 
+            new {
+                a.AppliedDateTime,
+                a.AppliedStatus,
+                post = a.Post.ToJson(),
+            }
+        );
+        return Json(result);
+    }
+
+
+    // ไม่น่าได้ใช้
     [Route("api/user/incomingevent")]
     [Authorize]
     public IActionResult GetInComingEvent()

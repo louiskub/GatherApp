@@ -9,8 +9,11 @@
 
 
     <link rel="stylesheet" href="~/css/components/dropdown.css">
+    <link rel="stylesheet" href="~/css/components/dropdown.css">    
     <link rel="stylesheet" href="~/css/components/post.css">
     <link rel="stylesheet" href="~/css/components/post_in_date.css">
+    <link rel="stylesheet" href="~/css/GOLF/createpost.css">
+
 
     @* @await Html.PartialAsync("_NavUnAuth") *@
     <link rel="stylesheet" href="~/css/home/home.css">
@@ -25,14 +28,97 @@
             <div class="write-button">
                 <img src="https://cdn-icons-png.flaticon.com/512/84/84380.png" alt="Write">
             </div>
+
+            <div class="popup_create" id="createPostPopup">
+                <div class="popup_create_content">
+                    <div class="popup_create_content_left">
+                        <h2>Create Post</h2>
+                        <div class="img_des_box">  
+                            <div class="upload_container">
+                                <input type="file" id="imageUpload" accept="image/*" style="display: none;" />
+                                <div class="preview">
+                                    <span class="upload_text">Upload Image</span>
+                                    <img id="previewImage" src="" alt="Preview" style="display: none;">
+                                </div>
+                            </div>
+                            <textarea class="descript_create" placeholder="Description"></textarea>
+                        </div>
+                    </div>
+                    <div class="popup_create_content_right">
+                        <div class="create_act_name">
+                            <input type="text" placeholder="Activity Name">
+                        </div>
+
+                        <div class="tag-container" id="tag-container">
+                            <div class="tag-list" id="tag-list">
+                                <span class="tag-placeholder" id="tag-placeholder">Select up to 3 tags</span>
+                            </div>
+                            <div class="tag-options" id="tag-options">
+                                <div data-value="Author">Author</div>
+                                <div data-value="MSelect">Multiselect Dropdown</div>
+                                <div data-value="Accordions">Accordions</div>
+                                <div data-value="Radio Buttons">Radio Buttons</div>
+                                <div data-value="SearchBox">Search Boxes</div>
+                                <div data-value="Tables">Tables</div>
+                                <div data-value="Profiles">Profiles</div>
+                                <div data-value="Sliders">Sliders</div>
+                                <div data-value="Tabs">Tabs</div>
+                                <div data-value="NavMenu">Navigation Menu</div>
+                                <div data-value="Cities">Cities</div>
+                                <div data-value="Countries">Countries</div>
+                                <div data-value="Regions">Regions</div>
+                                <div class="tag-limit-msg" id="tag-limit-msg">Only 3 tags can be selected</div>
+                            </div>
+                        </div>
+
+                        <div class="create_location">
+                            <div class="location_container"></div>
+                            <!-- <div class="location_province">
+                                <input type="text" placeholder="Province">
+                            </div>
+                            <div class="location_district">
+                                <input type="text" placeholder="District">
+                            </div> -->
+                        </div>
+                        <div class="google_map_link">
+                            <div class="input_map_link">
+                                <input type="text" placeholder="Google Map Link">
+                            </div>
+                            <div class="map_teach">
+                                <a href="https://www.youtube.com/watch?v=IiWCCFtKU8c" target="_blank" class="map-link">
+                                    🌍<span class="link-text">Discover how to get the Google Map link</span>🗺️
+                                </a>
+                            </div>
+                        </div>
+                        <div class="event_date">
+                            <label for="eventdate">📅Event Date</label>
+                            <input type="datetime-local" id="eventdate" class="event-date-input">
+                            <p id="event-error-msg" style="color: red; font-size: 14px; display: none;">
+                                ⛔Event date must be after the deadline
+                            </p>
+                        </div>
+                        
+                        <div class="app_deadline">
+                            <label for="deadline">📅Application Deadline</label>
+                            <input type="datetime-local" id="deadline" class="deadline-input">
+                            <p id="deadline-error-msg" style="color: red; font-size: 14px; display: none;">
+                                ⛔Please select a date and time in the future
+                            </p>
+                        </div>
+                        <div class="parti_needed">
+                            <input type="number" placeholder="Participants needed" min="0" step="1">
+                        </div>                    
+                        <div class="check_attach_file">
+                            <label><input type="checkbox"> Attach file</label>
+                        </div>
+                        <div class="popup-actions">
+                            <button class="cancel_but" onclick="closePopup()">Cancel</button>
+                            <button class="create_but" onclick="createpost()">Create</button>
+                        </div>
+                    </div>
+                </div>
+            </div>        
         </div>
     </div>
-    @* @if (isAuthorized)
-{
-    <p>แสดงเมนูสำหรับผู้ใช้ที่ล็อกอินแล้ว</p>
-}
-else
-{
-    <p>แสดงเมนูสำหรับผู้ใช้ที่ยังไม่ล็อกอิน</p>
-} *@
+    <script src="~/js/GOLF/createpost.js"></script>
     <script type="module" src="~/js/home/home.js"></script>

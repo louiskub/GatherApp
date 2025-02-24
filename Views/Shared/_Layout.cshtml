@@ -67,7 +67,7 @@
         const link = document.createElement("link");
         link.rel = "stylesheet";
 
-        if (localStorage.getItem('authorized') === null) {
+        if (localStorage.getItem('token') === null) {
             console.log("Unauthorized");
 
             link.href = "/css/nav/nav_unauth.css";
