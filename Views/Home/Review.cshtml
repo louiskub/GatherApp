@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="~/css/inform/review.css">
+
+<div class="main">
+    <div class="review-container">
+        <h2>Your Review</h2>
+        <div class="stars" id="starContainer">
+            <span class="star" data-value="5">&#9733;</span>
+            <span class="star" data-value="4">&#9733;</span>
+            <span class="star" data-value="3">&#9733;</span>
+            <span class="star" data-value="2">&#9733;</span>
+            <span class="star" data-value="1">&#9733;</span>
+        </div>
+        <p id="ratingText">choose Your score</p>
+
+        <input type="text" class="title" placeholder="Review title">
+        <textarea class="review-text" placeholder="Write your review here"></textarea>
+        
+        <div class="submit-button-container">
+            <button class="cancel-btn">Not Now</button>
+            <button class="submit-btn">Submit Review</button>
+        </div>
+    </div>
+</div>
+    
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const stars = document.querySelectorAll(".star");
+        const ratingText = document.getElementById("ratingText");
+        
+        stars.forEach(star => {
+            star.addEventListener("click", function() {
+                let rating = this.getAttribute("data-value");
+                updateStars(rating);
+                ratingText.textContent = `You give ${rating} ${rating == 1 ? 'star' : 'stars'}`;
+            });
+        });
+        
+        function updateStars(rating) {
+            stars.forEach(star => {
+                star.classList.toggle("active", star.getAttribute("data-value") <= rating);
+            });
+        }
+    });
+</script>
