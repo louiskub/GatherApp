@@ -9,7 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace GatherApp.Controllers;
 
@@ -80,15 +81,24 @@ public class AuthController : Controller
 
         Response.Cookies.Append("token", token, new CookieOptions
         {
-            HttpOnly = true,
-            Secure = true,
+            HttpOnly = false,
+            Secure = false,
             SameSite = SameSiteMode.Strict,
             Expires = DateTime.UtcNow.AddDays(1)
         });
         
         return Json(new { status = "Login success", token = token });
     }
-
+    
+    [HttpPost]
+    [Route("api/auth/logout")]
+    public async Task<IActionResult> Logout()
+    {
+        // ทำการ sign-out และลบ cookie ของผู้ใช้
+        Response.Cookies.Delete("token");
+        // await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToAction("Index", "Home");
+    }
 
     public IActionResult Register()
     {
