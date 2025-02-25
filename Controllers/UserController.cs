@@ -54,6 +54,7 @@ public class UserController : Controller
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var user = _db.Users
               .Include(u => u.BehaviorScores)
+              .Include(u => u.ReceivedRatings)
               .FirstOrDefault(u => u.Id == userId); 
               
         var totalScore = _db.BehaviorScores.Where(b => b.UserId == user.Id)

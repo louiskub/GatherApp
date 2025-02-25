@@ -97,7 +97,6 @@ namespace GatherApp.Controllers
                 Score = rating.Score,
                 Comment = rating.Comment,
                 CreatedAt = DateTime.UtcNow,
-                IsreviewAble = DateTime.UtcNow < post.ActDatetime.AddDays(7)
             };
             _ = _db.Notifications.Add(new Notification
             {

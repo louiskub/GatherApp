@@ -44,5 +44,4 @@ public class RatingScore
 
     public User Rater { get; set; }
 
-    public bool IsreviewAble { get; set; } = true;
 }
