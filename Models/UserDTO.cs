@@ -30,8 +30,17 @@ public class UserDTO
     public string? LastName { get; set; }
 
     [DataType(DataType.Date)]
+    [CustomValidation(typeof(UserDTO), nameof(ValidateDateOfBirth))]
     public DateTime? DateOfBirth { get; set; }
 
+    public static ValidationResult? ValidateDateOfBirth(DateTime? dateOfBirth, ValidationContext context)
+    {
+        if (dateOfBirth.HasValue && dateOfBirth.Value > DateTime.Now)
+        {
+            return new ValidationResult("Date of birth cannot be in the future.");
+        }
+        return ValidationResult.Success;
+    }
 }
 
 

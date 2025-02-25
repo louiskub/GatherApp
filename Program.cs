@@ -63,6 +63,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddSignalR();
+builder.Services.AddScoped<ChatHub>();
 builder.Services.AddScoped<GatherApp.Services.JwtService>();
 
 // Add services to the container.
@@ -70,6 +72,7 @@ builder.Services.AddControllersWithViews();
 
 
 var app = builder.Build();
+
 app.UseCors("AllowAll");
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -78,6 +81,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+app.MapHub<ChatHub>("/chatHub");
 
 
 app.UseHttpsRedirection();

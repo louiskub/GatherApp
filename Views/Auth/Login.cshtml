@@ -89,7 +89,7 @@
                     }
                 },
                 error: function (xhr) {
-                    let errorMessage = xhr.responseJSON?.status || "Login failed";
+                    let errorMessage = xhr.responseJSON?.errors || "Login failed";
                     alert(errorMessage);  
                 }
             });
