@@ -1,158 +1,216 @@
-.report-all{
-    margin: 10px;
-    padding: 20px;
-    border-radius: 0.3cm;
-    /* background-color: bisque; */
-    border: 1px solid black;
-    display: inline-block;
+:root {
+    --report-choice-bg: var(--cherry-blossom-pink);
+    --report-choice-hover-bg: var(--bright-pink-crayola-2);
+    --cancel-button-bg: var(--cherry-blossom-pink);
+    --report-button-bg: var(--amaranth-purple);
+    --text-area-bg: white;
+    --text-area-border: var(--rose-red);
+}
+
+* {
+    outline: none;
+}
+
+[data-theme="dark"] {
+    --report-choice-bg: var(--claret);
+    --report-choice-hover-bg: var(--rose-red);
+    --cancel-button-bg: var(--outer-sapce);
+    --report-button-bg: var(--rose-red);
+    --text-area-bg: var(--outer-space);
+    --text-area-border: var(--french-gray);
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* min-height: 80vh; */
+}
+
+.report-all {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 3rem; 
+    margin-top: auto;
+    border-radius: 10px;
+    background-color: var(--post-bg);
+    box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.3);
+    width: 80%; /* เพิ่มความกว้าง */
+    max-width: 900px; /* จำกัดความกว้างสูงสุด */
+    /* height: auto; */
 }
 
 .report-header {
     display: flex;
     align-items: center;
-    gap: 5px;
-    margin: 0 0 10px 5px;
+    gap: 10px;
+    margin-bottom: 1rem;
 }
 
-.report-container{
-    display: inline-flex;
+.report-container {
+    display: flex;
     gap: 20px;
-    height: 100%;
-    align-items: stretch;
-    /* background-color: red; */
+    /* align-items: stretch; */
+    width: 100%;
+}
 
-    .report-content{
-        width: 100%;
-        max-width: 20rem;
-        
-        hr {
-            margin: 0 0 5px 0;
-        }
-    
-        .report-checkbox{
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 5px;
-            margin: 10px 0;
+.report-img-container {
+    flex: 1; 
+    max-width: 280px;
+    min-width: 250px;
+    border-radius: 0.2cm;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
+    background-image: url("https://thaiastro.nectec.or.th/skyevnt/uploads/2020/media-3533-5e7b3d8b00ded.jpg");
+}
 
-            .report-choice {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background-color: aquamarine;
-                padding: 2px;
-                border-radius: 0.1cm;
-            }
-    
-            .report-choice:hover{
-                cursor: pointer;
-                transform: scale(1.02);
-                transition: all 0.2s ease-in-out;
-                background-color: #64c2a5;
-                color: white;
-            }
+.img-profile {
+    position: absolute;
+    width: 4rem;
+    height: 4rem;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 2px solid var(--text-color);
+    border-radius: 50%;
+    object-fit: cover;
+}
 
-            .report-active {
-                background-color: lightcoral;
-                color: white;
-                border: 1px solid black;
-            }            
-        }
-    
-        textarea{
-            width: 100%;
-            height: 2%;
-            resize: none;
-            border-radius: 0.2cm;
-            padding: 10px;
-            border: 1px solid #ccc;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-        }
-    }
+.img-username {
+    background: rgba(0, 0, 0, 0.6);
+    /* color: var(--text-color); */
+    background-color: var(--navbar-bg);
+    color: white;
+    font-size: 1rem;
+    text-align: center;
+    padding: 1rem;
+    width: 100%;
+}
+
+.report-content {
+    flex: 2;
+}
+
+.report-checkbox-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.report-checkbox {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.7rem;
+}
+
+.report-choice {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--report-choice-bg);
+    padding: 0.8rem;
+    border-radius: 8px;
+    border: none;
+    color: var(--text-color);
+    transition: all 0.2s ease-in-out;
+}
+
+.report-choice:hover {
+    cursor: pointer;
+    background-color: var(--report-choice-hover-bg);
+}
+
+.report-active {
+    background-color: var(--report-choice-hover-bg);
+    color: var(--hover-text);
+}
+
+textarea {
+    width: 100%;
+    resize: none;
+    border-radius: 5px;
+    padding: 10px;
+    color: var(--text-color);
+    background-color: var(--text-area-bg);
+    border: 1px solid var(--text-area-border);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .report-btn-container {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
-    margin: -5px 0 0 0;
-    button {
-        padding: 5px 20px;
-        border-radius: 0.15cm;
-        border: 1px solid #ccc;
-        cursor: pointer;
-        transition: 0.2s ease-in-out;
-        box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-    }
-
-    button:hover {
-        transform: scale(1.05);
-        transition: all 0.2s ease-in-out;
-        box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
-    }
-    
-    #report-btn {
-        background-color: red;
-        color: white;
-        border: none;
-    }
-    
-    #report-btn:hover {
-        background-color: darkred;
-    }
-    
-    #cancel-btn {
-        background-color: #425cde;
-        color: white;
-    }
-
-    #cancel-btn:hover {
-        background-color: rgb(35, 61, 155);
-    }
+    margin-top: 10px;
 }
 
-.report-img-container{
-    width: fit-content;
-    position: relative;
-    width: 160px;
-    border: 1px solid black;
-    border-radius: 0.2cm;
-    overflow: hidden;
-    background-image: url("https://png.pngtree.com/thumb_back/fh260/background/20210911/pngtree-xiaguang-daytime-rape-flower-mountain-no-photography-picture-with-picture-image_851488.jpg");
-    background-size: cover;
-    background-position: center;
-    
+button {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    padding: 8px 20px;
+    border-radius: 5px;
+    border: 1px solid var(--search-border);
+    transition: 0.2s ease-in-out;
+    color: var(--text-color);
+}
 
-    .img-profile{
-        position: absolute;
-        width: 4rem;
-        height: 3.5rem;
-        /* border-radius: 50%;  */
-        border: 1px solid black;
-        bottom: 25%;
-        left: 50%;
-        transform: translate(-50%, 0%);
-        z-index: 5;
-        object-fit: cover;
+#report-btn {
+    background-color: var(--report-button-bg);
+    color: white;
+}
+
+#cancel-btn {
+    background-color: var(--cancel-button-bg);
+    /* color: var(--text-color); */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .report-container {
+        flex-direction: column;
     }
 
-    .img-username{
-        position: absolute;
-        display: flex;
-        bottom: 0%;   
-        background-color: wheat;
-        word-break: break-word;
-        font-size: 0.9rem;
-        line-height: 1rem;
-        text-align: center;
-        align-items: center;
-        justify-content: center;
-        height: 20%;
+    .report-all {
         width: 100%;
-        padding: 30% 10% 20%;
-        font-weight: bold;
-        /* padding: 20% 10% 5%; */
-        /* height: 20%; */
-        
+        height: 100%;
+        border-radius: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
+
+    .report-img-container {
+        width: 90%;
+        align-self: center;
+        /* height: 180px; */
+        min-height: 150px;
+        max-width: none;
+        text-align: flex-end;
+    }
+
+    .img-profile {
+        /* width: 4.5rem; */
+        height: 4rem;
+        bottom: 23%;
+    }
+
+    .report-btn-container {
+        justify-content: center;
+    }
+
+    #report-btn, #cancel-btn {
+        width: 40%;
+    }
+
 }
