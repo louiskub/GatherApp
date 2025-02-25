@@ -60,6 +60,12 @@ public class HomeController : Controller
         return View("~/Views/Home/ReportPage.cshtml");
     }
 
+    [Route("review")]
+    public IActionResult Review()
+    {
+        return View("~/Views/Home/Review.cshtml");
+    }
+
     [Route("login")]
     public IActionResult Login()
     {
