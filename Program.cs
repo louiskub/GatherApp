@@ -91,15 +91,15 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// app.Use(async (context, next) =>
-// {
-//     await next();
+app.Use(async (context, next) =>
+{
+    await next();
 
-//     if (context.Response.StatusCode == 404) // If page not found
-//     {
-//         context.Response.Redirect("/home");
-//     }
-// });
+    if (context.Response.StatusCode == 404) // If page not found
+    {
+        context.Response.Redirect("/home");
+    }
+});
 
 app.MapControllerRoute(
     name: "default",
