@@ -154,6 +154,34 @@ namespace GatherApp.Migrations
                     b.ToTable("BehaviorScores");
                 });
 
+            modelBuilder.Entity("GatherApp.Models.ChatMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PostId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ChatMessages");
+                });
+
             modelBuilder.Entity("GatherApp.Models.Notification", b =>
                 {
                     b.Property<string>("UserId")
@@ -180,9 +208,6 @@ namespace GatherApp.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AgeLimit")
-                        .HasColumnType("int");
-
                     b.Property<string>("CoverPageImg")
                         .HasMaxLength(4000000)
                         .HasColumnType("longtext");
@@ -207,15 +232,7 @@ namespace GatherApp.Migrations
                     b.Property<int>("Like")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MaxAge")
-                        .IsRequired()
-                        .HasColumnType("int");
-
                     b.Property<int>("MaxParticipant")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MinAge")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("PostName")
