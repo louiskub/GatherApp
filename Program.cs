@@ -43,7 +43,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = false,
             ValidateLifetime = true
         };
-    options.Events = new JwtBearerEvents
+
+        options.Events = new JwtBearerEvents
         {
             OnMessageReceived = context =>
             {
@@ -51,6 +52,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 {
                     context.Token = context.Request.Cookies["token"];
                 }
+                return Task.CompletedTask;
+            },
+            OnChallenge = context =>
+            {
+                context.HandleResponse();
+                context.Response.Redirect("/login");  // Redirect unauthorized users to login page
                 return Task.CompletedTask;
             }
         };
@@ -83,6 +90,16 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.Use(async (context, next) =>
+{
+    await next();
+
+    if (context.Response.StatusCode == 404) // If page not found
+    {
+        context.Response.Redirect("/home");
+    }
+});
 
 app.MapControllerRoute(
     name: "default",
