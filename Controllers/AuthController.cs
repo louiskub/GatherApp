@@ -9,7 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace GatherApp.Controllers;
 
@@ -41,21 +42,13 @@ public class AuthController : Controller
     {
         if (obj.Password == null || obj.Username == null)
         {   
-            Console.WriteLine("Invalid request body");
             return BadRequest("Invalid request body");
         }
         
-        Console.WriteLine(obj.Username, obj.Password);
-        
-        // ค้นหาผู้ใช้จากฐานข้อมูล
-        var userDTO = _db.Users.Where(
-            s => s.Username == obj.Username
-        ).FirstOrDefault();
+        var userDTO = await _db.Users.FirstOrDefaultAsync(s=> s.Username == obj.Username);
 
-        // ตรวจสอบหากไม่พบผู้ใช้
         if (userDTO == null)
         {
-            Console.WriteLine("Error login");
             return Json(new { status = "Invalid username or password" });
         }
 
@@ -63,14 +56,14 @@ public class AuthController : Controller
         if (userScore != null && userScore.IsBanned)
         {
             if (userScore.BannedUntil.HasValue && userScore.BannedUntil > DateTime.Now)
-        {
+            {
             return Unauthorized($"You are banned until {userScore.BannedUntil.Value}");
-        }
+            }
 
         if (!userScore.BannedUntil.HasValue) // แบนถาวร
-        {
+            {
             return Unauthorized("You have been permanently banned.");
-        }
+            }
 
         // ถ้าครบ 7 วันแล้ว ให้ยกเลิกการแบน
         userScore.IsBanned = false;
@@ -80,19 +73,32 @@ public class AuthController : Controller
 
         if (!BCrypt.Net.BCrypt.Verify(obj.Password, userDTO.Password))
         {
-            Console.WriteLine("Error login - Incorrect password");
             return Json(new { status = "Invalid username or password" });
         }
 
-        // หากล็อกอินสำเร็จ
-        Console.WriteLine("Login success");
         string stId = userDTO.Id.ToString();
         var token = _jwtService.GenerateToken(stId, userDTO.Username);
-        Console.WriteLine($"token : {token}");
+
+        Response.Cookies.Append("token", token, new CookieOptions
+        {
+            HttpOnly = false,
+            Secure = false,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTime.UtcNow.AddDays(1)
+        });
         
         return Json(new { status = "Login success", token = token });
     }
-
+    
+    [HttpPost]
+    [Route("api/auth/logout")]
+    public async Task<IActionResult> Logout()
+    {
+        // ทำการ sign-out และลบ cookie ของผู้ใช้
+        Response.Cookies.Delete("token");
+        // await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToAction("Index", "Home");
+    }
 
     public IActionResult Register()
     {
@@ -104,19 +110,36 @@ public class AuthController : Controller
     [Route("api/auth/register")]
     public async Task<IActionResult> Register([FromBody] UserDTO obj)
     {
-        if (ModelState.IsValid)
-        {
-            if (_db.Users.Any(s => s.Username == obj.Username))
+            if (_db == null)
             {
-                return BadRequest(new { status = "Username already exists" });
+                return StatusCode(500, new { status = "Database context is not initialized." });
             }
-            
 
-            if (_db.Users.Any(s => s.Email == obj.Email))
+            if (string.IsNullOrWhiteSpace(obj.Username) || string.IsNullOrWhiteSpace(obj.Email) || string.IsNullOrWhiteSpace(obj.Password) || string.IsNullOrWhiteSpace(obj.DateOfBirth.ToString())
+            || string.IsNullOrWhiteSpace(obj.FirstName) || string.IsNullOrWhiteSpace(obj.LastName))
             {
-                return BadRequest(new { status = "Email already exists" });
+                return BadRequest(new { status = "Invalid input", errors = new[] { "Username, Email, and Password are required." } });
             }
-            else
+
+
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors)    
+                                            .Select(e => e.ErrorMessage)
+                                            .ToList();
+
+                return BadRequest(new { status = "Invalid request body" , errors});
+            }
+
+
+            var existingUser = await _db.Users.FirstOrDefaultAsync(s => s.Username == obj.Username || s.Email == obj.Email);
+            if (existingUser != null)
+            {
+                return BadRequest(new { status = "User already exists", errors = new[] { "Username or Email is already taken." } });
+            }
+
+            using var transaction = await _db.Database.BeginTransactionAsync();
+            try
             {
                 var user = new User
                 {
@@ -126,7 +149,7 @@ public class AuthController : Controller
                     Password = BCrypt.Net.BCrypt.HashPassword(obj.Password),
                     FirstName = obj.FirstName  ?? "Unknown",
                     LastName = obj.LastName ?? "Unknown",
-                    DateOfBirth = (DateTime)obj.DateOfBirth
+                    DateOfBirth = obj.DateOfBirth ?? DateTime.UtcNow.AddDays(-2)
                 };
 
                 _db.Users.Add(user);
@@ -151,15 +174,29 @@ public class AuthController : Controller
                 _db.BehaviorScores.Add(behaviorScore);
                 await _db.SaveChangesAsync();
 
+                await transaction.CommitAsync();
+
                 string stId = user.Id.ToString();
-                var token = _jwtService.GenerateToken(stId, user.Username); 
+                var token = _jwtService.GenerateToken(user.Id, user.Username);
+                if (string.IsNullOrEmpty(token))
+                {
+                    return StatusCode(500, new { status = "Token generation failed" });
+                }
+
+                Response.Cookies.Append("token", token, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.UtcNow.AddDays(1)
+                });
 
                 return Ok(new { status = "Registration successful", token = token });
             }
+        catch 
+        {
+            await transaction.RollbackAsync();
+            return StatusCode(500, new { status = "Registration failed", errors = new[] { "Transaction failed."} });
         }
-        var errors = ModelState.Values.SelectMany(v => v.Errors)
-                                    .Select(e => e.ErrorMessage);
-        return BadRequest(new {obj});
     }
-
 }

@@ -81,11 +81,15 @@
                     password: password
                 }),
                 success: function (response) {
-                    document.cookie = `token=${response.token}; path=/; secure; samesite=strict`;
-                    window.location.href = "/post/aboutpost"; 
+                    if(response.status == "Login success") {
+                        // เมื่อ login success, browser จะเก็บ cookie โดยอัตโนมัติ
+                        window.location.href = "/home"; 
+                    } else {
+                        alert(response.status);
+                    }
                 },
                 error: function (xhr) {
-                    let errorMessage = xhr.responseJSON?.status || "Login failed";
+                    let errorMessage = xhr.responseJSON?.errors || "Login failed";
                     alert(errorMessage);  
                 }
             });

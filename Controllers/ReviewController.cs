@@ -54,6 +54,11 @@ namespace GatherApp.Controllers
                 return BadRequest("You can only rate after the event has ended.");
             }
 
+            if (DateTime.UtcNow > post.ActDatetime.AddDays(7))
+            {
+                return BadRequest("You can only rate within 7 days after the event has ended.");
+            }
+
             bool commonPost = await _db.Applications
                 .AnyAsync(a1 => a1.UserId == raterId &&
                                 _db.Applications.Any(a2 => a2.UserId == rating.RatedUserId && a1.PostId == a2.PostId));
@@ -91,7 +96,7 @@ namespace GatherApp.Controllers
                 UserId = raterId,
                 Score = rating.Score,
                 Comment = rating.Comment,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
             };
             _ = _db.Notifications.Add(new Notification
             {
@@ -138,7 +143,7 @@ namespace GatherApp.Controllers
             rating.Score = updatedRating.Score;
             rating.Comment = !string.IsNullOrWhiteSpace(updatedRating.Comment) ? updatedRating.Comment : rating.Comment;
             rating.CreatedAt = DateTime.UtcNow;
-
+            
             _db.RatingScores.Update(rating);
             await _db.SaveChangesAsync();
             return Ok(new { message = "Rating updated successfully." });

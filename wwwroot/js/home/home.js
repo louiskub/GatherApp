@@ -2,6 +2,26 @@ import Dropdown from "/js/components/dropdown.js";
 import Post from "/js/components/post.js";
 import PostInDate from "/js/components/post_in_date.js";
 
+async function fetchAllPosts(){
+    try {
+        let response = await fetch("/api/post/allposts");
+        // response = await response.json();
+        console.log(response);
+        if (!response.ok) {
+            return [];
+        }
+        else {
+            response = await response.json();
+            return response;
+        }
+        
+    } catch (error) {
+        console.error("Error loading JSON:", error);
+        return [];
+    }
+}
+fetchAllPosts();
+// console.log(fetchAllPosts());
 document.addEventListener("DOMContentLoaded", function () {
     const main = document.querySelector(".main");
     const sidenav = document.querySelector(".sidenav");
@@ -45,10 +65,18 @@ document.addEventListener("DOMContentLoaded", function () {
         updateBodyScroll(); // ตรวจสอบการปิดการเลื่อน
     });
 
+    document.addEventListener("toggleSidebar", function () {
+        sidenav.classList.remove("active");
+        main.classList.remove("shifted", sidenav.classList.contains("active"));
+    
+        updateBodyScroll(); // ปรับการ scroll
+    });
+
     // ตรวจจับการคลิกที่ body เพื่อปิด sidenav ถ้าคลิกนอกพื้นที่ที่ต้องการ
     document.addEventListener("click", function (event) {
         // ถ้าคลิกไม่อยู่ภายใน sidenav และไม่อยู่ใน dropdownToggle
-        if (!sidenav.contains(event.target) && 
+        if ( sidenav.classList.contains("active") && 
+            !sidenav.contains(event.target) && 
             !dropdownToggle.contains(event.target) &&
             !themeToggle.contains(event.target)
         ) {

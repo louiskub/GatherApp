@@ -54,11 +54,15 @@ public class UserController : Controller
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var user = _db.Users
               .Include(u => u.BehaviorScores)
+              .Include(u => u.ReceivedRatings)
               .FirstOrDefault(u => u.Id == userId); 
               
         var totalScore = _db.BehaviorScores.Where(b => b.UserId == user.Id)
                                    .Sum(b => b.Score);
-
+        
+        var rating = _db.RatingScores.Where(r => r.RatedUserId == user.Id)
+                                .Select(r => r.Score)
+                                .ToList();
 
         if (user == null) 
             return NotFound("User not found");
@@ -69,6 +73,7 @@ public class UserController : Controller
             profileImg = user.ProfileImg,
             notification = user.Notifications,
             totalBehaviorScore = user.BehaviorScores.Sum(b => b.Score),
+            RatingScore = user.ReceivedRatings.Count == 0 ? 0 : user.ReceivedRatings.Average(r => r.Score),
         });
     }
 
