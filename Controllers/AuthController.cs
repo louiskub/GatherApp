@@ -101,10 +101,14 @@ public class AuthController : Controller
     public async Task<IActionResult> Register([FromBody] UserDTO obj)
     {
 
+             if (obj == null)
+            {
+                return BadRequest(new { status = "Invalid request body", errors = new[] { "Request body is missing or malformed." } });
+            }
             if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values.SelectMany(v => v.Errors)
-                                            // .Select(e => e.ErrorMessage)
+                                            .Select(e => e.ErrorMessage)
                                             .ToList();
 
                 return BadRequest(new { status = "Invalid request body" + errors, errors});

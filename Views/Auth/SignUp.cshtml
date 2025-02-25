@@ -153,6 +153,8 @@
             if (data.status === "Registration successful") {
                 alert('Registration successful.');
                 window.location.href = '/auth/login';
+            } else if (data.errors) {
+                alert('Registration failed: ' + data.errors.join('\n'));
             } else {
                 alert('Registration failed: ' + data.status);
             }

@@ -58,7 +58,10 @@ public class UserController : Controller
               
         var totalScore = _db.BehaviorScores.Where(b => b.UserId == user.Id)
                                    .Sum(b => b.Score);
-
+        
+        var rating = _db.RatingScores.Where(r => r.RatedUserId == user.Id)
+                                .Select(r => r.Score)
+                                .ToList();
 
         if (user == null) 
             return NotFound("User not found");
@@ -69,6 +72,7 @@ public class UserController : Controller
             profileImg = user.ProfileImg,
             notification = user.Notifications,
             totalBehaviorScore = user.BehaviorScores.Sum(b => b.Score),
+            RatingScore = user.ReceivedRatings.Count == 0 ? 0 : user.ReceivedRatings.Average(r => r.Score),
         });
     }
 
