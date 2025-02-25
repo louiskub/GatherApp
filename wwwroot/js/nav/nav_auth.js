@@ -1,7 +1,6 @@
 import UserProfileImage from "/js/components/user_profile_image.js";
 
 async function fetchMyProfile() {
-    console.log("Fetching my profile...");
     try {
         let response = await fetch("/api/user/myprofile", {
             method: "GET",
@@ -17,7 +16,6 @@ async function fetchMyProfile() {
 }
 
 let userProfile = await fetchMyProfile();
-console.log(userProfile)
 let profile = document.querySelector(".profile")
 
 if (profile) {
@@ -30,7 +28,6 @@ if (profile) {
     // console.log("Create Successfully", userProfileImage.render())
     const p = document.createElement("p")
     p.textContent = userProfile.username
-    console.log("kuy")
     profile.appendChild(userProfileImage.render())
     profile.appendChild(p)
 }
