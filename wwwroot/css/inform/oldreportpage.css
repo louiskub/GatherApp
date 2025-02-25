@@ -16,7 +16,7 @@
     background-color: var(--post-bg);
     box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.3);
     width: 60vw;
-    height: 70vh; 
+    /* height: 70vh;  */
     position: fixed;
     left: 50%;
     top: 50%;
@@ -51,9 +51,9 @@
 
 .report-checkbox {
     display: grid;
-    grid-template-columns: 3fr 3fr;
+    grid-template-columns: 2.5fr 2.5fr;
     gap: 10px;
-    margin: 10px;
+    /* margin: 10px; */
 }
 
 .report-choice {

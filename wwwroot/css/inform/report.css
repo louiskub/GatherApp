@@ -7,10 +7,6 @@
     --text-area-border: var(--rose-red);
 }
 
-* {
-    outline: none;
-}
-
 [data-theme="dark"] {
     --report-choice-bg: var(--claret);
     --report-choice-hover-bg: var(--rose-red);
@@ -19,12 +15,8 @@
     --text-area-bg: var(--outer-space);
     --text-area-border: var(--french-gray);
 }
-
-.main {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* min-height: 80vh; */
+* {
+    outline: none;
 }
 
 .report-all {
@@ -32,36 +24,33 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    padding: 3rem; 
-    margin-top: auto;
+    padding: 3.5rem; 
     border-radius: 10px;
     background-color: var(--post-bg);
     box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.3);
-    width: 80%; /* เพิ่มความกว้าง */
-    max-width: 900px; /* จำกัดความกว้างสูงสุด */
-    /* height: auto; */
+    width: 90%;
+    max-width: 1000px;
 }
 
 .report-header {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
     margin-bottom: 1rem;
 }
 
 .report-container {
     display: flex;
-    gap: 20px;
-    /* align-items: stretch; */
-    width: 100%;
+    gap: 2rem;
+    font-size: 1rem;
 }
 
 .report-img-container {
-    flex: 1; 
-    max-width: 280px;
-    min-width: 250px;
-    border-radius: 0.2cm;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    /* flex: 1;  */
+    /* max-width: 280px; */
+    min-width: 200px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 6px var(--text-color);
     overflow: hidden;
     background-size: cover;
     background-position: center;
@@ -69,14 +58,15 @@
     flex-direction: column;
     justify-content: flex-end;
     position: relative;
-    background-image: url("https://thaiastro.nectec.or.th/skyevnt/uploads/2020/media-3533-5e7b3d8b00ded.jpg");
+    border: 1px solid var(--text-color);
+    background-image: url("https://png.pngtree.com/thumb_back/fh260/background/20210911/pngtree-xiaguang-daytime-rape-flower-mountain-no-photography-picture-with-picture-image_851488.jpg");
 }
 
 .img-profile {
     position: absolute;
     width: 4rem;
     height: 4rem;
-    bottom: 20%;
+    bottom: 25%;
     left: 50%;
     transform: translateX(-50%);
     border: 2px solid var(--text-color);
@@ -85,32 +75,35 @@
 }
 
 .img-username {
-    background: rgba(0, 0, 0, 0.6);
+    /* background: rgba(0, 0, 0, 0.6); */
     /* color: var(--text-color); */
     background-color: var(--navbar-bg);
-    color: white;
+    color: var(--navbar-text);
     font-size: 1rem;
     text-align: center;
-    padding: 1rem;
+    font-weight: bold;
+    border-top: 1px solid var(--text-color);
+    padding: 0.8rem;
     width: 100%;
 }
 
 .report-content {
-    flex: 2;
-}
-
-.report-checkbox-container {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    padding: 1rem;
+    flex: 2;
+}
+.report-checkbox-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .report-checkbox {
     display: grid;
     width: 100%;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 0.7rem;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.8rem;
 }
 
 .report-choice {
@@ -120,6 +113,7 @@
     background-color: var(--report-choice-bg);
     padding: 0.8rem;
     border-radius: 8px;
+    font-size: 0.9rem;
     border: none;
     color: var(--text-color);
     transition: all 0.2s ease-in-out;
@@ -139,7 +133,9 @@ textarea {
     width: 100%;
     resize: none;
     border-radius: 5px;
-    padding: 10px;
+    max-height: 120px;
+    padding: 0.8rem;
+    font-size: 0.9rem;
     color: var(--text-color);
     background-color: var(--text-area-bg);
     border: 1px solid var(--text-area-border);
@@ -150,25 +146,23 @@ textarea {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
-    margin-top: 10px;
+    margin-top: 1rem;
 }
-
 button {
     cursor: pointer;
     display: flex;
     justify-content: center;
     padding: 8px 20px;
+    font-size: 0.8rem;
     border-radius: 5px;
     border: 1px solid var(--search-border);
     transition: 0.2s ease-in-out;
     color: var(--text-color);
 }
-
 #report-btn {
     background-color: var(--report-button-bg);
     color: white;
 }
-
 #cancel-btn {
     background-color: var(--cancel-button-bg);
     /* color: var(--text-color); */
@@ -176,10 +170,6 @@ button {
 
 /* Responsive */
 @media (max-width: 768px) {
-    .report-container {
-        flex-direction: column;
-    }
-
     .report-all {
         width: 100%;
         height: 100%;
@@ -190,27 +180,46 @@ button {
         align-items: center;
     }
 
+    .report-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
     .report-img-container {
-        width: 90%;
-        align-self: center;
+        width: 100%;
+        /* align-self: center; */
         /* height: 180px; */
-        min-height: 150px;
-        max-width: none;
-        text-align: flex-end;
+        min-height: 160px;
+        /* max-width: 100%; */
+        /* text-align: flex-end; */
     }
 
     .img-profile {
         /* width: 4.5rem; */
         height: 4rem;
-        bottom: 23%;
+    }
+    .img-username {
+        padding: 1.1rem 0.2rem 0.7rem;
     }
 
+    .report-checkbox-container {
+        gap: 1rem;
+    }
+
+    .report-checkbox {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+
+    textarea {
+        max-height: 70px;
+    }
     .report-btn-container {
         justify-content: center;
     }
 
     #report-btn, #cancel-btn {
-        width: 40%;
+        width: 50%;
     }
 
 }
