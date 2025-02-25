@@ -6,10 +6,11 @@
     --dropdown-bg: var(--lavender-blush);
     --dropdown-text: var(--chocolate-cosmos);
     --dropdown-border: var(--rose-red);
-    --dropdown-hover-bg: var(--cherry-blossom-pink); /* เปลี่ยนเป็นสีที่อ่อนลง */
+    --dropdown-hover-bg: var(--bright-pink-crayola-2); /* เปลี่ยนเป็นสีที่อ่อนลง */
     --dropdown-hover-text: var(--seasalt);
     --dropdown-shadow: var(--slate-gray);
     --dropdown-arrow: var(--rose-red); /* สีสามเหลี่ยม */
+    --dropdown-active-bg: var(--bright-pink-crayola); /* ใช้สีชมพูสดขึ้น */
 }
 
 /* Dark Mode */
@@ -56,7 +57,7 @@
     }
     .dropdown-btn.active {
         background: var(--rose-red);
-        color: var(--seasalt);
+        color: var(--dropdown-hover-text);
     }
     .dropdown-btn .down,
     .dropdown-btn .up {
