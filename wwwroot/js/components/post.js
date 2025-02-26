@@ -1,12 +1,20 @@
 class Post {
-    constructor(date, title, location, accepted, registered, categories = [], imageUrl, like = 0) {
+    constructor(postId, date, title, location, accepted, limitAccepted, registered, categories = [], imageUrl, like = 0) {
+    // constructor(date, title, location, accepted, limitAccepted, registered, categories = [], imageUrl, like = 0) {
+        this.postId = postId;
         this.date = date ?? "Unknown Date";
         this.title = title ?? "Untitled";
         this.location = location ?? "Unknown Location";
         this.accepted = accepted ?? 0;
+        this.limitAccepted = limitAccepted ?? 1;
         this.registered = registered ?? 0;
         this.categories = Array.isArray(categories) ? categories : [];
-        this.imageUrl = imageUrl ?? "https://neilpatel.com/wp-content/uploads/2017/09/blog-post-image-guide.jpg";
+        if (imageUrl && imageUrl.length < 200)
+            this.imageUrl = imageUrl;
+        else if (imageUrl)
+            this.imageUrl = "data:image/jpeg;base64," + imageUrl;
+        else 
+            this.imageUrl = "https://neilpatel.com/wp-content/uploads/2017/09/blog-post-image-guide.jpg";
         this.like = like;
     }
 
@@ -45,7 +53,7 @@ class Post {
 
         postDetail.innerHTML = `
             <div class="post-location"><i class="fa-solid fa-location-dot"></i> ${this.location}</div>
-            <p class="post-accepted">Accepted: ${this.accepted}/10</p>
+            <p class="post-accepted">Accepted: ${this.accepted}/${this.limitAccepted}</p>
             <p class="post-registered">Registered: ${this.registered}</p>
         `;
 
@@ -97,7 +105,7 @@ class Post {
 
     render() {
         const postContainer = document.createElement("a");
-        postContainer.href = "/post";
+        postContainer.href = "/post?postId=" + this.postId;
         postContainer.classList.add("post-container");
     
         const postContent = document.createElement("div");
