@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GatherApp.Migrations
 {
     /// <inheritdoc />
-    public partial class db : Migration
+    public partial class Db1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -27,26 +27,6 @@ namespace GatherApp.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ActivityTypes", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "ChatMessages",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    PostId = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UserId = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Message = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    SentAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ChatMessages", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -167,11 +147,14 @@ namespace GatherApp.Migrations
                     IsAttached = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CoverPageImg = table.Column<string>(type: "longtext", maxLength: 4000000, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    AgeLimit = table.Column<int>(type: "int", nullable: true),
                     Like = table.Column<int>(type: "int", nullable: false),
                     MaxParticipant = table.Column<int>(type: "int", nullable: false),
                     CurParticipant = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "varchar(36)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    MinAge = table.Column<int>(type: "int", nullable: false),
+                    MaxAge = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -509,9 +492,6 @@ namespace GatherApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "Applications");
-
-            migrationBuilder.DropTable(
-                name: "ChatMessages");
 
             migrationBuilder.DropTable(
                 name: "Notifications");

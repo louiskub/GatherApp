@@ -1,0 +1,23 @@
+Head = document.querySelector("head");
+Body = document.querySelector("body");
+RightNavbar = document.querySelector(".right-navbar");
+Menu = document.querySelector(".menu");
+
+const link = document.createElement("link");
+link.rel = "stylesheet";
+
+
+console.log("Unauthorized");
+
+link.href = "/css/nav/nav_unauth.css";
+Head.appendChild(link);
+RightNavbar.innerHTML = `
+<button class="menu-toggle">
+    <i class="fa fa-bars open-icon"></i>
+    <i class="fa fa-times close-icon"></i>
+</button>`;
+
+Menu.innerHTML = `
+<a href="/aboutus">About us<i class="fa fa-fw fa-info"></i></a>
+<a href="/login">Login<i class="fa fa-fw fa-user"></i></a>
+<a class="active" href="/signup">Sign up<i class="fa fa-user-plus"></i></a>`;

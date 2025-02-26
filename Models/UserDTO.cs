@@ -19,8 +19,8 @@ public class UserDTO
 
     [Required]
     [StringLength(100, MinimumLength = 8)]
-    [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#(){}[\]:;<>,.?/~_+=|-])[A-Za-z\d@$!%*?&^#(){}[\]:;<>,.?/~_+=|-]{8,}$", 
-    ErrorMessage = "Password must have at least one uppercase letter, one lowercase letter, one number, and one special character.")]
+    [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$", 
+        ErrorMessage = "Password must have at least one uppercase letter, one lowercase letter, one number, and one special character.")]
     public string Password { get; set; }
 
     [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "First name can only contain letters.")]
@@ -29,24 +29,15 @@ public class UserDTO
     [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Last name can only contain letters.")]
     public string? LastName { get; set; }
 
-    [Required(ErrorMessage = "Date of birth is required.")]
     [DataType(DataType.Date)]
     [CustomValidation(typeof(UserDTO), nameof(ValidateDateOfBirth))]
-    public DateTime? DateOfBirth { get; set; } 
+    public DateTime? DateOfBirth { get; set; }
 
-    public static ValidationResult? ValidateDateOfBirth(object? value, ValidationContext context)
+    public static ValidationResult? ValidateDateOfBirth(DateTime? dateOfBirth, ValidationContext context)
     {
-        if (value is DateTime dateOfBirth)
+        if (dateOfBirth.HasValue && dateOfBirth.Value > DateTime.Now)
         {
-            if (dateOfBirth.Date > DateTime.UtcNow.Date)
-            {
-                return new ValidationResult("Date of birth cannot be in the future.");
-            }
-
-            if (dateOfBirth > DateTime.UtcNow.AddDays(-2))
-            {
-                return new ValidationResult("User must be at least 2 days old.");
-            }
+            return new ValidationResult("Date of birth cannot be in the future.");
         }
         return ValidationResult.Success;
     }

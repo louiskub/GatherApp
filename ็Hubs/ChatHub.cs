@@ -1,12 +1,10 @@
 using GatherApp.Data;
 using GatherApp.Models;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
 
 public class ChatHub : Hub
 {
@@ -161,6 +159,6 @@ public class ChatHub : Hub
     {
         var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, postId);
-        await Clients.Group(postId).SendAsync("ReceiveMessage", "System", $"User {userId} left the chat.");
+        await Clients.Group(postId).SendAsync("ReceiveMessage", "System", $"User {Context.ConnectionId} left the chat.");
     }
 }

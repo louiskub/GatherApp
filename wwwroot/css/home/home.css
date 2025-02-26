@@ -53,17 +53,10 @@
 } */
 
 /* Main Content */
-/* .main {
+.main {
     width: 100%;
     padding-top: 60px;
     transition: all 0.3s ease;
-} */
-.main 
-{
-    background-size: cover;
-    background-position: center;
-    /* background-repeat: no-repeat; */
-    /* background-image: url('/assets/img/web_bg_dark.png'); */
 }
 .main.shifted {
     padding-left: var(--sidebar-width);
@@ -100,15 +93,13 @@
     padding-left: 20px;
 }
 
-
-
 /* 5. Dropdown Icon */
 .dropdown-toggle {
     display: flex;
     align-items: center;
     gap: 1rem;
     padding: 0.5rem 1rem;
-    margin: 0 1.7rem 1.2rem;
+    margin: 1.5rem 1.7rem;
     font-size: 1.2rem;
     color: var(--dropdown-btn-text);
     background: var(--dropdown-btn-bg);
@@ -129,7 +120,6 @@
     font-size: 1.5rem;
     transition: transform 0.3s ease;
 }
-.dropdown-toggle.active,
 .dropdown-icon:hover {
     transform: rotate(180deg);
 }
