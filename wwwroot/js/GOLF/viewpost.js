@@ -24,18 +24,17 @@ function submitApplication() {
     }
 }
 
-const heart = document.querySelector('.heart');
+const heart = document.querySelector('.heart i');
 const likesNum = document.querySelector('.likes_num');
 
 heart.addEventListener('click', () => {
-    const isLiked = heart.classList.toggle('liked');
     let likes = parseInt(likesNum.textContent);
 
-    if (isLiked) {
-        heart.textContent = '❤️'; 
+    if (heart.classList.contains('fa-regular')) {
+        heart.classList.replace('fa-regular', 'fa-solid'); 
         likes++;
     } else {
-        heart.textContent = '🤍'; 
+        heart.classList.replace('fa-solid', 'fa-regular');
         likes--;
     }
 
