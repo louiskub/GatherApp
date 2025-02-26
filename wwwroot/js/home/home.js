@@ -2,34 +2,38 @@ import Dropdown from "/js/components/dropdown.js";
 import Post from "/js/components/post.js";
 import PostInDate from "/js/components/post_in_date.js";
 
-async function fetchAllPosts(){
-    try {
-        let response = await fetch("/api/post/allposts");
-        if (!response.ok) {
-            return [];
-        }
-        else {
-            response = await response.json();
-            return response;
-        }
-        
-    } catch (error) {
-        console.error("Error loading JSON:", error);
-        return [];
-    }
-}
 
 async function createDropDown(){
+    async function fetchAllActTypes(){
+        try {
+            let response = await fetch("/api/acttype");
+            if (!response.ok) {
+                return [];
+            }
+            else {
+                response = await response.json();
+                return response;
+            }
+            
+        } catch (error) {
+            console.error("Error loading JSON:", error);
+            return [];
+        }
+        
+    }
+
     const main = document.querySelector(".main");
     const sidenav = document.querySelector(".sidenav");
     const themeToggle = document.querySelector(".theme-switch");
     const dropdownToggle = document.querySelector(".dropdown-toggle");
+    let actTypes = await fetchAllActTypes();
     const dropdowns = [
-        new Dropdown("Any day", ["Today", "Tomorrow", "This week", "Next week", "This month"], "Any day"),
-        new Dropdown("Any category", ["Art", "Games", "Pet & Animal", "Travel"], "Any category"),
-        new Dropdown("Any type", ["Online", "In person"], "Any type")
+        new Dropdown("Any day", ["Today", "Tomorrow", "This week", "Next week", "This month"], "Any day").render(),
+        new Dropdown("Any category", actTypes, "Any category").render(),
+        new Dropdown("Any type", ["Online", "In person"], "Any type").render()
     ];
-    dropdowns.forEach(dropdown => sidenav.appendChild(dropdown.render()));
+    dropdowns.forEach(dropdown => sidenav.appendChild(dropdown));
+    
 
     // ตรวจจับการคลิกที่ body เพื่อปิด sidenav ถ้าคลิกนอกพื้นที่ที่ต้องการ
     document.addEventListener("click", function (event) {
@@ -46,7 +50,8 @@ async function createDropDown(){
     });
 }
 
-async function provincesAndDistricts() {
+async function createProvincesAndDistricts() {
+    const sidenav = document.querySelector(".sidenav");
     let provinceData = [], districtData = [];
 
     async function loadData(url) {
@@ -93,6 +98,13 @@ async function provincesAndDistricts() {
             // รีเซ็ต dropdown ของอำเภอทุกครั้งที่มีการเปลี่ยนแปลงจังหวัด
             districtDropdown = new Dropdown("Any district", filteredAmp, "Any district");
             let newDistrictElement = districtDropdown.render();
+            
+            let span = newDistrictElement.querySelector("span")
+            const observer = new MutationObserver(() => {
+                filterPostInDate();
+            });
+            observer.observe(span, { childList: true, subtree: true });
+
             sidenav.replaceChild(newDistrictElement, districtElement);
             districtElement = newDistrictElement;
 
@@ -107,12 +119,9 @@ async function provincesAndDistricts() {
     provinceObserver.observe(provinceBtn, { childList: true });        
 }
 
-
-
-async function createPostInDate(){
+async function showPost(allPosts){
     const homeContent = document.querySelector(".home-content");
     console.log(homeContent);
-    let allPosts = await fetchAllPosts();
     console.log(allPosts);
 
     allPosts.forEach((eachDate) => {
@@ -122,7 +131,7 @@ async function createPostInDate(){
         posts.forEach((post) => {
             let owner = post.owner
             let activity = post.activity
-            let actType = post.actType
+            let actType = post.actTypes
             post = post.post
     
             let formattedDate = new Date(activity.actDatetime).toLocaleString('en-US', {
@@ -138,7 +147,7 @@ async function createPostInDate(){
             // console.log(formattedDate);
 
             postList.push(new Post(
-                formattedDate, post.postName, activity.province +", "+ activity.district, 
+                post.id,formattedDate, post.postName, activity.province +", "+ activity.district, 
                 post.curParticipant, post.maxParticipant, post.totalApplicant, 
                 actType, 
                 post.coverPageImg, post.like
@@ -165,9 +174,65 @@ async function createPostInDate(){
     })
 }
 
+async function createPostInDate(){
+    async function fetchAllPosts(){
+        try {
+            let response = await fetch("/api/post/allposts");
+            if (!response.ok) {
+                return [];
+            }
+            else {
+                response = await response.json();
+                return response;
+            }
+        } catch (error) {
+            console.error("Error loading JSON:", error);
+            return [];
+        }
+    }
+    let allPosts = await fetchAllPosts();
+    showPost(allPosts)
+}
+
+async function filterPostInDate(){
+    async function fetchFilterPosts(){
+        try {
+            const span = document.querySelectorAll(".sidenav .dropdown .dropdown-btn span");
+            let queryParams = new URLSearchParams({
+                date: span[0].innerText,
+                category: span[1].innerText,
+                actType: span[2].innerText,
+                province: span[3].innerText,
+                district: span[4].innerText
+            });
+            console.log(`/api/post/filter?${queryParams.toString()}`)
+            let response = await fetch(`/api/post/filter?${queryParams.toString()}`);
+            if (!response.ok) {
+                console.log("case1")
+                return [];
+            }
+            else {
+                console.log("case2")
+                response = await response.json();
+                return response;
+            }
+        } catch (error) {
+            console.log("case3")
+            console.error("Error loading JSON:", error);
+            return [];
+        }
+    }
+    const elementsToDelete = document.querySelectorAll(".home-content .post-in-date");
+    elementsToDelete.forEach(element => element.remove());
+    let filterPosts = await fetchFilterPosts();
+    console.log(filterPosts)
+    showPost(filterPosts)
+}
+
 document.addEventListener("DOMContentLoaded", async function () {
     const main = document.querySelector(".main");
     const sidenav = document.querySelector(".sidenav");
+    const themeToggle = document.querySelector(".theme-switch");
     const dropdownToggle = document.querySelector(".dropdown-toggle");
     // const mobileMediaQuery = window.matchMedia("(max-width: 768px)");
 
@@ -181,20 +246,17 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     await createDropDown();
     await createPostInDate();
-    await provincesAndDistricts();
-    // const post1 = new Post("SAT, FEB 1 - 6.00 P.M.", "ACTIVITY NAME", "Fontaine", 8, 10, 50, ["Category1", "Category2"], "https://staticg.sportskeeda.com/editor/2024/05/af09a-17157730211128-1920.jpg", 247);
-    // const post2 = new Post("SAT, FEB 1 - 8.00 P.M.", "ACTIVITY NAME 2", "Mondstadt", 5, 20, 30, ["Games", "Fun"], "https://cdna.artstation.com/p/assets/images/images/056/458/766/large/mathias-zamecki-genshin-approval.jpg?1669289221");
-    // const post3 = new Post("SUN, FEB 2 - 10.00 A.M.", "ACTIVITY NAME 3", "Inazuma", 10, 30, 100, ["Art", "Craft"], "https://assetsio.gnwcdn.com/How-to-get-to-Inazuma-in-Genshin-Impact-cover.jpg?width=1200&height=1200&fit=crop&quality=100&format=png&enable=upscale&auto=webp");
-    
-    // const postInDateList = [
-    //     new PostInDate("Today", [post1, post2, post3, post1, post2, post3, post1, post2, post3]),
-    //     new PostInDate("Tomorrow", [post1, post2, post3, post1, post2, post3, post1, post2, post3]),
-    //     new PostInDate("Sunday, February 20", [post1, post2, post3, post1, post2, post3, post1, post2, post3]),
-    //     new PostInDate("Wednesday, March 31", [post1, post2, post3, post1, post2, post3, post1, post2, post3]),
-    // ];
+    await createProvincesAndDistricts();
 
-    // postInDateList.forEach(postInDate => homeContent.appendChild(postInDate.render()));
-    
+    const dropdowns = document.querySelectorAll(".sidenav .dropdown .dropdown-btn");
+    dropdowns.forEach((dropdown) => {
+        let span = dropdown.querySelector("span")
+        const observer = new MutationObserver(() => {
+            filterPostInDate();
+        });
+        observer.observe(span, { childList: true, subtree: true });
+    })
+
     dropdownToggle.addEventListener("click", function (event) {
         event.stopPropagation();
         sidenav.classList.toggle("active");
