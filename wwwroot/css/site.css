@@ -56,6 +56,10 @@ html, body {
   background-color: var(--bg-color);
 }
 
+body.no-scroll {
+  overflow: hidden;
+}
+
 /* body {
   display: flex;
   flex-direction: column;

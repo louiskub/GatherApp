@@ -13,6 +13,12 @@ public class HomeController : Controller
         _logger = logger;
     }
 
+    [Route("history/popup")] // only test
+    public IActionResult HistoryPopup()
+    {
+        return View("~/Views/Home/History/HistoryPopup.cshtml");
+    }
+
     public IActionResult Index()
     {
         return View();
