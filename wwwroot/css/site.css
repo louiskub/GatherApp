@@ -12,15 +12,67 @@
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 } */
 
+/* button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+} */
+
+
 /* html {
   position: relative;
   min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.main {
+  padding-top: 60px;
+}
+
+.footer-container {
+  position: absolute;
+  white-space: nowrap;
+  bottom: 0;
+  width: 100%;
+  line-height: 60px;
+  padding-left: 30px;
+  border-top: 1px solid #e5e5e5;
 } */
 
+/* 1. Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Jost', sans-serif;
+  text-decoration: none;
+}
+
+html, body {
+  height: 100%;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+}
+
 /* body {
-  margin-bottom: 60px;
+  display: flex;
+  flex-direction: column;
 } */
 
 .main {
-  padding-top: 10px;
+  flex: 1;
+  padding-top: 60px;
+  width: 100%;
+  min-height: 100%;
+}
+
+.footer-container {
+  position: relative;
+  width: 100%;
+  line-height: 60px;
+  padding-left: 30px;
+  border-top: 1px solid #e5e5e5;
+  /* text-align: center; */
 }

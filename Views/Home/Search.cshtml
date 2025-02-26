@@ -1,0 +1,59 @@
+@{
+    ViewData["Title"] = "Gather-Search";
+}
+
+    <link rel="stylesheet" href="~/css/components/dropdown.css">
+    <link rel="stylesheet" href="~/css/components/post.css">
+    <link rel="stylesheet" href="~/css/components/post_in_date.css">
+    <link rel="stylesheet" href="~/css/search/search.css">
+
+    <div class="main">
+        <div class="sidenav"></div>
+        <div class="search-content">
+            <div class="search-filter">
+                <button class="active" id="search-all">All</button>
+                <button id="search-user">User</button>
+                <button id="search-post">Post</button>
+            </div>
+            <div class="search-results-container">
+                <div class="search-results-user">
+                    <h1> User Results</h1>
+                    <div class="search-user-container">
+                        <div class="search-user-info">
+                            <a href="#">
+                                <img src="https://static1.srcdn.com/wordpress/wp-content/uploads/2024/12/genshin-impact-mavuika-builds-weapons-artifacts-team-comps-stats.jpg" 
+                                alt="user" class="search-user-image">  
+                            </a> 
+                            <div class="search-user-name">Mavuika God of Fire</div>
+                            @* <div class="user-real-name">user-real-name</div> *@
+                        </div>
+                        <div class="search-user-info">
+                            <a href="#">
+                                <img src="https://keqingmains.com/wp-content/uploads/2023/07/nahida-camera.webp" 
+                                    alt="user" class="search-user-image">
+                            </a>
+                            <div class="search-user-name">Nahida God of Dendro</div>
+                            @* <div class="user-real-name">user-real-name</div> *@
+                        </div>
+                        <div class="search-user-info">
+                            <a href="#">
+                                <img src="https://static1.srcdn.com/wordpress/wp-content/uploads/2022/02/Genshin-Impact-2.5-Banners-Raiden-Shogun.jpg" 
+                                alt="user" class="search-user-image">   
+                            </a>
+                            <div class="search-user-name">Raiden God of Electro</div>
+                            @* <div class="user-real-name">user-real-name</div> *@
+                        </div>
+                    </div>
+                </div>
+                <div class="search-results-post">
+                    <h1> Post Results</h1>
+                    <button class="dropdown-toggle" href="#">
+                        <i class="fas fa-sliders dropdown-icon"></i> Filter
+                    </button>
+                    <div class="search-post-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="~/js/search/search.js"></script>

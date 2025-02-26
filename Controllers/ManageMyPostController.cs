@@ -5,6 +5,8 @@ using GatherApp.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.AspNetCore.SignalR;
 
 
 namespace GatherApp.Controllers;
@@ -12,10 +14,12 @@ namespace GatherApp.Controllers;
 public class ManageMyPostController : Controller
 {
     private readonly AppDbContext _db;
+    private readonly IHubContext<ChatHub> _chathubContext;
 
-    public ManageMyPostController(AppDbContext db)
+    public ManageMyPostController(AppDbContext db, IHubContext<ChatHub> chathubContext)
     {
         _db = db;
+        _chathubContext = chathubContext;
     }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -24,7 +28,7 @@ public class ManageMyPostController : Controller
     [HttpPost]
     [Route("api/post")]
     [Authorize]
-    public async Task<IActionResult> CreatePost([FromBody] DtoCreatePost dtopost)
+    public async Task<IActionResult> CreatePost([FromBody] DtoCreatePost dtopost, [FromServices] IHubContext<ChatHub> chathubContext)
     {
         // ดึง UserId จาก JWT
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -34,6 +38,9 @@ public class ManageMyPostController : Controller
         var user = await _db.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
         if (user == null)
             return NotFound("User not found");
+
+        if (!ModelState.IsValid)
+            return BadRequest("Invalid input");
 
         if (dtopost.ActTypes == null || dtopost.ActTypes.Count == 0)
         {
@@ -61,21 +68,6 @@ public class ManageMyPostController : Controller
             dtopost.District = null;
         }
 
-        if (dtopost.AgeLimit)
-        {
-            if (dtopost.MinAge == null || dtopost.MaxAge == null || dtopost.MinAge > dtopost.MaxAge)
-            {
-                return BadRequest("Invalid age range.");
-            }
-
-            if (user.Age < dtopost.MinAge || user.Age > dtopost.MaxAge)
-            {
-                return BadRequest("User does not meet the age requirements.");
-            }
-        }
-
-
-
         var activity = new Activity
         {
             OpenDateTime = dtopost.OpenDateTime,
@@ -96,9 +88,6 @@ public class ManageMyPostController : Controller
             MaxParticipant = dtopost.MaxParticipant,
             CoverPageImg = dtopost.CoverPageImg,
             Activity = activity,
-            AgeLimit = dtopost.AgeLimit ? 1 : 0,
-            MinAge = dtopost.MinAge,
-            MaxAge = dtopost.MaxAge,
             UserId = user.Id,  // ระบุ User ที่โพสต์
             User = user
         };
@@ -107,8 +96,14 @@ public class ManageMyPostController : Controller
         {
             _db.Posts.Add(post);
             await _db.SaveChangesAsync();
+
+            await chathubContext.Clients.All.SendAsync("ReceiveMessage", "Post", "New post has been created");
+
+            await chathubContext.Clients.Group(post.Id.ToString()).SendAsync("ReceiveMessage", "System", $"User {userId} joined chat.");
+
             return Json(new {status = "created"});
         }
+
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
@@ -257,21 +252,39 @@ public class ManageMyPostController : Controller
     public IActionResult AcceptParticipant(int postId, string username)
     {
         var postOwnerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (postOwnerId == null)
+        {
+            return Unauthorized("Invalid token. User ID not found.");
+        }
+
         var application = _db.Applications.Include(a => a.User)
                             .Include(a => a.Post)
                             .ThenInclude(p => p.User)
+                            .Include(a => a.Post)
+                            .ThenInclude(p => p.Activity)
                             .Include(a => a.Post.Applications)
+                            .Include(a => a.Post.Activity)
                             .Where(a => a.PostId == postId && a.User.Username == username)
                             .FirstOrDefault();
         if (application == null)
             return NotFound("Application not found");
         // check if the user is the owner of the post
+
+
+        if (application.Post.User == null)
+        {
+            return NotFound("Post owner not found.");
+        }
         if (application.Post.User.Id != postOwnerId)
             return Unauthorized("User Unauthorized");
         
         var post = application.Post;
         application.AppliedStatus = true;
 
+        if (post.Activity == null)
+        {
+            return NotFound("Activity data is missing for this post.");
+        }
 
         _db.Notifications.Add(new Notification
         {
@@ -302,6 +315,7 @@ public class ManageMyPostController : Controller
         }  
 
         _db.SaveChanges();
+        _chathubContext.Clients.Group(postId.ToString()).SendAsync("ReceiveMessage", "Post", $"User {username} has been accepted to join the chat.",DateTime.UtcNow);
         post.CurParticipant = post.Applications.Count(a => a.AppliedStatus == true);
         _db.SaveChanges();
         return Json(new {status = "accepted"});
@@ -347,23 +361,35 @@ public class ManageMyPostController : Controller
     public IActionResult GetFile(int postId, string participantName)
     {
         var ownerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var application = _db.Applications.Include(a => a.Post)
+        var application = _db.Applications.Include(a => a.User)
+                            .Include(a => a.Post)
                             .ThenInclude(p => p.User)
                             .Where(a => a.PostId == postId && a.User.Username == participantName)
                             .FirstOrDefault();
         if (application == null)
             return NotFound("Application not found");
-        // ต้องเป็นเจ้าของโพส
-        if (application.Post.User.Id != ownerId)
+        // ต้องเป็นเจ้าของโพส  หรือ คนส่งไฟล์
+        if (!(application.Post.User.Id == ownerId || application.User.Id == ownerId))
             return Unauthorized("User Unauthorized");
-        if (application.Post.IsAttached == false)
-            return BadRequest("File not attached");
+        // if (application.Post.IsAttached == false)
+        //     return BadRequest("File not attached");
         if (application.FileAttached == null)
             return NotFound("File not found");
         var fileResult = application.GetFile();
         return File(fileResult.Item1, "application/octet-stream", $"archieve.{fileResult.Item2}");
     }
 
+        [HttpGet]
+        [Route("api/chat/{postId}")]
+        public async Task<IActionResult> GetChatHistory(string postId)
+        {
+            var messages = await _db.ChatMessages
+                .Where(m => m.PostId == postId)
+                .OrderBy(m => m.SentAt)
+                .ToListAsync();
+
+            return Ok(messages);
+        }
 
 
 }

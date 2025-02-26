@@ -1,0 +1,276 @@
+@import url('/css/src.css');
+/* @import url('/wwwroot/css/src.css'); */
+
+:root {
+    --sidebar-width: 17.5rem;
+
+    /* Light Mode */
+    --sidenav-bg: var(--cherry-blossom-pink);
+    --sidenav-text: var(--chocolate-cosmos);
+    --sidenav-hover-bg: var(--bright-pink-crayola);
+    --sidenav-hover-text: var(--seasalt);
+    --sidenav-border: var(--rose-red);
+
+    --dropdown-btn-bg: var(--bright-pink-crayola-2);
+    --dropdown-btn-text: var(--eerie-black);
+    --dropdown-btn-border: var(--rose-red);
+    --dropdown-btn-hover-bg: var(--bright-pink-crayola);
+    --dropdown-btn-hover-text: var(--seasalt);
+    --dropdown-btn-shadow: var(--french-gray);
+
+    --write-button-bg: var(--rose-red);
+    --write-button-text: var(--seasalt);
+    --write-button-hover-bg: var(--bright-pink-crayola);
+    --write-button-hover-text: var(--seasalt);
+    --write-button-shadow: var(--chocolate-cosmos);
+
+    /* Element backgrounds และ texts สำหรับเนื้อหาหลัก */
+    --main-bg: var(--lavender-blush);
+    --main-text: var(--eerie-black);
+
+    /* Search filter */
+    --search-text: var(--eerie-black);
+    --search-border: var(--chocolate-cosmos);
+    --search-filter-bg: var(--cherry-blossom-pink);
+
+    /* Hover สำหรับ Search */
+    --hover-bg-1: var(--bright-pink-crayola);
+    --hover-bg-2: var(--bright-pink-crayola-2);
+    --hover-text: white;
+    --hover--user-bg: var(--pink);
+}
+
+/* Dark Mode */
+[data-theme="dark"] {
+    --sidenav-bg: var(--eerie-black);
+    --sidenav-text: var(--seasalt);
+    --sidenav-hover-bg: var(--rose-red);
+    --sidenav-hover-text: var(--seasalt);
+    --sidenav-border: var(--outer-space);
+
+    --dropdown-btn-bg: var(--eerie-black);
+    --dropdown-btn-text: var(--seasalt);
+    --dropdown-btn-border: var(--amaranth-purple);
+    --dropdown-btn-hover-bg: var(--rose-red);
+    --dropdown-btn-hover-text: var(--antiflash-white);
+    --dropdown-btn-shadow: var(--outer-space);
+
+    --write-button-bg: var(--claret);
+    --write-button-text: var(--seasalt);
+    --write-button-hover-bg: var(--amaranth-purple);
+    --write-button-hover-text: var(--seasalt);
+    --write-button-shadow: var(--outer-space);
+
+    --main-bg: var(--outer-space);
+    --main-text: var(--seasalt);
+
+    --search-text: var(--seasalt);
+    --search-border: var(--platinum);
+    --search-filter-bg: var(--slate-gray);
+
+    --hover-bg-1: var(--rose-red);
+    --hover-bg-2: var(--amaranth-purple);
+    --hover-text: var(--antiflash-white);
+    --hover--user-bg: var(--claret);
+}
+
+/* Layout และ Main Content */
+/* .main {
+    width: 100%;
+    padding-top: 60px;
+    background: var(--bg-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+} */
+.main.shifted {
+    padding-left: var(--sidebar-width);
+}
+.post-in-date {
+    padding: 0rem;
+}
+
+/* Sidebar (Sidenav) */
+.sidenav {
+    display: none;
+    height: 100%;
+    position: fixed;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    width: var(--sidebar-width);
+    top: 60px;
+    left: 0;
+    background-color: var(--sidenav-bg);
+    border-right: 2px solid var(--sidenav-border);
+    padding: 1rem;
+    gap: 1rem;
+}
+.sidenav.active {
+    display: flex;
+}
+.sidenav a {
+    color: var(--sidenav-text);
+    text-decoration: none;
+    font-weight: bold;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+.sidenav a:hover {
+    background-color: var(--sidenav-hover-bg);
+    color: var(--sidenav-hover-text);
+    padding-left: 1.5rem;
+}
+
+/* Dropdown Button */
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+    margin-top: 0.5rem;
+    font-size: 1.2rem;
+    color: var(--dropdown-btn-text);
+    background: var(--dropdown-btn-bg);
+    border: 2px solid var(--dropdown-btn-border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s, border-color 0.3s ease;
+    box-shadow: 2px 2px 10px var(--dropdown-btn-shadow);
+}
+.dropdown-toggle:hover {
+    background: var(--dropdown-btn-hover-bg);
+    color: var(--dropdown-btn-hover-text);
+    transform: scale(1.05);
+    border-color: var(--dropdown-btn-hover-bg);
+}
+.dropdown-icon {
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+}
+.dropdown-toggle.active,
+.dropdown-icon:hover {
+    transform: rotate(180deg);
+}
+
+/* Write Button */
+/* .write-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: var(--write-button-bg);
+    color: var(--write-button-text);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    box-shadow: 2px 2px 10px var(--write-button-shadow);
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
+}
+.write-button img {
+    width: 30px;
+    height: 30px;
+    filter: brightness(0) invert(1);
+}
+.write-button:hover {
+    background: var(--write-button-hover-bg);
+    color: var(--write-button-hover-text);
+    transform: scale(1.1);
+} */
+
+/* Search Content และ Filter */
+.search-content {
+    padding: 1rem 2.5rem;
+}
+.search-filter {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    font-size: 1.5rem;
+    padding: 1.2rem 0;
+    text-align: center;
+    border-bottom: 2px solid var(--search-border);
+    color: var(--search-text);
+}
+.search-filter button {
+    flex: 1;
+    margin: 0 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1.5px solid var(--search-border);
+    background-color: var(--search-filter-bg);
+    color: var(--search-text);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: background 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+}
+.search-filter button.active {
+    background-color: var(--hover-bg-1);
+    color: var(--hover-text);
+}
+.search-filter button:hover {
+    background-color: var(--hover-bg-2);
+    color: var(--hover-text);
+}
+
+/* Search Results */
+.search-results-user,
+.search-results-post {
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 2px solid var(--search-border);
+}
+.search-results-user.active,
+.search-results-post.active {
+    display: flex;
+}
+.search-user-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+}
+.search-user-info {
+    display: flex;
+    align-items: center;
+    background-color: var(--post-bg);
+    border-radius: 8px;
+    padding: 0.5rem 1.5rem;
+    box-shadow: 2px 2px 10px var(--dropdown-btn-shadow);
+    transition: all 0.3s ease;
+}
+.search-user-info:hover {
+    background-color: var(--hover--user-bg);
+    transform: scale(1.03);
+}
+.search-user-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 1rem;
+    cursor: pointer;
+    object-fit: cover;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sidenav {
+        width: 85%;
+        padding: 1rem;
+    }
+    .sidenav a {
+        padding: 0.5rem 1rem;
+    }
+    .main.shifted {
+        padding-left: 0;
+    }
+}

@@ -18,23 +18,11 @@ public class HomeController : Controller
         return View();
     }
 
-    [Route("home/unauth")]
-    public IActionResult HomeUnAuth()
+    [Route("search")]
+    public IActionResult Search()
     {
-        return View("~/Views/Home/HomeUnAuth.cshtml");
+        return View("~/Views/Home/Search.cshtml");
     }
-
-    [Route("home/auth")]
-    public IActionResult HomeAuth()
-    {
-        return View("~/Views/Home/HomeAuth.cshtml");
-    }
-
-    // [Route("nav")]
-    // public IActionResult Nav()
-    // {
-    //     return View("~/Views/Navbar/NavAuth.cshtml");
-    // }
 
     [Route("aboutus")]
     public IActionResult AboutUs()
@@ -66,6 +54,18 @@ public class HomeController : Controller
         return View("~/Views/Home/ViewProfile.cshtml");
     }
 
+    [Route("report")]
+    public IActionResult Report()
+    {
+        return View("~/Views/Home/ReportPage.cshtml");
+    }
+
+    [Route("review")]
+    public IActionResult Review()
+    {
+        return View("~/Views/Home/Review.cshtml");
+    }
+
     [Route("login")]
     public IActionResult Login()
     {
@@ -76,6 +76,13 @@ public class HomeController : Controller
     public IActionResult SignUp()
     {
         return View("~/Views/Auth/SignUp.cshtml");
+    }
+
+    [Route("Chat")]
+
+    public IActionResult Chat()
+    {
+        return View("~/Views/Home/ChatHub.cshtml");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -1,0 +1,58 @@
+@import url('/css/src.css');
+/* @import url(/wwwroot/css/src.css); */
+
+/* Post in date */
+.post-in-date {
+    display: flex;
+    flex-direction: column;
+    /* height: 20em; */
+    gap: 1rem;
+    /* margin-top: 1%; */
+    padding: 1.5rem;
+    border-radius: 10px;
+}
+.post-in-date h1 {
+    border-bottom: 2px solid var(--border-bottom-color);
+}
+
+.all-post-container {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 1rem;
+
+    /* ทำให้สามารถเลื่อนภายในกรอบ */
+    max-width: 100%; /* กำหนดความสูงของ Scroll Frame */
+    overflow-x: auto;
+    padding: 1rem;
+    scrollbar-width: thin; /* สำหรับ Firefox */
+    scrollbar-color: var(--pink) #f1f1f1;
+}
+/* ปรับแต่ง Scroll Bar สำหรับ Chrome, Edge, Safari */
+.all-post-container::-webkit-scrollbar {
+    height: 8px;
+}
+.all-post-container::-webkit-scrollbar-thumb {
+    background: var(--scroll-bar-bg);
+    border-radius: 10px;
+}
+.all-post-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+@media (max-width: 768px) {
+    .all-post-container {
+        flex-direction: column; /* จัดเรียงใหม่เป็นแนวตั้ง */
+        overflow-x: hidden;
+        overflow-y: auto; /* เลื่อนในแนวตั้ง */
+        max-height: 400px;
+        white-space: normal; /* อนุญาตให้ขึ้นบรรทัดใหม่ */
+        /* padding-right: 10px;
+        padding-bottom: 0; */
+    }
+
+    .all-post-container::-webkit-scrollbar {
+        width: 8px; /* ความกว้างของ Scroll Bar แนวตั้ง */
+        height: auto;
+    }
+}

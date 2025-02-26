@@ -1,0 +1,116 @@
+@import url('/css/src.css');
+/* @import url(/wwwroot/css/src.css); */
+
+/* Reset after clicked post */
+/* .post-title,
+.post-date,
+.post-location,
+.post-category {
+    color: var(--text-color);
+} */
+
+/* Post */
+.post-container {
+    display: flex;
+    /* flex-direction: column; */
+    cursor: pointer;
+    position: relative;
+    flex-wrap: wrap;
+    z-index: 10;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 10px;
+    color: var(--text-color);
+    border: 1px solid var(--post-border);
+    background-color: var(--post-bg);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+.post-container:hover {
+    transform: scale(1.05);
+    background-color: var(--post-hover-bg);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+}
+.post {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    color: var(--text-color);
+}
+
+/* Post image */
+.post img {
+    width: 15em;
+    float: right;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* Post header */
+.post-title {
+    font-size: 1.5rem;
+    color: var(--text-color);
+}
+.post-location {
+    color: var(--post-location-text);
+    font-weight: bold;
+}
+
+/* Post detail */
+.post-category {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-top: 0.5rem;
+}
+.post-category a {
+    padding: 0.2rem 0.8rem;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.1s ease-in-out;
+    color: var(--post-category-text);
+    background-color: var(--post-category-bg);
+}
+.post-category a:hover {
+    background-color: var(--hover-bg-2);
+}
+
+/* Post like */
+.post-like {
+    text-align: center;
+    align-items: center;
+    position: absolute;
+    z-index: 20;
+    bottom: 1rem;
+    right: 1rem;
+    color: var(--text-color);
+}
+.like-btn {
+    /* padding: 0.5rem 0.8rem; */
+    z-index: 999999;
+    font-size: 1.5rem;
+    color: var(--post-like-btn);
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+.like-btn:hover {
+    transform: scale(1.2);
+}
+
+/* ปรับ Dark Mode ให้มี Gradient */
+
+@media screen and (max-width: 768px) {
+    
+    .post-container,
+    .post {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .post img {
+        width: 100%;
+        height: 10em;
+    }
+}
