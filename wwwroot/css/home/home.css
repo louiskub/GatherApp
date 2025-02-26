@@ -53,10 +53,17 @@
 } */
 
 /* Main Content */
-.main {
+/* .main {
     width: 100%;
-    /* padding-top: 60px; */
+    padding-top: 60px;
     transition: all 0.3s ease;
+} */
+.main 
+{
+    background-size: cover;
+    background-position: center;
+    /* background-repeat: no-repeat; */
+    /* background-image: url('/assets/img/web_bg_dark.png'); */
 }
 .main.shifted {
     padding-left: var(--sidebar-width);
@@ -99,7 +106,7 @@
     align-items: center;
     gap: 1rem;
     padding: 0.5rem 1rem;
-    margin: 1.5rem 1.7rem;
+    margin: 0 1.7rem 1.2rem;
     font-size: 1.2rem;
     color: var(--dropdown-btn-text);
     background: var(--dropdown-btn-bg);
