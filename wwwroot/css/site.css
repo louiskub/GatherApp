@@ -41,22 +41,31 @@ body {
   border-top: 1px solid #e5e5e5;
 } */
 
-html, body {
-  height: 100%;
+/* 1. Global Reset */
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+  font-family: 'Jost', sans-serif;
+  text-decoration: none;
 }
 
-body {
+html, body {
+  height: 100%;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+}
+
+/* body {
   display: flex;
   flex-direction: column;
-}
+} */
 
 .main {
   flex: 1;
-  width: 100%;
   padding-top: 60px;
-  box-sizing: border-box;
+  width: 100%;
+  min-height: 100%;
 }
 
 .footer-container {

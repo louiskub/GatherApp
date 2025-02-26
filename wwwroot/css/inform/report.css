@@ -18,12 +18,19 @@
 * {
     outline: none;
 }
-
+.main {
+    width: 100%;
+    height: calc(100% - 61px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 .report-all {
-    position: absolute;
+    /* position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); */
     padding: 3.5rem; 
     border-radius: 10px;
     background-color: var(--post-bg);

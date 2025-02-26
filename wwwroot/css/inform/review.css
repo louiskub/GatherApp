@@ -1,5 +1,39 @@
 @import url(/css/src.css);
 
+:root {
+
+    --review-bg-color: var(--lavender-blush); /* ชมพูอ่อน */
+    --review-text-color: var(--claret);
+    
+    --star-color: var(--bright-pink-crayola); /* สีเหลืองทอง */
+    --star-shadow: 0px 0px 12px rgba(255, 77, 109, 0.9), 0px 0px 20px rgba(255, 77, 109, 0.6);
+    
+    --text-area-bg: white;
+    --text-area-border: var(--rose-red); 
+    
+    --button-bg: var(--bright-pink-crayola);
+    --button-hover: var(--rose-red);
+    
+    --box-shadow-color: rgba(255, 77, 109, 0.3); 
+}
+
+[data-theme="dark"] {
+
+    --review-bg-color: var(--eerie-black);
+    --review-text-color: var(--bright-pink-crayola-2);
+
+    --star-color: #FFD700; 
+    --star-shadow: 0px 0px 12px rgba(255, 215, 0, 0.9), 0px 0px 20px rgba(255, 215, 0, 0.6);
+    
+    --text-area-bg: var(--outer-space);
+    --text-area-border: var(--french-gray);
+    
+    --button-bg: var(--bright-pink-crayola-2);
+    --button-hover: var(--salmon-pink);
+    
+    --box-shadow-color: rgba(255, 117, 143, 0.5);
+}
+
 .main {
     display: flex;
     justify-content: center;
@@ -11,53 +45,184 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    background-image: var(--bg-image);
 }
-
 .review-container {
     display: flex;
-    background-image: url('/img/web_bg.png');
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: var(--post-bg);
+    background-color: var(--review-bg-color);
     border-radius: 20px;
     padding: 2rem;
-    box-shadow: 1px 1px 5px var(--text-color);
+    box-shadow: 0px 4px 10px var(--box-shadow-color);
     max-width: 900px;
     width: 100%;
 }
+
+.review-profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+.profile-img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 2px solid var(--text-color);
+    margin: 10px;
+}
+.profile-username {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.review-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+.review-title,
+.review-text {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid var(--text-area-border);
+    border-radius: 5px;
+    font-size: 1rem;
+    outline: none;
+    background: var(--text-area-bg);
+    color: var(--text-color);
+}
+.review-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+.review-text {
+    resize: none;
+    height: 100px;
+}
+
+.review-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+}
+h2 {
+    font-size: 1.6rem;
+    font-weight: bold;
+    text-align: center;
+    color: var(--review-text-color); /* เปลี่ยนหัวข้อให้สดใสขึ้น */
+}
+
+#ratingText {
+    font-size: 1rem;
+    text-align: center;
+}
+
 .stars {
     display: flex;
     justify-content: center;
     flex-direction: row-reverse;
     gap: 1rem;
 }
+
 .star {
-    /* border: var(--text-color) 1px solid; */
     font-size: 2rem;
     height: fit-content;
     cursor: pointer;
     color: var(--french-gray-2);
-    /* transition: transform 0.2s, color 0.3s; */
+    transition: transform 0.2s, color 0.3s;
 }
-.star:hover, .star.active {
-    color: var(--bright-pink-crayola);
+
+.star.active {
+    color: var(--star-color); /* ใช้สีชมพูที่กำหนด */
+    text-shadow: var(--star-shadow);
 }
+
 .rating-text {
     margin-top: 15px;
     font-size: 18px;
 }
+
+.submit-btn-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
 .submit-btn {
     margin-top: 20px;
     padding: 10px 20px;
     border: none;
     border-radius: 10px;
-    background-color: var(--rose-red);
+    background-color: var(--button-bg);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s, box-shadow 0.3s;
+    box-shadow: 0px 2px 5px var(--box-shadow-color);
+}
+
+.submit-btn:hover {
+    background-color: var(--button-hover);
+    box-shadow: 0px 4px 10px var(--box-shadow-color);
+}
+
+.cancel-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--french-gray-2);
     color: white;
     font-size: 16px;
     cursor: pointer;
     transition: background 0.3s;
 }
-.submit-btn:hover {
-    background-color: var(--amaranth-purple);
+
+@media (max-width: 768px) {}
+
+
+/* [data-theme="dark"] {
+    --bg-color: #1e1e2e; 
+    --text-color: #e0e0e0; 
+    --star-color: #ffcc00; 
+    
+    --text-area-bg: #25253a; 
+    --text-area-border: #5e5ebb; 
+    
+    --button-bg: #5e5ebb; 
+    --button-hover: #7a7ace; 
+} */
+
+/* .review-container {
+    background-color: var(--bg-color);
+    border: 2px solid #5e5ebb; 
+    box-shadow: 0px 4px 10px rgba(94, 94, 187, 0.5);
 }
+.star {
+    color: #555; 
+}
+.star.active {
+    color: var(--star-color);
+    text-shadow: 0px 0px 8px rgba(255, 204, 0, 0.8);
+}
+.submit-btn {
+    background-color: var(--button-bg);
+    box-shadow: 0px 2px 5px rgba(94, 94, 187, 0.5);
+}
+.submit-btn:hover {
+    background-color: var(--button-hover);
+}
+.cancel-btn {
+    background-color: #666; 
+} */
