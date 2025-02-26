@@ -15,49 +15,42 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
         return View();
     }
 
     [Route("search")]
     public IActionResult Search()
     {
-        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
         return View("~/Views/Home/Search.cshtml");
     }
 
     [Route("aboutus")]
     public IActionResult AboutUs()
     {
-        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
         return View("~/Views/Home/AboutUs.cshtml");
     }
 
     [Route("history/post")]
     public IActionResult PostHistory()
     {
-        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
         return View("~/Views/Home/History/PostHistory.cshtml");
     }
 
     [Route("history/application")]
     public IActionResult ApplicationHistory()
     {
-        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
         return View("~/Views/Home/History/ApplicationHistory.cshtml");
     }
 
     [Route("post")]
     public IActionResult ViewPost()
     {
-        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
         return View("~/Views/Home/ViewPost.cshtml");
     }
 
     [Route("profile")]
     public IActionResult ViewProfile()
     {
-        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
         return View("~/Views/Home/ViewProfile.cshtml");
     }
 
@@ -76,14 +69,12 @@ public class HomeController : Controller
     [Route("login")]
     public IActionResult Login()
     {
-        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
         return View("~/Views/Auth/Login.cshtml");
     }
 
     [Route("signup")]
     public IActionResult SignUp()
     {
-        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
         return View("~/Views/Auth/SignUp.cshtml");
     }
 
@@ -91,7 +82,6 @@ public class HomeController : Controller
 
     public IActionResult Chat()
     {
-        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
         return View("~/Views/Home/ChatHub.cshtml");
     }
 

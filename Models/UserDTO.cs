@@ -29,7 +29,7 @@ public class UserDTO
     [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Last name can only contain letters.")]
     public string? LastName { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Date of birth is required.")]
     [DataType(DataType.Date)]
     [CustomValidation(typeof(UserDTO), nameof(ValidateDateOfBirth))]
     public DateTime? DateOfBirth { get; set; } 
