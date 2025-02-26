@@ -115,12 +115,20 @@ public class AuthController : Controller
                 return StatusCode(500, new { status = "Database context is not initialized." });
             }
 
-            if (string.IsNullOrWhiteSpace(obj.Username) || string.IsNullOrWhiteSpace(obj.Email) || string.IsNullOrWhiteSpace(obj.Password) || string.IsNullOrWhiteSpace(obj.DateOfBirth.ToString())
-            || string.IsNullOrWhiteSpace(obj.FirstName) || string.IsNullOrWhiteSpace(obj.LastName))
+            if (string.IsNullOrWhiteSpace(obj.Username) || string.IsNullOrWhiteSpace(obj.Email))
             {
-                return BadRequest(new { status = "Invalid input", errors = new[] { "Username, Email, and Password are required." } });
+                return BadRequest(new { status = "Invalid input", errors = new[] { "Username, Email , and Password are required." } });
             }
 
+            if (string.IsNullOrWhiteSpace(obj.FirstName) || string.IsNullOrWhiteSpace(obj.LastName))
+            {
+                return BadRequest(new { status = "Invalid input", errors = new[] { "First name and Last name are required." }} );
+            }
+
+            if (obj.DateOfBirth == null)
+            {
+                return BadRequest(new { status = "Invalid input", errors = new[] { "Date of birth is required." } });
+            }
 
             if (!ModelState.IsValid)
             {
