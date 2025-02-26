@@ -102,11 +102,13 @@ public class PostController : Controller
     public async Task<ActionResult> GetAllPosts()
     {
         // รวมข้อมูล User ที่เกี่ยวข้องกับ Post
+        var reqUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var posts = await _db.Posts
                             .Include(p => p.User)
                             .Include(p => p.Activity)
                             .ThenInclude(a => a.ActTypes)
                             .Include(p => p.Applications)
+                            .Include(p => p.PostLikes)
                             .Where(p => p.IsOpened == true)
                             .Where(p => p.CurParticipant < p.MaxParticipant)
                             .Where(p => p.Activity.OpenDateTime < DateTime.Now)
@@ -136,6 +138,7 @@ public class PostController : Controller
     (string? date, string? category, string? actType, string? province, string? district)
     {   
         // รวมข้อมูล User ที่เกี่ยวข้องกับ Post
+        Console.WriteLine("\n\n{0} {1} {2} {3} {4}\n\n", date, category, actType, province, district);
         var posts = await _db.Posts.Include(p => p.User)
                             .Include(p => p.Activity)
                             .ThenInclude(a => a.ActTypes)
@@ -161,23 +164,25 @@ public class PostController : Controller
         else if (date == "Next week")
             posts = posts.Where(p =>  DateTime.Now.Date.AddDays(7) <= p.Activity.ActDatetime.Date 
                             && p.Activity.ActDatetime.Date <= DateTime.Now.Date.AddDays(14)).ToList();
+        else if(date == "This month")
+            posts = posts.Where(p => p.Activity.ActDatetime.Month == DateTime.Now.Month).ToList();
 
-        if (!string.IsNullOrEmpty(category))
+        if (!string.IsNullOrEmpty(category) && category != "Any category")
             posts = posts.Where(p => p.Activity.ActTypes.Any(a => a.ActType == category)).ToList();
 
         bool? actTypeFilter = null;
         if (actType == "Online") 
             actTypeFilter = true;
-        else if (actType == "In Person") 
+        else if (actType == "In person") 
             actTypeFilter = false;
-        
+
         if (actTypeFilter.HasValue)
             posts = posts.Where(p => p.Activity.Online == actTypeFilter).ToList();
         if (actTypeFilter == false)
-        {
-            if (!string.IsNullOrEmpty(province))
+        {   
+            if (!string.IsNullOrEmpty(province) && province != "Any province")
                 posts = posts.Where(p => p.Activity.Province == province).ToList();
-            if (!string.IsNullOrEmpty(district))
+            if (!string.IsNullOrEmpty(district) && district != "Any district")
                 posts = posts.Where(p => p.Activity.District == district).ToList();
         }
 
@@ -185,6 +190,7 @@ public class PostController : Controller
             return NotFound("No post found");
 
         var groupedPosts = posts.GroupBy(p => p.Activity.ActDatetime.Date)
+                                .OrderBy(g => g.Key)
                                 .Select(g => new {
                                     date = g.Key,  
                                     posts = g.Select(p => p.ToJson())})
@@ -220,6 +226,7 @@ public class PostController : Controller
             return NotFound("User and Post not found");
 
         var groupedPosts = posts.GroupBy(p => p.Activity.ActDatetime.Date)
+                                .OrderBy(g => g.Key)
                                 .Select(g => new {
                                     date = g.Key,  
                                     posts = g.Select(p => p.ToJson())})
@@ -290,6 +297,7 @@ public class PostController : Controller
         }
 
         var groupedPosts = posts.GroupBy(p => p.Activity.ActDatetime.Date)
+                                .OrderBy(g => g.Key)
                                 .Select(g => new {
                                     date = g.Key,  
                                     posts = g.Select(p => p.ToJson())})
