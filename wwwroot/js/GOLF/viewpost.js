@@ -2,6 +2,9 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelector(".reg_but").addEventListener("click", function() {
         alert("You have successfully registered for this activity!");
     });
+    document.querySelector(".cancel_post_but").addEventListener("click", function() {
+        alert("You have canceled this activity!");
+    });
 });
 
 function openPopup() {
