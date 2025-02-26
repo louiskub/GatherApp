@@ -122,6 +122,7 @@ public class PostController : Controller
             return NotFound();
         }
         var groupedPosts = posts.GroupBy(p => p.Activity.ActDatetime.Date)
+                                .OrderBy(g => g.Key)
                                 .Select(g => new {
                                        date = g.Key,  
                                     posts = g.Select(p => p.ToJson())})
