@@ -9,8 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+
 
 namespace GatherApp.Controllers;
 
@@ -81,24 +80,15 @@ public class AuthController : Controller
 
         Response.Cookies.Append("token", token, new CookieOptions
         {
-            HttpOnly = false,
-            Secure = false,
+            HttpOnly = true,
+            Secure = true,
             SameSite = SameSiteMode.Strict,
             Expires = DateTime.UtcNow.AddDays(1)
         });
         
         return Json(new { status = "Login success", token = token });
     }
-    
-    [HttpPost]
-    [Route("api/auth/logout")]
-    public async Task<IActionResult> Logout()
-    {
-        // ทำการ sign-out และลบ cookie ของผู้ใช้
-        Response.Cookies.Delete("token");
-        // await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        return RedirectToAction("Index", "Home");
-    }
+
 
     public IActionResult Register()
     {
@@ -110,32 +100,44 @@ public class AuthController : Controller
     [Route("api/auth/register")]
     public async Task<IActionResult> Register([FromBody] UserDTO obj)
     {
-
-             if (obj == null)
+            if (_db == null)
             {
-                return BadRequest(new { status = "Invalid request body", errors = new[] { "Request body is missing or malformed." } });
+                return StatusCode(500, new { status = "Database context is not initialized." });
             }
+
+            if (string.IsNullOrWhiteSpace(obj.Username) || string.IsNullOrWhiteSpace(obj.Email))
+            {
+                return BadRequest(new { status = "Invalid input", errors = new[] { "Username, Email , and Password are required." } });
+            }
+
+            if (string.IsNullOrWhiteSpace(obj.FirstName) || string.IsNullOrWhiteSpace(obj.LastName))
+            {
+                return BadRequest(new { status = "Invalid input", errors = new[] { "First name and Last name are required." }} );
+            }
+
+            if (obj.DateOfBirth == null)
+            {
+                return BadRequest(new { status = "Invalid input", errors = new[] { "Date of birth is required." } });
+            }
+
             if (!ModelState.IsValid)
             {
-                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                var errors = ModelState.Values.SelectMany(v => v.Errors)    
                                             .Select(e => e.ErrorMessage)
                                             .ToList();
 
-                return BadRequest(new { status = "Invalid request body" + errors, errors});
+                return BadRequest(new { status = "Invalid request body" , errors});
             }
 
 
-            if (_db.Users.Any(s => s.Username == obj.Username))
+            var existingUser = await _db.Users.FirstOrDefaultAsync(s => s.Username == obj.Username || s.Email == obj.Email);
+            if (existingUser != null)
             {
-                return BadRequest(new { status = "Username already exists" });
+                return BadRequest(new { status = "User already exists", errors = new[] { "Username or Email is already taken." } });
             }
-            
 
-            if (_db.Users.Any(s => s.Email == obj.Email))
-            {
-                return BadRequest(new { status = "Email already exists" });
-            }
-            else
+            using var transaction = await _db.Database.BeginTransactionAsync();
+            try
             {
                 var user = new User
                 {
@@ -145,7 +147,7 @@ public class AuthController : Controller
                     Password = BCrypt.Net.BCrypt.HashPassword(obj.Password),
                     FirstName = obj.FirstName  ?? "Unknown",
                     LastName = obj.LastName ?? "Unknown",
-                    DateOfBirth = (DateTime)obj.DateOfBirth
+                    DateOfBirth = obj.DateOfBirth ?? DateTime.UtcNow.AddDays(-2)
                 };
 
                 _db.Users.Add(user);
@@ -170,8 +172,14 @@ public class AuthController : Controller
                 _db.BehaviorScores.Add(behaviorScore);
                 await _db.SaveChangesAsync();
 
+                await transaction.CommitAsync();
+
                 string stId = user.Id.ToString();
-                var token = _jwtService.GenerateToken(stId, user.Username); 
+                var token = _jwtService.GenerateToken(user.Id, user.Username);
+                if (string.IsNullOrEmpty(token))
+                {
+                    return StatusCode(500, new { status = "Token generation failed" });
+                }
 
                 Response.Cookies.Append("token", token, new CookieOptions
                 {
@@ -183,5 +191,10 @@ public class AuthController : Controller
 
                 return Ok(new { status = "Registration successful", token = token });
             }
+        catch 
+        {
+            await transaction.RollbackAsync();
+            return StatusCode(500, new { status = "Registration failed", errors = new[] { "Transaction failed."} });
+        }
     }
 }
