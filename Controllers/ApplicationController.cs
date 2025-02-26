@@ -28,55 +28,61 @@ public class ApplicationController : Controller
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var user = _db.Users.Include(u => u.BehaviorScores)
                             .Where(u => u.Id == userId).FirstOrDefault();
+
         if (user == null)
             return NotFound("User not found");
 
         var post = _db.Posts.Include(p => p.Activity)
-                            .Where(p => p.Id == postId)
-                            .FirstOrDefault();
+                            .FirstOrDefault(p => p.Id == postId);
         if (post == null)
             return NotFound("Post not found");
-        
-        var oldApplication = _db.Applications.Where(a => a.UserId == userId && a.PostId == postId)
-                                            .FirstOrDefault();
+
+        var oldApplication = _db.Applications.FirstOrDefault(a => a.UserId == userId && a.PostId == postId);
         if (oldApplication != null)
-            return BadRequest("You have already applied this post");
-        
-        string? isAvilable = post.IsPostAvailable();
-        if (isAvilable != null)
-            return BadRequest(isAvilable);
-        
+            return BadRequest("You have already applied for this post");
+
+        string? isAvailable = post.IsPostAvailable();
+        if (!string.IsNullOrEmpty(isAvailable))
+            return BadRequest(isAvailable);
+
         if (post.IsAttached && (dtoApplyPost == null || string.IsNullOrEmpty(dtoApplyPost.FileAttached)))
-            return BadRequest("This post required file attached");
+            return BadRequest("This post requires a file attachment");
+
+        if (DateTime.Now >= post.Activity.ActDatetime)
+            return BadRequest("You cannot apply after the event has started.");
 
         var application = new Application
         {
             User = user,
-            Post = post
+            Post = post,
+            FileAttached = post.IsAttached ? dtoApplyPost.FileAttached : null
         };
-        
-        if (post.IsAttached)
-            application.FileAttached = dtoApplyPost.FileAttached;
-        try 
-        {
-            if (DateTime.Now > post.Activity.ActDatetime){
-                _db.Applications.Add(application);
 
-                var newBehaviorScore = new BehaviorScore
-                {
-                    User = user,
-                    Score = 10, 
-                    IsBanned = false,
-                    BannedUntil = null
-                };
-                _db.BehaviorScores.Add(newBehaviorScore);
-                _db.SaveChanges();
-                return Json(new { status = "applied" });
-            }
-            else
+
+        try
+        {
+            _db.Applications.Add(application);
+
+            var newBehaviorScore = new BehaviorScore
             {
-                return BadRequest("You can only apply after the event has ended.");
-            }
+                User = user,
+                Score = 10,
+                IsBanned = false,
+                BannedUntil = null
+            };
+
+            _ = _db.Notifications.Add(new Notification
+            {
+                UserId = user.Id,
+                Content = $"You Have Add Behavoir Score 10",
+                CreatedAt = DateTime.Now,
+            });
+
+            _db.BehaviorScores.Add(newBehaviorScore);
+
+            _db.SaveChanges();
+
+            return Json(new { status = "applied" });
         }
         catch (Exception e)
         {
@@ -103,6 +109,15 @@ public class ApplicationController : Controller
         try 
         {
             _db.Applications.Remove(application);
+             var newBehaviorScore = new BehaviorScore
+            {
+                User = user,
+                Score = -10,
+                IsBanned = false,
+                BannedUntil = null
+            };
+            _db.BehaviorScores.Add(newBehaviorScore);
+
             _db.SaveChanges();
             return Json(new { status = "deleted" });
         }

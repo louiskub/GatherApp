@@ -1,11 +1,11 @@
 @import url("../src.css");
 
-/* * {
+* {
   padding: 0;
   margin: 0;
-} */
+}
 
-.main {
+body {
   /* background-color: blue; */
   font-family: "Jost", sans-serif;
   color: var(--chocolate-cosmos);

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -32,7 +33,7 @@ public class ChatHub : Hub
             return;
         }
 
-        var userId = Context.UserIdentifier; 
+        var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value; 
         var postIdInt = int.Parse(postId);
         
         var isPostOwner = _db.Posts.Any(p => p.Id == postIdInt && p.UserId == userId);
@@ -58,7 +59,7 @@ public class ChatHub : Hub
             return;
         }
 
-        var userId = Context.UserIdentifier;
+        var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         var post = _db.Posts.FirstOrDefault(p => p.Id == postIdInt);
 
@@ -78,17 +79,26 @@ public class ChatHub : Hub
             return;
         }
 
+
         var messages = _db.ChatMessages
                         .Where(m => m.PostId == postIdInt.ToString())
                         .OrderBy(m => m.SentAt)
-                        .Select(m => new { m.UserId, m.Message, m.SentAt })
-                        .ToList();
+                        .Select(m => new
+                        {
+                            Username = _db.Users
+                                        .Where(u => u.Id == m.UserId)
+                                        .Select(u => u.Username)
+                                        .FirstOrDefault() ?? "Unknow user",
+                            Message = m.Message,
+                            SentAt = m.SentAt.ToUniversalTime().ToString("o")
+                        }).ToList();
 
-        await Clients.Caller.SendAsync("LoadMessages", messages);
+
+        await Clients.Caller.SendAsync("LoadPreviousMessages", messages);
     }
 
 
-    public async Task SendMessage(string postId, string userId, string message)
+    public async Task SendMessage(string postId, string message)
     {
         try
         {
@@ -100,13 +110,21 @@ public class ChatHub : Hub
 
             var postIdInt = int.Parse(postId);
 
+            var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                await Clients.Caller.SendAsync("Error", "Unauthorized: User ID not found.");
+                return;
+            }
+
             if (post == null)
             {
                 await Clients.Caller.SendAsync("Error", "Post not found.");
                 return;
             }
 
-            var isPostOwner = post.UserId == userId;
+            var isPostOwner = _db.Posts.Any(p => p.Id == postIdInt && p.UserId == userId);
             var isAcceptedUser = _db.Applications.Any(pu => pu.PostId == postIdInt && pu.UserId == userId && pu.AppliedStatus == true);
 
             if (!isPostOwner && !isAcceptedUser)
@@ -121,22 +139,27 @@ public class ChatHub : Hub
                 UserId = userId,
                 Message = message,
                 SentAt = DateTime.UtcNow
-            };
+            };  
 
             _db.ChatMessages.Add(chatMessage);
             await _db.SaveChangesAsync();
 
-            await Clients.Group(postId).SendAsync("ReceiveMessage", userId, message, chatMessage.SentAt);
+            var user = await _db.Users.FindAsync(userId);
+            string username = user?.Username ?? "Unknown";
+
+            string SentAt = chatMessage.SentAt.ToString("o");
+
+            await Clients.Group(postId).SendAsync("ReceiveMessage", username, message, SentAt);
         }
         catch (Exception e)
         {
-            await Clients.Caller.SendAsync("Error", "An error occurred while sending the message.");
+            await Clients.Caller.SendAsync("ReceiveError", "An error occurred while sending the message.");
         }
     }
 
     public async Task LeaveChat(string postId)
     {
-        var userId = Context.UserIdentifier;
+        var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, postId);
         await Clients.Group(postId).SendAsync("ReceiveMessage", "System", $"User {userId} left the chat.");
     }

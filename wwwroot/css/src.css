@@ -43,7 +43,7 @@
     /* Navbar */
     --bg-color: white;
     --text-color: var(--eerie-black);
-    --bg-image: url('/assets/img/web_bg.png');
+    --bg-image: '/img/web_bg.png';
 
     --hover-bg-1: var(--bright-pink-crayola);
     --hover-bg-2: var(--bright-pink-crayola-2);
@@ -82,7 +82,7 @@
     /* Navbar */
     --bg-color: var(--eerie-black);
     --text-color: white;
-    --bg-image: url('/assets/img/web_bg_dark.png');
+    --bg-image: '/img/web_bg_dark.png';
 
     --hover-bg-1: var(--bright-pink-crayola);
     --hover-bg-2: var(--bright-pink-crayola-2);
@@ -118,5 +118,5 @@
 @font-face {
     font-family: "Genty";
     /* src: url('/wwwroot/fonts/GentyDemo-Regular.ttf') format('truetype'); */
-    src: url("../assets/fonts/GentyDemo-Regular.ttf") format("truetype");
+    src: url("../fonts/GentyDemo-Regular.ttf") format("truetype");
 }
