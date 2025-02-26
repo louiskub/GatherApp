@@ -12,4 +12,3 @@ public class ChatMessage
     public DateTime SentAt { get; set; } = DateTime.UtcNow;
 }
 
-

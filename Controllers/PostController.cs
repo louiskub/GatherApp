@@ -127,7 +127,7 @@ public class PostController : Controller
                                 .OrderBy(g => g.Key)
                                 .Select(g => new {
                                        date = g.Key,  
-                                    posts = g.Select(p => p.ToJson())})
+                                    posts = g.Select(p => p.ToJson(reqUserId))})
                                 .ToList();
         return Json(groupedPosts);
     }

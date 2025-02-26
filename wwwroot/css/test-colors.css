@@ -1,0 +1,181 @@
+@import url(/wwwroot/css/colors.css);
+
+:root {
+
+    /* 1. Text color */
+    /* white-white */
+    --n-w--n-w-textColor: var(--normal-white);  /* Default Hover Text */
+    --d-w--d-w-textColor: var(--dark-white);
+    
+    /* red-white */
+    --dk-r--n-w-textColor: var(--darker-red);
+    --br-r--n-w-textColor: var(--bright-red);
+    --n-r--n-w-textColor: var(--normal-red);
+
+    /* red-pink */
+    --br-r--l-p-textColor: var(--bright-red);
+    --br-r--brt-p-textColor: var(--bright-red);
+
+    /* black-white */
+    --l-b--n-w-textColor: var(--light-black); /* Default Normal Text */
+    --n-b--n-w-textColor: var(--normal-black);
+
+    /* black-pink */
+
+    /* black-red */
+
+
+
+    /* 2. Background Color */
+    /* white-gray */
+    --n-w--d-g-bgColor: var(--normal-white);
+    --d-w--n-g-bgColor: var(--dark-white);
+    --d-w--d-g-bgColor: var(--dark-white);
+
+    /* white-black */
+    --n-w--l-bl-bgColor: var(--normal-white); /* Default Body */
+    --n-w--n-bl-bgColor: var(--normal-white);
+
+    /* pink-pink */
+    --brt-p--brt-p-bgColor: var(--brighter-pink); 
+    --br-p--br-p-bgColor: var(--bright-pink); 
+    --l-p--n-p-bgColor: var(--light-pink);
+
+    /* pink-red */
+    --n-p--dk-r-bgColor: var(--normal-pink);
+    --l-p--dk-r-bgColor: var(--light-pink);
+    --brt-p--br-r-bgColor: var(--brighter-pink);
+    --brt-p--n-r-bgColor: var(--brighter-pink);
+    --br-p--n-r-bgColor: var(--bright-pink);
+    --lt-p--d-r-bgColor: var(--lighter-pink);
+
+    /* pink-gray */
+    --lts-p-d-g-bgColor: var(--lightest-pink);
+    --lt-p--n-g-bgColor: var(--lighter-pink);
+    --l-p--n-g-bgColor: var(--light-pink);
+    --lts-p--dk-g-bgColor: var(--lightest-pink);
+
+    /* pink-black */
+    --l-p--l-bl-bgColor: var(--light-pink);
+    --brt-p--l-bl-bgColor: var(--brighter-pink);
+
+    /* red-white */
+    /* red-red */
+    --dk-r--br-r-bgColor: var(--darker-red);
+    --br-r--d-r-bgColor: var(--bright-red);
+    /* red-gray */
+    /* red-black */
+
+
+    /* 3. Border Color */
+    /* pink-pink */
+    --lt-p--lt-p-borderColor: var(--lighter-pink);
+
+    /* red-red */
+    --br-r--br-r-borderColor: var(--bright-red);
+    --br-r--n-r-borderColor: var(--bright-red);
+
+    /* red-gray */
+    --dk-r--d-g-borderColor: var(--darker-red);
+    --dk-r--lts-g-borderColor: var(--darker-red);
+
+
+    /* 4. Shadow Color */
+    /* red-gray */
+    --dk-r--d-g-shadowColor: var(--darker-red);
+    /* gray-gray */
+    --lt-g--d-g-shadowColor: var(--lighter-gray);
+    --n-g--d-g-shadowColor: var(--normal-gray);
+
+}
+
+/* 🌓 2. Dark Mode Variables */
+[data-theme="dark"] {
+
+    /* 1. Text color */
+    /* white-white */
+    --n-w--n-w-textColor: var(--normal-white);  /* Default Hover Text */
+    --d-w--d-w-textColor: var(--dark-white);
+
+    /* red-white */
+    --dk-r--n-w-textColor: var(--normal-white);
+    --br-r--n-w-textColor: var(--normal-white);
+    --n-r--n-w-textColor: var(--normal-white);
+
+    /* red-pink */
+    --br-r--l-p-textColor: var(--light-pink);
+    --br-r--brt-p-textColor: var(--brighter-pink);
+
+    /* black-white */
+    --l-b--n-w-textColor: var(--normal-white); /* Default Normal Text */
+    --n-b--n-w-textColor:  var(--normal-white);
+
+    /* black-pink */
+    /* black-red */
+
+
+    /* 2. Background Color */
+    /* white-gray */
+    --n-w--d-g-bgColor: var(--normal-white);
+    --d-w--n-g-bgColor: var(--normal-gray);
+    --d-w--d-g-bgColor: var(--dark-gray);
+
+    /* white-black */
+    --n-w--l-bl-bgColor: var(--light-black); /* Default Body */
+    --n-w--n-bl-bgColor: var(--normal-black);
+
+    /* pink-pink */
+    --brt-p--brt-p-bgColor: var(--brighter-pink); 
+    --br-p--br-p-bgColor: var(--bright-pink); 
+    --l-p--n-p-bgColor: var(--normal-pink);
+
+    /* pink-red */
+    --n-p--dk-r-bgColor: var(--darker-red);
+    --l-p--dk-r-bgColor: var(--darker-red);
+    --brt-p--br-r-bgColor: var(--bright-red);
+    --brt-p--n-r-bgColor: var(--normal-red);
+    --br-p--n-r-bgColor: var(--normal-red);
+    --lt-p--d-r-bgColor: var(--dark-red);
+
+    /* pink-gray */
+    --lts-p-d-g-bgColor: var(--dark-gray);
+    --lt-p--n-g-bgColor: var(--normal-gray);
+    --l-p--n-g-bgColor: var(--normal-gray);
+    --lts-p--dk-g-bgColor: var(--darker-gray);
+
+    /* pink-black */
+    --l-p--l-bl-bgColor: var(--light-black);
+    --brt-p--l-bl-bgColor: var(--light-black);
+
+    /* red-white */
+
+    /* red-red */
+    --dk-r--br-r-bgColor: var(--bright-red);
+    --br-r--d-r-bgColor: var(--dark-red);
+
+    /* red-gray */
+    /* red-black */
+
+
+    /* 3. Border Color */
+    /* pink-pink */
+    --lt-p--lt-p-borderColor: var(--lighter-pink);
+
+    /* red-red */
+    --br-r--br-r-borderColor: var(--bright-red);
+    --br-r--n-r-borderColor: var(--normal-red);
+
+    /* red-gray */
+    --dk-r--d-g-borderColor: var(--dark-gray);
+    --dk-r--lts-g-borderColor: var(--lightest-gray);
+
+
+    /* 4. Shadow Color */
+    /* red-gray */
+    --dk-r--d-g-shadowColor: var(--dark-gray);
+    
+    /* gray-gray */
+    --lt-g--d-g-shadowColor: var(--dark-gray);
+    --n-g--d-g-shadowColor: var(--dark-gray);
+
+}
