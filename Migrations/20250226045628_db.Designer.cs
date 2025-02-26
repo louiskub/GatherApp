@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GatherApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250225150400_Update")]
-    partial class Update
+    [Migration("20250226045628_db")]
+    partial class db
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

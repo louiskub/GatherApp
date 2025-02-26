@@ -1,55 +1,66 @@
 @{
     ViewData["Title"] = "Gather-PostHistory";
 }
+@await Html.PartialAsync("_NavAuth")
 
 <div class="pageContainer">
-<h1 class="top">Post History</h1>
+  <h1 class="top">Post History</h1>
 
-<div class="containerStyle">
-  <div class="indicator success"></div>
-  <div class="innerContainer">
-    <div class="contentStyle">
-      <h2>Activity Name 1</h2>
-      <p>Date: Thu, Jan 30, 6:30 PM - 9:30 PM</p>
-    </div>
+  <div class="containerStyle">
+    <div class="indicator onGoing"></div>
+    <div class="innerContainer">
 
-    <div class="buttonContainer">
-      <button class="buttonStyle review">Review</button>
-      <button class="buttonStyle report">Report</button>
-    </div>
-  </div>
-</div>
+      <div class="contentStyle">
+        <h2>Activity Name 1</h2>
+        <p>Date: Thu, Jan 30, 16:30 PM - 19:30 PM</p>
+      </div>
 
-<div class="containerStyle">
-  <div class="indicator process"></div>
-  <div class="innerContainer">
-    <div class="contentStyle">
-      <h2>Activity Name 1</h2>
-      <p>Date: Thu, Jan 30, 6:30 PM - 9:30 PM</p>
-    </div>
+      <div class="statusContainer">
+        <div class="switchContainer">
+          <p class="switchText">ON</p>
+          <label class="switch">
+            <input type="checkbox">
+            <span class="slider"></span>
+          </label>
+        </div>
 
-    <div class="statusContainer">
-      <p class="textStyle">Pending</p>
-      <div class="buttonContainer" id="process">
-        <button class="buttonStyle report">Report</button>
+        <div class="buttonContainer">
+          <button class="buttonStyle view">View</button>
+          <button class="buttonStyle report">Cancel</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="containerStyle">
-  <div class="indicator cancel"></div>
-  <div class="innerContainer">
-    <div class="contentStyle">
-      <h2>Activity Name 1</h2>
-      <p>Date: Thu, Jan 30, 6:30 PM - 9:30 PM</p>
-    </div>
 
-    <div class="statusContainer" id="cancel">
-      <p class="textStyle">Canceled</p>
+  <div class="containerStyle">
+    <div class="indicator finish"></div>
+    <div class="innerContainer">
+      <div class="contentStyle">
+        <h2>หาคนดูหนังเป็นเพื่อนครับเหงามากครับหาคนดูหนังเป็นเพื่อนครับเหงามากครับหาคนดูหนังเป็นเพื่อนครับเหงามากครับ</h2>
+        <p>Date: Thu, Jan 30, 6:30 PM - 9:30 PM</p>
+      </div>
+
+      <div class="statusContainer">
+        <p class="textStyle">Success</p>
+        <button class="buttonStyle report">Report</button>
+      </div>
+    </div> 
+  </div>
+
+
+  <div class="containerStyle">
+    <div class="indicator cancel"></div>
+    <div class="innerContainer">
+      <div class="contentStyle">
+        <h2>Activity Name 1</h2>
+        <p>Date: Thu, Jan 30, 6:30 PM - 9:30 PM</p>
+      </div>
+
+      <div class="statusContainer" id="reject">
+        <p class="textStyle">Canceled</p>
+      </div>
     </div>
   </div>
-</div>
-
 
 </div>
