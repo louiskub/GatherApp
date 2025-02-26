@@ -107,7 +107,7 @@ public class Post{
         Activity.GoogleMapLink = dtopost.GoogleMapLink;
     }
 
-    public Dictionary<string, object> ToJson()
+    public Dictionary<string, object> ToJson(string? reqUserId = null)
     {
         CurParticipant = Applications.Count(a => a.AppliedStatus == true);
         return new Dictionary<string, object> {
@@ -124,6 +124,7 @@ public class Post{
                 { "isAttached", IsAttached },
                 { "coverPageImg", CoverPageImg },
                 { "like", Like },
+                { "isLiked", PostLikes.Any(x => x.UserId == reqUserId) },
                 { "maxParticipant", MaxParticipant },
                 { "curParticipant", CurParticipant },
                 { "totalApplicant", Applications.Count }
