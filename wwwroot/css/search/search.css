@@ -85,6 +85,9 @@
 .main.shifted {
     padding-left: var(--sidebar-width);
 }
+.post-in-date {
+    padding: 0rem;
+}
 
 /* Sidebar (Sidenav) */
 .sidenav {
@@ -128,7 +131,7 @@
     width: 120px;
     gap: 1rem;
     padding: 0.5rem 1rem;
-    margin: 0rem 1.5rem;
+    margin-top: 0.5rem;
     font-size: 1.2rem;
     color: var(--dropdown-btn-text);
     background: var(--dropdown-btn-bg);
@@ -154,7 +157,7 @@
 }
 
 /* Write Button */
-.write-button {
+/* .write-button {
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -180,7 +183,7 @@
     background: var(--write-button-hover-bg);
     color: var(--write-button-hover-text);
     transform: scale(1.1);
-}
+} */
 
 /* Search Content และ Filter */
 .search-content {

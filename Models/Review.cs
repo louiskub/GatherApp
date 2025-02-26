@@ -43,4 +43,5 @@ public class RatingScore
     public User RatedUser { get; set; }
 
     public User Rater { get; set; }
+
 }

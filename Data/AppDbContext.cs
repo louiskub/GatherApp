@@ -22,6 +22,8 @@ public class AppDbContext : DbContext
 
     public DbSet<RatingScore> RatingScores { get; set; }
 
+    public DbSet<ChatMessage> ChatMessages { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder options) 
     {
         options.UseMySql(

@@ -59,20 +59,24 @@ public class ApplicationController : Controller
             application.FileAttached = dtoApplyPost.FileAttached;
         try 
         {
-            _db.Applications.Add(application);
+            if (DateTime.Now > post.Activity.ActDatetime){
+                _db.Applications.Add(application);
 
-            var newBehaviorScore = new BehaviorScore
+                var newBehaviorScore = new BehaviorScore
+                {
+                    User = user,
+                    Score = 10, 
+                    IsBanned = false,
+                    BannedUntil = null
+                };
+                _db.BehaviorScores.Add(newBehaviorScore);
+                _db.SaveChanges();
+                return Json(new { status = "applied" });
+            }
+            else
             {
-                User = user,
-                Score = 10, 
-                IsBanned = false,
-                BannedUntil = null
-            };
-            _db.BehaviorScores.Add(newBehaviorScore);
-
-
-            _db.SaveChanges();
-            return Json(new { status = "applied" });
+                return BadRequest("You can only apply after the event has ended.");
+            }
         }
         catch (Exception e)
         {

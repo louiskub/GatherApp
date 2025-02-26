@@ -54,6 +54,18 @@ public class HomeController : Controller
         return View("~/Views/Home/ViewProfile.cshtml");
     }
 
+    [Route("report")]
+    public IActionResult Report()
+    {
+        return View("~/Views/Home/ReportPage.cshtml");
+    }
+
+    [Route("review")]
+    public IActionResult Review()
+    {
+        return View("~/Views/Home/Review.cshtml");
+    }
+
     [Route("login")]
     public IActionResult Login()
     {
@@ -64,6 +76,13 @@ public class HomeController : Controller
     public IActionResult SignUp()
     {
         return View("~/Views/Auth/SignUp.cshtml");
+    }
+
+    [Route("Chat")]
+
+    public IActionResult Chat()
+    {
+        return View("~/Views/Home/ChatHub.cshtml");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
