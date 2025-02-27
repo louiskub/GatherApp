@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http.HttpResults;
 namespace GatherApp.Models;
@@ -107,7 +108,7 @@ public class Post{
         Activity.GoogleMapLink = dtopost.GoogleMapLink;
     }
 
-    public Dictionary<string, object> ToJson()
+    public Dictionary<string, object> ToJson(string? reqUserId=null)
     {
         CurParticipant = Applications.Count(a => a.AppliedStatus == true);
         return new Dictionary<string, object> {
@@ -126,7 +127,8 @@ public class Post{
                 { "like", Like },
                 { "maxParticipant", MaxParticipant },
                 { "curParticipant", CurParticipant },
-                { "totalApplicant", Applications.Count }
+                { "totalApplicant", Applications.Count },
+                { "isLiked", PostLikes.Any(x => x.UserId == reqUserId) }
             }},
             { "activity", Activity },
             { "actTypes", Activity.ActTypes.Select(x => x.ActType).ToList() }
