@@ -89,6 +89,15 @@ public class AuthController : Controller
         return Json(new { status = "Login success", token = token });
     }
 
+    [HttpPost]
+    [Route("api/auth/logout")]
+    public IActionResult Logout()
+    {
+        // ทำการ sign-out และลบ cookie ของผู้ใช้
+        Response.Cookies.Delete("token");
+        // await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return Json(new { status = "Logout success" });
+    }
 
     public IActionResult Register()
     {

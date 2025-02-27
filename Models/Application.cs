@@ -40,7 +40,8 @@ public class Application{
             User.Username,
             User.ProfileImg,
             AppliedDateTime,
-            AppliedStatus
+            AppliedStatus,
+            IsAttached = FileAttached != null
         };
     }
 

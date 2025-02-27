@@ -1,13 +1,37 @@
+async function likePost(obj) {
+    console.log(obj.postId)
+    let response = await fetch(`/api/post/togglelike/${obj.postId}`, {
+        method: "POST",
+        credentials: 'include'
+    })
+    if (response.ok) {
+        response = await response.json();
+        return response
+    } else {
+        return { error: response.status }
+    }
+}
+
+
 class Post {
-    constructor(date, title, location, accepted, registered, categories = [], imageUrl, like = 0) {
+    constructor(postId, date, title, location, accepted, limitAccepted, registered, categories = [], imageUrl, like = 0, isLiked = false) {
+    // constructor(date, title, location, accepted, limitAccepted, registered, categories = [], imageUrl, like = 0) {
+        this.postId = postId;
         this.date = date ?? "Unknown Date";
         this.title = title ?? "Untitled";
         this.location = location ?? "Unknown Location";
         this.accepted = accepted ?? 0;
+        this.limitAccepted = limitAccepted ?? 1;
         this.registered = registered ?? 0;
         this.categories = Array.isArray(categories) ? categories : [];
-        this.imageUrl = imageUrl ?? "https://neilpatel.com/wp-content/uploads/2017/09/blog-post-image-guide.jpg";
+        if (imageUrl && imageUrl.length < 200)
+            this.imageUrl = imageUrl;
+        else if (imageUrl)
+            this.imageUrl = "data:image/jpeg;base64," + imageUrl;
+        else 
+            this.imageUrl = "https://neilpatel.com/wp-content/uploads/2017/09/blog-post-image-guide.jpg";
         this.like = like;
+        this.isLiked = isLiked;
     }
 
     createPostImage() {
@@ -45,7 +69,7 @@ class Post {
 
         postDetail.innerHTML = `
             <div class="post-location"><i class="fa-solid fa-location-dot"></i> ${this.location}</div>
-            <p class="post-accepted">Accepted: ${this.accepted}/10</p>
+            <p class="post-accepted">Accepted: ${this.accepted}/${this.limitAccepted}</p>
             <p class="post-registered">Registered: ${this.registered}</p>
         `;
 
@@ -63,6 +87,8 @@ class Post {
     }
 
     createLikeButton() {
+        
+
         const postLike = document.createElement("div");
         postLike.classList.add("post-like");
 
@@ -73,20 +99,30 @@ class Post {
         likeButton.classList.add("like-btn");
         
         const likeIcon = document.createElement("i");
-        likeIcon.classList.add("fa-regular", "fa-heart");
+        console.log(this.isLiked)
+        if (this.isLiked)
+            likeIcon.classList.add("fa-solid", "fa-heart");
+        else
+            likeIcon.classList.add("fa-regular", "fa-heart");
         likeButton.appendChild(likeIcon);
 
-        likeButton.addEventListener("click", (event) => {
+        likeButton.addEventListener("click", async (event) => {
             event.stopPropagation();
             event.preventDefault();
-
-            if (likeIcon.classList.contains("fa-regular")) {
-                likeIcon.classList.replace("fa-regular", "fa-solid");
-                this.like++;
-            } else {
-                likeIcon.classList.replace("fa-solid", "fa-regular");
-                this.like--;
+            let response = await likePost(this);
+            console.log(response)
+            if (response.error) {
+                console.error("Like error:", response.error);
             }
+            else if (response.isLiked){
+                likeIcon.classList.replace("fa-regular", "fa-solid");
+                this.like = response.like;
+            }
+            else {
+                likeIcon.classList.replace("fa-solid", "fa-regular");
+                this.like = response.like;
+            }
+            
             likeCount.textContent = this.like;
         });
 
@@ -97,7 +133,7 @@ class Post {
 
     render() {
         const postContainer = document.createElement("a");
-        postContainer.href = "/post";
+        postContainer.href = "/post?postId=" + this.postId;
         postContainer.classList.add("post-container");
     
         const postContent = document.createElement("div");

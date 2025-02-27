@@ -329,7 +329,7 @@ public class PostController : Controller
         
 
         var existingLike = post.PostLikes.FirstOrDefault(pl => pl.UserId == userId);
-        
+        var isLiked = existingLike == null;
         if (existingLike != null)
         {
             // ถ้าเคยไลก์แล้ว → ให้ Unlike
@@ -349,7 +349,7 @@ public class PostController : Controller
         }
 
         await _db.SaveChangesAsync();
-        return Json(new{like = post.Like}); // ส่งจำนวนไลก์กลับไป
+        return Json(new{like = post.Like, isLiked}); // ส่งจำนวนไลก์กลับไป
     }
 }
 
