@@ -37,7 +37,7 @@ if (profile) {
 // const closeIcon = document.querySelector(".close-icon");
 // const themeToggle = document.querySelector(".theme-switch");
 
-// Menu Toggle
+// // Menu Toggle
 // menuToggle.addEventListener("click", function (event) {
 //     event.stopPropagation(); // ป้องกัน event จากการ propagate ออกไปที่ document
 //     menu.classList.toggle("active");
