@@ -23,7 +23,7 @@ if (profile) {
         userProfile.username,
         userProfile.profileImg,
         // "https://i.pinimg.com/736x/26/6e/5c/266e5cc575f46b6b309f0e5864707ce1.jpg",
-        "50px"
+        "60px"
     )
     // console.log("Create Successfully", userProfileImage.render())
     const p = document.createElement("p")
@@ -37,7 +37,7 @@ if (profile) {
 // const closeIcon = document.querySelector(".close-icon");
 // const themeToggle = document.querySelector(".theme-switch");
 
-// Menu Toggle
+// // Menu Toggle
 // menuToggle.addEventListener("click", function (event) {
 //     event.stopPropagation(); // ป้องกัน event จากการ propagate ออกไปที่ document
 //     menu.classList.toggle("active");

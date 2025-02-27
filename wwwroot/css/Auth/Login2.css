@@ -1,0 +1,213 @@
+@import url("/css/src.css");
+
+:root {
+    --login-bg: var(--seasalt);
+    --login-text: var(--outer-space);
+    --login-input-bg: var(--antiflash-white);
+    --login-border: var(--french-gray);
+    --login-submit-color: var(--bright-pink-crayola);
+    --login-submit-hover: var(--bright-pink-crayola-2);
+    --login-input-text: var(--outer-space);
+
+    --login-google-bg: var(--seasalt);
+    --login-google-border: var(--french-gray);
+    --login-google-hover-bg: var(--antiflash-white);
+}
+
+[data-theme="dark"] {
+    --login-bg: var(--eerie-black);
+    --login-text: var(--seasalt);
+    --login-input-bg: var(--onyx);
+    --login-border: var(--outer-space);
+    --login-submit-color: var(--amaranth-purple);
+    --login-submit-hover: var(--rose-red);
+    --login-input-text: var(--french-gray);
+
+    --login-google-bg: var(--outer-space);
+    --login-google-text: var(--seasalt);
+    --login-google-border: var(--slate-gray);
+    --login-google-hover-bg: var(--onyx);
+}
+
+
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background: var(--bg-image);
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    background: var(--login-bg);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+}
+
+.login-username, .login-password {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+.login-username input, .login-password input {
+    font-size: 1rem;
+    color: var(--login-input-text);
+}
+.login-username label, .login-password label {
+    font-size: 1.2rem;
+}
+
+.login-title {
+    font-size: 2.3rem;
+    margin-bottom: 0.8rem;
+}
+
+.inputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.inputBox {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid var(--login-border);
+    border-radius: 5px;
+    background: var(--login-input-bg);
+    color: var(--text-color);
+}
+.inputWrapper .inputBox {
+    padding-right: 3.2rem;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+.toggle-password i {
+    font-size: 0.8;
+    color: var(--text-color);
+}
+
+.login-button {
+    margin-bottom: 1rem;
+    width: 100%;
+    padding: 1rem;
+    background: var(--login-submit-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+.login-button:hover {
+    background: var(--login-submit-hover);
+}
+
+.login-google-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0.5rem;
+    background: var(--login-google-bg);
+    color: var(--login-google-text);
+    border: 1px solid var(--login-google-border);
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+.login-google-link:hover {
+    background: var(--login-google-hover-bg);
+    border-color: var(--rose-red);
+}
+
+.login-signup-container {
+    display: flex;
+    justify-content: center;
+}
+.login-signup-link {
+    color: var(--login-submit-color);
+}
+
+/* Media Queries สำหรับหน้าจอเล็ก */
+@media (max-width: 768px) {
+    .main {
+        justify-content: flex-end;
+    }
+    .login-container {
+        justify-content: center;
+        position: relative;
+        padding: 1.5rem;
+        padding: 1rem; 
+        width: 100%;
+        height: 90%;
+    }
+    .login-title {
+        width: 30%;
+        position: absolute;
+        left: 35%;
+        top: 15px;
+        z-index: 2;
+        font-size: 1.9rem; 
+    }
+
+    .inputBox {
+        font-size: 1rem; /* ลดขนาดตัวอักษรในกล่องกรอกข้อมูล */
+    }
+
+    .login-container {
+        padding: 1.5rem; /* ลดระยะห่างภายในฟอร์ม */
+        max-width: 500px; /* ขนาดฟอร์มให้เหมาะสมกับหน้าจอเล็ก */
+    }
+
+    .login-button {
+        font-size: 1rem; /* ลดขนาดฟอนต์ในปุ่ม */
+    }
+
+    .login-signup-container {
+        margin-top: 3rem; /* ขยับลิงก์สมัครสมาชิก */
+    }
+
+    .login-google-link {
+        font-size: 1rem; /* ลดขนาดฟอนต์ในปุ่ม Google */
+    }
+}
+
+/* สำหรับหน้าจอมือถือ */
+@media (max-width: 480px) {
+
+    .inputBox {
+        font-size: 0.9rem; /* ลดขนาดตัวอักษรในกล่องกรอกข้อมูล */
+    }
+
+    .login-title {
+        font-size: 1.6rem; /* ลดขนาดฟอนต์สำหรับชื่อฟอร์ม */
+    }
+
+    .login-button {
+        padding: 0.8rem; /* ปรับขนาดปุ่ม */
+        font-size: 1rem; /* ลดขนาดฟอนต์ */
+    }
+
+    .login-google-link {
+        font-size: 1rem; /* ปรับขนาดฟอนต์ของลิงก์ Google */
+    }
+
+    .toggle-password i {
+        font-size: 1.2rem; /* ปรับขนาดไอคอน */
+    }
+}
