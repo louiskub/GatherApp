@@ -17,9 +17,26 @@
 
         <div class="sidenav"></div>
         <div class="home-content">
-            <div class="write-button">
+            @* <div class="write-button">
                 <img src="https://cdn-icons-png.flaticon.com/512/84/84380.png" alt="Write">
+            </div> *@
+
+            <div class="floating-menu-button" onclick="toggleFloatingMenu()">
+                <i class="fas fa-plus floating-menu-icon"></i> 
             </div>
+
+            <div class="floating-menu" id="floatingMenu">
+                <div class="floating-menu-item" data-tooltip="About Us" id="menu-aboutus-button">
+                    <i class="fas fa-info-circle aboutus-item-icon"></i>
+                </div>
+                <div class="floating-menu-item" data-tooltip="Chat Hub" id="menu-chat-button">
+                    <i class="fas fa-comments chat-item-icon"></i>
+                </div>
+                <div class="floating-menu-item" data-tooltip="Create Post" id="menu-write-button">
+                    <i class="fas fa-pencil-alt createpost-item-icon"></i>
+                </div>
+            </div>
+
 
             <div class="popup_create" id="createPostPopup">
                 <div class="popup_create_content">
@@ -114,3 +131,17 @@
     </div>
     <script src="~/js/GOLF/createpost.js"></script>
     <script type="module" src="~/js/home/home.js"></script>
+    <script>
+        @* function toggleFloatingMenu() {
+            const menu = document.getElementById('floatingMenu');
+            menu.classList.toggle('active');
+        } *@
+
+        function toggleFloatingMenu() {
+            document.getElementById('floatingMenu').classList.toggle('show');
+        }
+
+        function openCreatePostPopup() {
+            document.getElementById('createPostPopup').style.display = 'block';
+        }
+    </script>

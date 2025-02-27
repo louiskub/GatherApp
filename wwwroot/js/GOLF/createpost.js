@@ -1,5 +1,5 @@
 const popup = document.getElementById('createPostPopup');
-const writeButton = document.querySelector('.write-button');
+const writeButton = document.getElementById('menu-write-button');
 const cancelButton = document.querySelector('.cancel_but');
 const createButton = document.querySelector('.create_but');
 const imageUpload = document.getElementById('imageUpload');
