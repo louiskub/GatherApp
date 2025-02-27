@@ -61,6 +61,20 @@ public class HomeController : Controller
         return View("~/Views/Home/ViewProfile.cshtml");
     }
 
+    [Route("report")]
+    public IActionResult Report()
+    {
+        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
+        return View("~/Views/Home/ReportPage.cshtml");
+    }
+
+    [Route("review")]
+    public IActionResult Review()
+    {
+        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
+        return View("~/Views/Home/Review.cshtml");
+    }
+
     [Route("login")]
     public IActionResult Login()
     {

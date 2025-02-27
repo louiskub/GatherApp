@@ -1,3 +1,47 @@
+/* @media สำหรับหน้าจอที่มีความกว้างต่ำกว่า 1200px */
+@media (max-width: 1200px) {
+    .actcontent {
+        display: flex !important; /* ใช้ !important เพื่อให้แน่ใจว่า CSS นี้ทำงาน */
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .actcontent_left,
+    .actcontent_right {
+        width: 100% !important; /* ใช้ !important เพื่อให้การกำหนด width ทำงาน */
+    }
+
+    .member_container{
+        max-width: 100% !important;
+    }
+}
+
+@media (max-width: 850px) {
+    .post_act_name h2 {
+        font-size: 40px !important;
+    }
+
+    .actbox1_left img {
+        width: 40px !important;
+        height: 40px !important; 
+    }
+    
+    .actbox1_left h2{
+        font-size: 16px !important;
+    }
+
+    .actbox1_right {
+        font-size: 14px !important;
+    }
+}
+
+@media (max-width: 700px) {
+    .post_act_name h2 {
+        font-size: 35px !important;
+    }
+}
+
+
 * {
     margin: 0;
     padding: 0;
@@ -9,8 +53,10 @@
     padding: 70px 40px 40px 40px;
 }
 
-h2 {
-    font-size: 50px;
+.post_act_name h2 {
+    font-size: 48px;
+    word-wrap: break-word; /* ทำให้ข้อความที่ยาวขึ้นบรรทัดใหม่ */
+    overflow-wrap: break-word; /* สำหรับการจัดการกับข้อความที่ยาวเกินขนาด */
 }
 
 .actbox1 {
@@ -39,8 +85,6 @@ h2 {
 .actbox1_right {
     align-self: flex-end;
     font-size: 16px;
-    /* color: #333333; */
-    
 }
 
 .actcontent{
@@ -53,6 +97,7 @@ h2 {
 
 .act_img img{
     width: 100%;
+    height: auto;
 }
 
 .actcontent_left .act_descript{
@@ -105,32 +150,31 @@ h2 {
     flex-direction: column;
     align-items: center;
     align-self: flex-end;
+    padding-right: 5px;
 }
 
 .likes_num {
-    color: #D7443E;
+    color: var(--post-like-btn);
     font-size: 24px;
     font-weight: bold;
-    margin-bottom: -20px;
+    margin-bottom: -10px;
     text-align: center;
     user-select: none;
 }
 
 .heart {
+    padding: 5px;
     font-size: 45px;
     cursor: pointer;
     transition: transform 0.2s;
     display: inline-block;
     user-select: none;
+    color: var(--post-like-btn);
+    line-height: 1; 
 }
 
 .heart:hover{
     transform: scale(1.1);
-}
-
-.heart.liked {
-    color: #D7443E;
-    user-select: none;
 }
 
 .act_member{
@@ -189,6 +233,21 @@ h2 {
     text-align: center;
 }
 
+
+
+/*********************************** View Post Button *******************************/
+/*********หน้าคนโพสต์*************/
+/* .app_but, .reg_but{
+    display: none;
+} */
+
+
+/*********หน้าสมัคร************/
+/* .edit_but, .view_but, .cancel_post_but{
+    display: none;
+} */
+
+
 .act_view_buttons{
     display: flex;
     flex-direction: column;
@@ -197,7 +256,6 @@ h2 {
 }
 
 .app_but{
-    /* display: none; no reqire application */
     width: 100%;
     padding: 5px;
     border: none;
@@ -220,6 +278,46 @@ h2 {
     font-weight: bold;
     cursor: pointer;
 }
+
+.edit_but {
+    width: 100%;
+    padding: 5px;
+    border: none;
+    border-radius: 10px;
+    background: #7c22c5;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.view_but {
+    width: 100%;
+    padding: 5px;
+    border: none;
+    border-radius: 10px;
+    background: #22c55e;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.cancel_post_but {
+    width: 100%;
+    padding: 5px;
+    border: none;
+    border-radius: 10px;
+    background: #ef4444;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+
+/*****************************************************************************************/
+
 
 .popup_app {
     display: none;
@@ -281,4 +379,17 @@ h2 {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.3);
+}
+
+/*******************Google Map************************/
+.googlemap {
+    width: 100%;
+    height: auto;
+}
+
+.googlemap iframe {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9; /* กำหนดอัตราส่วนโดยไม่ต้องใช้ padding */
+    border: 0;
 }

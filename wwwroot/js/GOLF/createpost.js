@@ -18,12 +18,6 @@ writeButton.addEventListener('click', () => {
     document.body.classList.add('no-scroll');
 });
 
-// // ฟังก์ชันแสดงข้อความเมื่อสร้างโพสต์
-// createButton.addEventListener('click', () => {
-//     alert("Create Post successfully!");
-//     popup.style.display = 'none';
-// });
-
 // ฟังก์ชัน triggerUpload
 function triggerUpload() {
     imageUpload.click(); // ทำให้การคลิกที่ preview กระตุ้นการคลิกที่ input[type="file"]

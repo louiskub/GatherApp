@@ -283,7 +283,7 @@ textarea:focus{
     gap: 10px;
 }
 
-input{
+.create_act_name input, .input_map_link input, .parti_needed input{
     width: 100%;
     height: 40px;
     padding: 10px;
@@ -294,12 +294,12 @@ input{
     color: var(--input_place_holder_color);
 }
 
-input::placeholder{
+.create_act_name input::placeholder, .input_map_link input::placeholder, .parti_needed input::placeholder{
     font-size: 16px;
     color: var(--input_place_holder_color);
 }
 
-input:focus{
+.create_act_name input:focus, .input_map_link input:focus, .parti_needed input:focus{
     border: 2px solid var(--border-color);
     outline: none;
 }
@@ -406,7 +406,7 @@ input:focus{
     width: 100%;
 }
 
-label {
+.event_date label, .app_deadline label {
     font-size: 16px;
     color: var(--input_place_holder_color);
 }
@@ -419,7 +419,7 @@ label {
     outline: none;
 }
 
-p {
+.event_date p, .app_deadline p {
     margin: 0;
     font-size: 14px;
 }

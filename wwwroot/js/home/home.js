@@ -150,7 +150,7 @@ async function showPost(allPosts){
                 post.id,formattedDate, post.postName, activity.province +", "+ activity.district, 
                 post.curParticipant, post.maxParticipant, post.totalApplicant, 
                 actType, 
-                post.coverPageImg, post.like
+                post.coverPageImg, post.like, post.isLiked
             ));
         })
         let formattedDate

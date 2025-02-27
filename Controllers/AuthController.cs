@@ -88,7 +88,7 @@ public class AuthController : Controller
         
         return Json(new { status = "Login success", token = token });
     }
-    
+
     [HttpPost]
     [Route("api/auth/logout")]
     public IActionResult Logout()
