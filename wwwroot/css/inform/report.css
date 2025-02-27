@@ -5,6 +5,7 @@
     --report-button-bg: var(--amaranth-purple);
     --text-area-bg: white;
     --text-area-border: var(--rose-red);
+    --hr-color: var(--claret);
 }
 
 [data-theme="dark"] {
@@ -14,6 +15,7 @@
     --report-button-bg: var(--rose-red);
     --text-area-bg: var(--outer-space);
     --text-area-border: var(--french-gray);
+    --hr-color: var(--french-gray);
 }
 * {
     outline: none;
@@ -25,6 +27,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-image: var(--bg-image);
 }
 .report-all {
     /* position: absolute;
@@ -100,6 +103,10 @@
     gap: 1rem;
     flex: 2;
 }
+.report-describe {
+    border-top: 1px solid var(--hr-color);
+}
+
 .report-checkbox-container {
     display: flex;
     flex-direction: column;

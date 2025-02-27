@@ -14,7 +14,7 @@
             <h2>Registrant: 57</h2>
         </div>
         <div class="popup-content">
-            <div class="popup-user-container">
+            @* <div class="popup-user-container">
                 <div class="popup-user-content">
                     <img class="popup-user-profile" 
                     src="https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559" 
@@ -26,9 +26,9 @@
                     <button class="popup-accept-btn">Accept</button>
                     <button class="popup-reject-btn">Reject</button>
                 </div>
-            </div>
+            </div> *@
 
-            <div class="popup-user-container">
+            @* <div class="popup-user-container">
                 <div class="popup-user-content">
                     <img class="popup-user-profile" 
                     src="https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559" 
@@ -40,9 +40,9 @@
                     <button class="popup-accept-btn">Accept</button>
                     <button class="popup-reject-btn">Reject</button>
                 </div>
-            </div>
+            </div> *@
 
-            <div class="popup-user-container">
+            @* <div class="popup-user-container">
                 <div class="popup-user-content">
                     <img class="popup-user-profile" 
                     src="https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559" 
@@ -54,9 +54,9 @@
                     <button class="popup-accept-btn">Accept</button>
                     <button class="popup-reject-btn">Reject</button>
                 </div>
-            </div>
+            </div> *@
 
-            <div class="popup-user-container">
+            @* <div class="popup-user-container">
                 <div class="popup-user-content">
                     <img class="popup-user-profile" 
                     src="https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559" 
@@ -68,13 +68,15 @@
                     <button class="popup-accept-btn">Accept</button>
                     <button class="popup-reject-btn">Reject</button>
                 </div>
-            </div>
+            </div> *@
         </div>
-
 
     </div>
 </div>
-<script>
+<script type="module">
+
+    import PopupUserList from '/js/components/popup_userlist.js';
+
     var popup = document.querySelector('.popup-container');
     var review = document.querySelector('.review');
     var report = document.querySelector('.report');
@@ -93,6 +95,36 @@
     review.addEventListener('click', openPopup);
     report.addEventListener('click', openPopup);
     close.addEventListener('click', closePopup);
+
+    const users = [
+    {
+        imgUrl: "https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559",
+        username: "Mavuika Natlan Anchor",
+        buttons: ["Application", "Approve", "Deny"]
+    },
+    {
+        imgUrl: "https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559",
+        username: "Mavuika Natlan Anchor",
+        buttons: ["Approve", "Deny"]
+    },
+    {
+        imgUrl: "https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559",
+        username: "Mavuika Natlan Anchor",
+        buttons: ["Review"]
+    },
+    {
+        imgUrl: "https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559",
+        username: "Mavuika Natlan Anchor",
+        buttons: ["Report"]
+    }];
+
+    // สร้าง container หลัก
+    const popupContent = document.querySelector('.popup-content');
+
+    users.forEach(userData => {
+        const userPopup = new PopupUserList(userData).render(); // เรียก .render()
+        popupContent.appendChild(userPopup);
+    });
 
     @* window.addEventListener('click', function (e) {
         if (e.target == popup) {

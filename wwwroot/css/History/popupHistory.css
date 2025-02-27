@@ -1,54 +1,170 @@
 @import url(/css/src.css);
 
+/* 🎨 Light Mode */
+:root {
+    --button-review-bg: var(--cherry-blossom-pink);
+    --button-review-border: var(--salmon-pink);
+    --button-review-hover: var(--bright-pink-crayola-2);
+    --button-review-hover-active: var(--bright-pink-crayola);
+
+    --button-report-bg: var(--bright-pink-crayola);
+    --button-report-border: var(--rose-red);
+    --button-report-hover: var(--amaranth-purple);
+    --button-report-hover-active: var(--salmon-pink);
+
+    --popup-bg: var(--seasalt);
+    --popup-text: var(--eerie-black);
+    --popup-shadow: rgba(0, 0, 0, 0.2);
+
+    --close-icon: var(--outer-space);
+    --close-icon-hover: var(--rose-red);
+
+    --popup-user-bg: var(--lavender-blush);
+    /* เปลี่ยนจาก --fairy-tale */
+    --popup-user-border: var(--pink);
+
+    --popup-application-btn-bg: var(--bright-pink-crayola-2);
+    --popup-application-btn-hover: var(--bright-pink-crayola);
+
+    --popup-approve-btn-bg: var(--bright-pink-crayola);
+    --popup-approve-btn-hover: var(--rose-red);
+
+    --popup-deny-btn-bg: var(--claret);
+    --popup-deny-btn-hover: var(--amaranth-purple);
+
+    --popup-report-btn-bg: var(--rose-red);
+    --popup-report-btn-hover: var(--bright-pink-crayola);
+
+    --popup-review-btn-bg: var(--amaranth-purple);
+    --popup-review-btn-hover: var(--rose-red);
+
+}
+
+/* 🌙 Dark Mode */
+[data-theme="dark"] {
+    --button-review-bg: var(--amaranth-purple);
+    --button-review-border: var(--rose-red);
+    --button-review-hover: var(--bright-pink-crayola);
+    --button-review-hover-active: var(--bright-pink-crayola-2);
+
+    --button-report-bg: var(--rose-red);
+    --button-report-border: var(--bright-pink-crayola);
+    --button-report-hover: var(--salmon-pink);
+    --button-report-hover-active: var(--cherry-blossom-pink);
+
+    --popup-bg: var(--eerie-black);
+    --popup-text: var(--seasalt);
+    --popup-shadow: rgba(255, 255, 255, 0.2);
+
+    --close-icon: var(--seasalt);
+    --close-icon-hover: var(--bright-pink-crayola-2);
+
+    --popup-user-bg: var(--onyx);
+    /* เปลี่ยนจาก --fairy-tale */
+    --popup-user-border: var(--outer-space);
+
+    --popup-application-btn-bg: linear-gradient(45deg, var(--bright-pink-crayola), var(--bright-pink-crayola-2));
+    --popup-application-btn-hover: linear-gradient(45deg, var(--bright-pink-crayola-2), var(--bright-pink-crayola));
+
+    --popup-approve-btn-bg: linear-gradient(45deg, var(--rose-red), var(--bright-pink-crayola));
+    --popup-approve-btn-hover: linear-gradient(45deg, var(--bright-pink-crayola), var(--salmon-pink));
+
+    --popup-deny-btn-bg: linear-gradient(45deg, var(--claret), var(--chocolate-cosmos));
+    --popup-deny-btn-hover: linear-gradient(45deg, var(--chocolate-cosmos), var(--claret));
+
+    --popup-report-btn-bg: linear-gradient(45deg, var(--rose-red), var(--bright-pink-crayola));
+    --popup-report-btn-hover: linear-gradient(45deg, var(--bright-pink-crayola), var(--rose-red));
+
+    --popup-review-btn-bg: linear-gradient(45deg, var(--amaranth-purple), var(--rose-red));
+    --popup-review-btn-hover: linear-gradient(45deg, var(--rose-red), var(--amaranth-purple));
+}
+
+/* ปรับปุ่ม Review และ Report */
+.buttonStyle.review,
+.buttonStyle.report {
+    font-size: 1.1rem;
+    padding: 0.8rem 1.2rem;
+    border-radius: 12px;
+    border-width: 2px;
+    transition: all 0.3s ease-in-out;
+    font-weight: bold;
+    cursor: pointer;
+}
+
 .buttonStyle.review {
-    background-color: var(--fairy-tale) !important;
-    border-color: rgb(248, 197, 216) !important;
+    background-color: var(--button-review-bg);
+    border-color: var(--button-review-border);
+    color: var(--text-color);
+}
+
+.buttonStyle.review:hover {
+    background-color: var(--button-review-hover);
+    transform: translateY(-2px);
+}
+
+.buttonStyle.review:active {
+    background-color: var(--button-review-hover-active);
+    transform: translateY(1px);
 }
 
 .buttonStyle.report {
-    background-color: var(--bright-pink-crayola-2) !important;
-    border-color: rgb(253, 110, 136) !important;
-    color: white;
+    background-color: var(--button-report-bg);
+    border-color: var(--button-report-border);
+    color: var(--text-color);
 }
+
+.buttonStyle.report:hover {
+    background-color: var(--button-report-hover);
+    transform: translateY(-2px);
+}
+
+.buttonStyle.report:active {
+    background-color: var(--button-report-hover-active);
+    transform: translateY(1px);
+}
+
 
 /* Popup Container */
 .popup-container {
     display: none;
     flex-direction: column;
-    /* justify-content: center; */
     position: fixed;
-    /* align-items: center; */
-    z-index: 5;
-    left: 10%;
-    top: calc(10% + 30px);
-    width: 80%;
-    height: 80%;
-    padding: 1rem 2rem;
     overflow-y: auto;
-    background-color: var(--navbar-bg);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 800px;
+    padding: 1.2rem;
+    background-color: var(--popup-bg);
+    color: var(--popup-text);
     border-radius: 20px;
+    box-shadow: 0 10px 30px var(--popup-shadow);
+    transition: all 0.3s ease-in-out;
 }
 
+/* Popup Close Icon */
 .close-popup-icon {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 15px;
+    right: 15px;
     cursor: pointer;
     font-size: 1.5rem;
-    font-weight: bold;
-    z-index: 10;
+    color: var(--close-icon);
+    transition: color 0.2s ease-in-out;
 }
 
+.close-popup-icon:hover {
+    color: var(--close-icon-hover);
+}
 
 /* Popup Header */
-.popup-header {
-    margin-bottom: 0.5rem;
-}
-
 .popup-header h2 {
+    margin-bottom: 0.5rem;
     font-size: 1.5rem;
     font-weight: bold;
     color: var(--text-color);
+    text-align: center;
 }
 
 /* Popup Content */
@@ -63,71 +179,126 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem;
-    border-radius: 25px;
-    /* border-top-left-radius: 40px;
-    border-bottom-left-radius: 40px; */
-    color: var(--text-color);
-    background-color: var(--fairy-tale);
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 15px;
+    background-color: var(--popup-user-bg);
+    border: 2px solid var(--popup-user-border);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 /* Popup User Content */
 .popup-user-content {
     display: flex;
     align-items: center;
-    text-align: center;
-    gap: 0.8rem;
-    padding: 0.5rem;
-    border-radius: 25px;
-    margin-left: 0.5rem;
+    gap: 1rem;
 }
 
 .popup-user-content img {
-    width: 70px;
-    height: 70px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid var(--text-color);
-
 }
 
 .popup-username {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: bold;
 }
 
 /* Popup Button Group */
 .popup-button-group {
     display: flex;
-    gap: 1rem;
-    padding: 1rem;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    justify-content: center;
 }
-
-/* Popup Button */
 .popup-button-group button {
     border: none;
-    padding: 0.5rem 0.8rem;
+    padding: 0.6rem 1.2rem;
     border-radius: 10px;
+    font-size: 1rem;
     cursor: pointer;
-    font-size: 0.9rem;
     font-weight: bold;
-    text-align: center;
-    min-width: 100px;
+    min-width: 120px;
     transition: 0.3s;
 }
 
-@media (max-width: 768px) {
+/* Popup Button */
+.popup-application-btn {
+    background: var(--popup-application-btn-bg);
+    color: white;
+    transition: background 0.3s ease-in-out;
+}
+.popup-application-btn:hover {
+    background: var(--popup-application-btn-hover);
+}
 
-    /* .popup-user-container {
-        align-items: center;
-    } */
+.popup-approve-btn {
+    background: var(--popup-approve-btn-bg);
+    color: white;
+    transition: background 0.3s ease-in-out;
+}
+.popup-approve-btn:hover {
+    background: var(--popup-approve-btn-hover);
+}
+
+.popup-deny-btn {
+    background: var(--popup-deny-btn-bg);
+    color: white;
+    transition: background 0.3s ease-in-out;
+}
+.popup-deny-btn:hover {
+    background: var(--popup-deny-btn-hover);
+}
+
+.popup-report-btn {
+    background: var(--popup-report-btn-bg);
+    color: white;
+    transition: background 0.3s ease-in-out;
+}
+.popup-report-btn:hover {
+    background: var(--popup-report-btn-hover);
+}
+
+.popup-review-btn {
+    background: var(--popup-review-btn-bg);
+    color: white;
+    transition: background 0.3s ease-in-out;
+}
+.popup-review-btn:hover {
+    background: var(--popup-review-btn-hover);
+}
+
+/* Media Query สำหรับมือถือ */
+@media (max-width: 768px) {
+    .popup-container {
+        width: 100%;
+        max-height: 100vh;
+        z-index: 1000000;
+        border-radius: 0;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .popup-user-container {
+        flex-direction: column;
+        text-align: center;
+        padding: 1rem;
+    }
+
     .popup-user-content {
         flex-direction: column;
-        align-items: center;
-        /* background-color: var(--bright-pink-crayola-2); */
+        gap: 0.3rem;
     }
 
     .popup-button-group {
         flex-direction: column;
+        width: 100%;
+        gap: 0.6rem;
+    }
+
+    .popup-button-group button {
+        width: 100%;
     }
 }
