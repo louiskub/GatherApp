@@ -77,8 +77,8 @@ public class Post{
         if (Activity == null) 
             return "Activity information is missing";
 
-        if (DateTime.Now < Activity.OpenDateTime)
-            return "Post is not available yet";
+        // if (DateTime.Now < Activity.OpenDateTime)
+        //     return "Post is not available yet";
 
         if (DateTime.Now > Activity.CloseDateTime)
             return "Post is already closed";
@@ -99,7 +99,6 @@ public class Post{
         IsAttached = dtopost.IsAttached;
         MaxParticipant = dtopost.MaxParticipant;
         CoverPageImg = dtopost.CoverPageImg;
-        Activity.OpenDateTime = dtopost.OpenDateTime;
         Activity.CloseDateTime = dtopost.CloseDateTime;
         Activity.ActDatetime = dtopost.ActDatetime;
         Activity.Province = dtopost.Province;

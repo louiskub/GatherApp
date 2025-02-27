@@ -73,7 +73,6 @@ public class ManageMyPostController : Controller
 
         var activity = new Activity
         {
-            OpenDateTime = dtopost.OpenDateTime,
             CloseDateTime = dtopost.CloseDateTime,
             ActDatetime = dtopost.ActDatetime,
             Province = dtopost.Province,
