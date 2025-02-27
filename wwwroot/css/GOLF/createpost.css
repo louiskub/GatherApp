@@ -417,6 +417,8 @@ textarea:focus{
     border-radius: 10px;
     font-size: 16px;
     outline: none;
+    background-color: var(--input-bg);
+    color: var(--input_place_holder_color);
 }
 
 .event_date p, .app_deadline p {

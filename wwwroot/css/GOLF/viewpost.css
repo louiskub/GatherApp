@@ -1,3 +1,18 @@
+:root {
+    /* Light Mode */
+    --miniinfo-bg: #F1F1F1;
+    --miniinfo_date-color: #bec121;
+    --miniinfo_locate-color: #d14232;
+}
+
+/* Dark Mode */
+[data-theme="dark"] {
+    --miniinfo-bg: rgb(120, 28, 54);
+    --miniinfo_date-color: #e0b20a;
+    --miniinfo_locate-color: #fd1c03;
+}
+
+
 /* @media สำหรับหน้าจอที่มีความกว้างต่ำกว่า 1200px */
 @media (max-width: 1200px) {
     .actcontent {
@@ -119,30 +134,28 @@
     width: 100%;
     height: auto;
     padding: 10px;
-    background-color: #F1F1F1;
-    border: 1px solid #C0C0C0;
+    background-color: var(--miniinfo-bg);
+    border: 2px solid #C0C0C0;
     border-radius: 10px;
 }
 
 .act_miniinfo_left h1{
     font-size: 26px;
-    color: #BFA547;
+    color: var(--miniinfo_date-color);
 }
 
 .act_miniinfo_left h2{
     font-size: 26px;
-    color: #333333;
 }
 
 .act_miniinfo_left h3{
     font-size: 18px;
-    color: #d14232;
+    color: var(--miniinfo_locate-color);
 }
 
 .act_miniinfo_left p{
     font-size: 18px;
     font-weight: 500;
-    color: #333333;
 }
 
 .act_miniinfo_right{
@@ -181,15 +194,14 @@
     width: 100%;
     height: auto;
     padding: 10px;
-    background-color: #F1F1F1;
-    border: 1px solid #C0C0C0;
+    background-color: var(--miniinfo-bg);
+    border: 2px solid #C0C0C0;
     border-radius: 10px;
 }
 
 .act_member h1{
     font-size: 30px;
     font-weight: bold;
-    color: #333333;
 }
 
 .member_container{
