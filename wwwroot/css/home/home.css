@@ -25,6 +25,24 @@
     --write-button-hover-text: var(--seasalt);
     --write-button-shadow: var(--chocolate-cosmos);
 
+    /* Chat Button */
+    --chat-button-bg: var(--amaranth-purple);
+    --chat-button-text: var(--seasalt);
+    --chat-button-hover-bg: var(--rose-red);
+    --chat-button-hover-shadow: var(--rose-red);
+
+    /* About Us Button */
+    --aboutus-button-bg: var(--chocolate-cosmos);
+    --aboutus-button-text: var(--antiflash-white);
+    --aboutus-button-hover-bg: var(--claret);
+    --aboutus-button-hover-shadow: var(--claret);
+
+    /* Create Post Button */
+    --createpost-button-bg: var(--bright-pink-crayola);
+    --createpost-button-text: var(--seasalt);
+    --createpost-button-hover-bg: var(--bright-pink-crayola-2);
+    --createpost-button-hover-shadow: var(--bright-pink-crayola-2);
+
 }
 /* Dark Mode */
 [data-theme="dark"] {
@@ -46,6 +64,24 @@
     --write-button-hover-bg: var(--amaranth-purple);
     --write-button-hover-text: var(--seasalt);
     --write-button-shadow: var(--outer-space);
+
+    /* Chat Button */
+    --chat-button-bg: var(--claret);
+    --chat-button-text: var(--seasalt);
+    --chat-button-hover-bg: var(--amaranth-purple);
+    --chat-button-hover-shadow: var(--amaranth-purple);
+
+    /* About Us Button */
+    --aboutus-button-bg: var(--claret);
+    --aboutus-button-text: var(--seasalt);
+    --aboutus-button-hover-bg: var(--chocolate-cosmos);
+    --aboutus-button-hover-shadow: var(--onyx);
+
+    /* Create Post Button */
+    --createpost-button-bg: var(--rose-red);
+    --createpost-button-text: var(--seasalt);
+    --createpost-button-hover-bg: var(--amaranth-purple);
+    --createpost-button-hover-shadow: var(--amaranth-purple);
 }
 
 /* body.menu-open {
@@ -132,9 +168,132 @@
     transform: rotate(180deg);
 }
 
+/* 6. Floating Menu Button */
+/* Floating Action Button */
+.floating-menu-button {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    width: 65px;
+    height: 65px;
+    background: var(--write-button-bg);
+    color: var(--write-button-text);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    box-shadow: 2px 2px 10px var(--write-button-shadow);
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
+}
+.floating-menu-button:hover {
+    background: var(--write-button-hover-bg);
+    transform: scale(1.1);
+}
+.floating-menu-button i {
+    font-size: 2rem;
+    color: var(--write-button-text);
+}
+
+/* Floating Menu */
+.floating-menu {
+    position: fixed;
+    bottom: 140px;
+    right: 47px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}
+.floating-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Floating Menu Items */
+.floating-menu-item {
+    width: 50px;
+    height: 50px;
+    background: var(--write-button-bg);
+    color: var(--write-button-text);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 2px 2px 10px var(--write-button-shadow);
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
+    position: relative;
+}
+.floating-menu-item:hover {
+    background: var(--write-button-hover-bg);
+    transform: scale(1.1);
+}
+.floating-menu-item i {
+    font-size: 1.2rem;
+    color: var(--write-button-text);
+}
+
+/* Tooltip on Hover */
+.floating-menu-item::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    right: 60px;
+    color: var(--navbar-text);
+    font-size: 14px;
+    font-weight: bold;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, transform 0.2s ease, visibility 0.3s;
+    white-space: nowrap;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Show Tooltip on Hover */
+.floating-menu-item:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-5px);
+}
+
+
+/* Chat Button */
+#menu-chat-button {
+    background: var(--chat-button-bg);
+    color: var(--chat-button-text);
+}
+#menu-chat-button:hover {
+    background: var(--chat-button-hover-bg);
+    box-shadow: 0px 0px 15px var(--chat-button-hover-shadow);
+}
+
+/* About Us Button */
+#menu-aboutus-button {
+    background: var(--aboutus-button-bg);
+    color: var(--aboutus-button-text);
+}
+#menu-aboutus-button:hover {
+    background: var(--aboutus-button-hover-bg);
+    box-shadow: 0px 0px 15px var(--aboutus-button-hover-shadow);
+}
+
+/* Create Post Button */
+#menu-write-button {
+    background: var(--createpost-button-bg);
+    color: var(--createpost-button-text);
+}
+#menu-write-button:hover {
+    background: var(--createpost-button-hover-bg);
+    box-shadow: 0px 0px 15px var(--createpost-button-hover-shadow);
+}
 
 /* 6. Write Button */
-.write-button {
+/* .write-button {
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -160,7 +319,7 @@
     background: var(--write-button-hover-bg);
     color: var(--write-button-hover-text);
     transform: scale(1.1);
-}
+} */
 
 /* .close-filter-icon {
     display: none;
