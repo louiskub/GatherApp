@@ -1,0 +1,102 @@
+@{
+    ViewData["Title"] = "Gather-PopupHistory";
+}
+
+<link rel="stylesheet" href="~/css/History/popupHistory.css">
+
+<div class="main">
+    <button class="buttonStyle review">Review</button>
+    <button class="buttonStyle report">Report</button>
+
+    <div class="popup-container">
+        <i class="fa-solid fa-xmark close-popup-icon"></i>
+        <div class="popup-header">
+            <h2>Registrant: 57</h2>
+        </div>
+        <div class="popup-content">
+            <div class="popup-user-container">
+                <div class="popup-user-content">
+                    <img class="popup-user-profile" 
+                    src="https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559" 
+                    alt="">
+                    <p class="popup-username">Mavuika Natlan Anchor</p>
+                </div>
+                <div class="popup-button-group">
+                    <button class="popup-appicaiton-btn">Appliaction</button>
+                    <button class="popup-accept-btn">Accept</button>
+                    <button class="popup-reject-btn">Reject</button>
+                </div>
+            </div>
+
+            <div class="popup-user-container">
+                <div class="popup-user-content">
+                    <img class="popup-user-profile" 
+                    src="https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559" 
+                    alt="">
+                    <p class="popup-username">Mavuika Natlan Anchor</p>
+                </div>
+                <div class="popup-button-group">
+                    <button class="popup-appicaiton-btn">Appliaction</button>
+                    <button class="popup-accept-btn">Accept</button>
+                    <button class="popup-reject-btn">Reject</button>
+                </div>
+            </div>
+
+            <div class="popup-user-container">
+                <div class="popup-user-content">
+                    <img class="popup-user-profile" 
+                    src="https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559" 
+                    alt="">
+                    <p class="popup-username">Mavuika Natlan Anchor</p>
+                </div>
+                <div class="popup-button-group">
+                    <button class="popup-appicaiton-btn">Appliaction</button>
+                    <button class="popup-accept-btn">Accept</button>
+                    <button class="popup-reject-btn">Reject</button>
+                </div>
+            </div>
+
+            <div class="popup-user-container">
+                <div class="popup-user-content">
+                    <img class="popup-user-profile" 
+                    src="https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559" 
+                    alt="">
+                    <p class="popup-username">Mavuika Natlan Anchor</p>
+                </div>
+                <div class="popup-button-group">
+                    <button class="popup-appicaiton-btn">Appliaction</button>
+                    <button class="popup-accept-btn">Accept</button>
+                    <button class="popup-reject-btn">Reject</button>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<script>
+    var popup = document.querySelector('.popup-container');
+    var review = document.querySelector('.review');
+    var report = document.querySelector('.report');
+    var close = document.querySelector('.close-popup-icon');
+
+    function openPopup() {
+        popup.style.display = 'flex';
+        document.body.classList.add("no-scroll"); // ปิดการเลื่อน
+    }
+
+    function closePopup() {
+        popup.style.display = 'none';
+        document.body.classList.remove("no-scroll"); // เปิดการเลื่อนกลับมา
+    }
+
+    review.addEventListener('click', openPopup);
+    report.addEventListener('click', openPopup);
+    close.addEventListener('click', closePopup);
+
+    @* window.addEventListener('click', function (e) {
+        if (e.target == popup) {
+            closePopup();
+        }
+    }); *@
+</script>

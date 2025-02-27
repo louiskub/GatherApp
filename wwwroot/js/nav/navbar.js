@@ -8,7 +8,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // 📌 Theme Toggle (Light/Dark Mode)
-    const themeToggle = document.querySelector("#theme-toggle");
+    const themeToggle = document.querySelector(".theme-toggle");
+    const themeIcon = document.querySelector(".theme-switch");
     const html = document.documentElement;
     const storedTheme = localStorage.getItem("theme") || 
         (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
@@ -49,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
             menu.classList.contains("active") &&
             !menu.contains(event.target) &&
             !menuToggle.contains(event.target) &&
-            !themeToggle.contains(event.target) // เช็คว่าไม่ใช่ theme toggle
+            !themeIcon.contains(event.target) // เช็คว่าไม่ใช่ theme toggle
         ) {
             menu.classList.remove("active");
             document.documentElement.style.overflow = ""; 
