@@ -1,4 +1,5 @@
 :root {
+    --report-bg: var(--lavender-blush);
     --report-choice-bg: var(--cherry-blossom-pink);
     --report-choice-hover-bg: var(--bright-pink-crayola-2);
     --cancel-button-bg: var(--cherry-blossom-pink);
@@ -9,6 +10,7 @@
 }
 
 [data-theme="dark"] {
+    --report-bg: var(--eerie-black);
     --report-choice-bg: var(--claret);
     --report-choice-hover-bg: var(--rose-red);
     --cancel-button-bg: var(--outer-sapce);
@@ -35,8 +37,8 @@
     top: 50%;
     transform: translate(-50%, -50%); */
     padding: 3.5rem; 
-    border-radius: 10px;
-    background-color: var(--post-bg);
+    border-radius: 20px;
+    background-color: var(--report-bg);
     box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.3);
     width: 90%;
     max-width: 1000px;

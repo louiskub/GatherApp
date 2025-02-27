@@ -82,14 +82,14 @@ public class HomeController : Controller
     public IActionResult Login()
     {
         ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
-        return View("~/Views/Auth/Login.cshtml");
+        return View("~/Views/Auth/Login2.cshtml");
     }
 
     [Route("signup")]
     public IActionResult SignUp()
     {
         ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
-        return View("~/Views/Auth/SignUp.cshtml");
+        return View("~/Views/Auth/SignUp2.cshtml");
     }
 
     [Route("Chat")]
