@@ -406,7 +406,7 @@ textarea:focus{
     width: 100%;
 }
 
-label {
+.event_date label, .app_deadline label {
     font-size: 16px;
     color: var(--input_place_holder_color);
 }
@@ -419,7 +419,7 @@ label {
     outline: none;
 }
 
-p {
+.event_date p, .app_deadline p {
     margin: 0;
     font-size: 14px;
 }
