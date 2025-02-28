@@ -12,8 +12,17 @@
     --signup-google-bg: var(--seasalt);
     --signup-google-border: var(--french-gray);
     --signup-google-hover-bg: var(--antiflash-white);
-}
 
+    /* Date Picker - Light Mode */
+    --datepicker-bg: var(--antiflash-white);  
+    --datepicker-text: var(--eerie-black);      
+    --datepicker-border-color: var(--french-gray);    
+    --datepicker-selected-bg: var(--bright-pink-crayola); 
+    --datepicker-today-bg: var(--bright-pink-crayola-2);  
+    --datepicker-hover-bg: var(--salmon-pink);        
+    --datepicker-hover-text: var(--eerie-black); 
+    --datepicker-inactive-day: var(--french-gray-2);   
+}
 [data-theme="dark"] {
     --signup-bg: var(--eerie-black);
     --signup-text: var(--seasalt);
@@ -27,8 +36,19 @@
     --signup-google-text: var(--seasalt);
     --signup-google-border: var(--slate-gray);
     --signup-google-hover-bg: var(--onyx);
-}
+    --datepicker-hover-bg: var(--amaranth-purple);
+    --datepicker-hover-text: var(--seasalt);
 
+    /* Date Picker - Dark Mode */
+    --datepicker-bg: var(--eerie-black);
+    --datepicker-text: var(--seasalt);
+    --datepicker-border-color: var(--outer-space);
+    --datepicker-selected-bg: var(--amaranth-purple);
+    --datepicker-today-bg: var(--rose-red);
+    --datepicker-hover-bg: var(--claret);
+    --datepicker-hover-text: var(--seasalt);
+    --datepicker-inactive-day: var(--french-gray);  
+}
 
 .main {
     display: flex;
@@ -49,40 +69,22 @@
     width: 100%;
     height: 80%;
     max-width: 800px;
-    text-align: center;
     overflow-y: auto;
+    /* align-items: center; */
 }
 .signup-title {
     font-size: 2.3rem;
     margin-bottom: 1rem;
+    text-align: center;
+}
+.signup-last-step {
+    display: none;
 }
 
-.signup-realname,
-.signup-username,
-.signup-email,
-.signup-password,
-.signup-confirm-password {
-    margin-bottom: 1rem;
-    text-align: left;
-}
 
-.signup-realname input,
-.signup-username input,
-.signup-email input,
-.signup-password input,
-.signup-confirm-password input {
-    font-size: 1rem;
-    color: var(--signup-input-text);
-}
-.signup-realname {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-}
 .signup-content .label {
     font-size: 1.2rem;
 }
-
 .inputWrapper {
     position: relative;
     display: flex;
@@ -91,15 +93,16 @@
 .inputBox {
     width: 100%;
     padding: 0.8rem;
-    border: 1px solid var(--signup-border);
+    margin-bottom: 1rem;
+    font-size: 1rem;
     border-radius: 5px;
+    border: 1px solid var(--signup-border);
     background: var(--signup-input-bg);
-    color: var(--text-color);
+    color: var(--signup-input-text);
 }
 .inputWrapper .inputBox {
     padding-right: 3.2rem;
 }
-
 .toggle-password {
     position: absolute;
     right: 15px;
@@ -114,6 +117,54 @@
     font-size: 0.8;
     color: var(--text-color);
 }
+
+
+.signup-realname {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+#customGenderInput {
+    display: none;
+    flex-direction: column;
+}
+
+
+/* Calender */
+.flatpickr-calendar {
+    background: var(--datepicker-bg) !important;
+    /* color: var(--datepicker-text) !important; */
+    border: 1px solid var(--datepicker-border-color) !important;
+}
+/* .flatpickr-day {
+    color: var(--datepicker-text) !important;
+} */
+[data-theme="dark"] .flatpickr-day {
+    color: var(--datepicker-text);
+}
+[data-theme="dark"] .flatpickr-day.inactive {
+    color: var(--datepicker-inactive-day) !important; 
+}
+.flatpickr-day.selected {
+    background: var(--datepicker-selected-bg) !important;
+    color: var(--seasalt) !important;
+}
+.flatpickr-day.today {
+    background: var(--datepicker-today-bg) !important;
+    color: var(--seasalt) !important;
+}
+.flatpickr-day:hover {
+    background: var(--datepicker-hover-bg) !important;
+    color: var(--datepicker-hover-text) !important;
+    transition: background 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+.flatpickr-month,
+.flatpickr-year,
+.flatpickr-weekday {
+    color: var(--datepicker-text) !important;
+}
+
+
 
 .signup-button {
     margin-bottom: 1rem;
@@ -153,6 +204,8 @@
 .signup-login-container {
     display: flex;
     justify-content: center;
+    text-align: center;
+    align-items: center;
 }
 .signup-login-link {
     color: var(--signup-submit-color);
