@@ -207,6 +207,7 @@ class HistoryActivity {
         indicator.classList.add("indicator.onGoing");
         containerStyle.appendChild(indicator);
         containerStyle.appendChild(innerContainer);
+break;
 
       case "done": //post
         innerContainer.appendChild(this.createActivityStatusFinished());
@@ -214,6 +215,7 @@ class HistoryActivity {
         activityInfo.removeChild(displayUsr);
         containerStyle.appendChild(indicator);
         containerStyle.appendChild(innerContainer);
+break;
 
       case "cancel": //post
       //   .removeChild
@@ -224,6 +226,7 @@ class HistoryActivity {
         activityInfo.removeChild(displayUsr);
         containerStyle.appendChild(indicator);
         containerStyle.appendChild(innerContainer);
+break;
 
       case "accept": //application
         innerContainer.appendChild(this.createActivityStatusAccepted());
@@ -231,6 +234,7 @@ class HistoryActivity {
         activityInfo.removeChild(displayUsr);
         containerStyle.appendChild(indicator);
         containerStyle.appendChild(innerContainer);
+break;
 
       case "pending": //application
         innerContainer.appendChild(this.createActivityStatusPending());
@@ -238,6 +242,7 @@ class HistoryActivity {
         activityInfo.removeChild(displayUsr);
         containerStyle.appendChild(indicator);
         containerStyle.appendChild(innerContainer);
+break;
 
       case "reject": //application
         innerContainer.appendChild(this.createActivityStatusRejected());
@@ -245,6 +250,7 @@ class HistoryActivity {
         activityInfo.removeChild(displayUsr);
         containerStyle.appendChild(indicator);
         containerStyle.appendChild(innerContainer);
+break;
     }
 
     return containerStyle;
