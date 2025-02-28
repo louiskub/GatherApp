@@ -200,11 +200,27 @@ public class ChatHub : Hub
             var user = await _db.Users.FindAsync(userId);
             string username = user?.Username ?? "Unknown";
             string profileImageUrl = user?.ProfileImg ?? "https://www.mcot.net/uploads/article/202409/fc9caee77c607de279ff9116c67c6ddf.jpeg";
-            var isMine = Context.ConnectionId == _userConnections.FirstOrDefault(x => x.Value == userId).Key;
+            var currentUserId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+             string SentAt = chatMessage.SentAt.ToString("o");
 
-            string SentAt = chatMessage.SentAt.ToString("o");
+            await Clients.OthersInGroup(postId.ToString()).SendAsync(
+                "ReceiveMessage",
+                false, 
+                username,
+                message,
+                chatMessage.SentAt.ToString("o"),
+                profileImageUrl
+            );
 
-            await Clients.Group(postId.ToString()).SendAsync("ReceiveMessage", isMine ,username, message, SentAt, profileImageUrl);
+            await Clients.Caller.SendAsync(
+                "ReceiveMessage",
+                true, 
+                username,
+                message,
+                chatMessage.SentAt.ToString("o"),
+                profileImageUrl
+            );
+
         }
         catch (Exception e)
         {

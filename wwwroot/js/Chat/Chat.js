@@ -140,7 +140,6 @@ function setupListeners() {
         chatBox.innerHTML = ""; 
     
         messages.forEach((msg) => {
-            console.log("[DEBUG] Processing message:", msg); // 👈 ดูว่ามันมี IsMine ไหม
             let isMine = msg.IsMine ?? msg.isMine ?? false;
             appendMessage(isMine, msg.username, msg.message, msg.sentAt, msg.profileImg);
         });
