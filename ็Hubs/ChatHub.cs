@@ -62,6 +62,7 @@ public class ChatHub : Hub
 
             var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             Console.WriteLine($"[DEBUG] Extracted userId: {userId}");
+            var currentUserId = userId; 
 
             if (userId == null)
             {
@@ -101,14 +102,15 @@ public class ChatHub : Hub
                     .OrderBy(m => m.SentAt)
                     .Select(m => new
                     {
+                        IsMine = (m.UserId == currentUserId),
                         Username = _db.Users
                             .Where(u => u.Id == m.UserId)
                             .Select(u => u.Username)
                             .FirstOrDefault() ?? "Unknown user",
                         Message = m.Message,
-                        SentAt = m.SentAt.ToUniversalTime().ToString("o")
+                        SentAt = m.SentAt.ToUniversalTime().ToString("o"),
+                        profileImg = m.ProfileImg
                     }).ToList<object>();
-
                 Console.WriteLine($"[DEBUG] Loaded {messages.Count} messages");
             }
             catch (Exception ex)
@@ -117,7 +119,10 @@ public class ChatHub : Hub
                 await Clients.Caller.SendAsync("Error", "Error loading messages.");
                 return;
             }
-
+            foreach (var msg in messages)
+            {
+                Console.WriteLine($"[DEBUG] Message: {{ IsMine: {msg.GetType().GetProperty("IsMine")?.GetValue(msg)}, Username: {msg.GetType().GetProperty("Username")?.GetValue(msg)}, SentAt: {msg.GetType().GetProperty("SentAt")?.GetValue(msg)} }}");
+            }
             await Clients.Caller.SendAsync("LoadPreviousMessages", messages);
         }
         catch (Exception ex)
@@ -128,7 +133,23 @@ public class ChatHub : Hub
     }
 
 
+    private static Dictionary<string, string> _userConnections = new Dictionary<string, string>();
 
+    public override async Task OnConnectedAsync()
+    {
+        var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!string.IsNullOrEmpty(userId))
+        {
+            _userConnections[Context.ConnectionId] = userId;
+        }
+        await base.OnConnectedAsync();
+    }
+
+    public override async Task OnDisconnectedAsync(Exception exception)
+    {
+        _userConnections.Remove(Context.ConnectionId);
+        await base.OnDisconnectedAsync(exception);
+    }
 
 
     public async Task SendMessage(int postId, string message)
@@ -169,7 +190,8 @@ public class ChatHub : Hub
                 PostId = postId,
                 UserId = userId,
                 Message = message,
-                SentAt = DateTime.Now
+                SentAt = DateTime.Now,
+                ProfileImg = _db.Users.FirstOrDefault(u => u.Id == userId)?.ProfileImg ?? "https://www.mcot.net/uploads/article/202409/fc9caee77c607de279ff9116c67c6ddf.jpeg"
             };  
 
             _db.ChatMessages.Add(chatMessage);
@@ -178,10 +200,11 @@ public class ChatHub : Hub
             var user = await _db.Users.FindAsync(userId);
             string username = user?.Username ?? "Unknown";
             string profileImageUrl = user?.ProfileImg ?? "https://www.mcot.net/uploads/article/202409/fc9caee77c607de279ff9116c67c6ddf.jpeg";
+            var isMine = Context.ConnectionId == _userConnections.FirstOrDefault(x => x.Value == userId).Key;
 
             string SentAt = chatMessage.SentAt.ToString("o");
 
-            await Clients.Group(postId.ToString()).SendAsync("ReceiveMessage", userId,username, message, SentAt, profileImageUrl);
+            await Clients.Group(postId.ToString()).SendAsync("ReceiveMessage", isMine ,username, message, SentAt, profileImageUrl);
         }
         catch (Exception e)
         {
@@ -230,14 +253,6 @@ public class ChatHub : Hub
         await Clients.Group(postId).SendAsync("DeleteMessage", messageId);
     }
 
-    public override async Task OnConnectedAsync()
-    {
-        var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        await Clients.Caller.SendAsync("SetCurrentUserId", userId);
-
-        await base.OnConnectedAsync();
-    }
     public async Task EditMessage(int postId, string messageId, string newMessage)
     {
         var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;

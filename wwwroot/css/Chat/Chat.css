@@ -1,6 +1,8 @@
 :root {
     --text-color: #333;
     --chat-bg-color: #f9f9f9;
+    --text-in-hover-color: #ffffff;
+    --chat-hover-color : #333;
     --border-color: #000;
     --button-bg: #007bff;
     --button-hover-bg: #0056b3;
@@ -8,7 +10,9 @@
 
 [data-theme="dark"] {
     --text-color: #fff;
+    --text-in-hover-color: #000000;
     --chat-bg-color: #222;
+    --chat-hover-color : #fff;
     --border-color: #555;
     --button-bg: #0056b3;
     --button-hover-bg: #003d80;
@@ -95,43 +99,65 @@ body {
     border: 2px solid var(--border-color);
 }
 
-.message-content {
+.message-info {
     display: flex;
-    flex-direction: column;
-    background: var(--chat-bg-color);
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 3px;
+}
+
+.message-content {
+    display: inline-block;
+    background: var(--chat-hover-color);
     padding: 8px 12px;
     border-radius: 10px;
-    max-width: 100%;
+    max-width: 80%;
     word-break: break-word;
 }
 
 .my-message .message-content {
-    background: var(--chat-bg-color);
+    background: var(--chat-hover-color);
     color: white;
     text-align: right;
+    align-self: flex-end;
 }
 
 .other-message .message-content {
-    background: var(--chat-bg-color);
+    background: var(--chat-hover-color);
     color: var(--text-color);
+    align-self: flex-start;
 }
 
 .username {
     font-weight: bold;
     margin-bottom: 3px;
-    color: var(--text-color);
+    color: var(--chat-hover-color);
 }
+
+.message-details {
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+}
+
 
 .message-text {
     margin: 0;
-    color: var(--text-color);
+    color: var(--text-in-hover-color);
+}
+
+.message-header {
+    display: flex;
+    justify-content: center; 
+    align-items: flex-start;
+    width: 100%;
 }
 
 .message-time {
     font-size: 0.75rem;
-    color: #777;
-    margin-top: 3px;
-    text-align: right;
+    color: var(--chat-hover-color);
+    margin-left: 10px; 
+    white-space: nowrap; 
 }
 
 .chatInput {

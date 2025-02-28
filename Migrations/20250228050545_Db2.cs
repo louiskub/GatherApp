@@ -18,11 +18,22 @@ namespace GatherApp.Migrations
                 oldClrType: typeof(string),
                 oldType: "longtext")
                 .OldAnnotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.AddColumn<string>(
+                name: "ProfileImg",
+                table: "ChatMessages",
+                type: "longtext",
+                nullable: true)
+                .Annotation("MySql:CharSet", "utf8mb4");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "ProfileImg",
+                table: "ChatMessages");
+
             migrationBuilder.AlterColumn<string>(
                 name: "PostId",
                 table: "ChatMessages",

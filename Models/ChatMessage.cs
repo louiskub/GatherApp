@@ -10,6 +10,7 @@ public class ChatMessage
     public string UserId { get; set; }
     public string Message { get; set; } 
     public DateTime SentAt { get; set; } = DateTime.UtcNow;
+    public string? ProfileImg { get; set; }
 }
 
 

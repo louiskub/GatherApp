@@ -169,6 +169,9 @@ namespace GatherApp.Migrations
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ProfileImg")
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime>("SentAt")
                         .HasColumnType("datetime(6)");
 

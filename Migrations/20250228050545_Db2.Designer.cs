@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GatherApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250227112053_Db2")]
+    [Migration("20250228050545_Db2")]
     partial class Db2
     {
         /// <inheritdoc />
@@ -171,6 +171,9 @@ namespace GatherApp.Migrations
 
                     b.Property<int>("PostId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ProfileImg")
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("SentAt")
                         .HasColumnType("datetime(6)");
