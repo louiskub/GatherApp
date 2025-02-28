@@ -13,6 +13,12 @@ public class HomeController : Controller
         _logger = logger;
     }
 
+    [Route("history/popup")] // only test
+    public IActionResult HistoryPopup()
+    {
+        return View("~/Views/Home/History/HistoryPopup.cshtml");
+    }
+
     public IActionResult Index()
     {
         ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
@@ -60,18 +66,15 @@ public class HomeController : Controller
         ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
         return View("~/Views/Home/ViewProfile.cshtml");
     }
-
-    [Route("report")]
+        [Route("report")]
     public IActionResult Report()
     {
-        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
-        return View("~/Views/Home/ReportPage.cshtml");
+        return View("~/Views/Home/Report.cshtml");
     }
 
     [Route("review")]
     public IActionResult Review()
     {
-        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
         return View("~/Views/Home/Review.cshtml");
     }
 
@@ -79,14 +82,14 @@ public class HomeController : Controller
     public IActionResult Login()
     {
         ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
-        return View("~/Views/Auth/Login.cshtml");
+        return View("~/Views/Auth/Login2.cshtml");
     }
 
     [Route("signup")]
     public IActionResult SignUp()
     {
         ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
-        return View("~/Views/Auth/SignUp.cshtml");
+        return View("~/Views/Auth/SignUp2.cshtml");
     }
 
     [Route("Chat")]

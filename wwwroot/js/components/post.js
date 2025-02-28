@@ -1,5 +1,5 @@
 async function likePost(obj) {
-    console.log(obj.postId)
+    // console.log(obj.postId)
     let response = await fetch(`/api/post/togglelike/${obj.postId}`, {
         method: "POST",
         credentials: 'include'
@@ -99,7 +99,7 @@ class Post {
         likeButton.classList.add("like-btn");
         
         const likeIcon = document.createElement("i");
-        console.log(this.isLiked)
+        // console.log(this.isLiked)
         if (this.isLiked)
             likeIcon.classList.add("fa-solid", "fa-heart");
         else
@@ -110,7 +110,7 @@ class Post {
             event.stopPropagation();
             event.preventDefault();
             let response = await likePost(this);
-            console.log(response)
+            // console.log(response)
             if (response.error) {
                 console.error("Like error:", response.error);
             }
