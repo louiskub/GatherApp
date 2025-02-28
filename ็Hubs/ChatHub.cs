@@ -55,18 +55,15 @@ public class ChatHub : Hub
     {
         try
         {
-            Console.WriteLine($"[DEBUG] LoadPreviousMessages called with postId: {postId}");
 
 
             int postIdInt = postId;
 
             var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            Console.WriteLine($"[DEBUG] Extracted userId: {userId}");
             var currentUserId = userId; 
 
             if (userId == null)
             {
-                Console.WriteLine("[ERROR] User ID not found in context");
                 await Clients.Caller.SendAsync("Error", "User not authenticated.");
                 return;
             }
@@ -74,26 +71,20 @@ public class ChatHub : Hub
             var post = _db.Posts.FirstOrDefault(p => p.Id == postIdInt);
             if (post == null)
             {
-                Console.WriteLine("[ERROR] Post not found");
                 await Clients.Caller.SendAsync("Error", "Post not found.");
                 return;
             }
 
-            Console.WriteLine($"[DEBUG] Post found: {post.Id}");
 
             var isPostOwner = _db.Posts.Any(p => p.Id == postIdInt && p.UserId == userId);
             var isAcceptedUser = _db.Applications.Any(pu => pu.PostId == postIdInt && pu.UserId == userId && pu.AppliedStatus == true);
-            Console.WriteLine($"[DEBUG] isPostOwner: {isPostOwner}, isAcceptedUser: {isAcceptedUser}");
 
             if (!isPostOwner && !isAcceptedUser)
             {
-                Console.WriteLine("[ERROR] User not allowed to view this chat");
                 await Clients.Caller.SendAsync("Error", "You are not allowed to view this chat.");
                 return;
             }
 
-            // 🔍 Log ว่าเริ่มดึงข้อความจาก Database
-            Console.WriteLine("[DEBUG] Fetching messages from database...");
             List<object> messages;
             try
             {
@@ -111,23 +102,16 @@ public class ChatHub : Hub
                         SentAt = m.SentAt.ToUniversalTime().ToString("o"),
                         profileImg = m.ProfileImg
                     }).ToList<object>();
-                Console.WriteLine($"[DEBUG] Loaded {messages.Count} messages");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ERROR] Error fetching messages: {ex}");
                 await Clients.Caller.SendAsync("Error", "Error loading messages.");
                 return;
-            }
-            foreach (var msg in messages)
-            {
-                Console.WriteLine($"[DEBUG] Message: {{ IsMine: {msg.GetType().GetProperty("IsMine")?.GetValue(msg)}, Username: {msg.GetType().GetProperty("Username")?.GetValue(msg)}, SentAt: {msg.GetType().GetProperty("SentAt")?.GetValue(msg)} }}");
             }
             await Clients.Caller.SendAsync("LoadPreviousMessages", messages);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[CRITICAL ERROR] {ex}");
             await Clients.Caller.SendAsync("Error", "Unexpected error occurred.");
         }
     }

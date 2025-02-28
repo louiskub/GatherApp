@@ -104,10 +104,10 @@ function setupListeners() {
             messageElement.classList.add("other-message");
         }
     
-            messageElement.innerHTML = `
+        messageElement.innerHTML = `
         <img src="${profileImageUrl}" alt="Profile" class="profile-pic">
         <div class="message-details">
-            <div class="message-header">
+            <div class="${isMine ? 'my-message-header' : 'other-message-header'}">
                 <strong class="username">${username}</strong>
                 <small class="message-time">${formattedTime}</small>
             </div>
@@ -115,7 +115,7 @@ function setupListeners() {
                 <p class="message-text">${message}</p>
             </div>
         </div>
-`;
+    `;
     
         chatBox.appendChild(messageElement);
         chatBox.scrollTop = chatBox.scrollHeight;
@@ -127,9 +127,6 @@ function setupListeners() {
     });
     
     connection.on("LoadPreviousMessages", (messages) => {
-
-        console.log("[DEBUG] Raw messages received:", messages); 
-        console.log("[DEBUG] First message structure:", messages[0]); // 👀 ดูโครงสร้างข้อมูล
     
         if (!Array.isArray(messages)) {
             console.error("Invalid response from server! Expected array but got:", messages);

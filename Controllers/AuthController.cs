@@ -156,7 +156,8 @@ public class AuthController : Controller
                     Password = BCrypt.Net.BCrypt.HashPassword(obj.Password),
                     FirstName = obj.FirstName  ?? "Unknown",
                     LastName = obj.LastName ?? "Unknown",
-                    DateOfBirth = obj.DateOfBirth ?? DateTime.UtcNow.AddDays(-2)
+                    DateOfBirth = obj.DateOfBirth ?? DateTime.UtcNow.AddDays(-2),
+                    Sex = obj.Sex ?? "Unknown",
                 };
 
                 _db.Users.Add(user);
