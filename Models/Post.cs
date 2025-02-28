@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http.HttpResults;
 namespace GatherApp.Models;
@@ -76,8 +77,8 @@ public class Post{
         if (Activity == null) 
             return "Activity information is missing";
 
-        if (DateTime.Now < Activity.OpenDateTime)
-            return "Post is not available yet";
+        // if (DateTime.Now < Activity.OpenDateTime)
+        //     return "Post is not available yet";
 
         if (DateTime.Now > Activity.CloseDateTime)
             return "Post is already closed";
@@ -98,7 +99,6 @@ public class Post{
         IsAttached = dtopost.IsAttached;
         MaxParticipant = dtopost.MaxParticipant;
         CoverPageImg = dtopost.CoverPageImg;
-        Activity.OpenDateTime = dtopost.OpenDateTime;
         Activity.CloseDateTime = dtopost.CloseDateTime;
         Activity.ActDatetime = dtopost.ActDatetime;
         Activity.Province = dtopost.Province;
@@ -107,7 +107,7 @@ public class Post{
         Activity.GoogleMapLink = dtopost.GoogleMapLink;
     }
 
-    public Dictionary<string, object> ToJson()
+    public Dictionary<string, object> ToJson(string? reqUserId=null)
     {
         CurParticipant = Applications.Count(a => a.AppliedStatus == true);
         return new Dictionary<string, object> {
@@ -126,7 +126,8 @@ public class Post{
                 { "like", Like },
                 { "maxParticipant", MaxParticipant },
                 { "curParticipant", CurParticipant },
-                { "totalApplicant", Applications.Count }
+                { "totalApplicant", Applications.Count },
+                { "isLiked", PostLikes.Any(x => x.UserId == reqUserId) }
             }},
             { "activity", Activity },
             { "actTypes", Activity.ActTypes.Select(x => x.ActType).ToList() }

@@ -1,5 +1,5 @@
 const popup = document.getElementById('createPostPopup');
-const writeButton = document.querySelector('.write-button');
+const writeButton = document.getElementById('menu-write-button');
 const cancelButton = document.querySelector('.cancel_but');
 const createButton = document.querySelector('.create_but');
 const imageUpload = document.getElementById('imageUpload');
@@ -17,12 +17,6 @@ writeButton.addEventListener('click', () => {
     popup.style.display = 'flex';
     document.body.classList.add('no-scroll');
 });
-
-// // ฟังก์ชันแสดงข้อความเมื่อสร้างโพสต์
-// createButton.addEventListener('click', () => {
-//     alert("Create Post successfully!");
-//     popup.style.display = 'none';
-// });
 
 // ฟังก์ชัน triggerUpload
 function triggerUpload() {
@@ -95,13 +89,39 @@ document.addEventListener("DOMContentLoaded", function () {
     eventInput.addEventListener("input", validateEventDate);
 });
 
+///////////////////// Fetch SELECT TAG //////////////////////////////////////////////////////////////
 
+async function fetchAllActTypes(){
+    try {
+        let response = await fetch("/api/acttype");
+        if (!response.ok) {
+            return [];
+        }
+        else {
+            response = await response.json();
+            return response;
+        }
+        
+    } catch (error) {
+        console.error("Error loading JSON:", error);
+        return [];
+    }
+}
 
+const tagOptions = document.getElementById('tag-options');
+(async function() {
+    let actTypes = await fetchAllActTypes();
+    actTypes.forEach((actType) => {
+        let div = document.createElement('div')
+        div.dataset.value = actType
+        div.textContent = actType
+        tagOptions.appendChild(div)
+    })
+})();
 
 
 ///////////////////// MULTI SELECT TAG //////////////////////////////////////////////////////////////
 const tagContainer = document.getElementById('tag-container');
-const tagOptions = document.getElementById('tag-options');
 const tagList = document.getElementById('tag-list');
 const tagPlaceholder = document.getElementById('tag-placeholder');
 const maxTags = 3;
@@ -245,7 +265,7 @@ ProvincesAndAmphures();
 
 /////////////////Check Input Before Create/////////////////////////////////////////////////////////
 // ฟังก์ชันตรวจสอบการกรอกข้อมูลในฟอร์มทั้งหมด
-function validateForm() {
+async function validateForm() {
     const activityName = document.querySelector('.create_act_name input').value;
     const description = document.querySelector('.descript_create').value;
     const eventDate = document.getElementById('eventdate').value;
@@ -293,22 +313,79 @@ function validateForm() {
 
     // ตรวจสอบการอัปโหลดภาพ (Preview Image)
     const imageUpload = document.getElementById('imageUpload');
+    console.log(previewImage.src.length)
     if (!imageUpload.files.length) {
         alert("Please upload an image.");
         return false;
     }
+    if (previewImage.src.length > 2000000) {
+        alert("Image size is too large. Please upload an image less than 2 MB.");
+        return false;
+    }
+    
+    
+    async function createPost() {
+        const isAttached = document.querySelector(".check_attach_file input").checked
+        const provinceText = provinceSelect.options[provinceSelect.selectedIndex].text;
+        const amphureText = amphureSelect.options[amphureSelect.selectedIndex].text;
+        
+        let sendImg = previewImage.src.split(",")[1]
+        let tags = []
+        selectedTags.forEach((tag) => {
+            tags.push(tag.dataset.value)
+        })
 
-    // ถ้าทุกอย่างโอเค return true
-    return true;
+        let today = new Date();
+        today.setHours(7, 0, 0, 0); // Set hour, minute, second, and millisecond to zero
+        today = today.toISOString().split('.')[0]; // Remove milliseconds
+        console.log("POSTING...")
+        let response = await fetch("/api/post", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                postName: activityName,
+                detail: description,
+                isAttached: isAttached,
+                maxParticipant: participantsNeeded,
+    
+                // openDateTime: today,
+                closeDateTime: deadline,
+                actDatetime: eventDate,
+    
+                province: provinceText,
+                district: amphureText,
+                online: false,
+                googleMapLink: googleMapLink,
+    
+                actTypes: tags,
+                coverPageImg: sendImg
+            })
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            return
+        })
+        if (response.redirected){
+            if (confirm("You need to log in before creating a post. Do you want to go to the login page?")) {
+                window.location.href = "/login";
+            }
+        }
+        else if (!response.ok) {
+            alert("Failed to create post.");
+        }
+        else {
+            alert("Create Post successfully!");
+            popup.style.display = 'none';
+            window.location.reload();
+        }
+    }
+    await createPost();
 }
 
 // ฟังก์ชันที่ใช้ในปุ่ม Create
-createButton.addEventListener('click', () => {
+createButton.addEventListener('click', async () => {
     // เรียกใช้งาน validateForm ก่อนที่จะอนุญาตให้โพสต์
-    if (validateForm()) {
-        alert("Create Post successfully!");
-        popup.style.display = 'none';
-    }
+    await validateForm();
 });
-
-

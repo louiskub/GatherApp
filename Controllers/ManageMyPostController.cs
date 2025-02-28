@@ -40,7 +40,10 @@ public class ManageMyPostController : Controller
             return NotFound("User not found");
 
         if (!ModelState.IsValid)
-            return BadRequest("Invalid input");
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                return BadRequest(errors);
+            }
 
         if (dtopost.ActTypes == null || dtopost.ActTypes.Count == 0)
         {
@@ -70,7 +73,6 @@ public class ManageMyPostController : Controller
 
         var activity = new Activity
         {
-            OpenDateTime = dtopost.OpenDateTime,
             CloseDateTime = dtopost.CloseDateTime,
             ActDatetime = dtopost.ActDatetime,
             Province = dtopost.Province,
@@ -96,10 +98,13 @@ public class ManageMyPostController : Controller
         {
             _db.Posts.Add(post);
             await _db.SaveChangesAsync();
+            
 
             await chathubContext.Clients.All.SendAsync("ReceiveMessage", "Post", "New post has been created");
 
-            await chathubContext.Clients.Group(post.Id.ToString()).SendAsync("ReceiveMessage", "System", $"User {userId} joined chat.");
+            var connectionId = HttpContext.Connection.Id;
+            await chathubContext.Groups.AddToGroupAsync(connectionId, post.Id.ToString());
+
 
             return Json(new {status = "created"});
         }
@@ -384,7 +389,7 @@ public class ManageMyPostController : Controller
         public async Task<IActionResult> GetChatHistory(string postId)
         {
             var messages = await _db.ChatMessages
-                .Where(m => m.PostId == postId)
+                .Where(m => m.PostId == int.Parse(postId))
                 .OrderBy(m => m.SentAt)
                 .ToListAsync();
 
