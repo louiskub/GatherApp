@@ -8,7 +8,7 @@ public class Activity
 {
 
     [Required]
-    public DateTime OpenDateTime { get; set; }
+    public DateTime OpenDateTime { get; set; } = DateTime.Now;
 
     [Required]
     public DateTime CloseDateTime { get; set; }

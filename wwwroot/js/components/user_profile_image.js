@@ -2,9 +2,10 @@ class UserProfileImage {
     constructor(username = "", profileImg = "", imgSize = "50px", imgBorder = "1px black solid") {
         if (profileImg == "" || profileImg == null)
             this.profileImg = "https://tr.rbxcdn.com/30DAY-Avatar-310966282D3529E36976BF6B07B1DC90-Png/352/352/Avatar/Png/noFilter"
-        else
-            // this.profileImg = "data:image/jpeg;base64," + profileImg
+        else if(profileImg.length < 200)
             this.profileImg = profileImg
+        else 
+            this.profileImg = "data:image/jpeg;base64," + profileImg
         this.tagA = document.createElement("a")
         this.tagA.classList.add("profile-img")
         if (username != "")
