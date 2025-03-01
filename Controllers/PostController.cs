@@ -54,6 +54,7 @@ public class PostController : Controller
                             .ThenInclude(a => a.ActTypes)
                             .Include(p => p.Applications)
                             .ThenInclude(a => a.User)
+                            .Include(p => p.PostLikes)
                             .Where(p => p.Id == postId).FirstOrDefault();   // ดึงข้อมูล post+user
         if (post == null)
             return NotFound();
@@ -66,7 +67,7 @@ public class PostController : Controller
                                 a.User.Username,
                                 a.User.ProfileImg
                             }).ToList();
-        var result = post.ToJson();
+        var result = post.ToJson(reqUserId);
         result["participants"] = applications;
         return Json(new{post = result, isOwner});
     }
@@ -140,7 +141,6 @@ public class PostController : Controller
         var reqUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         Console.WriteLine("\n\n{0} {1} {2} {3} {4}\n\n", date, category, actType, province, district);
         var posts = await _db.Posts.Include(p => p.User)
-                            .Include(p => p.User)
                             .Include(p => p.Activity)
                             .ThenInclude(a => a.ActTypes)
                             .Include(p => p.Applications)

@@ -127,7 +127,8 @@ public class Post{
                 { "maxParticipant", MaxParticipant },
                 { "curParticipant", CurParticipant },
                 { "totalApplicant", Applications.Count },
-                { "isLiked", PostLikes.Any(x => x.UserId == reqUserId) }
+                { "isLiked", PostLikes.Any(x => x.UserId == reqUserId) },
+                { "isApplied", Applications.Any(x => x.UserId == reqUserId)}
             }},
             { "activity", Activity },
             { "actTypes", Activity.ActTypes.Select(x => x.ActType).ToList() }
