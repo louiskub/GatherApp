@@ -102,3 +102,24 @@
             </div>
         </div>
 </div>
+
+<script>
+    function openPopup() {
+        document.getElementById("popup_app").style.display = "block";
+        document.getElementById("overlay").style.display = "block";
+    }
+
+    function closePopup() {
+        document.getElementById("popup_app").style.display = "none";
+        document.getElementById("overlay").style.display = "none";
+    }
+
+    function submitApplication() {
+        const fileInput = document.getElementById("fileInput");
+        if (fileInput.files.length === 0) {
+            alert("Please attach a file before submitting.");
+        } else {
+            closePopup();
+        }
+    }
+</script>

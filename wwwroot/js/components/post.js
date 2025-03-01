@@ -1,19 +1,4 @@
-import LikePostHandler from "/js/components/like_post_handler.js";
-
-async function likePost(obj) {
-    // console.log(obj.postId)
-    let response = await fetch(`/api/post/togglelike/${obj.postId}`, {
-        method: "POST",
-        credentials: 'include'
-    })
-    if (response.ok) {
-        response = await response.json();
-        return response
-    } else {
-        return { error: response.status }
-    }
-}
-
+import LikePostHandler from "/js/components/handler/like_post_handler.js";
 
 class Post {
     constructor(postId, date, title, location, accepted, limitAccepted, registered, categories = [], imageUrl, like = 0, isLiked = false) {
@@ -93,7 +78,7 @@ class Post {
         postLike.classList.add("post-like");
 
         const likeCount = document.createElement("div");
-        
+
         const likeButton = document.createElement("button");
         likeButton.classList.add("like-btn");
 

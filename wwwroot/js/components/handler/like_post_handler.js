@@ -38,8 +38,9 @@ class LikePostHandler{
                     credentials: 'include'
                 })
                 if (response.ok) {
-                    if (response.redirected)
-                        window.location.href = response.url
+                    if (response.redirected){
+                        window.redirectToLogin();
+                    }
                     else {
                         response = await response.json();
                         return response

@@ -1,4 +1,5 @@
-import LikePostHandler from "/js/components/like_post_handler.js";
+import LikePostHandler from "/js/components/handler/like_post_handler.js";
+import ToastTemplate from "/js/components/handler/toast_template.js";
 
 const urlParams = new URLSearchParams(window.location.search);
 const postId = urlParams.get('postid') || urlParams.get('postId');
@@ -128,7 +129,6 @@ async function showPostDetail() {
     ///////////////// Button Event /////////////////
     console.log(regBut)
     regBut.addEventListener("click", async function() {
-        console.log("Registering...")
         const urlParams = new URLSearchParams(window.location.search)
         const postId = urlParams.get('postid') || urlParams.get('postId');
         
@@ -156,18 +156,16 @@ async function showPostDetail() {
         }
         let response = await fetch(`/api/user/applypost?postid=${postId}`, apiSettings)
         if (!response.ok) 
-            // alert("Failed to register for this activity!")
             console.log(response)
         else {
             if (response.redirected)
-                window.location.href = response.url
+                window.redirectToLogin();
             else {
                 response = await response.json();
                 if (response.error) {
                     alert(response.error)
                 } else {
-                    alert("You have successfully registered for this activity!")
-                    window.location.reload()
+                    new ToastTemplate("You have successfully registered for this activity!", window.location.pathname + window.location.search).redirect();
                 }
             }
         }
@@ -182,26 +180,6 @@ async function showPostDetail() {
 document.addEventListener("DOMContentLoaded", async function() {
     await showPostDetail();
 });
-
-function openPopup() {
-    document.getElementById("popup_app").style.display = "block";
-    document.getElementById("overlay").style.display = "block";
-}
-
-function closePopup() {
-    document.getElementById("popup_app").style.display = "none";
-    document.getElementById("overlay").style.display = "none";
-}
-
-function submitApplication() {
-    const fileInput = document.getElementById("fileInput");
-    if (fileInput.files.length === 0) {
-        alert("Please attach a file before submitting.");
-    } else {
-        alert("Application submitted successfully!");
-        closePopup();
-    }
-}
 
 // const heart = document.querySelector('.heart i');
 // const likesNum = document.querySelector('.likes_num');
