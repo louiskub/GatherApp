@@ -24,15 +24,15 @@
     --datepicker-inactive-day: var(--french-gray-2);   
 }
 [data-theme="dark"] {
-    --signup-bg: var(--eerie-black);
+    --signup-bg: black;
     --signup-text: var(--seasalt);
-    --signup-input-bg: var(--onyx);
+    --signup-input-bg: var(--eerie-black);
     --signup-border: var(--outer-space);
     --signup-submit-color: var(--amaranth-purple);
     --signup-submit-hover: var(--rose-red);
     --signup-input-text: var(--french-gray);
 
-    --signup-google-bg: var(--outer-space);
+    --signup-google-bg: var(--eerie-black);
     --signup-google-text: var(--seasalt);
     --signup-google-border: var(--slate-gray);
     --signup-google-hover-bg: var(--onyx);
@@ -55,7 +55,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    /* height: 100%; */
     background: var(--bg-image);
 }
 
@@ -69,7 +69,7 @@
     width: 100%;
     height: 80%;
     max-width: 800px;
-    overflow-y: auto;
+    /* overflow-y: auto; */
     /* align-items: center; */
 }
 .signup-title {
@@ -118,11 +118,10 @@
     color: var(--text-color);
 }
 
-
 .signup-realname {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
+    grid-template-columns:  1fr 1fr;
+    gap: 1rem;
 }
 #customGenderInput {
     display: none;
@@ -132,6 +131,7 @@
 
 /* Calender */
 .flatpickr-calendar {
+    transform: translateX(130%);
     background: var(--datepicker-bg) !important;
     /* color: var(--datepicker-text) !important; */
     border: 1px solid var(--datepicker-border-color) !important;
@@ -162,6 +162,12 @@
 .flatpickr-year,
 .flatpickr-weekday {
     color: var(--datepicker-text) !important;
+}
+
+.signup-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
 }
 
 
@@ -213,38 +219,35 @@
 
 /* Media Queries สำหรับหน้าจอเล็ก */
 @media (max-width: 768px) {
-    .main {
-        justify-content: flex-end;
-    }
     .signup-container {
+        position: absolute;
+        /* top: 60px; */
+        width: 100%;
         padding: 1.5rem;
         padding: 1rem; 
-        width: 100%;
-        height: 90%;
+        height: calc(100% - 60px);
+        border-radius: 0;
     }
     .signup-title {
         font-size: 1.9rem; 
     }
-
-    .inputBox {
-        font-size: 1rem; /* ลดขนาดตัวอักษรในกล่องกรอกข้อมูล */
+    .signup-realname {
+        grid-template-columns:  1fr;
+        gap: 0rem;
     }
 
-    .signup-container {
-        padding: 1.5rem; /* ลดระยะห่างภายในฟอร์ม */
-        max-width: 500px; /* ขนาดฟอร์มให้เหมาะสมกับหน้าจอเล็ก */
-    }
-
-    .signup-button {
-        font-size: 1rem; /* ลดขนาดฟอนต์ในปุ่ม */
+    .inputBox,
+    .signup-button,
+    .signup-google-link {
+        font-size: 1rem;
     }
 
     .signup-signup-container {
-        margin-top: 3rem; /* ขยับลิงก์สมัครสมาชิก */
+        margin-top: 3rem; 
     }
 
-    .signup-google-link {
-        font-size: 1rem; /* ลดขนาดฟอนต์ในปุ่ม Google */
+    .flatpickr-calendar {
+        transform: translateX(0%);
     }
 }
 
