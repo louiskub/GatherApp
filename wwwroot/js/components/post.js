@@ -1,3 +1,5 @@
+import LikePostHandler from "/js/components/like_post_handler.js";
+
 async function likePost(obj) {
     // console.log(obj.postId)
     let response = await fetch(`/api/post/togglelike/${obj.postId}`, {
@@ -87,44 +89,19 @@ class Post {
     }
 
     createLikeButton() {
-        
-
         const postLike = document.createElement("div");
         postLike.classList.add("post-like");
 
         const likeCount = document.createElement("div");
-        likeCount.textContent = this.like;
-
+        
         const likeButton = document.createElement("button");
         likeButton.classList.add("like-btn");
-        
+
         const likeIcon = document.createElement("i");
-        // console.log(this.isLiked)
-        if (this.isLiked)
-            likeIcon.classList.add("fa-solid", "fa-heart");
-        else
-            likeIcon.classList.add("fa-regular", "fa-heart");
         likeButton.appendChild(likeIcon);
 
-        likeButton.addEventListener("click", async (event) => {
-            event.stopPropagation();
-            event.preventDefault();
-            let response = await likePost(this);
-            // console.log(response)
-            if (response.error) {
-                console.error("Like error:", response.error);
-            }
-            else if (response.isLiked){
-                likeIcon.classList.replace("fa-regular", "fa-solid");
-                this.like = response.like;
-            }
-            else {
-                likeIcon.classList.replace("fa-solid", "fa-regular");
-                this.like = response.like;
-            }
-            
-            likeCount.textContent = this.like;
-        });
+        new LikePostHandler(likeButton, likeCount, 
+                        this.postId, this.like, this.isLiked)
 
         postLike.appendChild(likeCount);
         postLike.appendChild(likeButton);
