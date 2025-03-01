@@ -4,7 +4,7 @@
 @* @await Html.PartialAsync("_NavAuth") *@
 
 <link rel="stylesheet" href="~/css/GOLF/viewpost.css">
-<script defer src="~/js/GOLF/viewpost.js"></script>
+<script defer src="~/js/GOLF/viewpost.js" type="module"></script>
 
 <div class="main">
         <div class="post_act_name">
@@ -44,13 +44,13 @@
                     </div>
                     <div class="act_miniinfo_right">
                         <div class="likes_num">123</div>
-                        <div class="heart"><i class="fa-regular fa-heart"></i></div>
+                        <div class="heart"><i class="fa-heart"></i></div>
                     </div>
                 </div>
                 <div class="act_member">
                     <h1>MEMBER</h1>
                     <div class="member_container">
-                        <img src="https://randomuser.me/api/portraits/women/1.jpg" class="avatar" alt="User 1">
+                        @* <img src="https://randomuser.me/api/portraits/women/1.jpg" class="avatar" alt="User 1">
                         <img src="https://randomuser.me/api/portraits/men/2.jpg" class="avatar" alt="User 2">
                         <img src="https://randomuser.me/api/portraits/women/3.jpg" class="avatar" alt="User 3">
                         <img src="https://randomuser.me/api/portraits/men/4.jpg" class="avatar" alt="User 4">
@@ -77,13 +77,10 @@
                         <img src="https://randomuser.me/api/portraits/women/11.jpg" class="avatar" alt="User 11">
                         <img src="https://randomuser.me/api/portraits/men/12.jpg" class="avatar" alt="User 12">
                         <img src="https://randomuser.me/api/portraits/women/13.jpg" class="avatar" alt="User 13">
-                        <img src="https://randomuser.me/api/portraits/men/14.jpg" class="avatar" alt="User 14">
+                        <img src="https://randomuser.me/api/portraits/men/14.jpg" class="avatar" alt="User 14"> *@
                     </div>
                 </div>
                 <div class="tag_container">
-                    <div class="tag">Cartoon</div>
-                    <div class="tag">Japan</div>
-                    <div class="tag">Crayon Shin Chan</div>
                 </div>                
                 <div class="act_view_buttons">
                     <button class="app_but" onclick="openPopup()">Application</button>
@@ -105,3 +102,24 @@
             </div>
         </div>
 </div>
+
+<script>
+    function openPopup() {
+        document.getElementById("popup_app").style.display = "block";
+        document.getElementById("overlay").style.display = "block";
+    }
+
+    function closePopup() {
+        document.getElementById("popup_app").style.display = "none";
+        document.getElementById("overlay").style.display = "none";
+    }
+
+    function submitApplication() {
+        const fileInput = document.getElementById("fileInput");
+        if (fileInput.files.length === 0) {
+            alert("Please attach a file before submitting.");
+        } else {
+            closePopup();
+        }
+    }
+</script>
