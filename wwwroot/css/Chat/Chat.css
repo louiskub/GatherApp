@@ -75,11 +75,11 @@ h1.top {
 }
 
 .chatCover {
-    width: 50px; /* ปรับขนาดรูป */
+    width: 50px; 
     height: 50px;
     border-radius: 8px;
     margin-right: 12px;
-    object-fit: cover; /* ให้ภาพพอดีกับขนาด */
+    object-fit: cover;
 }
 
 .chatText {
@@ -286,17 +286,19 @@ h1.top {
 }
 
 .buttonStyle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    margin-left : 10px;
+    font-size: 22px;
+    color: white;
     background: var(--button-bg);
     border: none;
     cursor: pointer;
     transition: background 0.3s, transform 0.2s;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
@@ -314,6 +316,118 @@ h1.top {
     width: 20px;
     height: 20px;
     fill: white;
+}
+
+.chatInput {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.inputBox {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    outline: none;
+}
+
+.sendIcon {
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.sendIcon:hover {
+    transform: scale(1.2);
+}
+
+.sendIcon.active {
+    color: #0084ff;
+}
+
+#actionButton {
+    color: #0084FF;
+    font-size: 28px; 
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+#actionButton:hover i {
+    color: #005BBB;
+}
+
+#actionButton:active {
+    transform: scale(0.85);
+}
+
+.fade-out {
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.fade-in {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+
+.emoji-main {
+    font-size: 25px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.emoji-main:hover {
+    transform: scale(1.2);
+}
+
+.emoji-picker {
+    display: none;
+    position: absolute;
+    bottom: 50px;
+    right: 10px;
+    background: white;
+    border-radius: 10px;
+    padding: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-wrap: wrap;
+    width: 140px;
+    gap: 5px;
+}
+
+.emoji-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.emoji-picker button {
+    font-size: 22px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 40px; 
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+
+.emoji-picker button:hover {
+    transform: scale(1.2);
 }
 
 @media (max-width: 768px) {

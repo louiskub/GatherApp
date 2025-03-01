@@ -190,7 +190,48 @@ function setupListeners() {
             alert("Failed to join chat: " + err);
         }
     }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let actionButton = document.getElementById("actionButton");
+        actionButton.innerHTML = '<i class="fa-solid fa-thumbs-up"></i>';
+    });
+
+    document.getElementById("messageInput").addEventListener("input", function () {
+        let actionButton = document.getElementById("actionButton");
     
+        actionButton.classList.remove("fade-in", "fade-out");
+
+        if (this.value.trim() !== "") {
+            if (actionButton.innerHTML !== '<i class="fa-solid fa-paper-plane"></i>') {
+                actionButton.classList.add("fade-out");
+                setTimeout(() => {
+                    actionButton.innerHTML = '<i class="fa-solid fa-paper-plane"></i>'; 
+                    actionButton.classList.remove("fade-out");
+                    actionButton.classList.add("fade-in");
+                }, 200);
+            }
+        } else {
+            if (actionButton.innerHTML !== '<i class="fa-solid fa-thumbs-up"></i>') {
+                actionButton.classList.add("fade-out");
+                setTimeout(() => {
+                    actionButton.innerHTML = '<i class="fa-solid fa-thumbs-up"></i>'; 
+                    actionButton.classList.remove("fade-out");
+                    actionButton.classList.add("fade-in");
+                }, 200);
+            }
+        }
+    });
+    
+    async function handleSend() {
+        const messageInput = document.getElementById("messageInput");
+        const message = messageInput.value.trim();
+    
+        if (message) {
+            await sendMessage(); 
+        } else {
+            await sendLike();
+        }
+    }
 
 async function getUserChats() {
     console.log("Fetching user chats...");
@@ -219,8 +260,67 @@ async function sendMessage() {
     try {
         await connection.invoke("SendMessage", currentPostId, message); 
         document.getElementById("messageInput").value = "";
+        document.getElementById("actionButton").innerHTML = '<i class="fa-solid fa-thumbs-up"></i>';
+        document.getElementById("actionButton").classList.remove("active");
     } catch (err) {
         console.error("Failed to send message: ", err);
+    }
+
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    let picker = document.getElementById("emojiPicker");
+    picker.style.display = "none"; 
+});
+
+function toggleEmojiPicker() {
+    let picker = document.getElementById("emojiPicker");
+    picker.style.display = picker.style.display === "none" ? "flex" : "none";
+}
+
+async function sendEmoji(emoji) {
+    if (!currentPostId) {
+        alert("You must join a chat first.");
+        return;
+    }
+
+    if (connection.state !== signalR.HubConnectionState.Connected) {
+        alert("Cannot send message. Not connected to the chat server.");
+        return;
+    }
+
+    try {
+        await connection.invoke("SendMessage", currentPostId, emoji);
+        document.getElementById("emojiPicker").style.display = "none"; 
+    } catch (err) {
+        console.error("Failed to send emoji: ", err);
+    }
+}
+
+document.addEventListener("click", function (event) {
+    let picker = document.getElementById("emojiPicker");
+    let emojiButton = document.getElementById("emojiButton");
+
+    if (picker.style.display === "flex" && !picker.contains(event.target) && event.target !== emojiButton) {
+        picker.style.display = "none";
+    }
+});
+
+async function sendLike() {
+    if (!currentPostId) {
+        alert("You must join a chat first.");
+        return;
+    }
+
+    if (connection.state !== signalR.HubConnectionState.Connected) {
+        alert("Cannot send message. Not connected to the chat server.");
+        return;
+    }
+
+    try {
+        await connection.invoke("SendMessage", currentPostId, '<i class="fa-solid fa-thumbs-up"></i>');
+    } catch (err) {
+        console.error("Failed to send like: ", err);
     }
 }
 
