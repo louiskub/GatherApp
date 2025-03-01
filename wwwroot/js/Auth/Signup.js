@@ -63,7 +63,7 @@ document.getElementById('signupNextButton').addEventListener('click', function (
     }
 });
 
-document.getElementById('signupBackButton').addEventListener('click', function () {
+document.getElementById('signupPrevButton').addEventListener('click', function () {
     // ซ่อน signup-last-step และแสดง signup-first-step
     document.querySelector('.signup-last-step').style.display = 'none';
     document.querySelector('.signup-first-step').style.display = 'block';

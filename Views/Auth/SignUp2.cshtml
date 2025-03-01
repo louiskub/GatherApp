@@ -10,7 +10,7 @@
 <title>Signup Page</title>
 
 <div class="main">
-    <form class="signup-container">
+    <div class="signup-container">
         <h1 class="signup-title">Sign Up</h1>
 
         <div class="signup-content">
@@ -28,7 +28,7 @@
                 <div class="signup-birthdate">
                     <label class="label" for="dob">Date of Birth</label>
                     @* <input type="date" id="dob" class="inputBox" required /> *@
-                    <input type="text" id="datePicker" class="inputBox" placeholder="Select your date of birth" required />
+                    <input type="text" id="datePicker" class="inputBox" placeholder="Select your birthday" required />
                 </div>
                 <div class="signup-gender">
                     <label class="label" for="gender">Gender</label>
@@ -42,7 +42,16 @@
                     </select>
                     <input type="text" id="customGenderInput" class="inputBox" placeholder="Enter your gender">
                 </div>
-                <button id="signupNextButton" class="signup-next-button">Next</button>
+                <div class="signup-navigation">
+                    <button id="signupPrevButton" class="signup-prev-button">Previous</button>
+                    <button id="signupNextButton" class="signup-next-button">Next</button>
+                </div>
+                <div class="signup-google-link">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/2048px-Google_%22G%22_logo.svg.png" 
+                    alt="Google G Logo" 
+                    width="25">
+                    <p>Sign Up with Google</p>
+                </div>
             </section>
             <section class="signup-last-step">
                 <div class="signup-username">
@@ -72,26 +81,23 @@
                         </button>
                     </div>
                 </div>
-                <button class="signup-back-button" id="signupBackButton">Back</button>
                 <button class="signup-button" id="signupButton">Sign Up</button>
+                <div class="signup-navigation">
+                    <button id="signupPrevButton" class="signup-prev-button">Previous</button>
+                    <button id="signupNextButton" class="signup-next-button">Next</button>
+                </div>
             </section>
         </div>
 
         <div class="signup-submit">
             @* <button class="signup-button" id="signupButton">Sign Up</button> *@
-
-            <div class="signup-google-link">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/2048px-Google_%22G%22_logo.svg.png" 
-                alt="Google G Logo" 
-                width="25">
-                <p>Sign Up with Google</p>
+            <div class="signup-login-container">
+                <p>Already have and account ? 
+                    <a class="signup-login-link" href="/login">Log In</a>
+                </p>
             </div>
-            <div class="signup-login-container"></div>
-            <p>Already have and account ? 
-                <a class="signup-login-link" href="/login">Log In</a>
-            </p>
         </div>
-    </form>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
