@@ -421,6 +421,33 @@ namespace GatherApp.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("GatherApp.Models.UserLogin", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Provider")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ProviderKey")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserLogins");
+                });
+
             modelBuilder.Entity("PostUser", b =>
                 {
                     b.Property<int>("LikedPostsId")
@@ -606,6 +633,17 @@ namespace GatherApp.Migrations
                     b.Navigation("Reporter");
                 });
 
+            modelBuilder.Entity("GatherApp.Models.UserLogin", b =>
+                {
+                    b.HasOne("GatherApp.Models.User", "User")
+                        .WithMany("UserLogins")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("PostUser", b =>
                 {
                     b.HasOne("GatherApp.Models.Post", null)
@@ -646,6 +684,8 @@ namespace GatherApp.Migrations
                     b.Navigation("Notifications");
 
                     b.Navigation("ReceivedRatings");
+
+                    b.Navigation("UserLogins");
                 });
 #pragma warning restore 612, 618
         }

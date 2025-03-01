@@ -58,13 +58,53 @@ h1.top {
     margin-bottom: 10px;
 }
 
+.chatItem {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-color);
+    transition: background 0.3s, color 0.3s;
+    border-radius: 5px;
+    text-align: left;
+}
+
+.chatItem:hover {
+    background: var(--chat-hover-color);
+    color: var(--text-in-hover-color);
+}
+
+.chatCover {
+    width: 50px; /* ปรับขนาดรูป */
+    height: 50px;
+    border-radius: 8px;
+    margin-right: 12px;
+    object-fit: cover; /* ให้ภาพพอดีกับขนาด */
+}
+
+.chatText {
+    flex-grow: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
 .chatList {
     list-style: none;
     padding: 0;
     margin: 0;
-    overflow-y: auto;
+    overflow-y: auto; 
     flex-grow: 1;
+    height: 300px; 
+    max-height: 600px; 
+    background: var(--chat-bg-color); 
+    max-width: 500px;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
 }
+
 
 .chatList li {
     padding: 12px;
@@ -168,16 +208,26 @@ h1.top {
 }
 
 .my-message .message-content {
-    background: var(--chat-hover-color);
+    background: linear-gradient(135deg, #007bff, #00d4ff);
     color: white;
     text-align: right;
     align-self: flex-end;
+    padding: 10px 15px;
+    border-radius: 12px;
+    max-width: 500px;
+    word-break: break-word;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .other-message .message-content {
-    background: #bdbcbc;
+    background: linear-gradient(135deg, #9a9a9a, #cdcdcd);
     color: var(--text-color);
     align-self: flex-start;
+    padding: 10px 15px;
+    border-radius: 12px;
+    max-width: 500px;
+    word-break: break-word;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .username {
@@ -236,19 +286,34 @@ h1.top {
 }
 
 .buttonStyle {
-    padding: 10px 15px;
-    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin-left : 10px;
     background: var(--button-bg);
-    color: white;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
-    transition: background 0.3s, transform 0.1s;
+    transition: background 0.3s, transform 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .buttonStyle:hover {
     background: var(--button-hover-bg);
-    transform: scale(1.05);
+    transform: scale(1.1);
+}
+
+.buttonStyle i {
+    font-size: 18px;
+    color: white;
+}
+
+.buttonStyle svg {
+    width: 20px;
+    height: 20px;
+    fill: white;
 }
 
 @media (max-width: 768px) {

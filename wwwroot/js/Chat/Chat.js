@@ -29,36 +29,53 @@ function setupListeners() {
     }
 
 
-    connection.on("LoadUserChats", (postIds) => {
-        console.log("[DEBUG] Joined Posts:", postIds); // <-- เพิ่ม debug
-        if (!Array.isArray(postIds) || postIds.length === 0) {
-            console.error("Invalid postIds received:", postIds);
+    connection.on("LoadUserChats", (posts) => {
+        console.log("[DEBUG] Joined Posts:", posts); // <-- เพิ่ม debug
+        
+        if (!Array.isArray(posts) || posts.length === 0) {
+            console.error("Invalid posts received:", posts);
             return;
         }
-
         let chatList = document.getElementById("chatList");
+        if (!chatList) {
+            console.error("❌ chatList not found! Make sure the element exists in HTML.");
+            return;
+        }
         chatList.innerHTML = "";
     
-        if (postIds.length === 0) {
+        if (posts.length === 0) {
             chatList.innerHTML = "<li>No joined chats</li>";
             return;
         }
     
-        postIds.forEach( postId => {
-            console.log("[DEBUG] Processing Post ID:", postId, "Type:", typeof postId);
+        posts.forEach( post => {
+            console.log("[DEBUG] Processing Post:", post);
 
-            if (!postId || isNaN(postId)) {
-                console.error("Invalid Post ID:", postId);
+            if (!post.id || isNaN(post.id) || !post.postName) {
+                console.error("Invalid Post ID:", post);
                 return;
             }
 
             let chatItem = document.createElement("li");
-            chatItem.textContent = `Post ${postId}`;
             chatItem.classList.add("chatItem");
+            let coverImg = document.createElement("img");
+            coverImg.src = post.coverImage || "https://www.mcot.net/uploads/article/202409/fc9caee77c607de279ff9116c67c6ddf.jpeg"; // ใช้ default.png ถ้าไม่มี
+            coverImg.alt = post.postName;
+            coverImg.classList.add("chatCover");
+
+            let postText = document.createElement("div");
+            postText.innerHTML = `<strong>${post.postName}</strong>`;
+            postText.classList.add("chatText");
+
             chatItem.onclick = () => {
-                console.log("🖱️ Clicked on Post ID:", postId.toString());
-                joinChat(parseInt(postId));
+                console.log("🖱️ Clicked on Post ID:", post.id);
+                joinChat(parseInt(post.id));
             };
+
+            chatItem.appendChild(coverImg);
+            chatItem.appendChild(postText);
+            
+            console.log("[DEBUG] Adding to chatList:", chatItem.innerText);
             chatList.appendChild(chatItem);
         });
     });

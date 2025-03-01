@@ -299,22 +299,24 @@ public class ChatHub : Hub
             return;
         }
 
-        var postIds = _db.Posts
+        var posts = _db.Posts
             .Where(p => p.UserId == userId)
-            .Select(p => p.Id)
+            .Select(p => new {p.Id , p.PostName,p.Detail,
+            CoverImage = string.IsNullOrEmpty(p.CoverPageImg) ? "https://www.mcot.net/uploads/article/202409/fc9caee77c607de279ff9116c67c6ddf.jpeg" : p.CoverPageImg})
             .Union(
                 _db.Applications
                     .Where(a => a.UserId == userId && a.AppliedStatus == true)
-                    .Select(a => a.PostId)
+                    .Join(_db.Posts,a => a.PostId,p => p.Id,(a,p) => new {p.Id,p.PostName,p.Detail,
+                    CoverImage = string.IsNullOrEmpty(p.CoverPageImg) ? "https://www.mcot.net/uploads/article/202409/fc9caee77c607de279ff9116c67c6ddf.jpeg" : p.CoverPageImg})
             )
             .ToList();
 
-        Console.WriteLine($"[DEBUG] Retrieved {postIds.Count} post(s) for user {userId}");
-        foreach (var postId in postIds)
+        Console.WriteLine($"[DEBUG] Retrieved {posts.Count} post(s) for user {userId}");
+        foreach (var post in posts)
         {
-            Console.WriteLine($"[DEBUG] Post ID: {postId}");
+            Console.WriteLine($"[DEBUG] Post ID: {post.Id}, Name: {post.PostName}, Detail: {post.Detail}, Cover: {post.CoverImage}");
         }
 
-        await Clients.Caller.SendAsync("LoadUserChats", postIds.Select(p => (int)p).ToList());
+        await Clients.Caller.SendAsync("LoadUserChats", posts);
     }    
 }
