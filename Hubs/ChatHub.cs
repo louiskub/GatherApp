@@ -294,7 +294,7 @@ public class ChatHub : Hub
 
         if (string.IsNullOrEmpty(userId))
         {
-            Console.WriteLine("🚨 Error: Unauthorized access - userId is null");
+            Console.WriteLine("Error: Unauthorized access - userId is null");
             await Clients.Caller.SendAsync("Error", "Unauthorized: User ID not found.");
             return;
         }

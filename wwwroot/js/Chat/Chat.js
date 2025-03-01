@@ -38,7 +38,7 @@ function setupListeners() {
         }
         let chatList = document.getElementById("chatList");
         if (!chatList) {
-            console.error("❌ chatList not found! Make sure the element exists in HTML.");
+            console.error("chatList not found! Make sure the element exists in HTML.");
             return;
         }
         chatList.innerHTML = "";
@@ -59,7 +59,7 @@ function setupListeners() {
             let chatItem = document.createElement("li");
             chatItem.classList.add("chatItem");
             let coverImg = document.createElement("img");
-            coverImg.src = post.coverImage || "https://www.mcot.net/uploads/article/202409/fc9caee77c607de279ff9116c67c6ddf.jpeg"; // ใช้ default.png ถ้าไม่มี
+            coverImg.src = post.coverImage || "https://www.mcot.net/uploads/article/202409/fc9caee77c607de279ff9116c67c6ddf.jpeg";
             coverImg.alt = post.postName;
             coverImg.classList.add("chatCover");
 
@@ -105,7 +105,7 @@ function setupListeners() {
                     hour12: false,
                 });
             } else {
-                console.error("⚠️ Invalid Date Format:", sentAt);
+                console.error("Invalid Date Format:", sentAt);
             }
         } catch (error) {
             console.error("Error parsing date:", error, "Raw value:", sentAt);
@@ -178,7 +178,7 @@ function setupListeners() {
     
         try {
             console.log("Calling JoinChat with PostID:", postId);
-            await connection.invoke("JoinChat", postId.toString()); // 🔥 แปลงเป็น string
+            await connection.invoke("JoinChat", postId.toString());
     
             console.log("Successfully joined chat with PostID:", postId);
             currentPostId = postId;
