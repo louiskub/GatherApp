@@ -1,17 +1,4 @@
-async function likePost(obj) {
-    // console.log(obj.postId)
-    let response = await fetch(`/api/post/togglelike/${obj.postId}`, {
-        method: "POST",
-        credentials: 'include'
-    })
-    if (response.ok) {
-        response = await response.json();
-        return response
-    } else {
-        return { error: response.status }
-    }
-}
-
+import LikePostHandler from "/js/components/handler/like_post_handler.js";
 
 class Post {
     constructor(postId, date, title, location, accepted, limitAccepted, registered, categories = [], imageUrl, like = 0, isLiked = false) {
@@ -87,44 +74,19 @@ class Post {
     }
 
     createLikeButton() {
-        
-
         const postLike = document.createElement("div");
         postLike.classList.add("post-like");
 
         const likeCount = document.createElement("div");
-        likeCount.textContent = this.like;
 
         const likeButton = document.createElement("button");
         likeButton.classList.add("like-btn");
-        
+
         const likeIcon = document.createElement("i");
-        // console.log(this.isLiked)
-        if (this.isLiked)
-            likeIcon.classList.add("fa-solid", "fa-heart");
-        else
-            likeIcon.classList.add("fa-regular", "fa-heart");
         likeButton.appendChild(likeIcon);
 
-        likeButton.addEventListener("click", async (event) => {
-            event.stopPropagation();
-            event.preventDefault();
-            let response = await likePost(this);
-            // console.log(response)
-            if (response.error) {
-                console.error("Like error:", response.error);
-            }
-            else if (response.isLiked){
-                likeIcon.classList.replace("fa-regular", "fa-solid");
-                this.like = response.like;
-            }
-            else {
-                likeIcon.classList.replace("fa-solid", "fa-regular");
-                this.like = response.like;
-            }
-            
-            likeCount.textContent = this.like;
-        });
+        new LikePostHandler(likeButton, likeCount, 
+                        this.postId, this.like, this.isLiked)
 
         postLike.appendChild(likeCount);
         postLike.appendChild(likeButton);
