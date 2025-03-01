@@ -1,3 +1,8 @@
+import LikePostHandler from "/js/components/like_post_handler.js";
+
+const urlParams = new URLSearchParams(window.location.search);
+const postId = urlParams.get('postid') || urlParams.get('postId');
+
 async function showPostDetail() {
     async function fetchPost() {
         const urlParams = window.location.search;
@@ -48,6 +53,7 @@ async function showPostDetail() {
     const googleMap = document.querySelector(".googlemap iframe");
     googleMap.src = activity.googleMapLink;
 
+
     const miniInfo = document.querySelector(".act_miniinfo");
     const miniLeft = miniInfo.querySelector(".act_miniinfo_left");
     const miniRight = miniInfo.querySelector(".act_miniinfo_right");
@@ -68,13 +74,12 @@ async function showPostDetail() {
     miniLeft.querySelectorAll("p")[0].textContent = `Accepted : ${post.curParticipant}/ ${post.maxParticipant}`;
     miniLeft.querySelectorAll("p")[1].textContent = `Registered : ${post.totalApplicant}`;
     
-    miniRight.querySelector(".likes_num").textContent = post.like;
-    const heart = miniRight.querySelector(".heart i")
-    if (post.isLiked)
-        heart.classList.add("fa-solid", "fa-heart");
-    else
-        heart.classList.add("fa-regular", "fa-heart");
+    ///////////////// หัวใจ /////////////////
+    new LikePostHandler( miniRight.querySelector('i'), 
+                        miniRight.querySelector(".likes_num"), 
+                        post.id, post.like, post.isLiked);
 
+    ///////////////// Participants /////////////////
     const memberContainer = document.querySelector(".member_container")
     if (participants.length == 0) {
         const tagP = document.createElement("p")
@@ -102,30 +107,80 @@ async function showPostDetail() {
         tagContainer.appendChild(tag);
     })
 
+    const editBut = document.querySelector(".edit_but");
+    const viewBut = document.querySelector(".view_but");
+    const cancelBut = document.querySelector(".cancel_post_but");
+    const regBut = document.querySelector(".reg_but");
+    const appBut = document.querySelector(".app_but");
+
     if (isOwner) {
-        document.querySelector(".edit_but").style.display = "block";
-        document.querySelector(".view_but").style.display = "block";
-        document.querySelector(".cancel_post_but").style.display = "block";
+        editBut.style.display = "block";
+        viewBut.style.display = "block";
+        cancelBut.style.display = "block";
     }else {
         if (!post.isApplied){
-            document.querySelector(".reg_but").style.display = "block";
+            regBut.style.display = "block";
             if (post.isAttached)
-                document.querySelector(".app_but").style.display = "block";
+                appBut.style.display = "block";
         }
     }
+
+    ///////////////// Button Event /////////////////
+    console.log(regBut)
+    regBut.addEventListener("click", async function() {
+        console.log("Registering...")
+        const urlParams = new URLSearchParams(window.location.search)
+        const postId = urlParams.get('postid') || urlParams.get('postId');
+        
+        let apiSettings = {
+            method: "POST",
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json'}
+        }
+
+        const fileToBase64 = (file) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result.split(",")[1]); // ตัด "data:image/png;base64," ออก
+                reader.onerror = (error) => reject(error);
+            });
+        };
+        if (post.isAttached){
+            let fileInput = document.getElementById("fileInput").files[0]
+            if (!fileInput) 
+                return alert("Please attach a file before submitting.")
+            apiSettings.body = JSON.stringify(
+                { fileAttached: await fileToBase64(fileInput)}
+            )
+        }
+        let response = await fetch(`/api/user/applypost?postid=${postId}`, apiSettings)
+        if (!response.ok) 
+            // alert("Failed to register for this activity!")
+            console.log(response)
+        else {
+            if (response.redirected)
+                window.location.href = response.url
+            else {
+                response = await response.json();
+                if (response.error) {
+                    alert(response.error)
+                } else {
+                    alert("You have successfully registered for this activity!")
+                    window.location.reload()
+                }
+            }
+        }
+    })
+
+    document.querySelector(".cancel_post_but").addEventListener("click", function() {
+        alert("You have canceled this activity!");
+    });
 }
 
 
 document.addEventListener("DOMContentLoaded", async function() {
     await showPostDetail();
-    
-    // console.log(response)
-    document.querySelector(".reg_but").addEventListener("click", function() {
-        alert("You have successfully registered for this activity!");
-    });
-    document.querySelector(".cancel_post_but").addEventListener("click", function() {
-        alert("You have canceled this activity!");
-    });
 });
 
 function openPopup() {
@@ -148,40 +203,44 @@ function submitApplication() {
     }
 }
 
-const heart = document.querySelector('.heart i');
-const likesNum = document.querySelector('.likes_num');
+// const heart = document.querySelector('.heart i');
+// const likesNum = document.querySelector('.likes_num');
 
-heart.addEventListener("click", async (event) => {
-    event.stopPropagation();
-    event.preventDefault();
+// heart.addEventListener("click", async (event) => {
+//     event.stopPropagation();
+//     event.preventDefault();
 
-    async function likePost() {
-        // const urlParams = window.location.search;
-        const urlParams = new URLSearchParams(window.location.search);
-        const postId = urlParams.get('postid') || urlParams.get('postId');
-        let response = await fetch(`/api/post/togglelike/${postId}`, {
-            method: "POST",
-            credentials: 'include'
-        })
-        if (response.ok) {
-            response = await response.json();
-            return response
-        } else {
-            return { error: response.status }
-        }
-    }
+//     async function likePost() {
+//         // const urlParams = window.location.search;
+//         const urlParams = new URLSearchParams(window.location.search);
+//         const postId = urlParams.get('postid') || urlParams.get('postId');
+//         let response = await fetch(`/api/post/togglelike/${postId}`, {
+//             method: "POST",
+//             credentials: 'include'
+//         })
+//         if (response.ok) {
+//             if (response.redirected)
+//                 window.location.href = response.url
+//             else {
+//                 response = await response.json();
+//                 return response
+//             }
+//         } else {
+//             return { error: response.status }
+//         }
+//     }
 
-    let response = await likePost();
-    // console.log(response)
-    if (response.error) {
-        console.error("Like error:", response.error);
-    }
-    else if (response.isLiked){
-        heart.classList.replace("fa-regular", "fa-solid");
-        likesNum.textContent = response.like;
-    }
-    else {
-        heart.classList.replace("fa-solid", "fa-regular");
-        likesNum.textContent = response.like;
-    }
-});
+//     let response = await likePost();
+//     // console.log(response)
+//     if (response.error) {
+//         console.error("Like error:", response.error);
+//     }
+//     else if (response.isLiked){
+//         heart.classList.replace("fa-regular", "fa-solid");
+//         likesNum.textContent = response.like;
+//     }
+//     else {
+//         heart.classList.replace("fa-solid", "fa-regular");
+//         likesNum.textContent = response.like;
+//     }
+// });
