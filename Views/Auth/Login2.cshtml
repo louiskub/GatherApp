@@ -67,6 +67,12 @@
         window.location.href = "/api/auth/google-login"; 
     });
 
+    if (window.location.search.includes("refresh=true")) {
+    window.location.href = "/home";
+    }
+    
+
+
     async function loginClick() {
         @* let username = $("#username").val();
         let password = $("#password").val(); *@

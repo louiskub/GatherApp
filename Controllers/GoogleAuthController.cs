@@ -26,6 +26,7 @@ namespace GatherApp.Controllers
             _googleAuthService = googleAuthService;
         }
 
+
 [HttpGet]
 [Route("api/auth/google-login")]
 public IActionResult GoogleLogin()
@@ -117,11 +118,12 @@ public async Task<IActionResult> GoogleResponse()
     {
         HttpOnly = true,
         Secure = true,
-        SameSite = SameSiteMode.Strict,
+        SameSite = SameSiteMode.Lax,
         Expires = DateTime.UtcNow.AddDays(1)
     });
 
-    return Ok(new { status = "Login", token = token });
+    return Redirect("/home");   
     }
   }
+  
 }
