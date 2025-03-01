@@ -2,6 +2,89 @@
     ViewData["Title"] = "Gather-AboutUs";
 }
 
+<link rel="stylesheet" href="~/css/GOLF/aboutus.css">
+
 <div class="main">
-    <h1> This is About Us page </h1>
+    <div class="background">
+        <svg class="bubbles-container" width="100%" height="100%">
+            <!-- Bubbles will be added here by JavaScript -->
+        </svg>
+        <div class="container">
+            <div class="content">
+                <h1>Meet the Team</h1>
+                <p class="subtitle">These are the people responsible for all the coding happening backstage.</p>
+                
+                <div class="team-showcase">
+                    <button id="prevBtn" class="nav-btn">←</button>
+                    <div class="team-member-container">
+                        <div class="team-member" data-index="0">
+                            <div class="photo-container">
+                                <img src="/assets/img/golf.jpg" alt="golf">
+                            </div>
+                        </div>
+                        <div class="team-member" data-index="1">
+                            <div class="photo-container">
+                                <img src="/assets/img/louis.jpg" alt="louis">
+                            </div>
+                        </div>
+                        <div class="team-member" data-index="2">
+                            <div class="photo-container">
+                                <img src="/assets/img/prae.jpg" alt="prae">
+                            </div>
+                        </div>
+                        <div class="team-member" data-index="3">
+                            <div class="photo-container">
+                                <img src="/assets/img/team.jpg" alt="team">
+                            </div>
+                        </div>
+                        <div class="team-member" data-index="4">
+                            <div class="photo-container">
+                                <img src="/assets/img/beam2.png" alt="beam">
+                            </div>
+                        </div>
+                        <div class="team-member" data-index="5">
+                            <div class="photo-container">
+                                <img src="/assets/img/little.png" alt="little">
+                            </div>
+                        </div>
+                    </div>
+                    <button id="nextBtn" class="nav-btn">→</button>
+                </div>
+                
+                <div class="team-info">
+                    <div class="member-details" id="memberDetails-0">
+                        <h2>John Doe</h2>
+                        <p class="position">Frontend Developer</p>
+                        <p class="bio">John specializes in creating beautiful and responsive user interfaces using modern web technologies.</p>
+                    </div>
+                    <div class="member-details" id="memberDetails-1">
+                        <h2>Jane Smith</h2>
+                        <p class="position">Backend Developer</p>
+                        <p class="bio">Jane is an expert in server-side programming and database management.</p>
+                    </div>
+                    <div class="member-details" id="memberDetails-2">
+                        <h2>Mike Johnson</h2>
+                        <p class="position">UX Designer</p>
+                        <p class="bio">Mike creates intuitive user experiences and ensures our products are user-friendly.</p>
+                    </div>
+                    <div class="member-details" id="memberDetails-3">
+                        <h2>Sarah Williams</h2>
+                        <p class="position">Project Manager</p>
+                        <p class="bio">Sarah coordinates our team efforts and ensures projects are delivered on time.</p>
+                    </div>
+                    <div class="member-details" id="memberDetails-4">
+                        <h2>David Lee</h2>
+                        <p class="position">Full Stack Developer</p>
+                        <p class="bio">David works across the entire technology stack and helps bridge frontend and backend systems.</p>
+                    </div>
+                    <div class="member-details" id="memberDetails-5">
+                        <h2>Emily Chen</h2>
+                        <p class="position">QA Engineer</p>
+                        <p class="bio">Emily ensures our products meet the highest quality standards through rigorous testing.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<script src="~/js/GOLF/aboutus.js"></script>

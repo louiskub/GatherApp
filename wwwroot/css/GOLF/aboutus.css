@@ -1,0 +1,172 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  
+  .footer-container{
+    display: none;
+  }
+
+  .background {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(to bottom right, #FFEBEE, #FAD2E1);
+    overflow: hidden;
+  }
+  
+  .bubbles-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  
+  .container {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    z-index: 1;
+  }
+  
+  .content {
+    text-align: center;
+  }
+  
+  h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .subtitle {
+    font-size: 18px;
+    margin-bottom: 30px;
+    color: #555;
+  }
+  
+  .team-showcase {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: -20px;
+  }
+  
+  .team-member-container {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    overflow: hidden;
+  }
+  
+  .nav-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+    z-index: 10;
+  }
+  
+  .nav-btn:hover {
+    transform: scale(1.2);
+  }
+  
+  .team-member {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  
+  .team-member.active {
+    opacity: 1;
+  }
+  
+  .photo-container {
+    width: 300px;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .photo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .member-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .team-info {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .member-details {
+    display: none;
+  }
+  
+  .member-details.active {
+    display: block;
+  }
+  
+  .member-details h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .position {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #555;
+  }
+  
+  .bio {
+    color: #555;
+    line-height: 1.5;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 28px;
+    }
+  
+    .subtitle {
+      font-size: 16px;
+    }
+  
+    .team-member-container {
+      width: 300px;
+      height: 300px;
+    }
+  
+    .photo-container {
+      width: 200px;
+      height: 200px;
+    }
+  }
