@@ -44,6 +44,27 @@ public class PostController : Controller
         return Json(actTypes.Select(a => a.ActType));
     }
 
+    // อนาคต ต้องลบ
+    [HttpPost]
+    [Route("api/acttype/{actType}")]
+    public IActionResult AddActType(string actType)
+    {
+        if (string.IsNullOrEmpty(actType))
+            return BadRequest("Invalid act type");
+        var newActType = new ActivityType
+        {
+            ActType = actType
+        };
+        try {
+            _db.ActivityTypes.Add(newActType);
+            _db.SaveChanges();
+            return Json(newActType);
+        }
+        catch (Exception) {
+            return BadRequest("Act type already exists");
+        }
+    }
+
     // ถ้าเป็นเจ้าของ return isOwner = true
     [Route("api/post")]
     public IActionResult GetPostFromId(int postId)
