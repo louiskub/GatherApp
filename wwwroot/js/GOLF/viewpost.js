@@ -4,6 +4,13 @@ import ToastTemplate from "/js/components/handler/toast_template.js";
 const urlParams = new URLSearchParams(window.location.search);
 const postId = urlParams.get('postid') || urlParams.get('postId');
 
+// Select DOM elements with a helper function
+const $ = selector => document.querySelector(selector);
+const $$ = selector => document.querySelectorAll(selector);
+
+var post, isOwner, owner, activity, actTypes, participants
+
+
 async function showPostDetail() {
     async function fetchPost() {
         const urlParams = window.location.search;
@@ -12,7 +19,7 @@ async function showPostDetail() {
             alert("Post not found");
             return;
         }
-        let post = await response.json();
+        post = await response.json();
         console.log(post)
         return post;
     }
@@ -26,13 +33,13 @@ async function showPostDetail() {
             return "data:image/jpeg;base64," + profileImg
     }
 
-    let post = await fetchPost();
-    let isOwner = post.isOwner;
+    post = await fetchPost();
+    isOwner = post.isOwner;
     post = post.post;
-    let owner = post.owner;
-    let activity = post.activity;
-    let actTypes = post.actTypes;
-    let participants = post.participants;
+    owner = post.owner;
+    activity = post.activity;
+    actTypes = post.actTypes;
+    participants = post.participants;
     post = post.post
 
     const postName = document.querySelector(".post_act_name h2");
@@ -71,7 +78,7 @@ async function showPostDetail() {
     formattedDate = formattedDate.join(" ")
     miniLeft.querySelector("h1").textContent = formattedDate;
     miniLeft.querySelector("h2").textContent = post.postName;
-    miniLeft.querySelector("h3").textContent = activity.actName;
+    miniLeft.querySelector("h3").innerHTML = `<i class="fa-solid fa-location-dot"></i> ` + activity.province + ", " + activity.district;
     miniLeft.querySelectorAll("p")[0].textContent = `Accepted : ${post.curParticipant}/ ${post.maxParticipant}`;
     miniLeft.querySelectorAll("p")[1].textContent = `Registered : ${post.totalApplicant}`;
     
@@ -177,62 +184,7 @@ async function showPostDetail() {
 }
 
 
-document.addEventListener("DOMContentLoaded", async function() {
-    await showPostDetail();
-});
-
-// const heart = document.querySelector('.heart i');
-// const likesNum = document.querySelector('.likes_num');
-
-// heart.addEventListener("click", async (event) => {
-//     event.stopPropagation();
-//     event.preventDefault();
-
-//     async function likePost() {
-//         // const urlParams = window.location.search;
-//         const urlParams = new URLSearchParams(window.location.search);
-//         const postId = urlParams.get('postid') || urlParams.get('postId');
-//         let response = await fetch(`/api/post/togglelike/${postId}`, {
-//             method: "POST",
-//             credentials: 'include'
-//         })
-//         if (response.ok) {
-//             if (response.redirected)
-//                 window.location.href = response.url
-//             else {
-//                 response = await response.json();
-//                 return response
-//             }
-//         } else {
-//             return { error: response.status }
-//         }
-//     }
-
-//     let response = await likePost();
-//     // console.log(response)
-//     if (response.error) {
-//         console.error("Like error:", response.error);
-//     }
-//     else if (response.isLiked){
-//         heart.classList.replace("fa-regular", "fa-solid");
-//         likesNum.textContent = response.like;
-//     }
-//     else {
-//         heart.classList.replace("fa-solid", "fa-regular");
-//         likesNum.textContent = response.like;
-//     }
-// });
-
-
-
-
-
-
 //////////////////////////////////////EDIT POPUP//////////////////////////////////////////////////////////////
-// Select DOM elements with a helper function
-const $ = selector => document.querySelector(selector);
-const $$ = selector => document.querySelectorAll(selector);
-
 // Get all required elements
 const elements = {
   popup: $('#popup_create'),
@@ -405,8 +357,8 @@ async function fetchAllActTypes() {
 
 // Initialize activity types
 async function initActivityTypes() {
-  const actTypes = await fetchAllActTypes();
-  actTypes.forEach(actType => {
+  const actTypesAll = await fetchAllActTypes();
+  actTypesAll.forEach(actType => {
     const div = document.createElement('div');
     div.dataset.value = actType;
     div.textContent = actType;
@@ -468,6 +420,20 @@ async function initProvincesAndAmphures() {
       elements.locationContainer.replaceChild(tempSpan, elements.locationContainer.lastChild);
     }
   });
+
+  if (isOwner && activity.province){
+    provinceSel.value = province.find((p) => {
+      return p.eng == activity.province
+    }).id;
+    const filteredAmp = filterAmphure(provinceSel.value);
+    const amphureSel = new Select(filteredAmp, "Amphure").render();
+    elements.locationContainer.replaceChild(amphureSel, elements.locationContainer.lastChild);
+    if (activity.district){
+      amphureSel.value = filteredAmp.find((a) => {
+        return a.eng == activity.district
+      }).id;
+    }
+  }
 }
 
 // Validate form before submission
@@ -613,13 +579,48 @@ async function editPost() {
   }
 }
 
-// Initialize everything
-document.addEventListener("DOMContentLoaded", async () => {
+async function editPostInit(){
+  const activityName = $('.create_act_name input');
+  const description = $('.descript_create');
+  const eventDate = $('#eventdate');
+  const deadline = $('#deadline');
+  const participantsNeeded = $('.parti_needed input');
+  const googleMapLink = $('.input_map_link input');
+  // ไม่ใช้ .value
+  
+
+  activityName.value = post.postName;
+  description.value = post.detail;
+  let temp = new Date(activity.actDatetime);
+  temp.setHours(temp.getHours() - temp.getTimezoneOffset() / 60);
+  eventDate.value = temp.toISOString().slice(0, 16);
+
+  temp = new Date(activity.closeDateTime);
+  temp.setHours(temp.getHours() - temp.getTimezoneOffset() / 60);
+  deadline.value = temp.toISOString().slice(0, 16);
+
+  participantsNeeded.value = post.maxParticipant
+  googleMapLink.value = `<iframe src="${activity.googleMapLink}" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`  
+  actTypes.forEach(actType => {
+    const div = document.createElement('div');
+    div.dataset.value = actType;
+    div.textContent = actType;
+    handleTagSelection({ target: div });
+  })
+
+
+}
+
+
+document.addEventListener("DOMContentLoaded", async function() {
+  await showPostDetail();
+
   initEventListeners();
   initDateValidation();
   await initActivityTypes();
   await initProvincesAndAmphures();
   updateTagPlaceholder();
+  await editPostInit();
 });
 
 // For testing
