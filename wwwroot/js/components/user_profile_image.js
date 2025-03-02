@@ -1,5 +1,5 @@
 class UserProfileImage {
-    constructor(username = "", profileImg = "", imgSize = "50px", imgBorder = "1px black solid") {
+    constructor(username = "", profileImg = "", imgSize = "50px", imgBorder = "none") {
         if (profileImg == "" || profileImg == null)
             this.profileImg = "https://tr.rbxcdn.com/30DAY-Avatar-310966282D3529E36976BF6B07B1DC90-Png/352/352/Avatar/Png/noFilter"
         else if(profileImg.length < 200)

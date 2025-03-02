@@ -236,10 +236,64 @@ async function filterPostInDate(){
 
 async function createUserSearchCard(users) {
     const searchUser = document.querySelector(".search-results-user .search-user-container");
-    users.forEach((user) => {
+    const searchMoreBtnContainer = document.querySelector(".search-more-user-container");
+    const main = document.querySelector(".main");
+    searchUser.innerHTML = ""; 
+
+    if (users.length === 0) return;
+    
+    const showMoreBtn = document.createElement("a");
+    // showMoreBtn.href = "#search-user-container";
+    showMoreBtn.textContent = "More Users";
+    showMoreBtn.classList.add("search-more-user-btn");
+
+    const maxVisibleUsers = 6;
+    let isExpanded = false;
+    let hiddenUserElements = [];
+
+    users.forEach((user, index) => {
         let userCard = new UserSearchCard(user.username, user.profileImg);
-        searchUser.appendChild(userCard.render());
-    })
+        let cardElement = userCard.render();
+        // searchUser.appendChild(userCard.render());
+
+        if (index < maxVisibleUsers) {
+            searchUser.appendChild(cardElement);
+        }
+        else {
+            cardElement.style.display = "none"; // Initially hidden
+            hiddenUserElements.push(cardElement);
+        }
+    });
+
+    if (hiddenUserElements.length > 0) {
+        if (!searchMoreBtnContainer.contains(showMoreBtn)) {
+            searchMoreBtnContainer.appendChild(showMoreBtn);
+        }
+
+        showMoreBtn.addEventListener("click", function (event) {
+
+            event.preventDefault();
+            isExpanded = !isExpanded;
+
+            hiddenUserElements.forEach(card => {
+                card.style.display = isExpanded ? "flex" : "none";
+            });
+
+            // ถ้ากด "More Users" จะต้องเพิ่ม card ที่ซ่อนไว้ลงใน DOM
+            if (isExpanded) {
+                hiddenUserElements.forEach(card => {
+                    searchUser.appendChild(card);
+                });
+            } else {
+                main.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start" 
+                });
+            }
+
+            showMoreBtn.textContent = isExpanded ? "Less Users" : "More Users";
+        });
+    }
 }
 
 document.addEventListener("DOMContentLoaded", async function () {
