@@ -19,7 +19,6 @@ class HistoryActivity {
     const usrIcon = document.createElement("svg");
     usrIcon.width = "16";
     usrIcon.xmlns = "http://www.w3.org/2000/svg";
-    usrIcon.fill = none;
     usrIcon.viewBox = "0 0 24 24";
     usrIcon.strokeWidth = "2";
     usrIcon.stroke = "currentColor";
@@ -38,7 +37,6 @@ class HistoryActivity {
     const dateIcon = document.createElement("svg");
     dateIcon.width = "16";
     dateIcon.xmlns = "http://www.w3.org/2000/svg";
-    dateIcon.fill = none;
     dateIcon.viewBox = "0 0 24 24";
     dateIcon.strokeWidth = "2";
     dateIcon.stroke = "currentColor";
@@ -76,10 +74,12 @@ class HistoryActivity {
     buttonContainer.classList.add("buttonContainer");
 
     const reviewButton = document.createElement("button");
-    reviewButton.classList.add("buttonStyle review");
+    reviewButton.classList.add("buttonStyle", "view");
+    reviewButton.textContent = "Review"
 
     const reportButton = document.createElement("button");
-    reportButton.classList.add("buttonStyle report");
+    reportButton.classList.add("buttonStyle", "report");
+    reportButton.textContent = "Report"
 
     buttonContainer.appendChild(reviewButton);
     buttonContainer.appendChild(reportButton);
@@ -98,7 +98,8 @@ class HistoryActivity {
     statusName.classList.add("textStyle");
 
     const cancelButton = document.createElement("button");
-    cancelButton.classList.add("buttonStyle report");
+    cancelButton.classList.add("buttonStyle", "report");
+    cancelButton.textContent = "Cancel";
 
     statusContainer.appendChild(statusName);
     statusContainer.appendChild(cancelButton);
@@ -116,7 +117,8 @@ class HistoryActivity {
     statusName.classList.add("textStyle");
 
     const cancelButton = document.createElement("button");
-    cancelButton.classList.add("buttonStyle report");
+    cancelButton.classList.add("buttonStyle", "report");
+    cancelButton.textContent = "Cancel";
 
     statusContainer.appendChild(statusName);
     statusContainer.appendChild(cancelButton);
@@ -144,24 +146,25 @@ class HistoryActivity {
     switchContainer.classList.add("switchContainer");
 
     const switchLabel = document.createElement("p");
-    switchLabel.classList.add("switchText");
+    switchLabel.classList.add("switchLabel");
 
     const switchBox = document.createElement("label");
-    switchBox.classList.add("switch");
+    switchBox.classList.add("activitySwitch");
     const switchInput = document.createElement("input");
-    switchInput.type("checkbox");
+    switchInput.type = "checkbox";
+    switchInput.id = "toggleSwitch";
 
     const switchSlider = document.createElement("span");
-    switchSlider.classList.add("slider");
+    switchSlider.classList.add("activitySlider");
 
     switchInput.addEventListener("change", function () {
-      switchText.textContent = this.checked ? "ON" : "OFF";
+      switchLabel.textContent = this.checked ? "ON" : "OFF";
     });
 
+    switchBox.appendChild(switchInput)
+    switchBox.appendChild(switchSlider)
     switchContainer.appendChild(switchLabel);
     switchContainer.appendChild(switchBox);
-    switchContainer.appendChild(switchInput);
-    switchContainer.appendChild(switchSlider);
 
     return switchContainer;
   }
@@ -175,10 +178,12 @@ class HistoryActivity {
     buttonContainer.classList.add("buttonContainer");
 
     const viewButton = document.createElement("button");
-    viewButton.classList.add("buttonStyle view");
+    viewButton.classList.add("buttonStyle", "view");
+    viewButton.textContent = "View"
 
     const cancelButton = document.createElement("button");
-    cancelButton.classList.add("buttonStyle report");
+    cancelButton.classList.add("buttonStyle", "report");
+    cancelButton.textContent = "Cancel"
 
     buttonContainer.appendChild(viewButton);
     buttonContainer.appendChild(cancelButton);
@@ -193,7 +198,6 @@ class HistoryActivity {
     innerContainer.classList.add("innerContainer");
 
     const indicator = document.createElement("div");
-    indicator.classList.add("indicator");
 
     const containerStyle = document.createElement("div");
     containerStyle.classList.add("containerStyle");
@@ -201,60 +205,71 @@ class HistoryActivity {
     const activityInfo = this.createActivityInfo();
     innerContainer.appendChild(activityInfo);
 
+    const displayUsr = activityInfo.querySelector(".displayIcon")
+    indicator.classList.add("indicator");
+
+    containerStyle.appendChild(indicator);
+
     switch (this.status) {
       case "onGoing": //post
         innerContainer.appendChild(this.createActivityStatusOnGoing());
-        indicator.classList.add("indicator.onGoing");
-        containerStyle.appendChild(indicator);
+        indicator.classList.add("indicator", "onGoing");
         containerStyle.appendChild(innerContainer);
-break;
+        break;
 
       case "done": //post
         innerContainer.appendChild(this.createActivityStatusFinished());
-        indicator.classList.add("indicator.done");
-        activityInfo.removeChild(displayUsr);
-        containerStyle.appendChild(indicator);
+        indicator.classList.add("indicator", "activityDone");
+        if (displayUsr.parentNode) {
+          activityInfo.removeChild(displayUsr);
+        }
         containerStyle.appendChild(innerContainer);
-break;
-
-      case "cancel": //post
-      //   .removeChild
+        break;
 
       case "finish": //application
         innerContainer.appendChild(this.createActivityStatusFinished());
-        indicator.classList.add("indicator.finish");
-        activityInfo.removeChild(displayUsr);
-        containerStyle.appendChild(indicator);
+        indicator.classList.add("indicator", "finish");
+        if (displayUsr && displayUsr.parentNode) {
+          displayUsr.parentNode.removeChild(displayUsr);
+        }
+
         containerStyle.appendChild(innerContainer);
-break;
+        break;
 
       case "accept": //application
         innerContainer.appendChild(this.createActivityStatusAccepted());
-        indicator.classList.add("indicator.accept");
-        activityInfo.removeChild(displayUsr);
-        containerStyle.appendChild(indicator);
+        indicator.classList.add("indicator", "accept");
+        if (displayUsr.parentNode) {
+          activityInfo.removeChild(displayUsr);
+        }
         containerStyle.appendChild(innerContainer);
-break;
+        break;
 
       case "pending": //application
         innerContainer.appendChild(this.createActivityStatusPending());
-        indicator.classList.add("indicator.pending");
-        activityInfo.removeChild(displayUsr);
-        containerStyle.appendChild(indicator);
+        indicator.classList.add("indicator", "pending");
+        if (displayUsr.parentNode) {
+          activityInfo.removeChild(displayUsr);
+        }
         containerStyle.appendChild(innerContainer);
-break;
+        break;
 
       case "reject": //application
         innerContainer.appendChild(this.createActivityStatusRejected());
-        indicator.classList.add("indicator.reject");
-        activityInfo.removeChild(displayUsr);
-        containerStyle.appendChild(indicator);
+        indicator.classList.add("indicator", "reject");
+        if (displayUsr.parentNode) {
+          activityInfo.removeChild(displayUsr);
+        }
         containerStyle.appendChild(innerContainer);
-break;
+        break;
+
+      default:
+        console.warn("Unknown status:", this.status);
+        break;
     }
 
     return containerStyle;
   }
 }
 
-export default HistoryActivity;
+

@@ -3,8 +3,10 @@
 
 <link rel="stylesheet" href="~/css/History/appHistory.css">
 
-<div class="pageContainer">
-  <h1 class="top">Application History</h1>
+<script src="~/js/History/historyContainer.js"></script>
+
+<div class="pageLayout">
+  <!-- <h1 class="top">Application History</h1>
 
   <div class="containerStyle">
     <div class="indicator finish"></div>
@@ -69,7 +71,30 @@
         <p class="textStyle">Rejected</p>
       </div>
     </div>
-  </div>
+  </div> -->
 
 
 </div>
+
+<script> 
+  const ActivityList = document.querySelector(".pageLayout");
+  const Activity1 = new HistoryActivity('Thu, Jan 30, 6:30 PM - 9:30 PM', 'onGoing', 'onGoing')
+  ActivityList.appendChild(Activity1.render())
+
+  const Activity6 = new HistoryActivity('Thu, Jan 30, 6:30 PM - 9:30 PM', 'done', 'done')
+  ActivityList.appendChild(Activity6.render())
+
+  const Activity2 = new HistoryActivity('Thu, Jan 30, 6:30 PM - 9:30 PM', 'finish', 'finish')
+  ActivityList.appendChild(Activity2.render())
+
+  const Activity3 = new HistoryActivity('Thu, Jan 30, 6:30 PM - 9:30 PM', 'accept', 'accept')
+  ActivityList.appendChild(Activity3.render())
+
+  const Activity4 = new HistoryActivity('Thu, Jan 30, 6:30 PM - 9:30 PM', 'pending', 'pending')
+  ActivityList.appendChild(Activity4.render())
+
+  const Activity5 = new HistoryActivity('Thu, Jan 30, 6:30 PM - 9:30 PM', 'reject', 'reject')
+  ActivityList.appendChild(Activity5.render())
+
+  
+</script>

@@ -4,7 +4,7 @@
   margin-bottom: 1rem;
 }
 
-.pageContainer {
+.pageLayout {
   background-color: var(--lavender-blush);
   padding: 100px 100px 60px 100px;
   height: auto;
@@ -153,6 +153,7 @@
     min-width: 200px;
     font-size: 0.8rem;
   }
+
   .contentStyle h2 {
     /* background-color: pink; */
     width: 100%;
