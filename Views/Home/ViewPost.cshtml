@@ -211,7 +211,7 @@
     function submitApplication() {
         const fileInput = document.getElementById("fileInput");
         if (fileInput.files.length === 0) {
-            alert("Please attach a file before submitting.");
+            window.showToast("Please attach your application.", "warning");
         } else {
             closePopup();
         }
