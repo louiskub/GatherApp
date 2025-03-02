@@ -11,45 +11,37 @@
 </head>
 
 <body>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <h1 class="top">Chat Room</h1>
-
-    <div class="chatContainer">
-        <div class="chatSidebar">
-            <h3>World Chat</h3>
-            <ul id="chatList" class="chatList"></ul>
-        </div>
-
-        <div class="chatMain">
-            <h2 id="chatTitle">Chat</h2>
-
-            <div class="chatBox" id="globalChatBox"></div>
-
-            <div class="chatInput">
-            <input type="text" id="globalMessageInput" class="inputBox" placeholder="Type your message..." required />
-
-        <button id="emojiButton" class="emoji-main" onclick="toggleEmojiPicker()">😃</button>
+    <h1 class="top">World Chat</h1>
+    
+    <div class="chatMainContainer">
+        <div class="chatBox" id="globalChatBox"></div>
         
-         <div class="emoji-container">
-            <div id="emojiPicker" class="emoji-picker">
-                <button onclick="sendEmoji('😀')">😀</button>
-                <button onclick="sendEmoji('😂')">😂</button>
-                <button onclick="sendEmoji('😍')">😍</button>
-                <button onclick="sendEmoji('😎')">😎</button>
-                <button onclick="sendEmoji('😭')">😭</button>
-                <button onclick="sendEmoji('😊')">😊</button>
-                <button onclick="sendEmoji('😡')">😡</button>
-                <button onclick="sendEmoji('👍')">👍</button>
-                <button onclick="sendEmoji('👎')">👎</button>
-                <button onclick="sendEmoji('🎉')">🎉</button>
-                <button onclick="sendEmoji('❤️')">❤️</button>
-                <button onclick="sendEmoji('🔥')">🔥</button>
+        <div class="chatInput">
+            <input type="text" id="globalMessageInput" class="inputBox" placeholder="Type your message..." required />
+            
+            <button id="emojiButton" class="emoji-main" onclick="toggleEmojiPicker()">😃</button>
+            
+            <div class="emoji-container">
+                <div id="emojiPicker" class="emoji-picker">
+                    <button onclick="sendEmoji('😀')">😀</button>
+                    <button onclick="sendEmoji('😂')">😂</button>
+                    <button onclick="sendEmoji('😍')">😍</button>
+                    <button onclick="sendEmoji('😎')">😎</button>
+                    <button onclick="sendEmoji('😭')">😭</button>
+                    <button onclick="sendEmoji('😊')">😊</button>
+                    <button onclick="sendEmoji('😡')">😡</button>
+                    <button onclick="sendEmoji('👍')">👍</button>
+                    <button onclick="sendEmoji('👎')">👎</button>
+                    <button onclick="sendEmoji('🎉')">🎉</button>
+                    <button onclick="sendEmoji('❤️')">❤️</button>
+                    <button onclick="sendEmoji('🔥')">🔥</button>
+                </div>
             </div>
-        </div>
-            <button id="actionButton" class="sendIcon" onclick="handleSend()"><i class="fa-solid fa-thumbs-up"></i>
+            
+            <button id="actionButton" class="sendIcon" onclick="handleSend()">
+                <i class="fa-solid fa-paper-plane"></i>
             </button>
         </div>
-      </div>
     </div>
 
     <script src="@Url.Content("~/js/Chat/ChatGlobal.js")"></script>
