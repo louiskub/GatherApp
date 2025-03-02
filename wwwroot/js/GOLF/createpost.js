@@ -274,20 +274,20 @@ async function validateForm() {
     // ตรวจสอบว่าแต่ละฟิลด์ถูกกรอกหรือไม่
     if (!activityName || !description || !eventDate || !deadline || !participantsNeeded) {
         // window.showToast("Please fill out all required fields.");
-        window.showToast("Please fill out all required fields.");
+        window.showToast("Please fill out all required fields.", "warning");
         return false;
     }
 
     // ตรวจสอบว่าได้เลือกแท็กหรือไม่
     const selectedTags = document.querySelectorAll('.tag-item');
     if (selectedTags.length === 0) {
-        window.showToast("Please select at least one tag.");
+        window.showToast("Please select at least one tag.", "warning");
         return false;
     }
 
     // ตรวจสอบว่าเลือกจำนวนผู้เข้าร่วมมากกว่า 0 หรือไม่
     if (parseInt(participantsNeeded) <= 0) {
-        window.showToast("Please enter a valid number for participants needed.");
+        window.showToast("Please enter a valid number for participants needed.", "warning");
         return false;
     }
 
@@ -295,19 +295,19 @@ async function validateForm() {
     const provinceSelect = document.querySelector('#Province');
     const amphureSelect = document.querySelector('#Amphure');
     if (provinceSelect && provinceSelect.value === "null") {
-        window.showToast("Please select a province.");
+        window.showToast("Please select a province.", "warning");
         return false;
     }
 
     if (amphureSelect && amphureSelect.value === "null") {
-        window.showToast("Please select an amphure.");
+        window.showToast("Please select an amphure.", "warning");
         return false;
     }
 
     // ตรวจสอบ Google Map Link (กรอกลิงก์ iframe หรือ link ปกติ)
     const googleMapLink = document.querySelector('.input_map_link input').value;
     if (!googleMapLink) {
-        window.showToast("Please enter a Google Map Link.");
+        window.showToast("Please enter a Google Map Link.", "warning");
         return false;
     }
 
@@ -315,11 +315,11 @@ async function validateForm() {
     const imageUpload = document.getElementById('imageUpload');
     console.log(previewImage.src.length)
     if (!imageUpload.files.length) {
-        window.showToast("Please upload an image.");
+        window.showToast("Please upload an image.", "warning");
         return false;
     }
     if (previewImage.src.length > 2000000) {
-        window.showToast("Image size is too large. Please upload an image less than 2 MB.");
+        window.showToast("Image size is too large. Please upload an image less than 2 MB.", "warning");
         return false;
     }
     
@@ -376,11 +376,11 @@ async function validateForm() {
             window.redirectToLogin()
         }
         else if (!response.ok) {
-            window.showToast("Failed to create post.");
+            window.showToast("Failed to create post.", "error");
         }
         else {
+            await window.changeToast("Post created successfully", "/", "success")
             popup.style.display = 'none';
-            window.changeToast("Post created successfully", "/")
         }
     }
     await createPost();

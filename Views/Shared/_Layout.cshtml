@@ -91,15 +91,15 @@
         const toastTemplate = new ToastTemplate();
         window.redirectToLogin = async function() {
             await toastTemplate.changeToast("You need to log in. Redirecting...", "/login");
-            await toastTemplate.redirect();
+            await toastTemplate.redirect("error");
         };
-        window.changeToast = async (content, redirectPath) => {
+        window.changeToast = async (content, redirectPath, type) => {
             await toastTemplate.changeToast(content, redirectPath);
-            await toastTemplate.redirect();
+            await toastTemplate.redirect(type);
         }
-        window.showToast = async (content) => {
+        window.showToast = async (content, type) => {
             await toastTemplate.changeToast(content, "");
-            await toastTemplate.showToast();
+            await toastTemplate.showToast(type);
         }
     </script>
     @await RenderSectionAsync("Scripts", required: false)

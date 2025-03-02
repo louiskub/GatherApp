@@ -11,7 +11,6 @@ export default class ToastTemplate{
             .toast {
                 visibility: hidden;
                 min-width: 250px;
-                background-color: #ccc;
                 color: black;
                 text-align: center;
                 border-radius: 5px;
@@ -22,13 +21,30 @@ export default class ToastTemplate{
                 transform: translateX(-50%);
                 z-index: 1010;
             }
+
+            .color-info {
+                background-color: #2196F3;
+            }
+            .color-success {
+                background-color: #4CAF50;
+            }
+            .color-warning {
+                background-color: #FF9800;
+            }
+            .color-error {
+                background-color: #F44336;
+            }
+            .color-simple{
+                background-color: #ccc;
+            }
+
             .show-toast {
                 visibility: visible;
                 animation: fadein 0.5s, fadeout 0.5s 2.5s;
             }
             .show-temp {
                 visibility: visible;
-                animation: fadein 0.5s, fadeout 0.5s 1.5s;
+                animation: fadein 0.5s, fadeout 0.5s 1.8s;
             }
             @keyframes fadein {
                 from { top: 0; opacity: 0; }
@@ -48,19 +64,23 @@ export default class ToastTemplate{
         this.redirectPath = redirectPath;
     }
 
-    redirect() {
+    redirect(type = "simple") {
+        this.div.classList.add(`color-${type}`);
         this.div.classList.add("show-toast");
-    
         setTimeout(() => {
+            this.div.classList.remove("show-toast");
             window.location.href = this.redirectPath;
         }, 3000);
+        return
     }
 
-    showToast() {
+    showToast(type = "simple") {
+        this.div.classList.add(`color-${type}`);
         this.div.classList.add("show-temp");
-    
         setTimeout(() => {
             this.div.classList.remove("show-temp");
-        }, 2000);
+            this.div.classList.remove(`color-${type}`);
+        }, 2200);
+        return
     }
 }
