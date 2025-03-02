@@ -65,7 +65,7 @@ class HistoryActivity {
     return activityInfo;
   }
 
-  //   application finish & post done
+  //   application finish
   createActivityStatusFinished() {
     const statusContainer = document.createElement("div");
     statusContainer.classList.add("statusContainer");
@@ -86,6 +86,25 @@ class HistoryActivity {
     statusContainer.appendChild(buttonContainer);
 
     return statusContainer;
+  }
+
+  //post done
+  createActivityStatusDone() {
+    const statusContainer = document.createElement("div");
+    statusContainer.classList.add("statusContainer");
+
+    const statusName = document.createElement("p");
+    statusName.textContent = "Success";
+    statusName.classList.add("textStyle");
+
+    const reportButton = document.createElement("button");
+    reportButton.classList.add("buttonStyle", "report");
+    reportButton.textContent = "Report"
+
+    statusContainer.appendChild(statusName);
+    statusContainer.appendChild(reportButton);
+
+    return statusContainer
   }
 
   //   application
@@ -218,7 +237,7 @@ class HistoryActivity {
         break;
 
       case "done": //post
-        innerContainer.appendChild(this.createActivityStatusFinished());
+        innerContainer.appendChild(this.createActivityStatusDone());
         indicator.classList.add("indicator", "activityDone");
         if (displayUsr.parentNode) {
           activityInfo.removeChild(displayUsr);
