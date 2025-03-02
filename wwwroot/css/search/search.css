@@ -39,8 +39,6 @@
     --hover-text: white;
     --hover--user-bg: var(--pink);
 }
-
-/* Dark Mode */
 [data-theme="dark"] {
     --sidenav-bg: var(--eerie-black);
     --sidenav-text: var(--seasalt);
@@ -121,7 +119,7 @@
     width: 120px;
     gap: 1rem;
     padding: 0.5rem 1rem;
-    margin: 0rem 1.5rem;
+    /* margin: 0rem 1rem; */
     font-size: 1.2rem;
     color: var(--dropdown-btn-text);
     background: var(--dropdown-btn-bg);
@@ -176,22 +174,12 @@
 
 /* Search Content และ Filter */
 .search-content {
-    padding: 1rem 2.5rem;
+    padding: 1rem 2rem;
 }
 .search-filter {
     display: flex;
-    /* width: 100%;
-    align-items: center;
-    font-size: 1.5rem;
-    padding: 1.2rem 0;
-    text-align: center;
-    border-bottom: 2px solid var(--search-border);
-    color: var(--search-text); */
-
-    flex-wrap: wrap; /* ให้ปุ่มขึ้นบรรทัดใหม่เมื่อพื้นที่ไม่พอ */
+    flex-wrap: wrap; 
     gap: 0.5rem;
-    /* justify-content: center; */
-
 }
 .search-filter button {
     flex: 1;
@@ -220,18 +208,15 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    padding: 1rem 0;
-}
-.search-results-user {
-    border-bottom: 2px solid var(--search-border);
-    border-top: 2px solid var(--search-border);
+    padding: 1rem 0 0;
 }
 .search-results-user,
 .search-results-post {
     display: none;
     flex-direction: column;
     gap: 1rem;
-    /* padding: 1rem 0; */
+    border-top: 2px solid var(--search-border);
+    padding: 1rem 0 0.2rem;
 }
 
 .search-results-user.active,
@@ -247,10 +232,10 @@
     padding: 1rem; */
 
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, auto));
-    gap: 1.2rem;
+    grid-template-columns: repeat(auto-fit, minmax(auto, 210px));
+    gap: 1.4rem;
     justify-content: flex-start;
-    padding: 1rem 0;
+    padding: 1rem 0 0.5rem;
 }
 .search-user-info {
     display: flex;
@@ -289,6 +274,30 @@
     text-align: center;
 }
 
+.search-more-user-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.search-more-user-btn {
+    background: var(--hover-bg-1);
+    color: var(--hover-text);
+    text-align: center;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    min-width: 200px;
+    max-width: 450px;
+    width: 100%;
+    /* max-height: 40px; */
+    cursor: pointer;
+    transition: all 0.3s ease, color 0.3s ease;
+}
+.search-more-user-btn:hover {
+    background: var(--hover-bg-2);
+    color: var(--hover-text);
+    transform: scale(1.03);
+    /* border: 1px solid var(--navbar-text); */
+}
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .sidenav {
@@ -325,4 +334,3 @@
         margin-right: 0.5rem;
     }
 }
-
