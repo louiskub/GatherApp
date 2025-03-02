@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GatherApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250301154009_db2")]
+    [Migration("20250302060747_db2")]
     partial class db2
     {
         /// <inheritdoc />
@@ -155,6 +155,34 @@ namespace GatherApp.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("BehaviorScores");
+                });
+
+            modelBuilder.Entity("GatherApp.Models.ChatGlobal", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ProfileImg")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ChatGlobals");
                 });
 
             modelBuilder.Entity("GatherApp.Models.ChatMessage", b =>
