@@ -20,6 +20,7 @@
             <input type="text" id="globalMessageInput" class="inputBox" placeholder="Type your message..." required />
             
             <button id="emojiButton" class="emoji-main" onclick="toggleEmojiPicker()">😃</button>
+
             
             <div class="emoji-container">
                 <div id="emojiPicker" class="emoji-picker">
@@ -37,6 +38,12 @@
                     <button onclick="sendEmoji('🔥')">🔥</button>
                 </div>
             </div>
+
+            <select id="postSelectionDropdown">
+                <option value="">-- Select a Post to Invite --</option>
+            </select>
+
+            <button id="sendInviteButton" onclick="SendPostInvitation()">Invite</button>
             
             <button id="actionButton" class="sendIcon" onclick="handleSend()">
                 <i class="fa-solid fa-paper-plane"></i>

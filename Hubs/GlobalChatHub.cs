@@ -111,4 +111,48 @@ public class GlobalChatHub : Hub
         return messages.Cast<object>().ToList();
     }
 
+public async Task SendPostInvitation(int postId)
+{
+    try
+    {
+        Console.WriteLine($"[DEBUG] SendPostInvitation called with postId: {postId}, Type: {postId.GetType()}");
+
+        var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+        {
+            await Clients.Caller.SendAsync("Error", "Unauthorized: User ID not found.");
+            return;
+        }
+
+        Console.WriteLine($"[DEBUG] postId Type: {postId.GetType()}");
+
+        // 🔍 ตรวจสอบว่ามีโพสต์นี้จริงหรือไม่
+        var post = await _db.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+        if (post == null)
+        {
+            Console.WriteLine($"[ERROR] Post with ID {postId} not found.");
+            await Clients.Caller.SendAsync("Error", "Post not found.");
+            return;
+        }
+
+        var user = await _db.Users.FindAsync(userId);
+        string username = user?.Username ?? "Unknown";
+
+        Console.WriteLine($"[DEBUG] User '{username}' invited to post '{post.PostName}' ({postId})");
+
+        await Clients.Group("GlobalChat").SendAsync("ReceivePostInvitation", 
+            postId, post.PostName, post.Detail, username);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[ERROR] SendPostInvitation failed: {ex.Message}\n{ex.StackTrace}");
+        await Clients.Caller.SendAsync("Error", $"An unexpected error occurred: {ex.Message}");
+
+        throw;
+    }
+}
+
+
+
+
 }

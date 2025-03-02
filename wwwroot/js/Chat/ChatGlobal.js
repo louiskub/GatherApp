@@ -53,6 +53,63 @@ function setupGlobalChatListeners() {
     console.log("Global Chat listeners set up!");
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+    loadUserPosts();
+});
+
+function loadUserPosts() {
+    fetch("/api/user/getmyposts")
+        .then(response => response.json())
+        .then(posts => {
+            const dropdown = document.getElementById("postSelectionDropdown");
+            dropdown.innerHTML = `<option value="">-- Select a Post to Invite --</option>`;
+            
+            posts.forEach(post => {
+                let option = document.createElement("option");
+                option.value = post.id;
+                option.textContent = post.postName;
+                dropdown.appendChild(option);
+            });
+        })
+        .catch(error => console.error("Error loading posts:", error));
+}
+
+function SendPostInvitation() {
+    const dropdown = document.getElementById("postSelectionDropdown");
+    let postId = dropdown.value;
+
+    if (!postId) {
+        alert("Please select a post first!");
+        return;
+    }
+    
+    postId = parseInt(postId, 10);
+    console.log("[DEBUG] postId (before conversion):", postId, "Type:", typeof postId);
+    connection.invoke("SendPostInvitation", postId)
+    .catch(err => console.error("[ERROR] SendPostInvitation failed:", err));
+}
+
+connection.on("ReceivePostInvitation", (postId, postName, postDetail, username) => {
+    const chatBox = document.getElementById("globalChatBox");
+    const inviteContainer = document.createElement("div");
+    inviteContainer.className = "post-invite";
+
+    inviteContainer.innerHTML = `
+        <p><strong>${username}</strong> is inviting users to apply for:</p>
+        <div class="post-details">
+            <h4>${postName}</h4>
+            <p>${postDetail}</p>
+            <button onclick="applyForPost('${postId}')">Apply</button>
+        </div>
+    `;
+
+    chatBox.appendChild(inviteContainer);
+});
+
+function applyForPost(postId) {
+    window.location.href = `/api/user/applypost?postId=${encodeURIComponent(postId)}`;
+}
+
 function appendGlobalMessage(IsMine,username, message, sentAt, profileImageUrl) {
     console.log("Adding global message:", {IsMine, username, message, sentAt, profileImageUrl });
     let chatBox = document.getElementById("globalChatBox");
