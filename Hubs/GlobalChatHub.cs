@@ -52,13 +52,24 @@ public class GlobalChatHub : Hub
         _db.ChatGlobals.Add(globalMessage);
         await _db.SaveChangesAsync();
 
-        await Clients.Group("GlobalChat").SendAsync(
-            "ReceiveGlobalMessage",
-            username,
-            message,
-            globalMessage.SentAt.ToString("o"),
-            profileImageUrl
-        );
+        await Clients.OthersInGroup("GlobalChat").SendAsync(
+        "ReceiveGlobalMessage",
+        false, 
+        username,
+        message,
+        globalMessage.SentAt.ToString("o"),
+        profileImageUrl
+         );
+
+        await Clients.Caller.SendAsync(
+        "ReceiveGlobalMessage",
+        true, // เป็นข้อความของเรา
+        username,
+        message,
+        globalMessage.SentAt.ToString("o"),
+        profileImageUrl
+    );
+
     }
 
     public override async Task OnConnectedAsync()
@@ -69,17 +80,24 @@ public class GlobalChatHub : Hub
             _userConnections[Context.ConnectionId] = userId;
         }
 
+        var previousMessages = await LoadGlobalMessages();
+
+        await Clients.Caller.SendAsync("LoadPreviousMessages", previousMessages);
+
         await Groups.AddToGroupAsync(Context.ConnectionId, "GlobalChat");
 
         await base.OnConnectedAsync();
     }
 
-    public async Task LoadGlobalMessages()
+    public async Task<List<object>> LoadGlobalMessages()
     {
-        var messages = _db.ChatGlobals
+        var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var currentUserId = userId; 
+        var messages = await _db.ChatGlobals
             .OrderBy(m => m.SentAt)
             .Select(m => new
             {
+                IsMine = (m.UserId == currentUserId),
                 Username = _db.Users
                     .Where(u => u.Id == m.UserId)
                     .Select(u => u.Username)
@@ -87,8 +105,10 @@ public class GlobalChatHub : Hub
                 Message = m.Message,
                 SentAt = m.SentAt.ToUniversalTime().ToString("o"),
                 ProfileImg = m.ProfileImg
-            }).ToList();
+            })
+            .ToListAsync();
 
-        await Clients.Caller.SendAsync("LoadGlobalMessages", messages);
+        return messages.Cast<object>().ToList();
     }
+
 }

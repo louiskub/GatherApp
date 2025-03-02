@@ -8,6 +8,7 @@
     --login-submit-color: var(--bright-pink-crayola);
     --login-submit-hover: var(--bright-pink-crayola-2);
     --login-input-text: var(--outer-space);
+    --login-line-with-text: var(--slate-gray);
 
     --login-google-bg: var(--seasalt);
     --login-google-border: var(--french-gray);
@@ -15,18 +16,18 @@
 }
 
 [data-theme="dark"] {
-    --login-bg: var(--eerie-black);
+    --login-bg: black;
     --login-text: var(--seasalt);
-    --login-input-bg: var(--onyx);
+    --login-input-bg: var(--eerie-black);
     --login-border: var(--outer-space);
     --login-submit-color: var(--amaranth-purple);
     --login-submit-hover: var(--rose-red);
     --login-input-text: var(--french-gray);
+    --login-line-with-text: var(--onyx);
 
-    --login-google-bg: var(--outer-space);
-    --login-google-text: var(--seasalt);
+    --login-google-bg: var(--onyx);
     --login-google-border: var(--slate-gray);
-    --login-google-hover-bg: var(--onyx);
+    --login-google-hover-bg: var(--eerie-black);
 }
 
 
@@ -50,6 +51,10 @@
     max-width: 600px;
     text-align: center;
 }
+.login-title {
+    font-size: 2.3rem;
+    margin-bottom: 0.8rem;
+}
 
 .login-username, .login-password {
     margin-bottom: 1rem;
@@ -61,11 +66,6 @@
 }
 .login-username label, .login-password label {
     font-size: 1.2rem;
-}
-
-.login-title {
-    font-size: 2.3rem;
-    margin-bottom: 0.8rem;
 }
 
 .inputWrapper {
@@ -113,6 +113,24 @@
 }
 .login-button:hover {
     background: var(--login-submit-hover);
+}
+
+.login-line-with-text {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    font-size: 0.5rem;
+    margin-bottom: 1.6rem;
+    gap: 0.5rem;
+    color: var(--login-input-text);
+}
+
+.login-line-with-text::before,
+.login-line-with-text::after {
+    content: "";
+    flex: 1;
+    border-bottom: 0.5px solid var(--login-input-text);
 }
 
 .login-google-link {
