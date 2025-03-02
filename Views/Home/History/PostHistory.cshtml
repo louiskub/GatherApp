@@ -6,7 +6,7 @@
 
 <div class="pageContainer">
   <h1 class="top">Post History</h1>
-
+<!-- 
   <div class="containerStyle">
     <div class="indicator onGoing"></div>
     <div class="innerContainer">
@@ -32,15 +32,11 @@
 
       <div class="statusContainer">
 
-        <!-- <div class="">
-        <p class="textStyle">Approved: 15/20</p>
-        </div> -->
-
         <div class="switchContainer">
           <p class="switchText">OFF</p>
-          <label class="switch">
+          <label class="activitySwitch">
             <input type="checkbox" id="toggleSwitch">
-            <span class="slider"></span>
+            <span class="activitySlider"></span>
           </label>
         </div>
 
@@ -54,7 +50,7 @@
 
 
   <div class="containerStyle">
-    <div class="indicator done"></div>
+    <div class="indicator activityDone"></div>
     <div class="innerContainer">
       <div class="contentStyle">
         <h2>หาคนดูหนังเป็นเพื่อนครับเหงามากครับหาคนดูหนังเป็นเพื่อนครับเหงามากครับหาคนดูหนังเป็นเพื่อนครับเหงามากครับ</h2>
@@ -81,16 +77,15 @@
         <p class="textStyle">Canceled</p>
       </div>
     </div>
-  </div>
+  </div> -->
 
 </div>
-<!-- 
+<script  src="~/js/History/historyContainer.js"></script>
 <script>
-        const switchInput = document.getElementById("toggleSwitch");
-        const switchText = document.querySelector(".switchText");
+  const ActivityList = document.querySelector(".pageContainer");
+  const Activity1 = new HistoryActivity('Thu, Jan 30, 6:30 PM - 9:30 PM', 'onGoing', 'onGoing')
+  ActivityList.appendChild(Activity1.render())
 
-        switchInput.addEventListener("change", function() {
-          console.log("change")
-            switchText.textContent = this.checked ? "ON" : "OFF";
-        });
-</script> -->
+  const Activity6 = new HistoryActivity('Thu, Jan 30, 6:30 PM - 9:30 PM', 'done', 'done')
+  ActivityList.appendChild(Activity6.render())
+</script>

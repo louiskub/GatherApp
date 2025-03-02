@@ -1,13 +1,17 @@
 @{
     ViewData["Title"] = "Gather-ApplicationHistory";
+}
 
 <link rel="stylesheet" href="~/css/History/appHistory.css">
 }
 
-<div class="pageContainer">
-  <h1 class="top">Application History</h1>
 
-  <div class="containerStyle">
+<script src="~/js/History/historyContainer.js"></script>
+
+<div class="pageLayout">
+   <h1 class="top">Application History</h1>
+
+  <!--<div class="containerStyle">
     <div class="indicator finish"></div>
     <div class="innerContainer">
 
@@ -70,7 +74,25 @@
         <p class="textStyle">Rejected</p>
       </div>
     </div>
-  </div>
+  </div> -->
 
 
 </div>
+
+<script> 
+  const ActivityList = document.querySelector(".pageLayout");
+
+  const Activity2 = new HistoryActivity('Thu, Jan 30, 6:30 PM - 9:30 PM', 'finish', 'finish')
+  ActivityList.appendChild(Activity2.render())
+
+  const Activity3 = new HistoryActivity('Thu, Jan 30, 6:30 PM - 9:30 PM', 'accept', 'accept')
+  ActivityList.appendChild(Activity3.render())
+
+  const Activity4 = new HistoryActivity('Thu, Jan 30, 6:30 PM - 9:30 PM', 'pending', 'pending')
+  ActivityList.appendChild(Activity4.render())
+
+  const Activity5 = new HistoryActivity('Thu, Jan 30, 6:30 PM - 9:30 PM', 'reject', 'reject')
+  ActivityList.appendChild(Activity5.render())
+
+  
+</script>
