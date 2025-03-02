@@ -5,8 +5,8 @@
   margin: 0;
 } */
 
-.main {
-  /* background-color: blue; */
+.mainContainer {
+  background-color: lightblue;
   font-family: "Jost", sans-serif;
   color: var(--chocolate-cosmos);
   justify-content: center;

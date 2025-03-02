@@ -1,356 +1,224 @@
-document.addEventListener("DOMContentLoaded", function() {
-    document.querySelector(".reg_but").addEventListener("click", function() {
-        alert("You have successfully registered for this activity!");
-    });
+import LikePostHandler from "/js/components/handler/like_post_handler.js";
+import ToastTemplate from "/js/components/handler/toast_template.js";
+
+const urlParams = new URLSearchParams(window.location.search);
+const postId = urlParams.get('postid') || urlParams.get('postId');
+
+async function showPostDetail() {
+    async function fetchPost() {
+        const urlParams = window.location.search;
+        let response = await fetch(`/api/post${urlParams}`);
+        if (!response.ok) {
+            alert("Post not found");
+            return;
+        }
+        let post = await response.json();
+        console.log(post)
+        return post;
+    }
+
+    function chooseImg(profileImg){
+        if (profileImg == "" || profileImg == null) 
+            return "https://tr.rbxcdn.com/30DAY-Avatar-310966282D3529E36976BF6B07B1DC90-Png/352/352/Avatar/Png/noFilter"
+        else if(profileImg.length < 200) 
+            return profileImg
+        else 
+            return "data:image/jpeg;base64," + profileImg
+    }
+
+    let post = await fetchPost();
+    let isOwner = post.isOwner;
+    post = post.post;
+    let owner = post.owner;
+    let activity = post.activity;
+    let actTypes = post.actTypes;
+    let participants = post.participants;
+    post = post.post
+
+    const postName = document.querySelector(".post_act_name h2");
+    postName.textContent = post.postName;
+
+    const postOwner = document.querySelector(".actbox1_left");
+    postOwner.querySelector("img").src = chooseImg(owner.profileImg)
+    postOwner.querySelector("h2").textContent = owner.username
+
+    const deadline = document.querySelector(".deadline")
+    deadline.textContent = `Application Deadline: ${new Date(activity.closeDateTime).toLocaleString()}`
+    
+    const postImg = document.querySelector(".act_img img");
+    postImg.src = `data:image/jpeg;base64, ${post.coverPageImg}`;
+
+    const postDesc = document.querySelector(".act_descript");
+    postDesc.textContent = post.detail;
+
+    const googleMap = document.querySelector(".googlemap iframe");
+    googleMap.src = activity.googleMapLink;
+
+
+    const miniInfo = document.querySelector(".act_miniinfo");
+    const miniLeft = miniInfo.querySelector(".act_miniinfo_left");
+    const miniRight = miniInfo.querySelector(".act_miniinfo_right");
+
+    let formattedDate = new Date(activity.actDatetime).toLocaleString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+    }).toUpperCase().split(" ")
+    formattedDate[2] = formattedDate[2].replace(",", " -")
+    formattedDate = formattedDate.join(" ")
+    miniLeft.querySelector("h1").textContent = formattedDate;
+    miniLeft.querySelector("h2").textContent = post.postName;
+    miniLeft.querySelector("h3").textContent = activity.actName;
+    miniLeft.querySelectorAll("p")[0].textContent = `Accepted : ${post.curParticipant}/ ${post.maxParticipant}`;
+    miniLeft.querySelectorAll("p")[1].textContent = `Registered : ${post.totalApplicant}`;
+    
+    ///////////////// หัวใจ /////////////////
+    new LikePostHandler( miniRight.querySelector('i'), 
+                        miniRight.querySelector(".likes_num"), 
+                        post.id, post.like, post.isLiked);
+
+    ///////////////// Participants /////////////////
+    const memberContainer = document.querySelector(".member_container")
+    if (participants.length == 0) {
+        const tagP = document.createElement("p")
+        tagP.textContent = "No participants yet."
+        memberContainer.appendChild(tagP)
+    }
+    else 
+        participants.forEach((part) => {
+            const tagA = document.createElement("a")
+            tagA.href = `/profile?username=${part.username}`
+
+            const profileImg = document.createElement("img")
+            profileImg.classList.add("avatar")
+            profileImg.src = chooseImg(part.profileImg)
+
+            tagA.appendChild(profileImg)
+            memberContainer.appendChild(tagA)
+        })
+    
+    const tagContainer = document.querySelector(".tag_container");
+    actTypes.forEach((actType) => {
+        const tag = document.createElement("div");
+        tag.classList.add("tag");
+        tag.textContent = actType;
+        tagContainer.appendChild(tag);
+    })
+
+    const editBut = document.querySelector(".edit_but");
+    const viewBut = document.querySelector(".view_but");
+    const cancelBut = document.querySelector(".cancel_post_but");
+    const regBut = document.querySelector(".reg_but");
+    const appBut = document.querySelector(".app_but");
+
+    if (isOwner) {
+        editBut.style.display = "block";
+        viewBut.style.display = "block";
+        cancelBut.style.display = "block";
+    }else {
+        if (!post.isApplied){
+            regBut.style.display = "block";
+            if (post.isAttached)
+                appBut.style.display = "block";
+        }
+    }
+
+    ///////////////// Button Event /////////////////
+    console.log(regBut)
+    regBut.addEventListener("click", async function() {
+        const urlParams = new URLSearchParams(window.location.search)
+        const postId = urlParams.get('postid') || urlParams.get('postId');
+        
+        let apiSettings = {
+            method: "POST",
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json'}
+        }
+
+        const fileToBase64 = (file) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result.split(",")[1]); // ตัด "data:image/png;base64," ออก
+                reader.onerror = (error) => reject(error);
+            });
+        };
+        if (post.isAttached){
+            let fileInput = document.getElementById("fileInput").files[0]
+            if (!fileInput) 
+                return alert("Please attach a file before submitting.")
+            apiSettings.body = JSON.stringify(
+                { fileAttached: await fileToBase64(fileInput)}
+            )
+        }
+        let response = await fetch(`/api/user/applypost?postid=${postId}`, apiSettings)
+        if (!response.ok) 
+            console.log(response)
+        else {
+            if (response.redirected)
+                window.redirectToLogin();
+            else {
+                response = await response.json();
+                if (response.error) {
+                    alert(response.error)
+                } else {
+                    new ToastTemplate("You have successfully registered for this activity!", window.location.pathname + window.location.search).redirect();
+                }
+            }
+        }
+    })
+
     document.querySelector(".cancel_post_but").addEventListener("click", function() {
         alert("You have canceled this activity!");
     });
-});
-
-function openPopup() {
-    document.getElementById("popup_app").style.display = "block";
-    document.getElementById("overlay").style.display = "block";
 }
 
-function closePopup() {
-    document.getElementById("popup_app").style.display = "none";
-    document.getElementById("overlay").style.display = "none";
-}
 
-function submitApplication() {
-    const fileInput = document.getElementById("fileInput");
-    if (fileInput.files.length === 0) {
-        alert("Please attach a file before submitting.");
-    } else {
-        alert("Application submitted successfully!");
-        closePopup();
-    }
-}
-
-const heart = document.querySelector('.heart i');
-const likesNum = document.querySelector('.likes_num');
-
-heart.addEventListener('click', () => {
-    let likes = parseInt(likesNum.textContent);
-
-    if (heart.classList.contains('fa-regular')) {
-        heart.classList.replace('fa-regular', 'fa-solid'); 
-        likes++;
-    } else {
-        heart.classList.replace('fa-solid', 'fa-regular');
-        likes--;
-    }
-
-    likesNum.textContent = likes;
+document.addEventListener("DOMContentLoaded", async function() {
+    await showPostDetail();
 });
 
+// const heart = document.querySelector('.heart i');
+// const likesNum = document.querySelector('.likes_num');
 
+// heart.addEventListener("click", async (event) => {
+//     event.stopPropagation();
+//     event.preventDefault();
 
-const popup = document.getElementById('createPostPopup');
-const writeButton = document.querySelector('.edit_but');
-const cancelButton = document.querySelector('.cancel_but');
-const createButton = document.querySelector('.create_but');
-const imageUpload = document.getElementById('imageUpload');
-const previewImage = document.getElementById('previewImage');
-const uploadText = document.querySelector('.upload_text');
+//     async function likePost() {
+//         // const urlParams = window.location.search;
+//         const urlParams = new URLSearchParams(window.location.search);
+//         const postId = urlParams.get('postid') || urlParams.get('postId');
+//         let response = await fetch(`/api/post/togglelike/${postId}`, {
+//             method: "POST",
+//             credentials: 'include'
+//         })
+//         if (response.ok) {
+//             if (response.redirected)
+//                 window.location.href = response.url
+//             else {
+//                 response = await response.json();
+//                 return response
+//             }
+//         } else {
+//             return { error: response.status }
+//         }
+//     }
 
-// ฟังก์ชันแสดง Popup เมื่อคลิกปุ่ม Cancel
-cancelButton.addEventListener('click', () => {
-    popup.style.display = 'none';
-    document.body.classList.remove('no-scroll');
-});
-
-// ฟังก์ชันแสดง Popup เมื่อคลิกปุ่ม Create
-writeButton.addEventListener('click', () => {
-    popup.style.display = 'flex';
-    document.body.classList.add('no-scroll');
-});
-
-// ฟังก์ชัน triggerUpload
-function triggerUpload() {
-    imageUpload.click(); // ทำให้การคลิกที่ preview กระตุ้นการคลิกที่ input[type="file"]
-}
-
-// ฟังการเปลี่ยนแปลงไฟล์ที่เลือก
-imageUpload.addEventListener('change', (event) => {
-    const file = event.target.files[0]; // รับไฟล์ที่เลือก
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            previewImage.src = e.target.result; // แสดงภาพที่เลือก
-            previewImage.style.display = 'block'; // แสดงภาพที่เลือก
-            uploadText.style.display = 'none'; // ซ่อนข้อความ "Upload Image"
-        };
-        reader.readAsDataURL(file); // อ่านไฟล์ที่เลือกเพื่อแสดงในรูปแบบ Base64
-    }
-});
-
-// ผูกเหตุการณ์คลิกที่ preview ให้เรียกฟังก์ชัน triggerUpload
-const preview = document.querySelector('.preview');
-preview.addEventListener('click', triggerUpload);
-
-document.addEventListener("DOMContentLoaded", function () {
-    let deadlineInput = document.getElementById("deadline");
-    let eventInput = document.getElementById("eventdate");
-    let deadlineErrorMsg = document.getElementById("deadline-error-msg");
-    let eventErrorMsg = document.getElementById("event-error-msg");
-
-    function updateMinDateTime() {
-        let now = new Date();
-        let minDateTime = now.toISOString().slice(0, 16);
-
-        deadlineInput.min = minDateTime;
-        eventInput.min = minDateTime;
-    }
-
-    function validateDeadline() {
-        let deadlineValue = new Date(deadlineInput.value);
-        let now = new Date();
-
-        if (deadlineValue < now) {
-            deadlineErrorMsg.style.display = "block";
-            deadlineInput.value = "";
-        } else {
-            deadlineErrorMsg.style.display = "none";
-            validateEventDate(); // ตรวจสอบ Event Date ด้วย
-        }
-    }
-
-    function validateEventDate() {
-        let deadlineValue = new Date(deadlineInput.value);
-        let eventValue = new Date(eventInput.value);
-        let now = new Date();
-
-        if (eventValue < now || (deadlineInput.value && eventValue <= deadlineValue)) {
-            eventErrorMsg.style.display = "block";
-            eventInput.value = "";
-        } else {
-            eventErrorMsg.style.display = "none";
-        }
-    }
-
-    // ตั้งค่า min เมื่อโหลดหน้าเว็บ
-    updateMinDateTime();
-
-    // ตรวจสอบเมื่อมีการเปลี่ยนค่า
-    deadlineInput.addEventListener("input", validateDeadline);
-    eventInput.addEventListener("input", validateEventDate);
-});
-
-
-
-
-
-///////////////////// MULTI SELECT TAG //////////////////////////////////////////////////////////////
-const tagContainer = document.getElementById('tag-container');
-const tagOptions = document.getElementById('tag-options');
-const tagList = document.getElementById('tag-list');
-const tagPlaceholder = document.getElementById('tag-placeholder');
-const maxTags = 3;
-const tagLimitMsg = document.getElementById('tag-limit-msg');
-
-// เพิ่ม position relative ให้กับ tag-container และกำหนด z-index
-tagContainer.style.position = 'relative'; // เพิ่ม position relative
-tagOptions.style.zIndex = '2001'; // เพิ่ม z-index ให้กับ tag-options
-tagContainer.style.zIndex = '1'; // ลด z-index ของ tag-container ถ้าจำเป็น
-
-tagContainer.addEventListener('click', function (e) {
-    if (e.target.classList.contains('remove-tag')) return;
-    tagOptions.classList.toggle('active');
-});
-
-tagOptions.addEventListener('click', function (e) {
-    if (e.target.dataset.value && !e.target.classList.contains('hidden')) {
-        const value = e.target.dataset.value;
-        const existingTags = [...tagList.querySelectorAll('.tag-item')].map(tag => tag.dataset.value);
-
-        if (!existingTags.includes(value) && existingTags.length < maxTags) {
-            const tag = document.createElement('span');
-            tag.className = 'tag-item';
-            tag.dataset.value = value;
-            tag.textContent = value;
-            tag.innerHTML += ` <span class="remove-tag">&times;</span>`;
-            tagList.appendChild(tag);
-            updateTagPlaceholder();
-            checkTagLimit();
-        }
-    }
-});
-
-tagList.addEventListener('click', function (e) {
-    if (e.target.classList.contains('remove-tag')) {
-        const tag = e.target.parentElement;
-        tagList.removeChild(tag);
-        updateTagPlaceholder();
-        checkTagLimit();
-    }
-});
-
-document.addEventListener('click', function (e) {
-    if (!tagContainer.contains(e.target)) {
-        tagOptions.classList.remove('active');
-    }
-});
-
-function updateTagPlaceholder() {
-    if (tagList.querySelectorAll('.tag-item').length === 0) {
-        tagPlaceholder.style.display = 'inline';
-    } else {
-        tagPlaceholder.style.display = 'none';
-    }
-}
-
-function checkTagLimit() {
-    const selectedCount = tagList.querySelectorAll('.tag-item').length;
-    if (selectedCount >= maxTags) {
-        document.querySelectorAll('.tag-options div[data-value]').forEach(option => {
-            option.classList.add('hidden');
-        });
-        tagLimitMsg.style.display = 'block';
-    } else {
-        document.querySelectorAll('.tag-options div[data-value]').forEach(option => {
-            option.classList.remove('hidden');
-        });
-        tagLimitMsg.style.display = 'none';
-    }
-}
-
-updateTagPlaceholder();
-
-///////////////////// SELECT PROVINCE & DISTRICT //////////////////////////////////////////////////////////////
-
-class Select{
-    constructor(data, name){
-        this.select = document.createElement('select');
-        this.select.id = name;
-        this.select.name = name;
-        this.select.appendChild(new Option(`Select ${name}`, null));
-        data.forEach((e) => {
-            this.select.appendChild(new Option(e.eng, e.id));
-        });
-    }
-    render(){
-        return this.select;
-    }
-}
-
-async function ProvincesAndAmphures(){
-    let province, filteredAmp, amphure 
-
-    async function GetProvincesAndAmphures(){
-        await fetch("/js/GOLF/provinces.json").then(response => response.json())
-                        .then(data => {
-                            province = data
-                        })
-                        .catch(error => console.error("Error loading JSON:", error));
-        await fetch("/js/GOLF/amphures.json")
-                        .then(response => response.json())
-                        .then(data => {
-                            amphure = data
-                        })
-                        .catch(error => console.error("Error loading JSON:", error));
-    }
-
-    async function filterAmphure(provId){
-        filteredAmp = amphure.filter((a) => {
-            if (provId == a.province_id)
-                return a
-        }) 
-        
-    }
-
-    await GetProvincesAndAmphures()
-
-    let test = document.querySelector(".location_container")
-    let tempSpan = document.createElement("span")
-
-    let provinceSel = new Select(province, "Province").render()
-    test.appendChild(provinceSel);
-    test.appendChild(tempSpan)
-    provinceSel.addEventListener('change', function() {
-        if (provinceSel.value != "null"){
-            filterAmphure(provinceSel.value)
-            let amphureSel = new Select(filteredAmp, "Amphure").render()
-            test.replaceChild(amphureSel, test.lastChild)
-        }
-        else
-        {
-            test.replaceChild(tempSpan, test.lastChild)
-        }
-    })
-}
-
-ProvincesAndAmphures();
-
-
-
-
-/////////////////Check Input Before Create/////////////////////////////////////////////////////////
-// ฟังก์ชันตรวจสอบการกรอกข้อมูลในฟอร์มทั้งหมด
-function validateForm() {
-    const activityName = document.querySelector('.create_act_name input').value;
-    const description = document.querySelector('.descript_create').value;
-    const eventDate = document.getElementById('eventdate').value;
-    const deadline = document.getElementById('deadline').value;
-    const participantsNeeded = document.querySelector('.parti_needed input').value;
-    
-    // ตรวจสอบว่าแต่ละฟิลด์ถูกกรอกหรือไม่
-    if (!activityName || !description || !eventDate || !deadline || !participantsNeeded) {
-        alert("Please fill out all required fields.");
-        return false;
-    }
-
-    // ตรวจสอบว่าได้เลือกแท็กหรือไม่
-    const selectedTags = document.querySelectorAll('.tag-item');
-    if (selectedTags.length === 0) {
-        alert("Please select at least one tag.");
-        return false;
-    }
-
-    // ตรวจสอบว่าเลือกจำนวนผู้เข้าร่วมมากกว่า 0 หรือไม่
-    if (parseInt(participantsNeeded) <= 0) {
-        alert("Please enter a valid number for participants needed.");
-        return false;
-    }
-
-    // ตรวจสอบการเลือก Province และ Amphure
-    const provinceSelect = document.querySelector('#Province');
-    const amphureSelect = document.querySelector('#Amphure');
-    if (provinceSelect && provinceSelect.value === "null") {
-        alert("Please select a province.");
-        return false;
-    }
-
-    if (amphureSelect && amphureSelect.value === "null") {
-        alert("Please select an amphure.");
-        return false;
-    }
-
-    // ตรวจสอบ Google Map Link (กรอกลิงก์ iframe หรือ link ปกติ)
-    const googleMapLink = document.querySelector('.input_map_link input').value;
-    if (!googleMapLink) {
-        alert("Please enter a Google Map Link.");
-        return false;
-    }
-
-    // ตรวจสอบการอัปโหลดภาพ (Preview Image)
-    const imageUpload = document.getElementById('imageUpload');
-    if (!imageUpload.files.length) {
-        alert("Please upload an image.");
-        return false;
-    }
-
-    // ถ้าทุกอย่างโอเค return true
-    return true;
-}
-
-// ฟังก์ชันที่ใช้ในปุ่ม Create
-createButton.addEventListener('click', () => {
-    // เรียกใช้งาน validateForm ก่อนที่จะอนุญาตให้โพสต์
-    if (validateForm()) {
-        alert("Create Post successfully!");
-        popup.style.display = 'none';
-    }
-});
-
-
+//     let response = await likePost();
+//     // console.log(response)
+//     if (response.error) {
+//         console.error("Like error:", response.error);
+//     }
+//     else if (response.isLiked){
+//         heart.classList.replace("fa-regular", "fa-solid");
+//         likesNum.textContent = response.like;
+//     }
+//     else {
+//         heart.classList.replace("fa-solid", "fa-regular");
+//         likesNum.textContent = response.like;
+//     }
+// });

@@ -153,7 +153,8 @@
     color: var(--miniinfo_locate-color);
 }
 
-.act_miniinfo_left p{
+.act_miniinfo_left p,
+.member_container p{
     font-size: 18px;
     font-weight: 500;
 }
@@ -265,6 +266,14 @@
     flex-direction: column;
     padding: 10px;
     gap: 10px;
+}
+
+.app_but,
+.reg_but,
+.edit_but,
+.view_but,
+.cancel_post_but{
+    display: none;
 }
 
 .app_but{

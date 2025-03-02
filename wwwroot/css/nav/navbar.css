@@ -206,11 +206,19 @@ input:checked + .switch .dark-text {
     font-size: 1.8rem;
     z-index: 3;
     padding-right: 0.5rem;
-    color: var(--navbar-text);
+    /* color: var(--navbar-text); */
+    width: 50px;
+    height: 50px;
+    img {
+        background-color: var(--user-menu-a-bg);
+        border-radius: 50%;
+        border: 2px solid var(--text-color);
+    }
+    
 }
 .menu-toggle .close-icon {
     display: none;
-    padding: 3.5px;
+    /* padding: 3.5px; */
 }
 
 /* Responsive */

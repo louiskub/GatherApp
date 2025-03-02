@@ -5,7 +5,7 @@ Menu = document.querySelector(".menu");
 
 const link = document.createElement("link");
 link.rel = "stylesheet";
-
+link.href = "/css/nav/nav_auth.css";
 console.log('Authorized');
 
 Head.appendChild(link);
@@ -13,8 +13,8 @@ Head.appendChild(link);
 RightNavbar.innerHTML = `                
 <button class="noti" href="#" aria-label="Notifications"><i class="fa fa-fw fa-bell"></i></button>
 <button class="menu-toggle" aria-label="Open Menu">
-    <i class="fa fa-bars open-icon"></i>
-    <i class="fa fa-times close-icon"></i>
+    <img class="fa fa-bars open-icon" src="https://craftycotton.co/wp-content/uploads/2024/09/d987aaeb-e902-495b-805e-91cb90e56215.png"></img>
+    <img class="fa fa-times close-icon" src="https://craftycotton.co/wp-content/uploads/2024/09/d987aaeb-e902-495b-805e-91cb90e56215.png"></img>
 </button>`;
 
 Menu.innerHTML = `
@@ -32,7 +32,6 @@ Menu.innerHTML = `
 <p>UsernameKubeieijububu55567890</p> */}
 
 const script = document.createElement("script");
-link.href = "/css/nav/nav_auth.css";
 script.type = "module";
 script.src = "/js/nav/nav_auth.js";
 Body.appendChild(script);
