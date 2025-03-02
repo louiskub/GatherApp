@@ -222,3 +222,405 @@ document.addEventListener("DOMContentLoaded", async function() {
 //         likesNum.textContent = response.like;
 //     }
 // });
+
+
+
+
+
+
+//////////////////////////////////////EDIT POPUP//////////////////////////////////////////////////////////////
+// Select DOM elements with a helper function
+const $ = selector => document.querySelector(selector);
+const $$ = selector => document.querySelectorAll(selector);
+
+// Get all required elements
+const elements = {
+  popup: $('#popup_create'),
+  canceleditButton: $('.cancel_edit_but'),
+  submiteditButton: $('.submit_edit_but'),
+  imageUpload: $('#imageUpload'),
+  previewImage: $('#previewImage'),
+  uploadText: $('.preview_text'),
+  tagContainer: $('#tag-container'),
+  tagList: $('#tag-list'),
+  tagOptions: $('#tag-options'),
+  tagPlaceholder: $('#tag-placeholder'),
+  tagLimitMsg: $('#tag-limit-msg'),
+  preview: $('.preview'),
+  locationContainer: $('.location_container')
+};
+
+// Constants
+const MAX_TAGS = 3;
+const MAX_IMAGE_SIZE = 2000000;
+
+// Initialize event listeners
+function initEventListeners() {
+  // Image upload
+  elements.preview.addEventListener('click', () => elements.imageUpload.click());
+  elements.imageUpload.addEventListener('change', handleImageUpload);
+
+  // Tag selection
+  elements.tagContainer.style.position = 'relative';
+  elements.tagOptions.style.zIndex = '2001';
+  elements.tagContainer.style.zIndex = '1';
+
+  elements.tagContainer.addEventListener('click', e => {
+    if (!e.target.classList.contains('remove-tag')) {
+      elements.tagOptions.classList.toggle('active');
+    }
+  });
+
+  elements.tagOptions.addEventListener('click', handleTagSelection);
+  elements.tagList.addEventListener('click', handleTagRemoval);
+
+  document.addEventListener('click', e => {
+    if (!elements.tagContainer.contains(e.target)) {
+      elements.tagOptions.classList.remove('active');
+    }
+  });
+
+  // Create button
+  elements.submiteditButton.addEventListener('click', validateForm);
+}
+
+// Handle image upload
+function handleImageUpload(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      elements.previewImage.src = e.target.result;
+      elements.previewImage.style.display = 'block';
+      elements.uploadText.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+// Handle tag selection
+function handleTagSelection(e) {
+  if (e.target.dataset.value && !e.target.classList.contains('hidden')) {
+    const value = e.target.dataset.value;
+    const existingTags = [...elements.tagList.querySelectorAll('.tag-item')].map(tag => tag.dataset.value);
+
+    if (!existingTags.includes(value) && existingTags.length < MAX_TAGS) {
+      const tag = document.createElement('span');
+      tag.className = 'tag-item';
+      tag.dataset.value = value;
+      tag.innerHTML = `${value} <span class="remove-tag">&times;</span>`;
+      elements.tagList.appendChild(tag);
+      updateTagPlaceholder();
+      checkTagLimit();
+    }
+  }
+}
+
+// Handle tag removal
+function handleTagRemoval(e) {
+  if (e.target.classList.contains('remove-tag')) {
+    elements.tagList.removeChild(e.target.parentElement);
+    updateTagPlaceholder();
+    checkTagLimit();
+  }
+}
+
+// Update tag placeholder visibility
+function updateTagPlaceholder() {
+  elements.tagPlaceholder.style.display = 
+    elements.tagList.querySelectorAll('.tag-item').length === 0 ? 'inline' : 'none';
+}
+
+// Check tag limit
+function checkTagLimit() {
+  const selectedCount = elements.tagList.querySelectorAll('.tag-item').length;
+  const options = $$('.tag-options div[data-value]');
+  
+  if (selectedCount >= MAX_TAGS) {
+    options.forEach(option => option.classList.add('hidden'));
+    elements.tagLimitMsg.style.display = 'block';
+  } else {
+    options.forEach(option => option.classList.remove('hidden'));
+    elements.tagLimitMsg.style.display = 'none';
+  }
+}
+
+// Initialize date validation
+function initDateValidation() {
+  const deadlineInput = $('#deadline');
+  const eventInput = $('#eventdate');
+  const deadlineErrorMsg = $('#deadline-error-msg');
+  const eventErrorMsg = $('#event-error-msg');
+
+  // Set minimum date/time to now
+  function updateMinDateTime() {
+    const minDateTime = new Date().toISOString().slice(0, 16);
+    deadlineInput.min = minDateTime;
+    eventInput.min = minDateTime;
+  }
+
+  // Validate deadline
+  function validateDeadline() {
+    const deadlineValue = new Date(deadlineInput.value);
+    const now = new Date();
+
+    if (deadlineValue < now) {
+      deadlineErrorMsg.style.display = "block";
+      deadlineInput.value = "";
+    } else {
+      deadlineErrorMsg.style.display = "none";
+      validateEventDate();
+    }
+  }
+
+  // Validate event date
+  function validateEventDate() {
+    const deadlineValue = new Date(deadlineInput.value);
+    const eventValue = new Date(eventInput.value);
+    const now = new Date();
+
+    if (eventValue < now || (deadlineInput.value && eventValue <= deadlineValue)) {
+      eventErrorMsg.style.display = "block";
+      eventInput.value = "";
+    } else {
+      eventErrorMsg.style.display = "none";
+    }
+  }
+
+  updateMinDateTime();
+  deadlineInput.addEventListener("input", validateDeadline);
+  eventInput.addEventListener("input", validateEventDate);
+}
+
+// Fetch activity types
+async function fetchAllActTypes() {
+  try {
+    const response = await fetch("/api/acttype");
+    return response.ok ? await response.json() : [];
+  } catch (error) {
+    console.error("Error loading JSON:", error);
+    return [];
+  }
+}
+
+// Initialize activity types
+async function initActivityTypes() {
+  const actTypes = await fetchAllActTypes();
+  actTypes.forEach(actType => {
+    const div = document.createElement('div');
+    div.dataset.value = actType;
+    div.textContent = actType;
+    elements.tagOptions.appendChild(div);
+  });
+}
+
+// Select class for dropdowns
+class Select {
+  constructor(data, name) {
+    this.select = document.createElement('select');
+    this.select.id = name;
+    this.select.name = name;
+    this.select.appendChild(new Option(`Select ${name}`, null));
+    data.forEach(e => {
+      this.select.appendChild(new Option(e.eng, e.id));
+    });
+  }
+  render() {
+    return this.select;
+  }
+}
+
+// Initialize provinces and amphures
+async function initProvincesAndAmphures() {
+  let province, amphure;
+
+  // Fetch data
+  try {
+    const [provinceResponse, amphureResponse] = await Promise.all([
+      fetch("/js/GOLF/provinces.json").then(res => res.json()),
+      fetch("/js/GOLF/amphures.json").then(res => res.json())
+    ]);
+    
+    province = provinceResponse;
+    amphure = amphureResponse;
+  } catch (error) {
+    console.error("Error loading JSON:", error);
+    return;
+  }
+
+  // Filter amphures by province
+  function filterAmphure(provId) {
+    return amphure.filter(a => a.province_id == provId);
+  }
+
+  const tempSpan = document.createElement("span");
+  const provinceSel = new Select(province, "Province").render();
+  
+  elements.locationContainer.appendChild(provinceSel);
+  elements.locationContainer.appendChild(tempSpan);
+  
+  provinceSel.addEventListener('change', function() {
+    if (provinceSel.value != "null") {
+      const filteredAmp = filterAmphure(provinceSel.value);
+      const amphureSel = new Select(filteredAmp, "Amphure").render();
+      elements.locationContainer.replaceChild(amphureSel, elements.locationContainer.lastChild);
+    } else {
+      elements.locationContainer.replaceChild(tempSpan, elements.locationContainer.lastChild);
+    }
+  });
+}
+
+// Validate form before submission
+async function validateForm() {
+    // Get form values
+    const activityName = $('.create_act_name input').value;
+    const description = $('.descript_create').value;
+    const eventDate = $('#eventdate').value;
+    const deadline = $('#deadline').value;
+    const participantsNeeded = $('.parti_needed input').value;
+    const googleMapLink = $('.input_map_link input').value;
+    const selectedTags = $$('.tag-item');
+    const provinceSelect = $('#Province');
+    const amphureSelect = $('#Amphure');
+  
+    // Check each field individually
+    if (!elements.imageUpload.files.length) {
+        window.showToast("Please upload an image.", "warning");
+        return false;
+    }
+    
+    if (elements.previewImage.src.length > MAX_IMAGE_SIZE) {
+        window.showToast("Image size is too large. Please upload an image less than 2 MB.", "warning");
+        return false;
+    }
+
+    if (!description) {
+        window.showToast("Please enter activity description.", "warning");
+        return false;
+    }
+    
+    if (!activityName) {
+      window.showToast("Please enter activity name.", "warning");
+      return false;
+    }
+    
+    if (selectedTags.length === 0) {
+        window.showToast("Please select at least one tag.", "warning");
+        return false;
+    }
+
+    if (!provinceSelect || provinceSelect.value === "null") {
+        window.showToast("Please select a province.", "warning");
+        return false;
+    }
+    
+    if (!amphureSelect || amphureSelect.value === "null") {
+        window.showToast("Please select an amphure.", "warning");
+        return false;
+    }
+    
+    if (!googleMapLink) {
+        window.showToast("Please enter a Google Map Link.", "warning");
+        return false;
+    }
+    
+    if (!eventDate) {
+      window.showToast("Please select event date.", "warning");
+      return false;
+    }
+    
+    if (!deadline) {
+      window.showToast("Please select deadline date.", "warning");
+      return false;
+    }
+    
+    if (!participantsNeeded) {
+      window.showToast("Please enter number of participants needed.", "warning");
+      return false;
+    }
+  
+    if (parseInt(participantsNeeded) <= 0) {
+      window.showToast("Please enter a valid number for participants needed.", "warning");
+      return false;
+    }
+  
+    await editPost();
+  }
+
+// Edit post
+async function editPost() {
+  const isAttached = $('.check_attach_file input').checked;
+  const provinceSelect = $('#Province');
+  const amphureSelect = $('#Amphure');
+  const provinceText = provinceSelect.options[provinceSelect.selectedIndex].text;
+  const amphureText = amphureSelect.options[amphureSelect.selectedIndex].text;
+  const googleMapLink = $('.input_map_link input').value;
+  const activityName = $('.create_act_name input').value;
+  const description = $('.descript_create').value;
+  const participantsNeeded = $('.parti_needed input').value;
+  const deadline = $('#deadline').value;
+  const eventDate = $('#eventdate').value;
+  const selectedTags = $$('.tag-item');
+
+  // Extract iframe src if present
+  const match = googleMapLink.match(/<iframe[^>]*\bsrc=["']([^"']+)["']/i);
+  const resultMap = match ? match[1] : googleMapLink;
+
+  // Prepare image data
+  const sendImg = elements.previewImage.src.split(",")[1];
+  
+  // Prepare tags
+  const tags = Array.from(selectedTags).map(tag => tag.dataset.value);
+
+  // Set today's date
+  const today = new Date();
+  today.setHours(7, 0, 0, 0);
+  
+  try {
+    const response = await fetch("/api/post", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        postName: activityName,
+        detail: description,
+        isAttached: isAttached,
+        maxParticipant: participantsNeeded,
+        closeDateTime: deadline,
+        actDatetime: eventDate,
+        province: provinceText,
+        district: amphureText,
+        online: false,
+        googleMapLink: resultMap,
+        actTypes: tags,
+        coverPageImg: sendImg
+      })
+    });
+
+    if (response.redirected) {
+      elements.popup.style.display = 'none';
+      window.redirectToLogin();
+    } else if (!response.ok) {
+      window.showToast("Failed to create post.", "error");
+    } else {
+      await window.changeToast("Post created successfully", "/", "success");
+      elements.popup.style.display = 'none';
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    window.showToast("Failed to create post.", "error");
+  }
+}
+
+// Initialize everything
+document.addEventListener("DOMContentLoaded", async () => {
+  initEventListeners();
+  initDateValidation();
+  await initActivityTypes();
+  await initProvincesAndAmphures();
+  updateTagPlaceholder();
+});
+
+// For testing
+console.log("Refactored post creation script loaded");
