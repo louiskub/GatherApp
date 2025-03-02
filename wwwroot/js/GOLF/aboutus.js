@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
         x: Math.random() * window.innerWidth,
         y: Math.random() * window.innerHeight,
         size: Math.random() * 20 + 5,
-        color: `rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},0.8)`,
+        color: `rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},1.0)`,
         speedX: Math.random() * 0.5 - 0.25,
         speedY: Math.random() * 0.5 - 0.25,
       }
