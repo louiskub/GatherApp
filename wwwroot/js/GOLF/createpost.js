@@ -271,23 +271,23 @@ async function validateForm() {
     const eventDate = document.getElementById('eventdate').value;
     const deadline = document.getElementById('deadline').value;
     const participantsNeeded = document.querySelector('.parti_needed input').value;
-    
     // ตรวจสอบว่าแต่ละฟิลด์ถูกกรอกหรือไม่
     if (!activityName || !description || !eventDate || !deadline || !participantsNeeded) {
-        alert("Please fill out all required fields.");
+        // window.showToast("Please fill out all required fields.");
+        window.showToast("Please fill out all required fields.", "warning");
         return false;
     }
 
     // ตรวจสอบว่าได้เลือกแท็กหรือไม่
     const selectedTags = document.querySelectorAll('.tag-item');
     if (selectedTags.length === 0) {
-        alert("Please select at least one tag.");
+        window.showToast("Please select at least one tag.", "warning");
         return false;
     }
 
     // ตรวจสอบว่าเลือกจำนวนผู้เข้าร่วมมากกว่า 0 หรือไม่
     if (parseInt(participantsNeeded) <= 0) {
-        alert("Please enter a valid number for participants needed.");
+        window.showToast("Please enter a valid number for participants needed.", "warning");
         return false;
     }
 
@@ -295,19 +295,19 @@ async function validateForm() {
     const provinceSelect = document.querySelector('#Province');
     const amphureSelect = document.querySelector('#Amphure');
     if (provinceSelect && provinceSelect.value === "null") {
-        alert("Please select a province.");
+        window.showToast("Please select a province.", "warning");
         return false;
     }
 
     if (amphureSelect && amphureSelect.value === "null") {
-        alert("Please select an amphure.");
+        window.showToast("Please select an amphure.", "warning");
         return false;
     }
 
     // ตรวจสอบ Google Map Link (กรอกลิงก์ iframe หรือ link ปกติ)
     const googleMapLink = document.querySelector('.input_map_link input').value;
     if (!googleMapLink) {
-        alert("Please enter a Google Map Link.");
+        window.showToast("Please enter a Google Map Link.", "warning");
         return false;
     }
 
@@ -315,11 +315,11 @@ async function validateForm() {
     const imageUpload = document.getElementById('imageUpload');
     console.log(previewImage.src.length)
     if (!imageUpload.files.length) {
-        alert("Please upload an image.");
+        window.showToast("Please upload an image.", "warning");
         return false;
     }
     if (previewImage.src.length > 2000000) {
-        alert("Image size is too large. Please upload an image less than 2 MB.");
+        window.showToast("Image size is too large. Please upload an image less than 2 MB.", "warning");
         return false;
     }
     
@@ -328,7 +328,11 @@ async function validateForm() {
         const isAttached = document.querySelector(".check_attach_file input").checked
         const provinceText = provinceSelect.options[provinceSelect.selectedIndex].text;
         const amphureText = amphureSelect.options[amphureSelect.selectedIndex].text;
-        
+
+        const mapSrc = googleMapLink
+        const match = mapSrc.match(/<iframe[^>]*\bsrc=["']([^"']+)["']/i);
+        const resultMap = match ? match[1] : null;
+
         let sendImg = previewImage.src.split(",")[1]
         let tags = []
         selectedTags.forEach((tag) => {
@@ -357,7 +361,7 @@ async function validateForm() {
                 province: provinceText,
                 district: amphureText,
                 online: false,
-                googleMapLink: googleMapLink,
+                googleMapLink: resultMap,
     
                 actTypes: tags,
                 coverPageImg: sendImg
@@ -368,17 +372,15 @@ async function validateForm() {
             return
         })
         if (response.redirected){
-            if (confirm("You need to log in before creating a post. Do you want to go to the login page?")) {
-                window.location.href = "/login";
-            }
+            popup.style.display = 'none';
+            window.redirectToLogin()
         }
         else if (!response.ok) {
-            alert("Failed to create post.");
+            window.showToast("Failed to create post.", "error");
         }
         else {
-            alert("Create Post successfully!");
+            await window.changeToast("Post created successfully", "/", "success")
             popup.style.display = 'none';
-            window.location.reload();
         }
     }
     await createPost();
