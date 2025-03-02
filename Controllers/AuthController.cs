@@ -9,6 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication;
 
 
 namespace GatherApp.Controllers;
@@ -17,13 +19,14 @@ public class AuthController : Controller
 {
     private readonly AppDbContext _db;
     private readonly JwtService _jwtService;
+    // private readonly GoogleAuthService _googleAuthService;
 
     public AuthController(AppDbContext db, JwtService jwtService)
     {
         _db = db;
         _jwtService = jwtService;
     }
-
+    
     public IActionResult Index()
     {
         return View();
@@ -156,7 +159,8 @@ public class AuthController : Controller
                     Password = BCrypt.Net.BCrypt.HashPassword(obj.Password),
                     FirstName = obj.FirstName  ?? "Unknown",
                     LastName = obj.LastName ?? "Unknown",
-                    DateOfBirth = obj.DateOfBirth ?? DateTime.UtcNow.AddDays(-2)
+                    DateOfBirth = obj.DateOfBirth ?? DateTime.UtcNow.AddDays(-2),
+                    Sex = obj.Sex ?? "Unknown",
                 };
 
                 _db.Users.Add(user);

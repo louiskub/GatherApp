@@ -4,8 +4,15 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using GatherApp.Data;
+using Microsoft.AspNetCore.Authentication.Google;
+using GatherApp.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
+
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 var secretKey = builder.Configuration["JwtSettings:SecretKey"];
 if (string.IsNullOrEmpty(secretKey))
 {
@@ -23,7 +30,7 @@ builder.Services.AddCors(options =>
 });
 
 
-// Add Sql
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -31,10 +38,21 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     )
 );
 
-
-// Add JWT Authentication
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options => {
+    builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme; 
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; 
+    })
+    .AddCookie() 
+    .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+    {
+        options.ClientId = builder.Configuration["GoogleAuth:ClientId"];
+        options.ClientSecret = builder.Configuration["GoogleAuth:ClientSecret"];
+        options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
@@ -57,12 +75,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             OnChallenge = context =>
             {
                 context.HandleResponse();
-                context.Response.Redirect("/login");  // Redirect unauthorized users to login page
+                context.Response.Redirect("/login");
                 return Task.CompletedTask;
             }
         };
     });
-
+    
+builder.Services.AddScoped<GoogleAuthService>();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<ChatHub>();
 builder.Services.AddScoped<GatherApp.Services.JwtService>();

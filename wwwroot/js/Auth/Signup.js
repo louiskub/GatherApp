@@ -41,6 +41,10 @@ async function toggleConfirmPassword() {
     }
 }
 
+document.getElementById('googleLogin').addEventListener('click', () => {
+    window.location.href = "/api/auth/google-login"; 
+});
+
 document.getElementById('togglePassword').addEventListener('click', togglePassword); 
 document.getElementById('toggleConfirmPassword').addEventListener('click', toggleConfirmPassword);
 document.getElementById('genderSelecter').addEventListener('change', toggleCustomInput);
