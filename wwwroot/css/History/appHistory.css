@@ -7,7 +7,7 @@
 .pageLayout {
   background-color: var(--lavender-blush);
   padding: 100px 100px 60px 100px;
-  height: auto;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }

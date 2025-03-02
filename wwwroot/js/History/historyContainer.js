@@ -75,11 +75,11 @@ class HistoryActivity {
 
     const reviewButton = document.createElement("button");
     reviewButton.classList.add("buttonStyle", "view");
-    reviewButton.textContent = "Review"
+    reviewButton.textContent = "Review";
 
     const reportButton = document.createElement("button");
     reportButton.classList.add("buttonStyle", "report");
-    reportButton.textContent = "Report"
+    reportButton.textContent = "Report";
 
     buttonContainer.appendChild(reviewButton);
     buttonContainer.appendChild(reportButton);
@@ -99,12 +99,12 @@ class HistoryActivity {
 
     const reportButton = document.createElement("button");
     reportButton.classList.add("buttonStyle", "report");
-    reportButton.textContent = "Report"
+    reportButton.textContent = "Report";
 
     statusContainer.appendChild(statusName);
     statusContainer.appendChild(reportButton);
 
-    return statusContainer
+    return statusContainer;
   }
 
   //   application
@@ -166,6 +166,7 @@ class HistoryActivity {
 
     const switchLabel = document.createElement("p");
     switchLabel.classList.add("switchLabel");
+    switchLabel.textContent = "OFF";
 
     const switchBox = document.createElement("label");
     switchBox.classList.add("activitySwitch");
@@ -180,8 +181,8 @@ class HistoryActivity {
       switchLabel.textContent = this.checked ? "ON" : "OFF";
     });
 
-    switchBox.appendChild(switchInput)
-    switchBox.appendChild(switchSlider)
+    switchBox.appendChild(switchInput);
+    switchBox.appendChild(switchSlider);
     switchContainer.appendChild(switchLabel);
     switchContainer.appendChild(switchBox);
 
@@ -198,11 +199,11 @@ class HistoryActivity {
 
     const viewButton = document.createElement("button");
     viewButton.classList.add("buttonStyle", "view");
-    viewButton.textContent = "View"
+    viewButton.textContent = "View";
 
     const cancelButton = document.createElement("button");
     cancelButton.classList.add("buttonStyle", "report");
-    cancelButton.textContent = "Cancel"
+    cancelButton.textContent = "Cancel";
 
     buttonContainer.appendChild(viewButton);
     buttonContainer.appendChild(cancelButton);
@@ -224,7 +225,7 @@ class HistoryActivity {
     const activityInfo = this.createActivityInfo();
     innerContainer.appendChild(activityInfo);
 
-    const displayUsr = activityInfo.querySelector(".displayIcon")
+    const displayUsr = activityInfo.querySelector(".displayIcon");
     indicator.classList.add("indicator");
 
     containerStyle.appendChild(indicator);
@@ -290,5 +291,3 @@ class HistoryActivity {
     return containerStyle;
   }
 }
-
-

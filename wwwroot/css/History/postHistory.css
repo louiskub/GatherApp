@@ -7,7 +7,7 @@
 .pageContainer {
   background-color: var(--lavender-blush);
   padding: 100px 100px 60px 100px;
-  height: auto;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -185,15 +185,15 @@
   border-radius: 50%;
 }
 
-input:checked+.activitySlider {
+input:checked + .activitySlider {
   background-color: var(--salmon-pink);
 }
 
-input:focus+.activitySlider {
+input:focus + .activitySlider {
   box-shadow: 0 0 3px var(--salmon-pink);
 }
 
-input:checked+.activitySlider:before {
+input:checked + .activitySlider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
@@ -286,7 +286,7 @@ input:checked+.activitySlider:before {
     border-radius: 50%;
   }
 
-  input:checked+.slider:before {
+  input:checked + .slider:before {
     -webkit-transform: translateX(21px);
     -ms-transform: translateX(21px);
     transform: translateX(21px);

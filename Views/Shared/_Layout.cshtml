@@ -25,7 +25,60 @@
 </head>
 
 <body>
+    <header>
+        <nav class="navbar">
+            <div class="left-navbar">
+                <!-- Logo -->
+                <a class="logo" href="/">Gather</a>
+
+                <!-- Dark/Light Mode Toggle -->
+                @* <button id="theme-toggle" class="theme-toggle">
+                    <i class="fas fa-sun"></i>
+                    <i class="fas fa-moon"></i>
+                </button> *@
+                <div class="theme-switch">
+                    <input type="checkbox" class="theme-toggle" id="theme-toggle">
+                    <label for="theme-toggle" class="switch">
+                        <span class="text light-text">Light</span>
+                        <i class="fa-solid fa-sun sun-icon"></i>
+                        <i class="fa-solid fa-moon moon-icon"></i>
+                        <span class="text dark-text">Dark</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Search Bar -->
+            <button class="search-icon" href="#">Search
+                <i class="fa fa-search"></i>
+            </button>
+            <div class="search-container">
+                <form class="search-bar" id="search-bar" action="/search" method="get">
+                    <input type="text" placeholder="Search.." name="keyword" aria-label="Search">
+                    <button type="submit"><i class="fa fa-search"></i></button>
+                </form>
+            </div>
+
+            <!-- Right Navbar -->
+            <div class="right-navbar"></div>
+
+            <!-- Main Menu -->
+            <div class="menu"></div>
+        </nav>
+    </header>
+
+    @* Headers = document.querySelector("header"); *@
     
+
+    @if (isAuthorized)
+    {
+        <script src="/js/components/nav_louis/auth_nav.js"></script>
+    }
+    else
+    {
+        <script src="/js/components/nav_louis/unauth_nav.js"></script>
+    }
+    <script src="~/js/nav/navbar.js"></script>
+
     @RenderBody()
 
     @* <footer class="footer-container">
@@ -33,5 +86,7 @@
             &copy; 2025 - GatherApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer> *@
+
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
