@@ -15,7 +15,7 @@ async function logOut(content="Logout successfully") {
         method: "POST",
         credentials: 'include'
     });
-    new ToastTemplate(content, "/home").redirect();
+    window.changeToast(content, "/home")
 }
 
 async function fetchMyProfile() {
@@ -59,5 +59,5 @@ if (profile) {
 
     // Logout button
     const logoutButton = document.querySelector(".log-out");
-    logoutButton.addEventListener("click", logOut);
+    logoutButton.addEventListener("click", () => {logOut()});
 }

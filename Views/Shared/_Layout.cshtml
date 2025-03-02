@@ -87,11 +87,20 @@
         </div>
     </footer> *@
     <script type="module">
-        import ReDirectLoginHandler from "/js/components/handler/redirect_login_handler.js";
-        const redirectHandler = new ReDirectLoginHandler();
-        window.redirectToLogin = function() {
-            redirectHandler.redirect();
+        import ToastTemplate from "/js/components/handler/toast_template.js"
+        const toastTemplate = new ToastTemplate();
+        window.redirectToLogin = async function() {
+            await toastTemplate.changeToast("You need to log in. Redirecting...", "/login");
+            await toastTemplate.redirect();
         };
+        window.changeToast = async (content, redirectPath) => {
+            await toastTemplate.changeToast(content, redirectPath);
+            await toastTemplate.redirect();
+        }
+        window.showToast = async (content) => {
+            await toastTemplate.changeToast(content, "");
+            await toastTemplate.showToast();
+        }
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
