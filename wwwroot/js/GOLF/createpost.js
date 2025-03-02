@@ -4,7 +4,7 @@ const cancelButton = document.querySelector('.cancel_but');
 const createButton = document.querySelector('.create_but');
 const imageUpload = document.getElementById('imageUpload');
 const previewImage = document.getElementById('previewImage');
-const uploadText = document.querySelector('.upload_text');
+const uploadText = document.querySelector('.preview_text');
 
 // ฟังก์ชันแสดง Popup เมื่อคลิกปุ่ม Cancel
 cancelButton.addEventListener('click', () => {
@@ -272,22 +272,38 @@ async function validateForm() {
     const deadline = document.getElementById('deadline').value;
     const participantsNeeded = document.querySelector('.parti_needed input').value;
     // ตรวจสอบว่าแต่ละฟิลด์ถูกกรอกหรือไม่
-    if (!activityName || !description || !eventDate || !deadline || !participantsNeeded) {
-        // window.showToast("Please fill out all required fields.");
-        window.showToast("Please fill out all required fields.", "warning");
+    // ตรวจสอบการอัปโหลดภาพ (Preview Image)
+    const imageUpload = document.getElementById('imageUpload');
+    console.log(previewImage.src.length)
+    if (!imageUpload.files.length) {
+        window.showToast("Please upload an image.", "warning");
         return false;
     }
+    if (previewImage.src.length > 2000000) {
+        window.showToast("Image size is too large. Please upload an image less than 2 MB.", "warning");
+        return false;
+    }
+    
+    if (!description) {
+        window.showToast("Please enter activity description.", "warning");
+        return false;
+    }
+
+    if (!activityName) {
+        window.showToast("Please enter activity name.", "warning");
+        return false;
+    }
+
+    // if (!activityName || !description || !eventDate || !deadline || !participantsNeeded) {
+    //     // window.showToast("Please fill out all required fields.");
+    //     window.showToast("Please fill out all required fields.", "warning");
+    //     return false;
+    // }
 
     // ตรวจสอบว่าได้เลือกแท็กหรือไม่
     const selectedTags = document.querySelectorAll('.tag-item');
     if (selectedTags.length === 0) {
         window.showToast("Please select at least one tag.", "warning");
-        return false;
-    }
-
-    // ตรวจสอบว่าเลือกจำนวนผู้เข้าร่วมมากกว่า 0 หรือไม่
-    if (parseInt(participantsNeeded) <= 0) {
-        window.showToast("Please enter a valid number for participants needed.", "warning");
         return false;
     }
 
@@ -311,18 +327,26 @@ async function validateForm() {
         return false;
     }
 
-    // ตรวจสอบการอัปโหลดภาพ (Preview Image)
-    const imageUpload = document.getElementById('imageUpload');
-    console.log(previewImage.src.length)
-    if (!imageUpload.files.length) {
-        window.showToast("Please upload an image.", "warning");
+    if (!eventDate) {
+        window.showToast("Please select event date.", "warning");
         return false;
     }
-    if (previewImage.src.length > 2000000) {
-        window.showToast("Image size is too large. Please upload an image less than 2 MB.", "warning");
+      
+    if (!deadline) {
+        window.showToast("Please select deadline date.", "warning");
+        return false;
+    }
+
+    if (!participantsNeeded) {
+        window.showToast("Please enter number of participants needed.", "warning");
         return false;
     }
     
+    // ตรวจสอบว่าเลือกจำนวนผู้เข้าร่วมมากกว่า 0 หรือไม่
+    if (parseInt(participantsNeeded) <= 0) {
+        window.showToast("Please enter a valid number for participants needed.", "warning");
+        return false;
+    }
     
     async function createPost() {
         const isAttached = document.querySelector(".check_attach_file input").checked

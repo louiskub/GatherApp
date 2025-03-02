@@ -33,7 +33,7 @@
 
             <div class="actcontent_right">
                 <div class="googlemap">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3875.8252048040313!2d100.77303807573125!3d13.729030197818979!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x311d664a24b4a651%3A0x1deb4e950f2fbd07!2z4Lig4Liy4LiE4Lin4Li04LiK4Liy4Lin4Li04Lio4Lin4LiB4Lij4Lij4Lih4LiE4Lit4Lih4Lie4Li04Lin4LmA4LiV4Lit4Lij4LmMIOC4hOC4k-C4sOC4p-C4tOC4qOC4p-C4geC4o-C4o-C4oeC4qOC4suC4quC4leC4o-C5jCAoS01JVEwp!5e0!3m2!1sth!2sth!4v1739342641074!5m2!1sth!2sth" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <iframe width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
                 <div class="act_miniinfo">
                     <div class="act_miniinfo_left">
@@ -87,7 +87,7 @@
                     <button class="app_but" onclick="openPopup()">Application</button>
                     <button class="reg_but">Register</button>
 
-                    <button class="edit_but">Edit Post</button>
+                    <button class="edit_but" onclick="openeditPopup()">Edit Post</button>
                     <button class="view_but">View Application</button>
                     <button class="cancel_post_but">Cancel Post</button>
                 </div>
@@ -102,6 +102,89 @@
                 </div>
             </div>
         </div>
+
+
+
+        <!-- Popup -->
+        <div class="popup_create" id="popup_create">
+                <div class="popup_create_content">
+                    <div class="popup_create_content_left">
+                        <h2>Edit Post</h2>
+                        <div class="img_des_box">  
+                            <div class="upload_container">
+                                <input type="file" id="imageUpload" accept="image/*" style="display: none;" />
+                                <div class="preview">
+                                    <div class="preview_text">
+                                        <span class="upload_text">Upload Image</span>
+                                        <span class="upload_text_rec">Recommend 1200x550 pixels</span>
+                                    </div>
+                                    <img id="previewImage" src="" alt="Preview" style="display: none;">
+                                </div>
+                            </div>
+                            <textarea class="descript_create" placeholder="Description"></textarea>
+                        </div>
+                    </div>
+                    <div class="popup_create_content_right">
+                        <div class="create_act_name">
+                            <input type="text" placeholder="Activity Name">
+                        </div>
+
+                        <div class="tag-container" id="tag-container">
+                            <div class="tag-list" id="tag-list">
+                                <span class="tag-placeholder" id="tag-placeholder">Select up to 3 tags</span>
+                            </div>
+                            <div class="tag-options" id="tag-options">
+                                <div class="tag-limit-msg" id="tag-limit-msg">Only 3 tags can be selected</div>
+                            </div>
+                        </div>
+
+                        <div class="create_location">
+                            <div class="location_container"></div>
+                            <!-- <div class="location_province">
+                                <input type="text" placeholder="Province">
+                            </div>
+                            <div class="location_district">
+                                <input type="text" placeholder="District">
+                            </div> -->
+                        </div>
+                        <div class="google_map_link">
+                            <div class="input_map_link">
+                                <input type="text" placeholder="Google Map Link">
+                            </div>
+                            <div class="map_teach">
+                                <a href="https://www.youtube.com/watch?v=IiWCCFtKU8c" target="_blank" class="map-link">
+                                    🌍<span class="link-text">Discover how to get the Google Map link</span>🗺️
+                                </a>
+                            </div>
+                        </div>
+                        <div class="event_date">
+                            <label for="eventdate">📅Event Date</label>
+                            <input type="datetime-local" id="eventdate" class="event-date-input">
+                            <p id="event-error-msg" style="color: red; font-size: 14px; display: none;">
+                                ⛔Event date must be after the deadline
+                            </p>
+                        </div>
+                        
+                        <div class="app_deadline">
+                            <label for="deadline">📅Application Deadline</label>
+                            <input type="datetime-local" id="deadline" class="deadline-input">
+                            <p id="deadline-error-msg" style="color: red; font-size: 14px; display: none;">
+                                ⛔Please select a date and time in the future
+                            </p>
+                        </div>
+                        <div class="parti_needed">
+                            <input type="number" placeholder="Participants needed" min="0" step="1">
+                        </div>                    
+                        <div class="check_attach_file">
+                            <label><input type="checkbox"> Attach file</label>
+                        </div>
+                        <div class="popup-actions">
+                            <button class="cancel_edit_but" onclick="closeeditPopup()">Cancel</button>
+                            <button class="submit_edit_but" onclick="createpost()">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>  
 </div>
 
 <script>
@@ -110,15 +193,25 @@
         document.getElementById("overlay").style.display = "block";
     }
 
+    function openeditPopup() {
+        document.getElementById("popup_create").style.display = "flex";
+        document.body.classList.add('popup-open');
+    }
+
     function closePopup() {
         document.getElementById("popup_app").style.display = "none";
         document.getElementById("overlay").style.display = "none";
     }
 
+    function closeeditPopup() {
+        document.getElementById("popup_create").style.display = "none";
+        document.body.classList.remove('popup-open');
+    }
+
     function submitApplication() {
         const fileInput = document.getElementById("fileInput");
         if (fileInput.files.length === 0) {
-            alert("Please attach a file before submitting.");
+            window.showToast("Please attach your application.", "warning");
         } else {
             closePopup();
         }
