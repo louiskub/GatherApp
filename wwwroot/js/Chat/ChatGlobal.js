@@ -26,12 +26,12 @@ function setupGlobalChatListeners() {
         return;
     }
 
-    connection.on("ReceiveGlobalMessage", (username, message, sentAt, profileImageUrl) => {
-        console.log("[DEBUG] ReceiveGlobalMessage:", { username, message, sentAt, profileImageUrl });
-        appendGlobalMessage(username, message, sentAt, profileImageUrl);
+    connection.on("ReceiveGlobalMessage", (isMine,username, message, sentAt, profileImageUrl) => {
+        console.log("[DEBUG] ReceiveGlobalMessage:", {isMine, username, message, sentAt, profileImageUrl });
+        appendGlobalMessage(isMine,username, message, sentAt, profileImageUrl);
     });
 
-    connection.on("LoadGlobalMessages", (messages) => {
+    connection.on("LoadPreviousMessages", (messages) => {
         if (!Array.isArray(messages)) {
             console.error("Invalid response from server! Expected array but got:", messages);
             return;
@@ -41,7 +41,8 @@ function setupGlobalChatListeners() {
         chatBox.innerHTML = ""; 
 
         messages.forEach((msg) => {
-            appendGlobalMessage(msg.username, msg.message, msg.sentAt, msg.profileImg);
+            let isMine = msg.IsMine ?? msg.isMine ?? false;
+            appendGlobalMessage(isMine,msg.username, msg.message, msg.sentAt, msg.profileImg);
         });
     });
 
@@ -52,8 +53,8 @@ function setupGlobalChatListeners() {
     console.log("Global Chat listeners set up!");
 }
 
-function appendGlobalMessage(username, message, sentAt, profileImageUrl) {
-    console.log("Adding global message:", { username, message, sentAt, profileImageUrl });
+function appendGlobalMessage(IsMine,username, message, sentAt, profileImageUrl) {
+    console.log("Adding global message:", {IsMine, username, message, sentAt, profileImageUrl });
     let chatBox = document.getElementById("globalChatBox");
     if (!chatBox) {
         console.error("globalChatBox not found!");
@@ -76,9 +77,17 @@ function appendGlobalMessage(username, message, sentAt, profileImageUrl) {
     } catch (error) {
         console.error("Error parsing date:", error, "Raw value:", sentAt);
     }
+    let isMine = Boolean(IsMine);
+
 
     let messageElement = document.createElement("div");
     messageElement.classList.add("chatMessage");
+    if (isMine) {
+        messageElement.classList.add("my-message");
+    } else {
+        messageElement.classList.add("other-message");
+    }
+
     messageElement.innerHTML = `
         <img src="${profileImageUrl}" alt="Profile" class="profile-pic">
         <div class="message-details">
@@ -108,6 +117,8 @@ async function sendGlobalMessage() {
     try {
         await connection.invoke("SendGlobalMessage", message); 
         document.getElementById("globalMessageInput").value = "";
+        document.getElementById("actionButton").innerHTML = '<i class="fa-solid fa-thumbs-up"></i>';
+        document.getElementById("actionButton").classList.remove("active");
     } catch (err) {
         console.error("Failed to send global message: ", err);
     }
@@ -119,5 +130,94 @@ async function loadGlobalMessages() {
         await connection.invoke("LoadGlobalMessages");
     } catch (err) {
         console.error("Failed to load global messages:", err);
+    }
+}
+document.addEventListener("DOMContentLoaded", function () {
+    let actionButton = document.getElementById("actionButton");
+    actionButton.innerHTML = '<i class="fa-solid fa-thumbs-up"></i>';
+});
+
+document.getElementById("globalMessageInput").addEventListener("input", function () {
+    let actionButton = document.getElementById("actionButton");
+
+    actionButton.classList.remove("fade-in", "fade-out");
+
+    if (this.value.trim() !== "") {
+        if (actionButton.innerHTML !== '<i class="fa-solid fa-paper-plane"></i>') {
+            actionButton.classList.add("fade-out");
+            setTimeout(() => {
+                actionButton.innerHTML = '<i class="fa-solid fa-paper-plane"></i>'; 
+                actionButton.classList.remove("fade-out");
+                actionButton.classList.add("fade-in");
+            }, 200);
+        }
+    } else {
+        if (actionButton.innerHTML !== '<i class="fa-solid fa-thumbs-up"></i>') {
+            actionButton.classList.add("fade-out");
+            setTimeout(() => {
+                actionButton.innerHTML = '<i class="fa-solid fa-thumbs-up"></i>'; 
+                actionButton.classList.remove("fade-out");
+                actionButton.classList.add("fade-in");
+            }, 200);
+        }
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    let picker = document.getElementById("emojiPicker");
+    picker.style.display = "none"; 
+});
+
+function toggleEmojiPicker() {
+    let picker = document.getElementById("emojiPicker");
+    picker.style.display = picker.style.display === "none" ? "flex" : "none";
+}
+
+async function sendEmoji(emoji) {
+
+    if (connection.state !== signalR.HubConnectionState.Connected) {
+        alert("Cannot send message. Not connected to the chat server.");
+        return;
+    }
+
+    try {
+        await connection.invoke("sendGlobalMessage", currentPostId, emoji);
+        document.getElementById("emojiPicker").style.display = "none"; 
+    } catch (err) {
+        console.error("Failed to send emoji: ", err);
+    }
+}
+
+document.addEventListener("click", function (event) {
+    let picker = document.getElementById("emojiPicker");
+    let emojiButton = document.getElementById("emojiButton");
+
+    if (picker.style.display === "flex" && !picker.contains(event.target) && event.target !== emojiButton) {
+        picker.style.display = "none";
+    }
+});
+
+async function sendLike() {
+
+    if (connection.state !== signalR.HubConnectionState.Connected) {
+        alert("Cannot send message. Not connected to the chat server.");
+        return;
+    }
+
+    try {
+        await connection.invoke("sendGlobalMessage",'<i class="fa-solid fa-thumbs-up"></i>');
+    } catch (err) {
+        console.error("Failed to send like: ", err);
+    }
+}
+
+async function handleSend() {
+    const messageInput = document.getElementById("globalMessageInput");
+    const message = messageInput.value.trim();
+
+    if (message) {
+        await sendGlobalMessage(); 
+    } else {
+        await sendLike();
     }
 }
