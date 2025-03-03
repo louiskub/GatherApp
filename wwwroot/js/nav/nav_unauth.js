@@ -1,29 +1,26 @@
-// document.addEventListener("DOMContentLoaded", function () {
-//     // 📌 Menu Toggle สำหรับมือถือ
-//     const menuToggle = document.querySelector(".menu-toggle");
-//     const menu = document.querySelector(".menu");
-//     const openIcon = document.querySelector(".open-icon");
-//     const closeIcon = document.querySelector(".close-icon");
+const Head = document.querySelector("head");
+const Body = document.querySelector("body");
+const RightNavbar = document.querySelector(".right-navbar");
+const Menu = document.querySelector(".menu");
+
+const link = document.createElement("link");
+link.rel = "stylesheet";
 
 
-//     menuToggle.addEventListener("click", function (event) {
-//         event.stopPropagation();
-//         const isActive = menu.classList.toggle("active");
-//         if (isActive) {
-//             document.body.style.overflow = "hidden";
-//         }
-//         else {
-//             document.body.style.overflow = "";
-//         }
+console.log("Unauthorized");
 
-//         // แสดง/ซ่อนไอคอน
-//         openIcon.style.display = isActive ? "none" : "inline";
-//         closeIcon.style.display = isActive ? "inline" : "none";
-//     });
+link.href = "/css/nav/nav_unauth.css";
+Head.appendChild(link);
+RightNavbar.innerHTML = `
+<button class="menu-toggle">
+    <i class="fa fa-bars open-icon"></i>
+    <i class="fa fa-times close-icon"></i>
+</button>`;
 
-//     // ตั้งค่าไอคอนให้ถูกต้องเมื่อโหลดหน้าเว็บ
-//     const isMenuActive = menu.classList.contains("active");
-//     document.body.classList.toggle("no-scroll", isMenuActive);
-//     openIcon.style.display = isMenuActive ? "none" : "inline";
-//     closeIcon.style.display = isMenuActive ? "inline" : "none";
-// });
+Menu.innerHTML = `
+<a href="/aboutus">About us<i class="fa fa-fw fa-info"></i></a>
+<a href="/login">Login<i class="fa fa-fw fa-user"></i></a>
+<a class="active" href="/signup">Sign up<i class="fa fa-user-plus"></i></a>`;
+
+window.userProfile = {role: "guest"};
+document.dispatchEvent(new CustomEvent("userProfileLoaded", { detail: {role: "guest"} }));

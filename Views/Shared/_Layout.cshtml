@@ -71,11 +71,12 @@
 
     @if (isAuthorized)
     {
-        <script src="/js/components/nav_louis/auth_nav.js"></script>
+        @* <script src="/js/components/user_profile_image.js"></script> *@
+        <script src="/js/nav/nav_auth.js" type="module"></script>
     }
     else
     {
-        <script src="/js/components/nav_louis/unauth_nav.js"></script>
+        <script src="/js/nav/nav_unauth.js"></script>
     }
     <script src="~/js/nav/navbar.js"></script>
 
@@ -91,6 +92,9 @@
         import ConfirmDialog from "/js/components/handler/confirm_dialog.js"
         const toastTemplate = new ToastTemplate();
         const confirmDialog = new ConfirmDialog();
+
+        window.userProfile = null;
+
         window.redirectToLogin = async function() {
             await toastTemplate.changeToast("You need to log in. Redirecting...", "/login");
             await toastTemplate.redirect("error");
