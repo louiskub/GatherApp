@@ -631,30 +631,61 @@ async function userButtonHandler(){
   })
 
   cancelBut.addEventListener("click", async function() {
+      let head, cont, noText, yesText;
       let apiPath, successMessage, failMessage, successRedirect;
       if (isOwner){
+        head = "Delete this post?"
+        cont = "Are you sure you want to delete this post? This action cannot be undone."
+        noText = "Keep it"
+        yesText = "Delete post"
+
         apiPath = `/api/post?postid=${postId}`
         successMessage = "Post deleted successfully"
         failMessage = "Failed to delete post"
         successRedirect = "/home"
       }
       else {
+        head = "Cancel this registration?"
+        cont = "Are you sure you want to cancel this registration? This action cannot be undone."
+        noText = "Keep it"
+        yesText = "Cancel registration"
+
         apiPath = `api/user/applypost?postid=${postId}`
         successMessage = "Post registration canceled successfully"
         failMessage = "Failed to cancel post registration"
         successRedirect = window.location.pathname + window.location.search
       }
-      await fetch(apiPath, {
+      async function deleteApi(apiPath, successMessage, failMessage, successRedirect) {
+        await fetch(apiPath, {
           method: 'DELETE',
           headers: {'Content-Type': 'application/json'}
+        })
+          .then(response => {
+              if (response.ok) {
+                  window.changePage(successMessage, successRedirect, "success");
+              } else {
+                  window.changePage(failMessage, "/home", "error");
+              }
           })
-      .then(response => {
-          if (response.ok) {
-              window.changePage(successMessage, successRedirect, "success");
-          } else {
-              window.changePage(failMessage, "/home", "error");
-          }
+      }
+
+    window.confirmAction(
+      head,
+      cont,
+      noText,
+      yesText,
+      async () => await fetch(apiPath, {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'}
       })
+        .then(response => {
+            if (response.ok) {
+                window.changePage(successMessage, successRedirect, "success");
+            } else {
+                window.changePage(failMessage, "/home", "error");
+            }
+        })
+    );
   });
 }
 

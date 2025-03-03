@@ -25,14 +25,6 @@ export default class ConfirmDialog{
 
     confirmAction(header, message, notext, yestext, yesCallback) {
         return new Promise((resolve) => {
-            `
-            <h2 id="confirm-header"><span>⚠️</span>${header}</h2>
-            <p id="confirm-message">${message}</p>
-            <div class="confirm-buttons">
-                <button class="confirm-btn confirm-yes" id="confirmYes">${notext}</button>
-                <button class="confirm-btn confirm-no" id="confirmNo">${yestext}</button>
-            </div>`
-            
             const overlay = this.div;
             const confirmBox = overlay.querySelector(".confirm-box");
 
@@ -49,7 +41,6 @@ export default class ConfirmDialog{
             overlay.style.display = "flex";
             
             // คลิก No
-
             async function btnSettings(){
                 confirmBox.classList.add("confirm-box-close");
                 setTimeout(() => {
@@ -57,16 +48,17 @@ export default class ConfirmDialog{
                     overlay.style.display = "none";
                     document.body.style.overflow = "";
                 }, 250);
+                return resolve();
             }
 
             btnNo.onclick = async () => {
-                btnSettings();
-                await yesCallback;
+                await btnSettings();
             };
 
             // คลิก Yes
-            btnYes.onclick = () => {
-                btnSettings();
+            btnYes.onclick = async () => {
+                await btnSettings();
+                await yesCallback();
             };
         });
     }
