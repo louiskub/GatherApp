@@ -13,6 +13,7 @@
 
   --button-hover: var(--bright-pink-crayola);
   --button-border-hover: var(--eerie-black);
+  --slider-on: var(--salmon-pink);
 }
 
 /* Dark Mode */
@@ -27,6 +28,7 @@
   --button-report-txt-color: white;
 
   --button-border-hover: white;
+  --slider-on: rgb(231, 26, 84);
 }
 
 .top {
@@ -247,7 +249,7 @@
 }
 
 input:checked + .activitySlider {
-  background-color: var(--salmon-pink);
+  background-color: var(--slider-on);
 }
 
 input:focus + .activitySlider {
