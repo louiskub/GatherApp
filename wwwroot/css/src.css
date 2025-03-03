@@ -1,122 +1,124 @@
 /* CSS HEX */
 :root {
-    /* --rose-pompadour: #e27396ff;
+  /* --rose-pompadour: #e27396ff;
     --amaranth-pink: #ea9ab2ff;
     --mimi-pink: #efcfe3ff;
     --beige: #eaf2d7ff;
     --light-blue: #b3dee2ff; */
 
-    --chocolate-cosmos: #590d22ff;
-    --claret: #800f2fff;
-    --amaranth-purple: #a4133cff;
-    --rose-red: #c9184aff;
-    --bright-pink-crayola: #ff4d6dff;
-    --bright-pink-crayola-2: #ff758fff;
-    --salmon-pink: #ff8fa3ff;
-    --cherry-blossom-pink: #ffb3c1ff;
-    --pink: #ffccd5ff;
-    --lavender-blush: #fff0f3ff;
+  --chocolate-cosmos: #590d22ff;
+  --claret: #800f2fff;
+  --amaranth-purple: #a4133cff;
+  --rose-red: #c9184aff;
+  --bright-pink-crayola: #ff4d6dff;
+  --bright-pink-crayola-2: #ff758fff;
+  --salmon-pink: #ff8fa3ff;
+  --cherry-blossom-pink: #ffb3c1ff;
+  --pink: #ffccd5ff;
+  --lavender-blush: #fff0f3ff;
 
-    --seasalt: #f8f9faff;
-    --antiflash-white: #e9ecefff;
-    --platinum: #dee2e6ff;
-    --french-gray: #ced4daff;
-    --french-gray-2: #adb5bdff;
-    --slate-gray: #6c757dff;
-    --outer-space: #495057ff;
-    --onyx: #343a40ff;
-    --eerie-black: #212529ff;
+  --seasalt: #f8f9faff;
+  --antiflash-white: #e9ecefff;
+  --platinum: #dee2e6ff;
+  --french-gray: #ced4daff;
+  --french-gray-2: #adb5bdff;
+  --slate-gray: #6c757dff;
+  --outer-space: #495057ff;
+  --onyx: #343a40ff;
+  --eerie-black: #212529ff;
 
-    /* --thistle: #cdb4dbff;
+  /* --thistle: #cdb4dbff;
     --fairy-tale: #ffc8ddff;
     --carnation-pink: #ffafccff;
     --uranian-blue: #bde0feff;
     --light-sky-blue: #a2d2ffff; */
 
-    --sky-blue: #8ac3f8;
-    --mint-green: #65c09d;
-    --deep-fern-green: #3f6b50;
-    --sea-pink: #d17a74;
+  --sky-blue: #8ac3f8;
+  --mint-green: #65c09d;
+  --deep-fern-green: #3f6b50;
+  --mustard: #ffd65c;
+  --honolulu-blue: #0072a3;
+  --neon-blue: #5a72ed;
+  --light-coral: #e9727c;
 
-    /* 🎨 Light Mode */
+  /* 🎨 Light Mode */
 
-    /* Navbar */
-    --bg-color: white;
-    --text-color: var(--eerie-black);
-    --bg-image: url('/assets/img/web_bg.png');
+  /* Navbar */
+  --bg-color: white;
+  --text-color: var(--eerie-black);
+  --bg-image: url("/assets/img/web_bg.png");
 
-    --hover-bg-1: var(--bright-pink-crayola);
-    --hover-bg-2: var(--bright-pink-crayola-2);
-    --hover-text: white;
+  --hover-bg-1: var(--bright-pink-crayola);
+  --hover-bg-2: var(--bright-pink-crayola-2);
+  --hover-text: white;
 
-    --navbar-bg: var(--salmon-pink);
-    --navbar-text: var(--chocolate-cosmos);
+  --navbar-bg: var(--salmon-pink);
+  --navbar-text: var(--chocolate-cosmos);
 
-    --menu-bg: var(--cherry-blossom-pink);
-    --menu-text: var(--chocolate-cosmos);
+  --menu-bg: var(--cherry-blossom-pink);
+  --menu-text: var(--chocolate-cosmos);
 
-    --search-bg: white;
-    --search-border: var(--chocolate-cosmos);
-    --search-text: var(--eerie-black);
+  --search-bg: white;
+  --search-border: var(--chocolate-cosmos);
+  --search-text: var(--eerie-black);
 
-    --btn-color: var(--chocolate-cosmos);
-    --active-btn-text: white;
-    --active-btn-bg: var(--chocolate-cosmos);
+  --btn-color: var(--chocolate-cosmos);
+  --active-btn-text: white;
+  --active-btn-bg: var(--chocolate-cosmos);
 
-    /* Post */
-    --post-border: 1px solid var(--pink);
-    --post-bg: var(--lavender-blush);
-    --post-hover-bg: var(--seasalt);
-    --post-title-hover: var(--amaranth-purple);
-    --post-location-text: var(--rose-red);
-    --post-category-bg: var(--cherry-blossom-pink);
-    --post-category-text: var(--amaranth-purple);
-    --post-like-btn: var(--rose-red);
-    --scroll-bar-bg: var(--pink);
-    --border-bottom-color: var(--pink);
+  /* Post */
+  --post-border: 1px solid var(--pink);
+  --post-bg: var(--lavender-blush);
+  --post-hover-bg: var(--seasalt);
+  --post-title-hover: var(--amaranth-purple);
+  --post-location-text: var(--rose-red);
+  --post-category-bg: var(--cherry-blossom-pink);
+  --post-category-text: var(--amaranth-purple);
+  --post-like-btn: var(--rose-red);
+  --scroll-bar-bg: var(--pink);
+  --border-bottom-color: var(--pink);
 }
 
 /* 🌓 2. Dark Mode Variables */
 [data-theme="dark"] {
+  /* Navbar */
+  --bg-color: var(--eerie-black);
+  --text-color: white;
+  --bg-image: url("/assets/img/web_bg_dark.png");
 
-    /* Navbar */
-    --bg-color: var(--eerie-black);
-    --text-color: white;
-    --bg-image: url('/assets/img/web_bg_dark.png');
+  --hover-bg-1: var(--bright-pink-crayola);
+  --hover-bg-2: var(--bright-pink-crayola-2);
+  --hover-text: white;
 
-    --hover-bg-1: var(--bright-pink-crayola);
-    --hover-bg-2: var(--bright-pink-crayola-2);
-    --hover-text: white;
+  --navbar-bg: var(--chocolate-cosmos);
+  --navbar-text: white;
 
-    --navbar-bg: var(--chocolate-cosmos);
-    --navbar-text: white;
+  --menu-bg: var(--chocolate-cosmos);
+  --menu-text: white;
 
-    --menu-bg: var(--chocolate-cosmos);
-    --menu-text: white;
+  --search-bg: var(--outer-space);
+  --search-border: var(--french-gray);
+  --search-text: white;
 
-    --search-bg: var(--outer-space);
-    --search-border: var(--french-gray);
-    --search-text: white;
+  --btn-color: white;
+  --active-btn-text: white;
+  --active-btn-bg: var(--rose-red);
 
-    --btn-color: white;
-    --active-btn-text: white;
-    --active-btn-bg: var(--rose-red);
-
-    /* Post */
-    --post-border: 1px solid var(--pink);
-    --post-bg: var(--outer-space);
-    --post-hover-bg: var(--slate-gray);
-    --post-title-hover: var(--pink);
-    --post-location-text: var(--cherry-blossom-pink);
-    --post-category-bg: var(--salmon-pink);
-    --post-category-text: white;
-    --post-like-btn: white;
-    --scroll-bar-bg: var(--slate-gray);
-    --border-bottom-color: var(--pink);
+  /* Post */
+  --post-border: 1px solid var(--pink);
+  --post-bg: var(--outer-space);
+  --post-hover-bg: var(--slate-gray);
+  --post-title-hover: var(--pink);
+  --post-location-text: var(--cherry-blossom-pink);
+  --post-category-bg: var(--salmon-pink);
+  --post-category-text: white;
+  --post-like-btn: white;
+  --scroll-bar-bg: var(--slate-gray);
+  --border-bottom-color: var(--pink);
 }
 
 @font-face {
-    font-family: "Genty";
-    /* src: url('/wwwroot/fonts/GentyDemo-Regular.ttf') format('truetype'); */
-    src: url("../assets/fonts/GentyDemo-Regular.ttf") format("truetype");
+  font-family: "Genty";
+  /* src: url('/wwwroot/fonts/GentyDemo-Regular.ttf') format('truetype'); */
+  src: url("../assets/fonts/GentyDemo-Regular.ttf") format("truetype");
 }

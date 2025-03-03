@@ -37,7 +37,7 @@
 }
 
 .indicator.finish {
-  background-color: var(--deep-fern-green);
+  background-color: var(--honolulu-blue);
 }
 
 .indicator.accept {
@@ -45,11 +45,11 @@
 }
 
 .indicator.pending {
-  background-color: var(--sky-blue);
+  background-color: var(--mustard);
 }
 
 .indicator.reject {
-  background-color: var(--sea-pink);
+  background-color: var(--light-coral);
 }
 
 .contentStyle {
