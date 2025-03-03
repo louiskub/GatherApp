@@ -26,6 +26,15 @@
   --outer-space: #495057ff;
   --onyx: #343a40ff;
   --eerie-black: #212529ff;
+  --seasalt: #f8f9faff;
+  --antiflash-white: #e9ecefff;
+  --platinum: #dee2e6ff;
+  --french-gray: #ced4daff;
+  --french-gray-2: #adb5bdff;
+  --slate-gray: #6c757dff;
+  --outer-space: #495057ff;
+  --onyx: #343a40ff;
+  --eerie-black: #212529ff;
 
   /* --thistle: #cdb4dbff;
     --fairy-tale: #ffc8ddff;
@@ -40,9 +49,20 @@
   --honolulu-blue: #0072a3;
   --neon-blue: #5a72ed;
   --light-coral: #e9727c;
+  --sky-blue: #8ac3f8;
+  --mint-green: #65c09d;
+  --deep-fern-green: #3f6b50;
+  --mustard: #ffd65c;
+  --honolulu-blue: #0072a3;
+  --neon-blue: #5a72ed;
+  --light-coral: #e9727c;
 
   /* 🎨 Light Mode */
 
+  /* Navbar */
+  --bg-color: white;
+  --text-color: var(--eerie-black);
+  --bg-image: url("/assets/img/web_bg.png");
   /* Navbar */
   --bg-color: white;
   --text-color: var(--eerie-black);
