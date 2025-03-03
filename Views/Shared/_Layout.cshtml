@@ -65,7 +65,7 @@
             <div class="menu"></div>
         </nav>
     </header>
-
+    
     @* Headers = document.querySelector("header"); *@
     
 
@@ -100,6 +100,11 @@
         window.showToast = async (content, type) => {
             await toastTemplate.changeToast(content, "");
             await toastTemplate.showToast(type);
+        }
+
+        window.changePage = async (content, redirectPath, type) => {
+            await toastTemplate.changeToast(content, redirectPath);
+            await toastTemplate.redirect(type);
         }
     </script>
     @await RenderSectionAsync("Scripts", required: false)

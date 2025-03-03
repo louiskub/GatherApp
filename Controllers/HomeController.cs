@@ -108,6 +108,14 @@ public class HomeController : Controller
         return View("~/Views/Home/GlobalChathub.cshtml");
     }
 
+    [Route("testpage")]
+
+    public IActionResult Testpage()
+    {
+        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
+        return View("~/Views/Home/testpage.cshtml");
+    }
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

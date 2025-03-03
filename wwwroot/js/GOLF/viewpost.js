@@ -13,8 +13,7 @@ var post, isOwner, owner, activity, actTypes, participants
 
 async function showPostDetail() {
     async function fetchPost() {
-        const urlParams = window.location.search;
-        let response = await fetch(`/api/post${urlParams}`);
+        let response = await fetch(`/api/post?postid=${postId}`);
         if (!response.ok) {
             alert("Post not found");
             return;
@@ -58,8 +57,11 @@ async function showPostDetail() {
     const postDesc = document.querySelector(".act_descript");
     postDesc.textContent = post.detail;
 
-    const googleMap = document.querySelector(".googlemap iframe");
-    googleMap.src = activity.googleMapLink;
+    const googleMap = document.querySelector(".googlemap");
+    if (activity.googleMapLink && activity.googleMapLink.includes("https://www.google.com/maps/embed?pb="))
+        googleMap.querySelector("iframe").src = activity.googleMapLink;
+    else
+        googleMap.removeChild(googleMap.querySelector("iframe"));
 
 
     const miniInfo = document.querySelector(".act_miniinfo");
@@ -114,73 +116,6 @@ async function showPostDetail() {
         tag.textContent = actType;
         tagContainer.appendChild(tag);
     })
-
-    const editBut = document.querySelector(".edit_but");
-    const viewBut = document.querySelector(".view_but");
-    const cancelBut = document.querySelector(".cancel_post_but");
-    const regBut = document.querySelector(".reg_but");
-    const appBut = document.querySelector(".app_but");
-
-    if (isOwner) {
-        editBut.style.display = "block";
-        viewBut.style.display = "block";
-        cancelBut.style.display = "block";
-    }else {
-        if (!post.isApplied){
-            regBut.style.display = "block";
-            if (post.isAttached)
-                appBut.style.display = "block";
-        }
-    }
-
-    ///////////////// Button Event /////////////////
-    console.log(regBut)
-    regBut.addEventListener("click", async function() {
-        const urlParams = new URLSearchParams(window.location.search)
-        const postId = urlParams.get('postid') || urlParams.get('postId');
-        
-        let apiSettings = {
-            method: "POST",
-            credentials: 'include',
-            headers: {'Content-Type': 'application/json'}
-        }
-
-        const fileToBase64 = (file) => {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result.split(",")[1]); // ตัด "data:image/png;base64," ออก
-                reader.onerror = (error) => reject(error);
-            });
-        };
-        if (post.isAttached){
-            let fileInput = document.getElementById("fileInput").files[0]
-            if (!fileInput) 
-                return alert("Please attach a file before submitting.")
-            apiSettings.body = JSON.stringify(
-                { fileAttached: await fileToBase64(fileInput)}
-            )
-        }
-        let response = await fetch(`/api/user/applypost?postid=${postId}`, apiSettings)
-        if (!response.ok) 
-            console.log(response)
-        else {
-            if (response.redirected)
-                window.redirectToLogin();
-            else {
-                response = await response.json();
-                if (response.error) {
-                    alert(response.error)
-                } else {
-                    new ToastTemplate("You have successfully registered for this activity!", window.location.pathname + window.location.search).redirect();
-                }
-            }
-        }
-    })
-
-    document.querySelector(".cancel_post_but").addEventListener("click", function() {
-        alert("You have canceled this activity!");
-    });
 }
 
 
@@ -543,8 +478,8 @@ async function editPost() {
   today.setHours(7, 0, 0, 0);
   
   try {
-    const response = await fetch("/api/post", {
-      method: 'POST',
+    const response = await fetch(`/api/post?postid=${postId}`, {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -570,8 +505,9 @@ async function editPost() {
     } else if (!response.ok) {
       window.showToast("Failed to create post.", "error");
     } else {
-      await window.changeToast("Post created successfully", "/", "success");
       elements.popup.style.display = 'none';
+      await window.showToast("Post updated successfully", "success");
+      window.location.reload();
     }
   } catch (error) {
     console.error("Error:", error);
@@ -579,7 +515,8 @@ async function editPost() {
   }
 }
 
-async function editPostInit(){
+function editPostInit(){
+  const isAttached = $('.check_attach_file input');
   const activityName = $('.create_act_name input');
   const description = $('.descript_create');
   const eventDate = $('#eventdate');
@@ -588,7 +525,7 @@ async function editPostInit(){
   const googleMapLink = $('.input_map_link input');
   // ไม่ใช้ .value
   
-
+  isAttached.checked = post.isAttached;
   activityName.value = post.postName;
   description.value = post.detail;
   let temp = new Date(activity.actDatetime);
@@ -608,19 +545,130 @@ async function editPostInit(){
     handleTagSelection({ target: div });
   })
 
+  const byteCharacters = atob(post.coverPageImg);
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+  const blob = new Blob([byteArray], { type: 'image/jpeg' });
+  const file = new File([blob], "coverPageImg.jpg", { type: 'image/jpeg' });
 
+  const dataTransfer = new DataTransfer();
+  dataTransfer.items.add(file);
+  elements.imageUpload.files = dataTransfer.files;
+
+  elements.previewImage.src = `data:image/jpeg;base64, ${post.coverPageImg}`
+  elements.previewImage.style.display = 'block';
+  elements.uploadText.style.display = 'none';
 }
 
+async function userButtonHandler(){
+  const editBut = document.querySelector(".edit_but");
+  const viewBut = document.querySelector(".view_but");
+  const cancelBut = document.querySelector(".cancel_post_but");
+  const regBut = document.querySelector(".reg_but");
+  const appBut = document.querySelector(".app_but");
+
+  if (isOwner) {
+      editBut.style.display = "block";
+      // viewBut.style.display = "block";
+      cancelBut.style.display = "block";
+  }else {
+      if (!post.isApplied){
+          regBut.style.display = "block";
+          if (post.isAttached)
+              appBut.style.display = "block";
+      }
+      else {
+          cancelBut.style.display = "block";
+          cancelBut.textContent = "Cancel Registration"
+      }
+  }
+
+  ///////////////// Button Event /////////////////
+  
+  regBut.addEventListener("click", async function() {        
+      let apiSettings = {
+          method: "POST",
+          credentials: 'include',
+          headers: {'Content-Type': 'application/json'}
+      }
+
+      const fileToBase64 = (file) => {
+          return new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.readAsDataURL(file);
+              reader.onload = () => resolve(reader.result.split(",")[1]); // ตัด "data:image/png;base64," ออก
+              reader.onerror = (error) => reject(error);
+          });
+      };
+      if (post.isAttached){
+          let fileInput = document.getElementById("fileInput").files[0]
+          if (!fileInput) 
+              return alert("Please attach a file before submitting.")
+          apiSettings.body = JSON.stringify(
+              { fileAttached: await fileToBase64(fileInput)}
+          )
+      }
+      let response = await fetch(`/api/user/applypost?postid=${postId}`, apiSettings)
+      if (!response.ok) 
+          console.log(response)
+      else {
+          if (response.redirected)
+              window.redirectToLogin();
+          else {
+              response = await response.json();
+              if (response.error) {
+                  window.changePage(response.error, "/login", "error");
+              } else {
+                  window.changePage("You have successfully registered for this activity!", 
+                                    window.location.pathname + window.location.search, 
+                                    "success")
+              }
+          }
+      }
+  })
+
+  cancelBut.addEventListener("click", async function() {
+      let apiPath, successMessage, failMessage, successRedirect;
+      if (isOwner){
+        apiPath = `/api/post?postid=${postId}`
+        successMessage = "Post deleted successfully"
+        failMessage = "Failed to delete post"
+        successRedirect = "/home"
+      }
+      else {
+        apiPath = `api/user/applypost?postid=${postId}`
+        successMessage = "Post registration canceled successfully"
+        failMessage = "Failed to cancel post registration"
+        successRedirect = window.location.pathname + window.location.search
+      }
+      await fetch(apiPath, {
+          method: 'DELETE',
+          headers: {'Content-Type': 'application/json'}
+          })
+      .then(response => {
+          if (response.ok) {
+              window.changePage(successMessage, successRedirect, "success");
+          } else {
+              window.changePage(failMessage, "/home", "error");
+          }
+      })
+  });
+}
 
 document.addEventListener("DOMContentLoaded", async function() {
   await showPostDetail();
+  await userButtonHandler();
 
   initEventListeners();
   initDateValidation();
   await initActivityTypes();
   await initProvincesAndAmphures();
   updateTagPlaceholder();
-  await editPostInit();
+  if (isOwner)
+    editPostInit();
 });
 
 // For testing
