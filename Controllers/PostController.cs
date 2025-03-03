@@ -371,5 +371,27 @@ public class PostController : Controller
         await _db.SaveChangesAsync();
         return Json(new{like = post.Like, isLiked}); // ส่งจำนวนไลก์กลับไป
     }
+
+
+    [Route("api/chat/getactiveinvites")]
+    [HttpGet]
+    public async Task<IActionResult> GetActiveInvites()
+    {
+        var activeInvites = await _db.PostInvitations
+            .OrderByDescending(i => i.SentAt)
+            .Select(i => new
+            {
+                i.PostId,
+                i.PostName,
+                i.PostDetail,
+                Username = _db.Users
+                    .Where(u => u.Id == i.InviterUserId)
+                    .Select(u => u.Username)
+                    .FirstOrDefault() ?? "Unknown"
+            })
+            .ToListAsync();
+
+        return Ok(activeInvites);
+    }
 }
 

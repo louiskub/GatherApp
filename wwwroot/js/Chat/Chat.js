@@ -334,3 +334,4 @@ async function loadPreviousMessages() {
         console.error("Full error details:", JSON.stringify(err, null, 2));
     }
 }
+

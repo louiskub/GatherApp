@@ -12,7 +12,7 @@
     --text-color: #fff;
     --text-in-hover-color: #000;
     --chat-bg-color: #222;
-    --chat-hover-color: #1a73e8;
+    --chat-hover-color: #a4d0ff;
     --border-color: #555;
     --button-bg: #0056b3;
     --button-hover-bg: #003d80;
@@ -363,7 +363,7 @@ h1.top {
 
 #actionButton {
     color: #0084FF;
-    font-size: 28px; 
+    font-size: 40px; 
     background: transparent;
     border: none;
     cursor: pointer;
@@ -392,7 +392,7 @@ h1.top {
 
 
 .emoji-main {
-    font-size: 25px;
+    font-size: 35px;
     background: none;
     border: none;
     cursor: pointer;
@@ -425,7 +425,7 @@ h1.top {
 }
 
 .emoji-picker button {
-    font-size: 22px;
+    font-size: 28px;
     background: none;
     border: none;
     cursor: pointer;
@@ -442,124 +442,202 @@ h1.top {
 }
 
 .post-invite {
-    background: #f8f9fa;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 12px;
-    margin: 10px 0;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease-in-out;
+    min-width: 360px; 
+    min-height: 200px;
+    width: auto; 
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 18px;
+    margin: 15px 0;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+    border-radius: 16px;
+    border-left: 5px solid #00d0ff;
+    box-shadow: 0 10px 30px rgba(0, 208, 255, 0.3);
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+    font-family: "Poppins", sans-serif;
 }
 
 .post-invite:hover {
     transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0, 208, 255, 0.5);
+}
+
+.post-invite::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(0, 208, 255, 0.3), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.5s ease;
+}
+.post-invite:hover::before {
+    left: 100%;
 }
 
 .post-invite p {
     font-size: 16px;
-    color: #333;
-    margin-bottom: 8px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--text-color);
 }
 
 .post-details {
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    padding: 10px;
-    margin-top: 5px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 15px;
+    border-radius: 12px;
+    border-left: 4px solid #00d0ff;
+    backdrop-filter: blur(12px);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 0 12px rgba(0, 208, 255, 0.3);
 }
 
 .post-details h4 {
-    margin: 0;
-    font-size: 18px;
-    color: #007bff;
+    font-size: 20px;
+    font-weight: bold;
+    color: #00a0e9;
+    margin-bottom: 6px;
+    text-shadow: 0 0 5px rgba(0, 208, 255, 0.4);
 }
 
 .post-details p {
     font-size: 14px;
-    color: #666;
-    margin: 5px 0;
+    color: var(--text-color);
+    font-weight: 500;
+    margin-bottom: 8px;
 }
 
-.post-invite button {
-    background: #007bff;
+.post-details button {
+    background: linear-gradient(135deg, #00d0ff, #0089c9);
     color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 6px;
     font-size: 14px;
+    font-weight: bold;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background 0.3s ease-in-out;
-    display: block;
-    width: 100px;
-    text-align: center;
-    margin-top: 8px;
+    transition: all 0.3s ease-in-out;
+    margin-top: 10px;
+    box-shadow: 0 4px 12px rgba(0, 208, 255, 0.4);
 }
 
-.post-invite button:hover {
-    background: #0056b3;
+.post-details button:hover {
+    background: linear-gradient(135deg, #0089c9, #005f8e);
+    transform: scale(1.05);
+    box-shadow: 0 6px 18px rgba(0, 208, 255, 0.6);
 }
+
 
 #postSelectionDropdown {
-    width: 100%;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    background: #fff;
-    font-size: 16px;
-    color: #333;
+    padding: 8px;
+    border-radius: 8px;
+    border: 2px solid rgba(0, 123, 255, 0.6);
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    font-weight: bold;
+    color: black;
     cursor: pointer;
-    transition: border 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    width: 180px;
+    box-shadow: 0 3px 8px rgba(0, 123, 255, 0.3);
+    appearance: none;
 }
 
 #postSelectionDropdown:focus {
     border-color: #007bff;
     outline: none;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 12px rgba(0, 123, 255, 0.4);
+    transform: scale(1.03);
+}
+;
+
+#postSelectionDropdown option {
+    background: white; 
+    color: black;      
+    font-size: 14px;
+    padding: 10px;  
+}
+
+#postSelectionDropdown option:checked {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
 }
 
 
 .invite-container {
     display: flex;
     align-items: center;
-    gap: 10px; 
+    gap: 10px;
     justify-content: center;
-    margin: 10px 0;
+    margin: 15px 0;
+    padding: 12px 15px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease-in-out;
 }
 
-
-#postSelectionDropdown {
-    padding: 8px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    background: #fff;
-    font-size: 14px;
-    color: #333;
-    cursor: pointer;
-    transition: border 0.3s ease-in-out;
-    width: 190px;
+.invite-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
 }
-
-#postSelectionDropdown:focus {
-    border-color: #007bff;
-    outline: none;
-}
-
 
 #inviteButton {
-    background: #007bff;
+    background: linear-gradient(135deg, #007bff, #0046b3);
     color: white;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 8px 16px;
     border: none;
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-size: 11px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
     white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+}
+
+#inviteButton::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 250%;
+    height: 250%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
 }
 
 #inviteButton:hover {
-    background: #0056b3;
+    background: linear-gradient(135deg, #0056b3, #002d80);
+    box-shadow: 0 6px 18px rgba(0, 123, 255, 0.5);
+    transform: scale(1.05);
 }
+
+#inviteButton:hover::before {
+    opacity: 1;
+}
+
+
 
 
 

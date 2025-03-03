@@ -31,28 +31,69 @@ function setupGlobalChatListeners() {
         appendGlobalMessage(isMine,username, message, sentAt, profileImageUrl);
     });
 
-    connection.on("LoadPreviousGlobalMessages", (messages) => {
-        if (!Array.isArray(messages)) {
-            console.error("Invalid response from server! Expected array but got:", messages);
+    connection.on("LoadPreviousGlobalMessages", (messages , postInvitations) => {
+        console.log("[Debug] Received Messages from Server:", messages);
+        console.log("[Debug] Received Post Invitations:", postInvitations);
+    
+        if (!Array.isArray(messages) || !Array.isArray(postInvitations)) {
+            console.error("Invalid response from server! Messages or Post Invitations are not arrays.");
             return;
-        }   
-
+        }
+    
         const chatBox = document.getElementById("globalChatBox");
         chatBox.innerHTML = ""; 
-
-        messages.forEach((msg) => {
-            let isMine = msg.IsMine ?? msg.isMine ?? false;
-            
-            if (msg.Message.startsWith("INVITE:")) {
-                let postId = msg.Message.split(":")[1];
-                appendGlobalInvitation(msg.Username, postId);
-            } else {
-                appendGlobalMessage(isMine, msg.Username, msg.Message, msg.SentAt, msg.ProfileImg);
+    
+        // ✅ รวม messages และ postInvitations เป็น array เดียว
+        const allItems = [
+            ...messages.map(msg => ({
+                type: "message",
+                isMine: msg.IsMine ?? msg.isMine ?? false,
+                username: msg.Username ?? msg.username ?? "Unknown",
+                message: msg.Message ?? msg.message ?? "[No Message]",
+                sentAt: msg.SentAt ?? msg.sentAt ?? new Date().toISOString(),
+                profileImageUrl: msg.ProfileImg ?? msg.profileImg ?? "https://example.com/default-profile.jpg"
+            })),
+            ...postInvitations.map(inv => ({
+                type: "invitation",
+                postId: inv.postId ?? inv.PostId ?? null,
+                postName: inv.postName ?? inv.PostName ?? "No Title",
+                postDetail: inv.postDetail ?? inv.PostDetail ?? "No Details",
+                username: inv.username ?? inv.Username ?? "Unknown",
+                sentAt: inv.sentAt ?? inv.SentAt ?? new Date().toISOString()
+            }))
+        ];
+    
+        console.log("[Debug] All items before sort:", allItems);
+    
+        allItems.forEach(item => item.sentAt = new Date(item.sentAt));
+    
+        allItems.forEach(item => {
+            if (isNaN(item.sentAt.getTime())) {
+                console.error("[ERROR] Invalid Date detected:", item);
             }
         });
+    
+        allItems.sort((a, b) => a.sentAt - b.sentAt);
+    
+        console.log("[Debug] All items after sort:", allItems);
+    
+        allItems.forEach(item => {
+            if (item.type === "message") {
+                appendGlobalMessage(item.isMine, item.username, item.message, item.sentAt.toISOString(), item.profileImageUrl);
+            } else if (item.type === "invitation") {
+                appendPostInvitation(item.postId, item.postName, item.postDetail, item.username);
+            }
+        });
+    
+        console.log("[Debug] Messages and invitations rendered.");
     });
 
-    function appendGlobalInvitation(postId, postName, postDetail, username) {
+    function appendPostInvitation(postId, postName, postDetail, username) {
+
+        if (!postId || !postName || !postDetail || !username) {
+            console.error("[ERROR] appendPostInvitation received undefined values", { postId, postName, postDetail, username });
+            return;
+        }
         const chatBox = document.getElementById("globalChatBox");
         const inviteContainer = document.createElement("div");
         inviteContainer.className = "post-invite";
@@ -69,6 +110,7 @@ function setupGlobalChatListeners() {
         chatBox.appendChild(inviteContainer);
     }
     
+
     
 
     connection.on("Error", (errorMessage) => {
@@ -98,6 +140,7 @@ function loadUserPosts() {
         })
         .catch(error => console.error("Error loading posts:", error));
 }
+
 
 function SendPostInvitation() {
     const dropdown = document.getElementById("postSelectionDropdown");
@@ -204,6 +247,7 @@ function appendGlobalMessage(IsMine,username, message, sentAt, profileImageUrl) 
             </div>
         </div>
     `;
+
     
     chatBox.appendChild(messageElement);
     chatBox.scrollTop = chatBox.scrollHeight;
@@ -285,7 +329,7 @@ async function sendEmoji(emoji) {
     }
 
     try {
-        await connection.invoke("sendGlobalMessage", currentPostId, emoji);
+        await connection.invoke("sendGlobalMessage", emoji);
         document.getElementById("emojiPicker").style.display = "none"; 
     } catch (err) {
         console.error("Failed to send emoji: ", err);
@@ -325,3 +369,4 @@ async function handleSend() {
         await sendLike();
     }
 }
+
