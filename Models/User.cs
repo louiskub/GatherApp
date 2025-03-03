@@ -99,7 +99,7 @@ public class User{
             { "receivedRatings", ReceivedRatings }
         };
         if (isOwner == true)
-            obj.Add("GivenRatings", GivenRatings);
+            obj.Add("givenRatings", GivenRatings);
         return obj;
     }
 

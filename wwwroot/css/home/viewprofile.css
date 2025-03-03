@@ -1,0 +1,461 @@
+@import url('/css/src.css');
+/* @import url('/wwwroot/css/src.css'); */
+
+/* Sidebar (Sidenav) */
+:root {
+    --sidebar-width: 17.5rem;
+
+    --sidenav-bg: var(--pink);
+    --sidenav-text: var(--chocolate-cosmos);
+    --sidenav-hover-bg: var(--bright-pink-crayola);
+    --sidenav-hover-text: var(--seasalt);
+    --sidenav-border: var(--rose-red);
+
+    /* 🎨 Light Mode */
+    --dropdown-btn-bg: var(--bright-pink-crayola-2);
+    --dropdown-btn-text: var(--eerie-black);
+    --dropdown-btn-border: var(--rose-red);
+    --dropdown-btn-hover-bg: var(--bright-pink-crayola);
+    --dropdown-btn-hover-text: var(--seasalt);
+    --dropdown-btn-shadow: var(--french-gray);
+
+    --write-button-bg: var(--rose-red);
+    --write-button-text: var(--seasalt);
+    --write-button-hover-bg: var(--bright-pink-crayola);
+    --write-button-hover-text: var(--seasalt);
+    --write-button-shadow: var(--chocolate-cosmos);
+
+    --label: var(#333);
+    --container-bg: var(--lavender-blush);
+
+}
+/* Dark Mode */
+[data-theme="dark"] {
+    --sidenav-bg: var(--eerie-black);
+    --sidenav-text: var(--seasalt);
+    --sidenav-hover-bg: var(--rose-red);
+    --sidenav-hover-text: var(--seasalt);
+    --sidenav-border: var(--outer-space);
+
+    --dropdown-btn-bg: var(--eerie-black);
+    --dropdown-btn-text: var(--seasalt);
+    --dropdown-btn-border: var(--amaranth-purple);
+    --dropdown-btn-hover-bg: var(--rose-red);
+    --dropdown-btn-hover-text: var(--antiflash-white);
+    --dropdown-btn-shadow: var(--outer-space);
+
+    --write-button-bg: var(--claret);
+    --write-button-text: var(--seasalt);
+    --write-button-hover-bg: var(--amaranth-purple);
+    --write-button-hover-text: var(--seasalt);
+    --write-button-shadow: var(--outer-space);
+
+    --label: var(--seasalt);
+    --container-bg: var(--pinkpink);
+}
+
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 50px;
+    font-family: 'Arial', sans-serif;
+    background: var(--sidenav-bg);
+    min-height: 100vh;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--container-bg);
+    width: 80vw;
+    max-width: 1600px;
+    padding: 40px;
+    box-shadow: 0px 10px 20px rgb(252, 197, 207);
+    text-align: center;
+    position: relative;
+    margin-top: 200px;
+    margin-bottom: 50px;
+    backdrop-filter: blur(10px);
+    animation: fadeIn 0.8s ease-in-out;
+    border: 2px dashed #aaa;
+    border-radius: 25px;
+}
+
+/* .container::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border: 2px dashed #aaa;
+    border-radius: 25px;
+    opacity: 0.5;
+} */
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.container {
+    animation: slideIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.profile-pic {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: white;
+    object-fit: cover;
+    position: absolute;
+    top: -100px;
+    /* border: 4px double #000; */
+    border: 2px dashed #aaa;
+    box-shadow: 0px 10px 20px rgb(252, 197, 207);
+    backdrop-filter: blur(10px);
+    /* box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3); */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s;
+}
+
+.profile-pic:hover {
+    /* transform: rotate(10deg) scale(1.1); */
+    transform: scale3d(1.4, 1.4, 1.4);
+    box-shadow: 0px 10px 20px rgb(252, 197, 207);
+    /* border: 4px dashed #000; */
+}
+
+.edit-button {
+    position: absolute;
+    left: 50px; /* จัดให้อยู่ทางขวาแบบยืดหยุ่น */
+    top: 45px; /* ค่าต่ำสุดจากด้านล่าง */
+    display: flex;
+    justify-content: flex-end;
+    align-items: end;
+    text-align: center;
+    gap: 20px;
+    width: auto;
+    transition: transform 0.3s ease-in-out;
+}
+
+.edit-button #editbtn , .edit-button #savebtn , .edit-button #cancelbtn {
+    padding: 10px 25px;
+    height: 60px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    border-radius: 30px;
+}
+
+.edit-button #editbtn { background: orange; color: white;}
+.edit-button #savebtn { background: green; color: white; display: none; }
+.edit-button #cancelbtn { background: red; color: white; display: none; }
+
+.edit-button #editbtn:hover, .edit-button #savebtn:hover , .edit-button #cancelbtn:hover {
+    transform: scale(1.03);
+}
+
+/* .popup-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+.popup {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 300px;
+}
+.popup input {
+    width: 90%;
+    padding: 8px;
+    margin: 10px 0;
+}
+.popup button {
+    padding: 10px;
+    width: 100px;
+    margin: 5px;
+    cursor: pointer;
+} */
+
+.popup-container { 
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+.popup {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 300px;
+}
+.popup input {
+    width: 90%;
+    padding: 8px;
+    margin: 10px 0;
+}
+/* สไตล์สำหรับกล่องใส่รหัสผ่าน */
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.password-container input {
+    padding-right: 30px;
+    width: 100%;
+}
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+.popup button {
+    padding: 10px;
+    width: 100px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+
+.upload_container {
+    margin-top: 80px;
+    margin-bottom: -280px;
+    width: 100% ;
+    height: 200px ;
+    overflow: hidden ;
+    justify-content: center ;
+    font-size: 20px ;
+}
+
+#imageUpload {
+    margin-left: 60px;
+}
+
+.preview {
+    width: 100% ;
+    height: 100% ;
+    justify-content: center ;
+    align-items: center ;
+}
+
+.preview img {
+    max-width: 100% ;
+    max-height: 100% ;
+    width: auto ;
+    height: auto ;
+    object-fit: contain ;
+}
+
+
+.behavior-score {
+    position: absolute;
+    right: 50px; /* จัดให้อยู่ทางขวาแบบยืดหยุ่น */
+    top: 45px; /* ค่าต่ำสุดจากด้านล่าง */
+    display: flex;
+    justify-content: flex-end;
+    align-items: end;
+    text-align: center;
+    gap: 20px;
+    width: auto;
+    transition: transform 0.3s ease-in-out;
+}
+
+.behavior-score:hover {
+    transform: scale(1.03);
+}
+
+.behavior-score #behaviorscore {
+    padding: 10px 20px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    color: white;
+    background-color: rgb(197, 39, 68);
+    border: none;
+    border-radius: 30px;
+    height: 60px;
+}
+
+.form-container {
+    width: 100%;
+    margin-top: 120px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 15px 0;
+    width: 100%;
+    transition: transform 0.3s ease-in-out;
+}
+
+.form-group:hover {
+    transform: scale(1.02);
+}
+
+.allnamebox {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 20px;
+    /* transition: transform 0.3s ease-in-out; */
+}
+
+.namebox {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.namebox:first-child:hover, .namebox:last-child:hover {
+    transition: transform 0.3s ease-in-out;
+    transform: scale(1.02);
+}
+
+.namebox label:first-child:hover, .namebox label:last-child:hover {
+    transition: transform 0.3s ease-in-out;
+    color: var(--post-category-text);
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 18px;
+    color: var(--label);
+}
+
+label:hover {
+    color: var(--post-category-text);
+}
+
+.form-group input, .namebox input, textarea {
+    padding: 12px;
+    border: 2px solid #000;
+    border-radius: 8px;
+    font-size: 18px;
+    width: 100%;
+    resize: none;
+    transition: all 0.3s ease-in-out;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+input:focus, textarea:focus {
+    border-color: #555;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.rating-container {
+    margin-top: 35px;
+    margin-bottom: 10px;
+    /* background-color: white; */
+    border-radius: 8px;
+    padding: 20px;
+    /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
+    text-align: center;
+}
+
+.rating-container h2 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 23px;
+}
+  
+.stars {
+    display: flex;
+    justify-content: center;
+    gap:20px;
+    margin: 15px 0;
+}
+  
+.star {
+    position: relative;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    margin: 0 2px;
+}
+  
+.star-empty {
+    color: #d1d5db;
+}
+  
+.star-full {
+    color: #fbbf24;
+}
+  
+.star-half {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 83%;
+    overflow: hiddei;
+    color: #fbbf24;
+}
+
+.postcontainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--container-bg);
+    width: 80vw;
+    max-width: 1600px;
+    padding: 40px;
+    box-shadow: 0px 10px 20px rgb(252, 197, 207);
+    text-align: center;
+    position: relative;
+    margin-top: 30px;
+    margin-bottom: 50px;
+    backdrop-filter: blur(10px);
+    animation: fadeIn 0.8s ease-in-out;
+    border: 2px dashed #aaa;
+    border-radius: 25px;
+}
+
+.posttitle {
+    display: flex;
+    /* justify-content: flex-end; */
+    /* align-items: end; */
+    text-align: center;
+    gap: 20px;
+    width: 150px;
+    transition: transform 0.3s ease-in-out;
+    padding: 10px 20px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 30px;
+    border: none;
+    background: #cd97e0ff;
+    color: white;
+}
+
+.posttitle:hover {
+    transform: scale(1.03);
+}
