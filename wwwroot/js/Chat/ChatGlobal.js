@@ -31,20 +31,45 @@ function setupGlobalChatListeners() {
         appendGlobalMessage(isMine,username, message, sentAt, profileImageUrl);
     });
 
-    connection.on("LoadPreviousMessages", (messages) => {
+    connection.on("LoadPreviousGlobalMessages", (messages) => {
         if (!Array.isArray(messages)) {
             console.error("Invalid response from server! Expected array but got:", messages);
             return;
-        }
+        }   
 
         const chatBox = document.getElementById("globalChatBox");
         chatBox.innerHTML = ""; 
 
         messages.forEach((msg) => {
             let isMine = msg.IsMine ?? msg.isMine ?? false;
-            appendGlobalMessage(isMine,msg.username, msg.message, msg.sentAt, msg.profileImg);
+            
+            if (msg.Message.startsWith("INVITE:")) {
+                let postId = msg.Message.split(":")[1];
+                appendGlobalInvitation(msg.Username, postId);
+            } else {
+                appendGlobalMessage(isMine, msg.Username, msg.Message, msg.SentAt, msg.ProfileImg);
+            }
         });
     });
+
+    function appendGlobalInvitation(postId, postName, postDetail, username) {
+        const chatBox = document.getElementById("globalChatBox");
+        const inviteContainer = document.createElement("div");
+        inviteContainer.className = "post-invite";
+    
+        inviteContainer.innerHTML = `
+            <p><strong>${username}</strong> is inviting users to apply for:</p>
+            <div class="post-details">
+                <h4>${postName}</h4>
+                <p>${postDetail}</p>
+                <button onclick="applyForPost('${postId}')">Apply</button>
+            </div>
+        `;
+    
+        chatBox.appendChild(inviteContainer);
+    }
+    
+    
 
     connection.on("Error", (errorMessage) => {
         alert("Error: " + errorMessage);
@@ -82,7 +107,7 @@ function SendPostInvitation() {
         alert("Please select a post first!");
         return;
     }
-    
+
     postId = parseInt(postId, 10);
     console.log("[DEBUG] postId (before conversion):", postId, "Type:", typeof postId);
     connection.invoke("SendPostInvitation", postId)
@@ -107,8 +132,29 @@ connection.on("ReceivePostInvitation", (postId, postName, postDetail, username) 
 });
 
 function applyForPost(postId) {
-    window.location.href = `/api/user/applypost?postId=${encodeURIComponent(postId)}`;
+    console.log("[DEBUG] Sending POST request to:", `http://localhost:5174/api/user/applypost?postid=${postId}`);
+
+    fetch(`http://localhost:5174/api/user/applypost?postid=${postId}`, {  
+        method: "POST",  
+        headers: {
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(text => { throw new Error(text); });
+        }
+        return response.json();
+    })
+    .then(data => {
+        alert("Successfully applied for the post!");
+    })
+    .catch(error => {
+        console.error("[ERROR] Failed to apply:", error);
+        alert(`Error: ${error.message}`);
+    });
 }
+
+
 
 function appendGlobalMessage(IsMine,username, message, sentAt, profileImageUrl) {
     console.log("Adding global message:", {IsMine, username, message, sentAt, profileImageUrl });
@@ -117,6 +163,7 @@ function appendGlobalMessage(IsMine,username, message, sentAt, profileImageUrl) 
         console.error("globalChatBox not found!");
         return;
     }
+
 
     let formattedTime = "Unknown Time";
     try {

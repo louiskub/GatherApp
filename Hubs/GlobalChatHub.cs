@@ -80,16 +80,14 @@ public class GlobalChatHub : Hub
             _userConnections[Context.ConnectionId] = userId;
         }
 
-        var previousMessages = await LoadGlobalMessages();
-
-        await Clients.Caller.SendAsync("LoadPreviousMessages", previousMessages);
+        await LoadGlobalMessages();
 
         await Groups.AddToGroupAsync(Context.ConnectionId, "GlobalChat");
 
         await base.OnConnectedAsync();
     }
 
-    public async Task<List<object>> LoadGlobalMessages()
+    public async Task LoadGlobalMessages()
     {
         var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var currentUserId = userId; 
@@ -108,7 +106,7 @@ public class GlobalChatHub : Hub
             })
             .ToListAsync();
 
-        return messages.Cast<object>().ToList();
+        await Clients.Caller.SendAsync("LoadPreviousGlobalMessages", messages); 
     }
 
 public async Task SendPostInvitation(int postId)
@@ -137,6 +135,17 @@ public async Task SendPostInvitation(int postId)
 
         var user = await _db.Users.FindAsync(userId);
         string username = user?.Username ?? "Unknown";
+
+         var inviteMessage = new ChatGlobal
+        {
+            UserId = userId,
+            Message = $"INVITE:{postId}",
+            SentAt = DateTime.UtcNow,
+            ProfileImg = user?.ProfileImg ?? "/default-profile.png"
+        };
+
+         _db.ChatGlobals.Add(inviteMessage);
+        await _db.SaveChangesAsync();
 
         Console.WriteLine($"[DEBUG] User '{username}' invited to post '{post.PostName}' ({postId})");
 

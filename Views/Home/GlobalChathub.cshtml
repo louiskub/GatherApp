@@ -39,11 +39,11 @@
                 </div>
             </div>
 
-            <select id="postSelectionDropdown">
-                <option value="">-- Select a Post to Invite --</option>
-            </select>
+            <div class="invite-container">
+            <select id="postSelectionDropdown"></select>
+            <button id="inviteButton" onclick="SendPostInvitation()">Send Invitation</button>
+        </div>
 
-            <button id="sendInviteButton" onclick="SendPostInvitation()">Invite</button>
             
             <button id="actionButton" class="sendIcon" onclick="handleSend()">
                 <i class="fa-solid fa-paper-plane"></i>
