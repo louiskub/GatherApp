@@ -1,48 +1,73 @@
 export default class ConfirmDialog{
-    constructor(heaeder, message, notext, yestext, noCallback, yesCallback) {
+    constructor() {
         this.div = document.createElement("div");
         this.div.classList.add("confirm-overlay");
 
-        this.confirmBox = document.createElement("div");
-        this.confirmBox.classList.add("confirm-box");
-
-        this.confirmHeader = document.createElement("h2");
-        this.confirmHeader.id = "confirm-header";
-        this.confirmMessage = document.createElement("p");
-        this.confirmMessage.id = "confirmMessage";
-
-
-        this.confirmButtons = document.createElement("div");
-        this.confirmButtons.classList.add("confirm-buttons");
-
-        this.confirmNo = document.createElement("button");
-        this.confirmNo.classList.add("confirm-btn", "confirm-no");
-        this.confirmNo.id = "confirmNo";
+        this.div.innerHTML =
+        `
+            <div class="confirm-box">
+                <h2 id="confirm-header"></h2>
+                <p id="confirm-message"></p>
+                <div class="confirm-buttons">
+                    <button class="confirm-btn confirm-no" id="confirmNo"></button>
+                    <button class="confirm-btn confirm-yes" id="confirmYes"></button>
+                </div>
+            </div>
+        `
         
-        this.confirmYes = document.createElement("button");
-        this.confirmYes.classList.add("confirm-btn", "confirm-yes");
-        this.confirmYes.id = "confirmYes";
+        this.css = document.createElement("link")
+        this.css.rel = "stylesheet"
+        this.css.href = "/css/components/confirm.css"
 
-        this.confirmButtons.appendChild(confirmNo);
-        this.confirmButtons.appendChild(confirmYes);
-        
-        this.confirmBox.appendChild(confirmHeader);
-        this.confirmBox.appendChild(confirmMessage);
-        this.confirmBox.appendChild(confirmButtons);
-
-        this.div.appendChild(confirmBox);
-
-
-        this.confirmYes.addEventListener("click", () => {
-            overlay.style.display = "none";
-            document.body.style.overflow = "";
-        })
-
-        this.confirmNo.addEventListener("click", () => { 
-            overlay.style.display = "none";
-            document.body.style.overflow = "";
-        })
-
+        document.body.appendChild(this.css)
         document.body.appendChild(this.div);
+    }
+
+    confirmAction(header, message, notext, yestext, yesCallback) {
+        return new Promise((resolve) => {
+            `
+            <h2 id="confirm-header"><span>⚠️</span>${header}</h2>
+            <p id="confirm-message">${message}</p>
+            <div class="confirm-buttons">
+                <button class="confirm-btn confirm-yes" id="confirmYes">${notext}</button>
+                <button class="confirm-btn confirm-no" id="confirmNo">${yestext}</button>
+            </div>`
+            
+            const overlay = this.div;
+            const confirmBox = overlay.querySelector(".confirm-box");
+
+            overlay.querySelector("#confirm-header").innerHTML = `<span>⚠️</span>${header}`;
+            overlay.querySelector("#confirm-message").innerHTML = message;
+
+            const btnNo = overlay.querySelector("#confirmNo");
+            const btnYes = overlay.querySelector("#confirmYes");
+            
+            btnNo.innerHTML = notext;
+            btnYes.innerHTML = yestext;
+
+            document.body.style.overflow = "hidden";
+            overlay.style.display = "flex";
+            
+            // คลิก No
+
+            async function btnSettings(){
+                confirmBox.classList.add("confirm-box-close");
+                setTimeout(() => {
+                    confirmBox.classList.remove("confirm-box-close");
+                    overlay.style.display = "none";
+                    document.body.style.overflow = "";
+                }, 250);
+            }
+
+            btnNo.onclick = async () => {
+                btnSettings();
+                await yesCallback;
+            };
+
+            // คลิก Yes
+            btnYes.onclick = () => {
+                btnSettings();
+            };
+        });
     }
 }

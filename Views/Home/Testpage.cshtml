@@ -1,10 +1,10 @@
-<link rel="stylesheet" href="/css/components/confirm.css">
+@* <link rel="stylesheet" href="/css/components/confirm.css">
 
 <!-- Confirm Box -->
 <div id="confirmOverlay" class="confirm-overlay">
     <div class="confirm-box">
         <h2 id="confirm-header"><span>⚠️</span>Delete this post?</h2>
-        <p id="confirmMessage">This action cannot be undone. Are you sure you want to proceed?</p>
+        <p id="confirm-message">This action cannot be undone. Are you sure you want to proceed?</p>
         <div class="confirm-buttons">
             <button class="confirm-btn confirm-yes" id="confirmYes">Keep it</button>
             <button class="confirm-btn confirm-no" id="confirmNo">Delete post</button>
@@ -17,7 +17,7 @@
     function confirmAction(message) {
         return new Promise((resolve) => {
             const overlay = document.getElementById("confirmOverlay");
-            const messageBox = document.getElementById("confirmMessage");
+            const messageBox = document.getElementById("confirm-message");
             const btnYes = document.getElementById("confirmYes");
             const btnNo = document.getElementById("confirmNo");
 
@@ -47,4 +47,21 @@ confirmAction("Are you sure you want to delete this?")
     //         alert("Deleted!");
     //     }
     // });
+</script> *@
+
+<div class="main">
+    <button id="kuy"> kuy </button>
+</div>
+
+<script type="module">
+    document.getElementById("kuy").addEventListener("click", async () => {
+        @* window.changePage("test", "/home") *@
+        function abcdef(a,b){
+            console.log(a+b)
+        }
+        window.confirmAction("Are you sure you want to delete this?", "Are you sure you want to delete this?", "Keep it", "Delete post"
+            , abcdef(1,2)
+        );
+        
+    });
 </script>
