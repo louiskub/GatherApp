@@ -10,15 +10,18 @@
 <div class="pageLayout">
    <h1 class="top">Application History</h1>
 
-  <!--<div class="containerStyle">
+    <!-- <div class="containerStyle">
     <div class="indicator finish"></div>
     <div class="innerContainer">
 
       <div class="contentStyle">
         <h2>Activity Name 1</h2>
-        <p>Date: Thu, Jan 30, 6:30 PM - 9:30 PM</p>
-      </div>
-
+        <div class="displayIcon">
+          <img src="~/assets/img/dateIcon.svg">
+          <p>Thu, Jan 30, 16:30 PM - 19:30 PM</p>
+        </div>
+      </div> -->
+<!--
       <div class="statusContainer">
         <div class="buttonContainer">
           <button class="buttonStyle review">Review</button>
@@ -81,16 +84,16 @@
 <script> 
   const ActivityList = document.querySelector(".pageLayout");
 
-  const Activity2 = new HistoryActivity('Thu, Jan 30, 6:30 PM - 9:30 PM', 'finish', 'finish')
+  const Activity2 = new HistoryActivity(12, 20, 'Thu, Jan 30, 6:30 PM - 9:30 PM', 'finish', 'finish', 'Cartoon','Japan', 'Crayon Shin Chan')
   ActivityList.appendChild(Activity2.render())
 
-  const Activity3 = new HistoryActivity('Thu, Jan 30, 6:30 PM - 9:30 PM', 'accept', 'accept')
+  const Activity3 = new HistoryActivity(12, 20, 'Thu, Jan 30, 6:30 PM - 9:30 PM', 'accept', 'accept', 'Artificial Intelligence','Support & Coaching', 'Virtual Reality')
   ActivityList.appendChild(Activity3.render())
 
-  const Activity4 = new HistoryActivity('Thu, Jan 30, 6:30 PM - 9:30 PM', 'pending', 'pending')
+  const Activity4 = new HistoryActivity(12, 20, 'Thu, Jan 30, 6:30 PM - 9:30 PM', 'pending', 'pending', 'Documentary Photography')
   ActivityList.appendChild(Activity4.render())
 
-  const Activity5 = new HistoryActivity('Thu, Jan 30, 6:30 PM - 9:30 PM', 'reject', 'reject')
+  const Activity5 = new HistoryActivity(12, 20, 'Thu, Jan 30, 6:30 PM - 9:30 PM', 'reject', 'reject', 'Game', 'Indoor')
   ActivityList.appendChild(Activity5.render())
 
   
