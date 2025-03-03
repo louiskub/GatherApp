@@ -655,20 +655,6 @@ async function userButtonHandler(){
         failMessage = "Failed to cancel post registration"
         successRedirect = window.location.pathname + window.location.search
       }
-      async function deleteApi(apiPath, successMessage, failMessage, successRedirect) {
-        await fetch(apiPath, {
-          method: 'DELETE',
-          headers: {'Content-Type': 'application/json'}
-        })
-          .then(response => {
-              if (response.ok) {
-                  window.changePage(successMessage, successRedirect, "success");
-              } else {
-                  window.changePage(failMessage, "/home", "error");
-              }
-          })
-      }
-
     window.confirmAction(
       head,
       cont,
