@@ -10,7 +10,6 @@ const $$ = selector => document.querySelectorAll(selector);
 
 var post, isOwner, owner, activity, actTypes, participants
 
-
 async function showPostDetail() {
     async function fetchPost() {
         let response = await fetch(`/api/post?postid=${postId}`);
@@ -569,7 +568,6 @@ async function userButtonHandler(){
   const cancelBut = document.querySelector(".cancel_post_but");
   const regBut = document.querySelector(".reg_but");
   const appBut = document.querySelector(".app_but");
-
   if (isOwner) {
       editBut.style.display = "block";
       // viewBut.style.display = "block";
@@ -581,54 +579,58 @@ async function userButtonHandler(){
               appBut.style.display = "block";
       }
       else {
+          if (post.isParticipant){
+              regBut.style.display = "block";
+              regBut.textContent = "You are already a participant"
+          }
           cancelBut.style.display = "block";
           cancelBut.textContent = "Cancel Registration"
       }
   }
 
   ///////////////// Button Event /////////////////
-  
-  regBut.addEventListener("click", async function() {        
-      let apiSettings = {
-          method: "POST",
-          credentials: 'include',
-          headers: {'Content-Type': 'application/json'}
-      }
+  if (!post.isParticipant)
+    regBut.addEventListener("click", async function() {        
+        let apiSettings = {
+            method: "POST",
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json'}
+        }
 
-      const fileToBase64 = (file) => {
-          return new Promise((resolve, reject) => {
-              const reader = new FileReader();
-              reader.readAsDataURL(file);
-              reader.onload = () => resolve(reader.result.split(",")[1]); // ตัด "data:image/png;base64," ออก
-              reader.onerror = (error) => reject(error);
-          });
-      };
-      if (post.isAttached){
-          let fileInput = document.getElementById("fileInput").files[0]
-          if (!fileInput) 
-              return alert("Please attach a file before submitting.")
-          apiSettings.body = JSON.stringify(
-              { fileAttached: await fileToBase64(fileInput)}
-          )
-      }
-      let response = await fetch(`/api/user/applypost?postid=${postId}`, apiSettings)
-      if (!response.ok) 
-          console.log(response)
-      else {
-          if (response.redirected)
-              window.redirectToLogin();
-          else {
-              response = await response.json();
-              if (response.error) {
-                  window.changePage(response.error, "/login", "error");
-              } else {
-                  window.changePage("You have successfully registered for this activity!", 
-                                    window.location.pathname + window.location.search, 
-                                    "success")
-              }
-          }
-      }
-  })
+        const fileToBase64 = (file) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result.split(",")[1]); // ตัด "data:image/png;base64," ออก
+                reader.onerror = (error) => reject(error);
+            });
+        };
+        if (post.isAttached){
+            let fileInput = document.getElementById("fileInput").files[0]
+            if (!fileInput) 
+                return alert("Please attach a file before submitting.")
+            apiSettings.body = JSON.stringify(
+                { fileAttached: await fileToBase64(fileInput)}
+            )
+        }
+        let response = await fetch(`/api/user/applypost?postid=${postId}`, apiSettings)
+        if (!response.ok) 
+            console.log(response)
+        else {
+            if (response.redirected)
+                window.redirectToLogin();
+            else {
+                response = await response.json();
+                if (response.error) {
+                    window.changePage(response.error, "/login", "error");
+                } else {
+                    window.changePage("You have successfully registered for this activity!", 
+                                      window.location.pathname + window.location.search, 
+                                      "success")
+                }
+            }
+        }
+    })
 
   cancelBut.addEventListener("click", async function() {
       let head, cont, noText, yesText;
