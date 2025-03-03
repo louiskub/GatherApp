@@ -29,6 +29,7 @@ async function fetchMyProfile() {
                 window.redirectToLogin();
             }
             response = await response.json();
+            document.dispatchEvent(new CustomEvent("userProfileLoaded", { detail: response }));
             return response;
         }else {
             logOut("Error: Please login again");

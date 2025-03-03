@@ -4,15 +4,20 @@ import ToastTemplate from "/js/components/handler/toast_template.js";
 const urlParams = new URLSearchParams(window.location.search);
 const postId = urlParams.get('postid') || urlParams.get('postId');
 
+// Select DOM elements with a helper function
+const $ = selector => document.querySelector(selector);
+const $$ = selector => document.querySelectorAll(selector);
+
+var post, isOwner, owner, activity, actTypes, participants
+
 async function showPostDetail() {
     async function fetchPost() {
-        const urlParams = window.location.search;
-        let response = await fetch(`/api/post${urlParams}`);
+        let response = await fetch(`/api/post?postid=${postId}`);
         if (!response.ok) {
             alert("Post not found");
             return;
         }
-        let post = await response.json();
+        post = await response.json();
         console.log(post)
         return post;
     }
@@ -26,13 +31,13 @@ async function showPostDetail() {
             return "data:image/jpeg;base64," + profileImg
     }
 
-    let post = await fetchPost();
-    let isOwner = post.isOwner;
+    post = await fetchPost();
+    isOwner = post.isOwner;
     post = post.post;
-    let owner = post.owner;
-    let activity = post.activity;
-    let actTypes = post.actTypes;
-    let participants = post.participants;
+    owner = post.owner;
+    activity = post.activity;
+    actTypes = post.actTypes;
+    participants = post.participants;
     post = post.post
 
     const postName = document.querySelector(".post_act_name h2");
@@ -51,8 +56,11 @@ async function showPostDetail() {
     const postDesc = document.querySelector(".act_descript");
     postDesc.textContent = post.detail;
 
-    const googleMap = document.querySelector(".googlemap iframe");
-    googleMap.src = activity.googleMapLink;
+    const googleMap = document.querySelector(".googlemap");
+    if (activity.googleMapLink && activity.googleMapLink.includes("https://www.google.com/maps/embed?pb="))
+        googleMap.querySelector("iframe").src = activity.googleMapLink;
+    else
+        googleMap.removeChild(googleMap.querySelector("iframe"));
 
 
     const miniInfo = document.querySelector(".act_miniinfo");
@@ -71,7 +79,7 @@ async function showPostDetail() {
     formattedDate = formattedDate.join(" ")
     miniLeft.querySelector("h1").textContent = formattedDate;
     miniLeft.querySelector("h2").textContent = post.postName;
-    miniLeft.querySelector("h3").textContent = activity.actName;
+    miniLeft.querySelector("h3").innerHTML = `<i class="fa-solid fa-location-dot"></i> ` + activity.province + ", " + activity.district;
     miniLeft.querySelectorAll("p")[0].textContent = `Accepted : ${post.curParticipant}/ ${post.maxParticipant}`;
     miniLeft.querySelectorAll("p")[1].textContent = `Registered : ${post.totalApplicant}`;
     
@@ -107,132 +115,10 @@ async function showPostDetail() {
         tag.textContent = actType;
         tagContainer.appendChild(tag);
     })
-
-    const editBut = document.querySelector(".edit_but");
-    const viewBut = document.querySelector(".view_but");
-    const cancelBut = document.querySelector(".cancel_post_but");
-    const regBut = document.querySelector(".reg_but");
-    const appBut = document.querySelector(".app_but");
-
-    if (isOwner) {
-        editBut.style.display = "block";
-        viewBut.style.display = "block";
-        cancelBut.style.display = "block";
-    }else {
-        if (!post.isApplied){
-            regBut.style.display = "block";
-            if (post.isAttached)
-                appBut.style.display = "block";
-        }
-    }
-
-    ///////////////// Button Event /////////////////
-    console.log(regBut)
-    regBut.addEventListener("click", async function() {
-        const urlParams = new URLSearchParams(window.location.search)
-        const postId = urlParams.get('postid') || urlParams.get('postId');
-        
-        let apiSettings = {
-            method: "POST",
-            credentials: 'include',
-            headers: {'Content-Type': 'application/json'}
-        }
-
-        const fileToBase64 = (file) => {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result.split(",")[1]); // ตัด "data:image/png;base64," ออก
-                reader.onerror = (error) => reject(error);
-            });
-        };
-        if (post.isAttached){
-            let fileInput = document.getElementById("fileInput").files[0]
-            if (!fileInput) 
-                return alert("Please attach a file before submitting.")
-            apiSettings.body = JSON.stringify(
-                { fileAttached: await fileToBase64(fileInput)}
-            )
-        }
-        let response = await fetch(`/api/user/applypost?postid=${postId}`, apiSettings)
-        if (!response.ok) 
-            console.log(response)
-        else {
-            if (response.redirected)
-                window.redirectToLogin();
-            else {
-                response = await response.json();
-                if (response.error) {
-                    alert(response.error)
-                } else {
-                    new ToastTemplate("You have successfully registered for this activity!", window.location.pathname + window.location.search).redirect();
-                }
-            }
-        }
-    })
-
-    document.querySelector(".cancel_post_but").addEventListener("click", function() {
-        alert("You have canceled this activity!");
-    });
 }
 
 
-document.addEventListener("DOMContentLoaded", async function() {
-    await showPostDetail();
-});
-
-// const heart = document.querySelector('.heart i');
-// const likesNum = document.querySelector('.likes_num');
-
-// heart.addEventListener("click", async (event) => {
-//     event.stopPropagation();
-//     event.preventDefault();
-
-//     async function likePost() {
-//         // const urlParams = window.location.search;
-//         const urlParams = new URLSearchParams(window.location.search);
-//         const postId = urlParams.get('postid') || urlParams.get('postId');
-//         let response = await fetch(`/api/post/togglelike/${postId}`, {
-//             method: "POST",
-//             credentials: 'include'
-//         })
-//         if (response.ok) {
-//             if (response.redirected)
-//                 window.location.href = response.url
-//             else {
-//                 response = await response.json();
-//                 return response
-//             }
-//         } else {
-//             return { error: response.status }
-//         }
-//     }
-
-//     let response = await likePost();
-//     // console.log(response)
-//     if (response.error) {
-//         console.error("Like error:", response.error);
-//     }
-//     else if (response.isLiked){
-//         heart.classList.replace("fa-regular", "fa-solid");
-//         likesNum.textContent = response.like;
-//     }
-//     else {
-//         heart.classList.replace("fa-solid", "fa-regular");
-//         likesNum.textContent = response.like;
-//     }
-// });
-
-
-
-
-
-
 //////////////////////////////////////EDIT POPUP//////////////////////////////////////////////////////////////
-// Select DOM elements with a helper function
-const $ = selector => document.querySelector(selector);
-const $$ = selector => document.querySelectorAll(selector);
-
 // Get all required elements
 const elements = {
   popup: $('#popup_create'),
@@ -405,8 +291,8 @@ async function fetchAllActTypes() {
 
 // Initialize activity types
 async function initActivityTypes() {
-  const actTypes = await fetchAllActTypes();
-  actTypes.forEach(actType => {
+  const actTypesAll = await fetchAllActTypes();
+  actTypesAll.forEach(actType => {
     const div = document.createElement('div');
     div.dataset.value = actType;
     div.textContent = actType;
@@ -468,6 +354,20 @@ async function initProvincesAndAmphures() {
       elements.locationContainer.replaceChild(tempSpan, elements.locationContainer.lastChild);
     }
   });
+
+  if (isOwner && activity.province){
+    provinceSel.value = province.find((p) => {
+      return p.eng == activity.province
+    }).id;
+    const filteredAmp = filterAmphure(provinceSel.value);
+    const amphureSel = new Select(filteredAmp, "Amphure").render();
+    elements.locationContainer.replaceChild(amphureSel, elements.locationContainer.lastChild);
+    if (activity.district){
+      amphureSel.value = filteredAmp.find((a) => {
+        return a.eng == activity.district
+      }).id;
+    }
+  }
 }
 
 // Validate form before submission
@@ -577,8 +477,8 @@ async function editPost() {
   today.setHours(7, 0, 0, 0);
   
   try {
-    const response = await fetch("/api/post", {
-      method: 'POST',
+    const response = await fetch(`/api/post?postid=${postId}`, {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -604,8 +504,9 @@ async function editPost() {
     } else if (!response.ok) {
       window.showToast("Failed to create post.", "error");
     } else {
-      await window.changeToast("Post created successfully", "/", "success");
       elements.popup.style.display = 'none';
+      await window.showToast("Post updated successfully", "success");
+      window.location.reload();
     }
   } catch (error) {
     console.error("Error:", error);
@@ -613,13 +514,180 @@ async function editPost() {
   }
 }
 
-// Initialize everything
-document.addEventListener("DOMContentLoaded", async () => {
+function editPostInit(){
+  const isAttached = $('.check_attach_file input');
+  const activityName = $('.create_act_name input');
+  const description = $('.descript_create');
+  const eventDate = $('#eventdate');
+  const deadline = $('#deadline');
+  const participantsNeeded = $('.parti_needed input');
+  const googleMapLink = $('.input_map_link input');
+  // ไม่ใช้ .value
+  
+  isAttached.checked = post.isAttached;
+  activityName.value = post.postName;
+  description.value = post.detail;
+  let temp = new Date(activity.actDatetime);
+  temp.setHours(temp.getHours() - temp.getTimezoneOffset() / 60);
+  eventDate.value = temp.toISOString().slice(0, 16);
+
+  temp = new Date(activity.closeDateTime);
+  temp.setHours(temp.getHours() - temp.getTimezoneOffset() / 60);
+  deadline.value = temp.toISOString().slice(0, 16);
+
+  participantsNeeded.value = post.maxParticipant
+  googleMapLink.value = `<iframe src="${activity.googleMapLink}" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`  
+  actTypes.forEach(actType => {
+    const div = document.createElement('div');
+    div.dataset.value = actType;
+    div.textContent = actType;
+    handleTagSelection({ target: div });
+  })
+
+  const byteCharacters = atob(post.coverPageImg);
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+  const blob = new Blob([byteArray], { type: 'image/jpeg' });
+  const file = new File([blob], "coverPageImg.jpg", { type: 'image/jpeg' });
+
+  const dataTransfer = new DataTransfer();
+  dataTransfer.items.add(file);
+  elements.imageUpload.files = dataTransfer.files;
+
+  elements.previewImage.src = `data:image/jpeg;base64, ${post.coverPageImg}`
+  elements.previewImage.style.display = 'block';
+  elements.uploadText.style.display = 'none';
+}
+
+async function userButtonHandler(){
+  const editBut = document.querySelector(".edit_but");
+  const viewBut = document.querySelector(".view_but");
+  const cancelBut = document.querySelector(".cancel_post_but");
+  const regBut = document.querySelector(".reg_but");
+  const appBut = document.querySelector(".app_but");
+  if (isOwner) {
+      editBut.style.display = "block";
+      // viewBut.style.display = "block";
+      cancelBut.style.display = "block";
+  }else {
+      if (!post.isApplied){
+          regBut.style.display = "block";
+          if (post.isAttached)
+              appBut.style.display = "block";
+      }
+      else {
+          if (post.isParticipant){
+              regBut.style.display = "block";
+              regBut.textContent = "You are already a participant"
+          }
+          cancelBut.style.display = "block";
+          cancelBut.textContent = "Cancel Registration"
+      }
+  }
+
+  ///////////////// Button Event /////////////////
+  if (!post.isParticipant)
+    regBut.addEventListener("click", async function() {        
+        let apiSettings = {
+            method: "POST",
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json'}
+        }
+
+        const fileToBase64 = (file) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result.split(",")[1]); // ตัด "data:image/png;base64," ออก
+                reader.onerror = (error) => reject(error);
+            });
+        };
+        if (post.isAttached){
+            let fileInput = document.getElementById("fileInput").files[0]
+            if (!fileInput) 
+                return alert("Please attach a file before submitting.")
+            apiSettings.body = JSON.stringify(
+                { fileAttached: await fileToBase64(fileInput)}
+            )
+        }
+        let response = await fetch(`/api/user/applypost?postid=${postId}`, apiSettings)
+        if (!response.ok) 
+            console.log(response)
+        else {
+            if (response.redirected)
+                window.redirectToLogin();
+            else {
+                response = await response.json();
+                if (response.error) {
+                    window.changePage(response.error, "/login", "error");
+                } else {
+                    window.changePage("You have successfully registered for this activity!", 
+                                      window.location.pathname + window.location.search, 
+                                      "success")
+                }
+            }
+        }
+    })
+
+  cancelBut.addEventListener("click", async function() {
+      let head, cont, noText, yesText;
+      let apiPath, successMessage, failMessage, successRedirect;
+      if (isOwner){
+        head = "Delete this post?"
+        cont = "Are you sure you want to delete this post? This action cannot be undone."
+        noText = "Keep it"
+        yesText = "Delete post"
+
+        apiPath = `/api/post?postid=${postId}`
+        successMessage = "Post deleted successfully"
+        failMessage = "Failed to delete post"
+        successRedirect = "/home"
+      }
+      else {
+        head = "Cancel this registration?"
+        cont = "Are you sure you want to cancel this registration? This action cannot be undone."
+        noText = "Keep it"
+        yesText = "Cancel registration"
+
+        apiPath = `api/user/applypost?postid=${postId}`
+        successMessage = "Post registration canceled successfully"
+        failMessage = "Failed to cancel post registration"
+        successRedirect = window.location.pathname + window.location.search
+      }
+    window.confirmAction(
+      head,
+      cont,
+      noText,
+      yesText,
+      async () => await fetch(apiPath, {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'}
+      })
+        .then(response => {
+            if (response.ok) {
+                window.changePage(successMessage, successRedirect, "success");
+            } else {
+                window.changePage(failMessage, "/home", "error");
+            }
+        })
+    );
+  });
+}
+
+document.addEventListener("DOMContentLoaded", async function() {
+  await showPostDetail();
+  await userButtonHandler();
+
   initEventListeners();
   initDateValidation();
   await initActivityTypes();
   await initProvincesAndAmphures();
   updateTagPlaceholder();
+  if (isOwner)
+    editPostInit();
 });
 
 // For testing
