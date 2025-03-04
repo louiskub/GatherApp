@@ -1,0 +1,104 @@
+@{
+    ViewData["Title"] = "Gather-PostHistory";
+}
+
+<link rel="stylesheet" href="~/css/History/post_history.css">
+<link rel="stylesheet" href="~/css/History/popup_history.css">
+
+<div class="main">
+    <div class="post-history-container">
+        <header class="post-history-header">
+            @* <h1>Post History</h1> *@
+            <div class="history-filter"></div>
+        </header>
+        <section class="post-history-content incoming">
+            <h2>Incoming</h2>
+            
+            <!-- Incomplete Activity -->
+            @* <article class="activity-container incomplete">
+                <div class="activity-content-left">
+                    <div class="activity-header">
+                        <a class="activity-title" href="/post">ActivityName1ehr;odijcwedgvsuxjdhswuigedbpnoilckje</a>
+                        <div class="activity-status">
+                            <input type="checkbox" class="activity-status-toggle" id="activity-status-toggle">
+                            <label for="activity-status-toggle" class="activity-status-switch">
+                                <span class="activity-status-switch-circle"></span>
+                                <span class="activity-status-switch-text"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="activity-detail">
+                        <div class="activity-deadline">
+                            <div class="activity-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                Date: 2021-08-31
+                            </div>
+                            <div class="activity-time">
+                                <i class="fas fa-clock"></i>
+                                Time: 9:30 PM
+                            </div>
+                        </div>
+                        <div class="activity-approved-user">
+                            <p class="activity-registrant-text">
+                                <i class="fas fa-users"></i>
+                                Registrants: 57
+                            </p>
+                            <p class="activity-approved-user">
+                                <i class="fas fa-user"></i>
+                                Approved: 15/20
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="activity-content-right">
+                    <div class="activity-button">
+                        <button class="activity-view-button">
+                            <p id="activity-view-text">View</p>
+                        </button>
+                        <button class="activity-cancel-button">Cancel</button>
+                    </div>
+                </div>
+            </article> *@
+            
+            <!-- Complete Activity -->
+            @* <article class="activity-container complete">
+                <div class="activity-content-left">
+                    <div class="activity-header">
+                        <a class="activity-title" href="/post">ActivityName1jebnfd;oiekmdoikfncked</a>
+                        <div class="activity-status">
+                            <i class="fas fa-circle" style="font-size: 12px;"></i>
+                            <p>Success</p>
+                        </div>
+                    </div>
+
+                    <div class="activity-detail">
+                        <p class="activity-registrant-text">
+                            <i class="fas fa-users"></i>
+                            Registrants: 57
+                        </p>
+                        <p class="activity-approved-user">
+                            <i class="fas fa-user"></i>
+                            Approved: 15/20
+                        </p>
+                    </div>
+                </div>
+                <div class="activity-content-right">
+                    <div class="activity-button">
+                        <button class="activity-report-button">Report</button>
+                        <button class="activity-review-button">Review</button>
+                    </div>
+                </div>
+            </article> *@
+        </section>
+        <section class="post-history-content future">
+            <h2>Future</h2>
+        </section>
+        <section class="post-history-content completed">
+            <h2>Completed</h2>
+        </section>
+    </div>
+    <div class="popup-container"></div>
+</div>
+
+<script type="module" src="~/js/History/post_history.js"></script>

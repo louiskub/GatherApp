@@ -1,6 +1,7 @@
 import Dropdown from "/js/components/dropdown.js";
 import Post from "/js/components/post.js";
 import PostInDate from "/js/components/post_in_date.js";
+import loadCss from "/js/components/reuse_func.js";
 
 
 async function createDropDown(){
@@ -243,6 +244,9 @@ document.addEventListener("DOMContentLoaded", async function () {
             document.body.style.overflow = ""; // เปิดการเลื่อนในจอใหญ่
         }
     }
+
+    await loadCss("/css/home/home.css");
+    await loadCss("/css/GOLF/createpost.css");
 
     await createDropDown();
     await createPostInDate();

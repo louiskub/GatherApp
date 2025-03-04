@@ -53,6 +53,13 @@ public class HomeController : Controller
         return View("~/Views/Home/History/ApplicationHistory.cshtml");
     }
 
+    [Route("user/likedpost")]
+    public IActionResult LikedPost()
+    {
+        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
+        return View("~/Views/Home/LikedPost.cshtml");
+    }
+
     [Route("post")]
     public IActionResult ViewPost()
     {
@@ -90,6 +97,20 @@ public class HomeController : Controller
     {
         ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
         return View("~/Views/Auth/SignUp2.cshtml");
+    }
+
+    [Route("history/post2")]
+    public IActionResult PostHistory2()
+    {
+        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
+        return View("~/Views/Home/History/PostHistory2.cshtml");
+    }
+
+    [Route("history/application2")]
+    public IActionResult ApplicationHistory2()
+    {
+        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
+        return View("~/Views/Home/History/ApplicationHistory2.cshtml");
     }
 
     [Route("Chat")]

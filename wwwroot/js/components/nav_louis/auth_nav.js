@@ -25,6 +25,7 @@ Menu.innerHTML = `
 <div class="menu-list">
     <a href="/history/post">Post History<i class="fa fa-history"></i></a>
     <a href="/history/application">Application History<i class="fa fa-file-alt"></i></a>
+    <a href="/user/likedpost">Liked Post<i class="fa fa-heart"></i></a>
     <a href="/user/changepassword">Change Password<i class="fa fa-lock"></i></a>
     <a class="log-out" href="#">Logout<i class="fa fa-fw fa-sign-out"></i></a>
 </div>`;
