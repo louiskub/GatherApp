@@ -70,10 +70,16 @@ public class UserController : Controller
         return Json(new
         {
             username = user.Username,
+            name = user.FirstName,
+            surname = user.LastName,
+            email = user.Email,
+            bio = user.Bio,
+            birthdate = user.DateOfBirth,
+            // tag = user.ActTypeProfile.Select(at => at.ActType),
             profileImg = user.ProfileImg,
             notification = user.Notifications,
             totalBehaviorScore = user.BehaviorScores.Sum(b => b.Score),
-            RatingScore = user.ReceivedRatings.Count == 0 ? 0 : user.ReceivedRatings.Average(r => r.Score),
+            RatingScore = user.ReceivedRatings.Count == 0 ? 0 : user.ReceivedRatings.Average(r => r.Score)
         });
     }
 
