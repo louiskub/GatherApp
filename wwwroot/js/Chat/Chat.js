@@ -334,3 +334,30 @@ async function loadPreviousMessages() {
         console.error("Full error details:", JSON.stringify(err, null, 2));
     }
 }
+
+
+function toggleThemeMenu() {
+    let menu = document.querySelector(".theme-dropdown");
+
+    menu.style.display = (menu.style.display === "block") ? "none" : "block";
+}
+
+function changeTheme(theme) {
+    let chatBox = document.querySelector(".chatBox");
+
+    chatBox.classList.remove("dark-theme", "blue-theme", "retro-theme");
+
+    if (theme !== "default") {
+        chatBox.classList.add(theme);
+    }
+
+    localStorage.setItem("chatTheme", theme);
+
+    document.querySelector(".theme-dropdown").style.display = "none";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    let savedTheme = localStorage.getItem("chatTheme") || "default";
+    changeTheme(savedTheme);
+});
+

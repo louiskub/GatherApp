@@ -25,9 +25,15 @@ public class ApplicationController : Controller
     [Authorize]
     public IActionResult ApplyPost(int postId, [FromBody] DtoApplyPost? dtoApplyPost)
     {
+
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized("User not authenticated.");
+
         var user = _db.Users.Include(u => u.BehaviorScores)
                             .Where(u => u.Id == userId).FirstOrDefault();
+
 
         if (user == null)
             return NotFound("User not found");
@@ -86,7 +92,7 @@ public class ApplicationController : Controller
         }
         catch (Exception e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(e.Message);   
         }
     }
 

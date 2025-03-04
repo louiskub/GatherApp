@@ -39,6 +39,13 @@ public class HomeController : Controller
         return View("~/Views/Home/AboutUs.cshtml");
     }
 
+    [Route("history/likes")]
+    public IActionResult LikesPost()
+    {
+        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
+        return View("~/Views/Home/LikesPost.cshtml");
+    }
+
     [Route("history/post")]
     public IActionResult PostHistory()
     {

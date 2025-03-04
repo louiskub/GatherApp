@@ -20,6 +20,7 @@
             <input type="text" id="globalMessageInput" class="inputBox" placeholder="Type your message..." required />
             
             <button id="emojiButton" class="emoji-main" onclick="toggleEmojiPicker()">😃</button>
+
             
             <div class="emoji-container">
                 <div id="emojiPicker" class="emoji-picker">
@@ -37,6 +38,12 @@
                     <button onclick="sendEmoji('🔥')">🔥</button>
                 </div>
             </div>
+
+            <div class="invite-container">
+            <select id="postSelectionDropdown"></select>
+            <button id="inviteButton" onclick="SendPostInvitation()">Send Invitation</button>
+        </div>
+
             
             <button id="actionButton" class="sendIcon" onclick="handleSend()">
                 <i class="fa-solid fa-paper-plane"></i>
@@ -44,5 +51,8 @@
         </div>
     </div>
 
-    <script src="@Url.Content("~/js/Chat/ChatGlobal.js")"></script>
+    <script 
+    src="@Url.Content("~/js/Chat/ChatGlobal.js")">
+    </script>
+
 </body>

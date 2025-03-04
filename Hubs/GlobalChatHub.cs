@@ -72,27 +72,39 @@ public class GlobalChatHub : Hub
 
     }
 
-    public override async Task OnConnectedAsync()
+   public override async Task OnConnectedAsync()
     {
-        var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (!string.IsNullOrEmpty(userId))
+        try
         {
-            _userConnections[Context.ConnectionId] = userId;
+            var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!string.IsNullOrEmpty(userId))
+            {
+                _userConnections[Context.ConnectionId] = userId;
+                Console.WriteLine($"[DEBUG] User {userId} connected with ConnectionId: {Context.ConnectionId}");
+            }
+            else
+            {
+                Console.WriteLine("[WARNING] OnConnectedAsync: User ID not found!");
+            }
+
+            await Groups.AddToGroupAsync(Context.ConnectionId, "GlobalChat");
+            Console.WriteLine($"[DEBUG] ConnectionId {Context.ConnectionId} added to GlobalChat group.");
+            await LoadGlobalMessages(); 
         }
-
-        var previousMessages = await LoadGlobalMessages();
-
-        await Clients.Caller.SendAsync("LoadPreviousMessages", previousMessages);
-
-        await Groups.AddToGroupAsync(Context.ConnectionId, "GlobalChat");
-
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[ERROR] OnConnectedAsync failed: {ex.Message}\n{ex.StackTrace}");
+        }
+        
         await base.OnConnectedAsync();
     }
 
-    public async Task<List<object>> LoadGlobalMessages()
+
+    public async Task LoadGlobalMessages()
     {
         var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var currentUserId = userId; 
+
         var messages = await _db.ChatGlobals
             .OrderBy(m => m.SentAt)
             .Select(m => new
@@ -108,7 +120,92 @@ public class GlobalChatHub : Hub
             })
             .ToListAsync();
 
-        return messages.Cast<object>().ToList();
+        Console.WriteLine($"[DEBUG] Loaded {messages.Count} messages");
+        
+        var postInvitations = await _db.PostInvitations
+        .OrderBy(p => p.SentAt)
+        .Select(p => new
+        {
+            PostId = p.PostId,
+            PostName = p.Post.PostName,
+            PostDetail = p.Post.Detail,
+            Username = _db.Users
+                .Where(u => u.Id == p.InviterUserId)
+                .Select(u => u.Username)
+                .FirstOrDefault() ?? "Unknown",
+            SentAt = p.SentAt.ToUniversalTime().ToString("o")
+        })
+        
+        .ToListAsync();
+
+         Console.WriteLine($"[DEBUG] Loaded {postInvitations.Count} post invitations");
+
+            foreach (var msg in messages)
+            {
+                Console.WriteLine($"[Debug] IsMine: {msg.IsMine}, Username: {msg.Username}, Message: {msg.Message}, SentAt: {msg.SentAt}, ProfileImg: {msg.ProfileImg}");
+            }
+
+            foreach (var invite in postInvitations)
+            {
+                Console.WriteLine($"[Debug] PostId: {invite.PostId}, PostName: {invite.PostName}, PostDetail: {invite.PostDetail}, Username: {invite.Username}, SentAt: {invite.SentAt}");
+            }
+
+        await Clients.All.SendAsync("LoadPreviousGlobalMessages", messages, postInvitations); 
+        Console.WriteLine("[DEBUG] Sent LoadPreviousGlobalMessages to Client");
     }
+
+public async Task SendPostInvitation(int postId)
+{
+    try
+    {
+        Console.WriteLine($"[DEBUG] SendPostInvitation called with postId: {postId}, Type: {postId.GetType()}");
+
+        var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+        {
+            await Clients.Caller.SendAsync("Error", "Unauthorized: User ID not found.");
+            return;
+        }
+
+        Console.WriteLine($"[DEBUG] postId Type: {postId.GetType()}");
+
+        var post = await _db.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+        if (post == null)
+        {
+            Console.WriteLine($"[ERROR] Post with ID {postId} not found.");
+            await Clients.Caller.SendAsync("Error", "Post not found.");
+            return;
+        }
+
+        var user = await _db.Users.FindAsync(userId);
+        string username = user?.Username ?? "Unknown";
+
+        var invitation  = new PostInvitation
+        {
+            PostId = post.Id,
+            PostName = post.PostName,
+            PostDetail = post.Detail,
+            InviterUserId = userId,
+            SentAt = DateTime.Now
+        };
+
+        _db.PostInvitations.Add(invitation);
+        await _db.SaveChangesAsync();
+
+        Console.WriteLine($"[DEBUG] User '{username}' invited to post '{post.PostName}' ({postId})");
+        Console.WriteLine($"[DEBUG] Sending to GlobalChat: PostId={invitation.PostId}, PostName={invitation.PostName}, PostDetail={invitation.PostDetail}, Username={username}");
+
+       await Clients.Group("GlobalChat").SendAsync("ReceivePostInvitation", 
+            invitation.PostId, invitation.PostName, invitation.PostDetail, username);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[ERROR] SendPostInvitation failed: {ex.Message}\n{ex.StackTrace}");
+        await Clients.Caller.SendAsync("Error", $"An unexpected error occurred: {ex.Message}");
+    }
+}
+
+
+
 
 }

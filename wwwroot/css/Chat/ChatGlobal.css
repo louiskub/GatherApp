@@ -12,7 +12,7 @@
     --text-color: #fff;
     --text-in-hover-color: #000;
     --chat-bg-color: #222;
-    --chat-hover-color: #1a73e8;
+    --chat-hover-color: #a4d0ff;
     --border-color: #555;
     --button-bg: #0056b3;
     --button-hover-bg: #003d80;
@@ -124,7 +124,7 @@ h1.top {
     color: var(--text-in-hover-color);
 }
 
-.chatSidebar ul {
+.chatSidebar ul {   
     list-style: none;
     padding: 0;
 }
@@ -154,13 +154,18 @@ h1.top {
 }
 
 .chatBox {
-    flex: 1;
-    padding: 15px;
+    height: 750px;
+    max-height: 80vh;
     overflow-y: auto;
-    border-bottom: 1px solid #ccc;
-    background-color: #f9f9f9;
-    border-radius: 10px 10px 0 0;
-    font-size: 1rem;
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    background: var(--chat-bg-color);
+    text-align: left;
+    border-radius: 5px;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .chatMessage {
@@ -273,7 +278,7 @@ h1.top {
     display: flex;
     align-items: center;
     padding: 10px 15px;
-    background-color: #ffffff;
+    background-color: var(--chat-bg-color);
     border-top: 1px solid #ccc;
     border-radius: 0 0 10px 10px;
 }
@@ -358,7 +363,7 @@ h1.top {
 
 #actionButton {
     color: #0084FF;
-    font-size: 28px; 
+    font-size: 40px; 
     background: transparent;
     border: none;
     cursor: pointer;
@@ -387,7 +392,7 @@ h1.top {
 
 
 .emoji-main {
-    font-size: 25px;
+    font-size: 35px;
     background: none;
     border: none;
     cursor: pointer;
@@ -420,7 +425,7 @@ h1.top {
 }
 
 .emoji-picker button {
-    font-size: 22px;
+    font-size: 28px;
     background: none;
     border: none;
     cursor: pointer;
@@ -435,6 +440,203 @@ h1.top {
 .emoji-picker button:hover {
     transform: scale(1.2);
 }
+
+.post-invite {
+    min-width: 360px; 
+    min-height: 200px;
+    width: auto; 
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 18px;
+    margin: 15px 0;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+    border-radius: 16px;
+    border-left: 5px solid #00d0ff;
+    box-shadow: 0 10px 30px rgba(0, 208, 255, 0.3);
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+    font-family: "Poppins", sans-serif;
+}
+
+.post-invite:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0, 208, 255, 0.5);
+}
+
+.post-invite::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(0, 208, 255, 0.3), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.5s ease;
+}
+.post-invite:hover::before {
+    left: 100%;
+}
+
+.post-invite p {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.post-details {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 15px;
+    border-radius: 12px;
+    border-left: 4px solid #00d0ff;
+    backdrop-filter: blur(12px);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 0 12px rgba(0, 208, 255, 0.3);
+}
+
+.post-details h4 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #00a0e9;
+    margin-bottom: 6px;
+    text-shadow: 0 0 5px rgba(0, 208, 255, 0.4);
+}
+
+.post-details p {
+    font-size: 14px;
+    color: var(--text-color);
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.post-details button {
+    background: linear-gradient(135deg, #00d0ff, #0089c9);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    margin-top: 10px;
+    box-shadow: 0 4px 12px rgba(0, 208, 255, 0.4);
+}
+
+.post-details button:hover {
+    background: linear-gradient(135deg, #0089c9, #005f8e);
+    transform: scale(1.05);
+    box-shadow: 0 6px 18px rgba(0, 208, 255, 0.6);
+}
+
+
+#postSelectionDropdown {
+    padding: 8px;
+    border-radius: 8px;
+    border: 2px solid rgba(0, 123, 255, 0.6);
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    font-weight: bold;
+    color: black;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    width: 180px;
+    box-shadow: 0 3px 8px rgba(0, 123, 255, 0.3);
+    appearance: none;
+}
+
+#postSelectionDropdown:focus {
+    border-color: #007bff;
+    outline: none;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 12px rgba(0, 123, 255, 0.4);
+    transform: scale(1.03);
+}
+;
+
+#postSelectionDropdown option {
+    background: white; 
+    color: black;      
+    font-size: 14px;
+    padding: 10px;  
+}
+
+#postSelectionDropdown option:checked {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+
+.invite-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    margin: 15px 0;
+    padding: 12px 15px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease-in-out;
+}
+
+.invite-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+}
+
+#inviteButton {
+    background: linear-gradient(135deg, #007bff, #0046b3);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+}
+
+#inviteButton::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 250%;
+    height: 250%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+#inviteButton:hover {
+    background: linear-gradient(135deg, #0056b3, #002d80);
+    box-shadow: 0 6px 18px rgba(0, 123, 255, 0.5);
+    transform: scale(1.05);
+}
+
+#inviteButton:hover::before {
+    opacity: 1;
+}
+
 
 @media (max-width: 768px) {
     .chatContainer {

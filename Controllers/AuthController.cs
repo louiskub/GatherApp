@@ -205,6 +205,7 @@ public class AuthController : Controller
                 return Ok(new { status = "Registration successful", token = token });
             }
         catch 
+        
         {
             await transaction.RollbackAsync();
             return StatusCode(500, new { status = "Registration failed", errors = new[] { "Transaction failed."} });

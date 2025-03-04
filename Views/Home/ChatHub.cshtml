@@ -28,6 +28,26 @@
             <div class="chatInput">
             <input type="text" id="messageInput" class="inputBox" placeholder="Type your message..." required />
 
+                <div class="theme-menu">
+        <div class="theme-dropdown">
+            <div class="theme-option default-theme" onclick="changeTheme('default')">
+                <span>Default</span>
+            </div>
+            <div class="theme-option dark-theme" onclick="changeTheme('dark-theme')">
+                <span>Dark</span>
+            </div>
+            <div class="theme-option blue-theme" onclick="changeTheme('blue-theme')">
+                <span>Blue</span>
+            </div>
+            <div class="theme-option retro-theme" onclick="changeTheme('retro-theme')">
+                <span>Retro</span>
+            </div>
+        </div>
+        <button class="theme-button" onclick="toggleThemeMenu()">🎨 Select Theme</button>
+    </div>
+
+
+
         <button id="emojiButton" class="emoji-main" onclick="toggleEmojiPicker()">😃</button>
         
          <div class="emoji-container">
