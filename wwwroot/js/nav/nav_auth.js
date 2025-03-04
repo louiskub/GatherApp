@@ -50,8 +50,8 @@ async function getMyProfile() {
         });
         window.changeToast(content, "/home")
     }
-    
-    async function fetchMyProfile() {
+
+    window.userProfileLoaded = new Promise(async (resolve) => {
         try {
             let response = await fetch("/api/user/myprofile", {
                 method: "GET",
@@ -65,16 +65,17 @@ async function getMyProfile() {
                 response.role = "user";
                 window.userProfile = response;
                 document.dispatchEvent(new CustomEvent("userProfileLoaded", { detail: response }));
-                return response;
+                resolve()
             }else {
                 logOut("Error: Please login again");
             }
         } catch (error) {
             logOut("Error: Occured");
         }
-    }
+    });
     
-    let userProfile = await fetchMyProfile();
+    await window.userProfileLoaded;
+    let userProfile = window.userProfile;
     let profile = document.querySelector(".profile")
     
     if (profile) {

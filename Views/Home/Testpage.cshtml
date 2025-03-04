@@ -54,14 +54,10 @@ confirmAction("Are you sure you want to delete this?")
 </div>
 
 <script type="module">
-    document.getElementById("kuy").addEventListener("click", async () => {
-        @* window.changePage("test", "/home") *@
-        function abcdef(a,b){
-            console.log(a+b)
-        }
-        window.confirmAction("Are you sure you want to delete this?", "Are you sure you want to delete this?", "Keep it", "Delete post"
-            , () => abcdef(1,2)
-        );
-        
-    });
+    async function test(){
+        await window.userProfileLoaded;
+        console.log(window.userProfile);
+    }
+
+    test();    
 </script>

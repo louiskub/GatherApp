@@ -1,5 +1,4 @@
 import LikePostHandler from "/js/components/handler/like_post_handler.js";
-import ToastTemplate from "/js/components/handler/toast_template.js";
 
 const urlParams = new URLSearchParams(window.location.search);
 const postId = urlParams.get('postid') || urlParams.get('postId');
@@ -689,6 +688,3 @@ document.addEventListener("DOMContentLoaded", async function() {
   if (isOwner)
     editPostInit();
 });
-
-// For testing
-console.log("Refactored post creation script loaded");

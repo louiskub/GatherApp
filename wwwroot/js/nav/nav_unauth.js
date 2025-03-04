@@ -22,5 +22,5 @@ Menu.innerHTML = `
 <a href="/login">Login<i class="fa fa-fw fa-user"></i></a>
 <a class="active" href="/signup">Sign up<i class="fa fa-user-plus"></i></a>`;
 
-window.userProfile = {role: "guest"};
-document.dispatchEvent(new CustomEvent("userProfileLoaded", { detail: {role: "guest"} }));
+window.userProfile = {role: "visitor" };
+window.userProfileLoaded = Promise.resolve(window.userProfile);
