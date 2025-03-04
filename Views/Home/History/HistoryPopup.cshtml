@@ -1,0 +1,179 @@
+@{
+    ViewData["Title"] = "Gather-PopupHistory";
+}
+
+<link rel="stylesheet" href="~/css/History/popupHistory.css">
+
+<div class="main">
+    <button class="buttonStyle review" data-action="review">Review</button>
+    <button class="buttonStyle report" data-action="report">Report</button>
+    <button class="buttonStyle view" data-action="view">View</button>
+
+
+    <div class="popup-container">
+        <i class="fa-solid fa-xmark close-popup-icon"></i>
+        <div class="popup-header">
+            <h2>Registrant: 57</h2>
+        </div>
+        <div class="popup-content">
+            @* <div class="popup-user-container">
+                <div class="popup-user-content">
+                    <img class="popup-user-profile" 
+                    src="https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559" 
+                    alt="">
+                    <p class="popup-username">Mavuika Natlan Anchor</p>
+                </div>
+                <div class="popup-button-group">
+                    <button class="popup-appicaiton-btn">Appliaction</button>
+                    <button class="popup-accept-btn">Accept</button>
+                    <button class="popup-reject-btn">Reject</button>
+                </div>
+            </div> *@
+
+            @* <div class="popup-user-container">
+                <div class="popup-user-content">
+                    <img class="popup-user-profile" 
+                    src="https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559" 
+                    alt="">
+                    <p class="popup-username">Mavuika Natlan Anchor</p>
+                </div>
+                <div class="popup-button-group">
+                    <button class="popup-appicaiton-btn">Appliaction</button>
+                    <button class="popup-accept-btn">Accept</button>
+                    <button class="popup-reject-btn">Reject</button>
+                </div>
+            </div> *@
+
+            @* <div class="popup-user-container">
+                <div class="popup-user-content">
+                    <img class="popup-user-profile" 
+                    src="https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559" 
+                    alt="">
+                    <p class="popup-username">Mavuika Natlan Anchor</p>
+                </div>
+                <div class="popup-button-group">
+                    <button class="popup-appicaiton-btn">Appliaction</button>
+                    <button class="popup-accept-btn">Accept</button>
+                    <button class="popup-reject-btn">Reject</button>
+                </div>
+            </div> *@
+
+            @* <div class="popup-user-container">
+                <div class="popup-user-content">
+                    <img class="popup-user-profile" 
+                    src="https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559" 
+                    alt="">
+                    <p class="popup-username">Mavuika Natlan Anchor</p>
+                </div>
+                <div class="popup-button-group">
+                    <button class="popup-appicaiton-btn">Appliaction</button>
+                    <button class="popup-accept-btn">Accept</button>
+                    <button class="popup-reject-btn">Reject</button>
+                </div>
+            </div> *@
+        </div>
+
+    </div>
+</div>
+<script type="module">
+
+    import PopupUserList from '/js/components/popup_userlist.js';
+
+    var popupContent = document.querySelector('.popup-content');
+    var popup = document.querySelector('.popup-container');
+
+    const users = [
+        {
+            imgUrl: "https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559",
+            username: "Mavuika Natlan Anchor",
+            hasAttachment: true, // แนบไฟล์
+            status: null,
+        },
+        {
+            imgUrl: "https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559",
+            username: "Mavuika Natlan Anchor",
+            hasAttachment: false, // ไม่แนบไฟล์
+            status: 0,
+        },
+        {
+            imgUrl: "https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559",
+            username: "Mavuika Natlan Anchor",
+            hasAttachment: false,
+            status: null,
+        },
+                {
+            imgUrl: "https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559",
+            username: "Mavuika Natlan Anchor",
+            hasAttachment: true, // แนบไฟล์
+            status: 1,
+        },
+        {
+            imgUrl: "https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559",
+            username: "Mavuika Natlan Anchor",
+            hasAttachment: false,
+            status: 0,
+        },
+        {
+            imgUrl: "https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559",
+            username: "Mavuika Natlan Anchor",
+            hasAttachment: true, // แนบไฟล์
+            status: 1,
+        },
+                {
+            imgUrl: "https://preview.redd.it/do-you-guys-think-that-mavuika-is-an-archon-v0-z90atow2ppcd1.jpeg?auto=webp&s=c60295c5e9ab1cdd2001f54a1b87f46c66291559",
+            username: "Mavuika Natlan Anchor",
+            hasAttachment: false, // แนบไฟล์
+            status: 0,
+        },
+    ];
+
+    function openPopup(type) {
+        popupContent.innerHTML = ""; // ล้างข้อมูลเก่าก่อนสร้างใหม่
+
+        users.forEach(userData => {
+            const buttons = getButtonsByType(type, userData.hasAttachment, userData.status);
+            const userPopup = new PopupUserList( userData.imgUrl, userData.username, buttons ).render();
+            popupContent.appendChild(userPopup);
+        });
+
+        popup.style.display = 'grid';
+        document.body.classList.add("no-scroll"); // ปิดการเลื่อน
+    }
+
+    function closePopup() {
+        popup.style.display = 'none';
+        document.body.classList.remove("no-scroll"); // เปิดการเลื่อนกลับมา
+    }
+
+    function getButtonsByType(type, hasAttachment, status) {
+        let textList = [];
+
+        if (type === "review") {
+            textList = status === 1 ? ["Reviewed"] : ["Review"];
+        }
+        if (type === "report") {
+            textList = status === 1 ? ["Reported"] : ["Report"];
+        }
+        if (type === "view") {
+            if (status === null) {
+                textList = hasAttachment ? ["Attached File", "Approve", "Reject"] : ["Approve", "Reject"];
+            }
+            else {
+                textList = status === 0 ? ["Rejected"] : ["Approved"];
+            }
+        }
+        return textList || [];
+    }
+
+
+    document.querySelector('.review').addEventListener('click', () => openPopup("review"));
+    document.querySelector('.report').addEventListener('click', () => openPopup("report"));
+    document.querySelector('.view').addEventListener('click', () => openPopup("view"));
+    document.querySelector('.close-popup-icon').addEventListener('click', closePopup);
+
+    @* window.addEventListener('click', function (e) {
+        if (e.target == popup) {
+            closePopup();
+        }
+    }); *@
+</script>

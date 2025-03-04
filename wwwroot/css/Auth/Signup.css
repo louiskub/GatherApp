@@ -99,24 +99,17 @@
 
 .visibleButton {
   position: absolute;
-  /* transform: translateY(5px) translateX(-50px); */
   right: 10px;
   top: 10px;
   background: none;
   cursor: pointer;
   border: none;
-  /* background-color: blueviolet; */
 }
 
 .visibleButton img {
   width: 20px;
   height: 20px;
 }
-
-/* .nonVisibleButton img {
-    width: 30px;
-    height: 30px;
-  } */
 
 .buttonStyle {
   background-color: var(--bright-pink-crayola-2);

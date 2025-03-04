@@ -192,6 +192,25 @@ public class UserController : Controller
     }
 
 
+    [Route("api/user/getmyposts")]
+    [HttpGet]
+    public async Task<IActionResult> GetMyPosts()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+        var posts = await _db.Posts
+            .Where(p => p.UserId == userId)
+            .Select(p => new { p.Id, p.PostName })
+            .ToListAsync();
+
+        return Ok(posts);
+    }   
+
+
     // แสดงประวัติการสมัครโพสของ user คนนั้น
     [Route("api/user/myapplication")]
     [Authorize]

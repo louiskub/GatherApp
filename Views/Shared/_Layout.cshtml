@@ -65,28 +65,59 @@
             <div class="menu"></div>
         </nav>
     </header>
-
+    
     @* Headers = document.querySelector("header"); *@
     
 
     @if (isAuthorized)
     {
-        <script src="/js/components/nav_louis/auth_nav.js"></script>
+        @* <script src="/js/components/user_profile_image.js"></script> *@
+        <script src="/js/nav/nav_auth.js" type="module"></script>
     }
     else
     {
-        <script src="/js/components/nav_louis/unauth_nav.js"></script>
+        <script src="/js/nav/nav_unauth.js"></script>
     }
     <script src="~/js/nav/navbar.js"></script>
 
     @RenderBody()
 
-    <footer class="footer-container">
+    @* <footer class="footer-container">
         <div class="footer-content">
             &copy; 2025 - GatherApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
-    </footer>
+    </footer> *@
+    <script type="module">
+        import ToastTemplate from "/js/components/handler/toast_template.js"
+        import ConfirmDialog from "/js/components/handler/confirm_dialog.js"
+        const toastTemplate = new ToastTemplate();
+        const confirmDialog = new ConfirmDialog();
 
+        window.userProfile = null;
+
+        window.redirectToLogin = async function() {
+            await toastTemplate.changeToast("You need to log in. Redirecting...", "/login");
+            await toastTemplate.redirect("error");
+        };
+        window.changeToast = async (content, redirectPath, type) => {
+            await toastTemplate.changeToast(content, redirectPath);
+            await toastTemplate.redirect(type);
+        }
+        window.showToast = async (content, type) => {
+            await toastTemplate.changeToast(content, "");
+            await toastTemplate.showToast(type);
+        }
+
+        window.changePage = async (content, redirectPath, type) => {
+            await toastTemplate.changeToast(content, redirectPath);
+            await toastTemplate.redirect(type);
+        }
+
+        window.confirmAction = async (header, message, notext, yestext, yesCallback) => {
+            await confirmDialog.confirmAction(header, message, notext, yestext, yesCallback);
+        }
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

@@ -17,9 +17,26 @@
 
         <div class="sidenav"></div>
         <div class="home-content">
-            <div class="write-button">
+            @* <div class="write-button">
                 <img src="https://cdn-icons-png.flaticon.com/512/84/84380.png" alt="Write">
+            </div> *@
+
+            <div class="floating-menu-button" onclick="toggleFloatingMenu()">
+                <i class="fas fa-plus floating-menu-icon"></i> 
             </div>
+
+            <div class="floating-menu" id="floatingMenu">
+                <div class="floating-menu-item" data-tooltip="About Us" id="menu-aboutus-button">
+                    <i class="fas fa-info-circle aboutus-item-icon"></i>
+                </div>
+                <div class="floating-menu-item" data-tooltip="Chat Hub" id="menu-chat-button">
+                    <i class="fas fa-comments chat-item-icon"></i>
+                </div>
+                <div class="floating-menu-item" data-tooltip="Create Post" id="menu-write-button">
+                    <i class="fas fa-pencil-alt createpost-item-icon"></i>
+                </div>
+            </div>
+
 
             <div class="popup_create" id="createPostPopup">
                 <div class="popup_create_content">
@@ -29,7 +46,10 @@
                             <div class="upload_container">
                                 <input type="file" id="imageUpload" accept="image/*" style="display: none;" />
                                 <div class="preview">
-                                    <span class="upload_text">Upload Image</span>
+                                    <div class="preview_text">
+                                        <span class="upload_text">Upload Image</span>
+                                        <span class="upload_text_rec">Recommend 1200x550 pixels</span>
+                                    </div>
                                     <img id="previewImage" src="" alt="Preview" style="display: none;">
                                 </div>
                             </div>
@@ -46,19 +66,6 @@
                                 <span class="tag-placeholder" id="tag-placeholder">Select up to 3 tags</span>
                             </div>
                             <div class="tag-options" id="tag-options">
-                                <div data-value="Author">Author</div>
-                                <div data-value="MSelect">Multiselect Dropdown</div>
-                                <div data-value="Accordions">Accordions</div>
-                                <div data-value="Radio Buttons">Radio Buttons</div>
-                                <div data-value="SearchBox">Search Boxes</div>
-                                <div data-value="Tables">Tables</div>
-                                <div data-value="Profiles">Profiles</div>
-                                <div data-value="Sliders">Sliders</div>
-                                <div data-value="Tabs">Tabs</div>
-                                <div data-value="NavMenu">Navigation Menu</div>
-                                <div data-value="Cities">Cities</div>
-                                <div data-value="Countries">Countries</div>
-                                <div data-value="Regions">Regions</div>
                                 <div class="tag-limit-msg" id="tag-limit-msg">Only 3 tags can be selected</div>
                             </div>
                         </div>
@@ -114,3 +121,21 @@
     </div>
     <script src="~/js/GOLF/createpost.js"></script>
     <script type="module" src="~/js/home/home.js"></script>
+    <script>
+        @* function toggleFloatingMenu() {
+            const menu = document.getElementById('floatingMenu');
+            menu.classList.toggle('active');
+        } *@
+
+        function toggleFloatingMenu() {
+            document.getElementById('floatingMenu').classList.toggle('show');
+        }
+
+        function openCreatePostPopup() {
+            document.getElementById('createPostPopup').style.display = 'block';
+        }
+
+        document.getElementById("menu-aboutus-button").addEventListener("click", function() {
+        window.location.href = "/aboutus";
+        });
+    </script>

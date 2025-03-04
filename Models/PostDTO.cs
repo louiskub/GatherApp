@@ -15,7 +15,7 @@ public class DtoCreatePost
     [Range(1,1000)]
     public int MaxParticipant { get; set; }
 
-    public DateTime OpenDateTime { get; set; }
+    // public DateTime OpenDateTime { get; set; }
     public DateTime CloseDateTime { get; set; }
     public DateTime ActDatetime { get; set; }
 

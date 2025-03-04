@@ -1,10 +1,10 @@
 const popup = document.getElementById('createPostPopup');
-const writeButton = document.querySelector('.write-button');
+const writeButton = document.getElementById('menu-write-button');
 const cancelButton = document.querySelector('.cancel_but');
 const createButton = document.querySelector('.create_but');
 const imageUpload = document.getElementById('imageUpload');
 const previewImage = document.getElementById('previewImage');
-const uploadText = document.querySelector('.upload_text');
+const uploadText = document.querySelector('.preview_text');
 
 // ฟังก์ชันแสดง Popup เมื่อคลิกปุ่ม Cancel
 cancelButton.addEventListener('click', () => {
@@ -89,13 +89,39 @@ document.addEventListener("DOMContentLoaded", function () {
     eventInput.addEventListener("input", validateEventDate);
 });
 
+///////////////////// Fetch SELECT TAG //////////////////////////////////////////////////////////////
 
+async function fetchAllActTypes(){
+    try {
+        let response = await fetch("/api/acttype");
+        if (!response.ok) {
+            return [];
+        }
+        else {
+            response = await response.json();
+            return response;
+        }
+        
+    } catch (error) {
+        console.error("Error loading JSON:", error);
+        return [];
+    }
+}
 
+const tagOptions = document.getElementById('tag-options');
+(async function() {
+    let actTypes = await fetchAllActTypes();
+    actTypes.forEach((actType) => {
+        let div = document.createElement('div')
+        div.dataset.value = actType
+        div.textContent = actType
+        tagOptions.appendChild(div)
+    })
+})();
 
 
 ///////////////////// MULTI SELECT TAG //////////////////////////////////////////////////////////////
 const tagContainer = document.getElementById('tag-container');
-const tagOptions = document.getElementById('tag-options');
 const tagList = document.getElementById('tag-list');
 const tagPlaceholder = document.getElementById('tag-placeholder');
 const maxTags = 3;
@@ -239,29 +265,45 @@ ProvincesAndAmphures();
 
 /////////////////Check Input Before Create/////////////////////////////////////////////////////////
 // ฟังก์ชันตรวจสอบการกรอกข้อมูลในฟอร์มทั้งหมด
-function validateForm() {
+async function validateForm() {
     const activityName = document.querySelector('.create_act_name input').value;
     const description = document.querySelector('.descript_create').value;
     const eventDate = document.getElementById('eventdate').value;
     const deadline = document.getElementById('deadline').value;
     const participantsNeeded = document.querySelector('.parti_needed input').value;
-    
     // ตรวจสอบว่าแต่ละฟิลด์ถูกกรอกหรือไม่
-    if (!activityName || !description || !eventDate || !deadline || !participantsNeeded) {
-        alert("Please fill out all required fields.");
+    // ตรวจสอบการอัปโหลดภาพ (Preview Image)
+    const imageUpload = document.getElementById('imageUpload');
+    console.log(previewImage.src.length)
+    if (!imageUpload.files.length) {
+        window.showToast("Please upload an image.", "warning");
         return false;
     }
+    if (previewImage.src.length > 2000000) {
+        window.showToast("Image size is too large. Please upload an image less than 2 MB.", "warning");
+        return false;
+    }
+    
+    if (!description) {
+        window.showToast("Please enter activity description.", "warning");
+        return false;
+    }
+
+    if (!activityName) {
+        window.showToast("Please enter activity name.", "warning");
+        return false;
+    }
+
+    // if (!activityName || !description || !eventDate || !deadline || !participantsNeeded) {
+    //     // window.showToast("Please fill out all required fields.");
+    //     window.showToast("Please fill out all required fields.", "warning");
+    //     return false;
+    // }
 
     // ตรวจสอบว่าได้เลือกแท็กหรือไม่
     const selectedTags = document.querySelectorAll('.tag-item');
     if (selectedTags.length === 0) {
-        alert("Please select at least one tag.");
-        return false;
-    }
-
-    // ตรวจสอบว่าเลือกจำนวนผู้เข้าร่วมมากกว่า 0 หรือไม่
-    if (parseInt(participantsNeeded) <= 0) {
-        alert("Please enter a valid number for participants needed.");
+        window.showToast("Please select at least one tag.", "warning");
         return false;
     }
 
@@ -269,40 +311,107 @@ function validateForm() {
     const provinceSelect = document.querySelector('#Province');
     const amphureSelect = document.querySelector('#Amphure');
     if (provinceSelect && provinceSelect.value === "null") {
-        alert("Please select a province.");
+        window.showToast("Please select a province.", "warning");
         return false;
     }
 
     if (amphureSelect && amphureSelect.value === "null") {
-        alert("Please select an amphure.");
+        window.showToast("Please select an amphure.", "warning");
         return false;
     }
 
     // ตรวจสอบ Google Map Link (กรอกลิงก์ iframe หรือ link ปกติ)
     const googleMapLink = document.querySelector('.input_map_link input').value;
     if (!googleMapLink) {
-        alert("Please enter a Google Map Link.");
+        window.showToast("Please enter a Google Map Link.", "warning");
         return false;
     }
 
-    // ตรวจสอบการอัปโหลดภาพ (Preview Image)
-    const imageUpload = document.getElementById('imageUpload');
-    if (!imageUpload.files.length) {
-        alert("Please upload an image.");
+    if (!eventDate) {
+        window.showToast("Please select event date.", "warning");
+        return false;
+    }
+      
+    if (!deadline) {
+        window.showToast("Please select deadline date.", "warning");
         return false;
     }
 
-    // ถ้าทุกอย่างโอเค return true
-    return true;
+    if (!participantsNeeded) {
+        window.showToast("Please enter number of participants needed.", "warning");
+        return false;
+    }
+    
+    // ตรวจสอบว่าเลือกจำนวนผู้เข้าร่วมมากกว่า 0 หรือไม่
+    if (parseInt(participantsNeeded) <= 0) {
+        window.showToast("Please enter a valid number for participants needed.", "warning");
+        return false;
+    }
+    
+    async function createPost() {
+        const isAttached = document.querySelector(".check_attach_file input").checked
+        const provinceText = provinceSelect.options[provinceSelect.selectedIndex].text;
+        const amphureText = amphureSelect.options[amphureSelect.selectedIndex].text;
+
+        const mapSrc = googleMapLink
+        const match = mapSrc.match(/<iframe[^>]*\bsrc=["']([^"']+)["']/i);
+        const resultMap = match ? match[1] : null;
+
+        let sendImg = previewImage.src.split(",")[1]
+        let tags = []
+        selectedTags.forEach((tag) => {
+            tags.push(tag.dataset.value)
+        })
+
+        let today = new Date();
+        today.setHours(7, 0, 0, 0); // Set hour, minute, second, and millisecond to zero
+        today = today.toISOString().split('.')[0]; // Remove milliseconds
+        console.log("POSTING...")
+        let response = await fetch("/api/post", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                postName: activityName,
+                detail: description,
+                isAttached: isAttached,
+                maxParticipant: participantsNeeded,
+    
+                // openDateTime: today,
+                closeDateTime: deadline,
+                actDatetime: eventDate,
+    
+                province: provinceText,
+                district: amphureText,
+                online: false,
+                googleMapLink: resultMap,
+    
+                actTypes: tags,
+                coverPageImg: sendImg
+            })
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            return
+        })
+        if (response.redirected){
+            popup.style.display = 'none';
+            window.redirectToLogin()
+        }
+        else if (!response.ok) {
+            window.showToast("Failed to create post.", "error");
+        }
+        else {
+            await window.changeToast("Post created successfully", "/", "success")
+            popup.style.display = 'none';
+        }
+    }
+    await createPost();
 }
 
 // ฟังก์ชันที่ใช้ในปุ่ม Create
-createButton.addEventListener('click', () => {
+createButton.addEventListener('click', async () => {
     // เรียกใช้งาน validateForm ก่อนที่จะอนุญาตให้โพสต์
-    if (validateForm()) {
-        alert("Create Post successfully!");
-        popup.style.display = 'none';
-    }
+    await validateForm();
 });
-
-

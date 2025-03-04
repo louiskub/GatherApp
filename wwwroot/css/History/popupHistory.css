@@ -1,0 +1,331 @@
+@import url(/css/src.css);
+
+:root {
+
+    --popup-bg: var(--seasalt);
+    --popup-text: var(--eerie-black);
+    --popup-shadow: rgba(0, 0, 0, 0.2);
+
+    --close-icon: var(--outer-space);
+    --close-icon-hover: var(--rose-red);
+
+    --popup-user-bg: var(--lavender-blush);
+    --popup-user-border: var(--pink);
+
+    --popup-attachedfile-btn-bg: var(--bright-pink-crayola-2);
+    --popup-attachedfile-btn-hover: var(--bright-pink-crayola);
+
+    --popup-approve-btn-bg: var(--bright-pink-crayola);
+    --popup-approve-btn-hover: var(--rose-red);
+
+    --popup-reject-btn-bg: var(--claret);
+    --popup-reject-btn-hover: var(--amaranth-purple);
+
+    --popup-report-btn-bg: var(--rose-red);
+    --popup-report-btn-hover: var(--bright-pink-crayola);
+
+    --popup-review-btn-bg: var(--amaranth-purple);
+    --popup-review-btn-hover: var(--rose-red);
+
+    --popup-status-approved-bg: var(--cherry-blossom-pink);
+    --popup-status-approved-border: var(--salmon-pink);
+    --popup-status-approved-text: var(--eerie-black);
+
+    --popup-status-rejected-bg: var(--rose-red);
+    --popup-status-rejected-border: var(--bright-pink-crayola);
+    --popup-status-rejected-text: var(--seasalt);
+
+    --popup-status-reviewed-bg: var(--amaranth-purple);
+    --popup-status-reviewed-border: var(--rose-red);
+    --popup-status-reviewed-text: var(--seasalt);
+
+    --popup-status-reported-bg: var(--chocolate-cosmos);
+    --popup-status-reported-border: var(--claret);
+    --popup-status-reported-text: var(--seasalt);
+}
+[data-theme="dark"] {
+
+    --popup-bg: var(--eerie-black);
+    --popup-text: var(--seasalt);
+    --popup-shadow: rgba(255, 255, 255, 0.2);
+
+    --close-icon: var(--seasalt);
+    --close-icon-hover: var(--bright-pink-crayola-2);
+
+    --popup-user-bg: var(--onyx);
+    --popup-user-border: var(--outer-space);
+
+    --popup-attachedfile-btn-bg: linear-gradient(45deg, var(--bright-pink-crayola), var(--bright-pink-crayola-2));
+    --popup-attachedfile-btn-hover: linear-gradient(45deg, var(--bright-pink-crayola-2), var(--bright-pink-crayola));
+
+    --popup-approve-btn-bg: linear-gradient(45deg, var(--rose-red), var(--bright-pink-crayola));
+    --popup-approve-btn-hover: linear-gradient(45deg, var(--bright-pink-crayola), var(--rose-red));
+
+    --popup-reject-btn-bg: linear-gradient(45deg, var(--claret), var(--chocolate-cosmos));
+    --popup-reject-btn-hover: linear-gradient(45deg, var(--chocolate-cosmos), var(--claret));
+
+    --popup-report-btn-bg: linear-gradient(45deg, var(--rose-red), var(--bright-pink-crayola));
+    --popup-report-btn-hover: linear-gradient(45deg, var(--bright-pink-crayola), var(--rose-red));
+
+    --popup-review-btn-bg: linear-gradient(45deg, var(--amaranth-purple), var(--rose-red));
+    --popup-review-btn-hover: linear-gradient(45deg, var(--rose-red), var(--amaranth-purple));
+
+    --popup-status-approved-bg: var(--salmon-pink);
+    --popup-status-approved-border: var(--cherry-blossom-pink);
+    --popup-status-approved-text: var(--eerie-black);
+
+    --popup-status-rejected-bg: var(--bright-pink-crayola);
+    --popup-status-rejected-border: var(--rose-red);
+    --popup-status-rejected-text: var(--seasalt);
+
+    --popup-status-reviewed-bg: var(--amaranth-purple);
+    --popup-status-reviewed-border: var(--rose-red);
+    --popup-status-reviewed-text: var(--seasalt);
+
+    --popup-status-reported-bg: var(--claret);
+    --popup-status-reported-border: var(--chocolate-cosmos);
+    --popup-status-reported-text: var(--seasalt);
+}
+
+/* Popup Container */
+.popup-container {
+    display: none;
+    flex-direction: column;
+    position: fixed;
+    overflow-y: auto;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -48%);
+    width: 90%;
+    max-width: 800px;
+    max-height: 80%;
+    padding: 1.2rem;
+    background-color: var(--popup-bg);
+    color: var(--popup-text);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px var(--popup-shadow);
+    grid-template-rows: 1fr 1fr;
+    gap: 1rem;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Popup Close Icon */
+.close-popup-icon {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: var(--close-icon);
+    transition: color 0.2s ease-in-out;
+}
+.close-popup-icon:hover {
+    color: var(--close-icon-hover);
+}
+
+/* Popup Header */
+.popup-header h2 {
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-color);
+    text-align: center;
+}
+
+/* Popup Content */
+.popup-content {
+    /* display: flex;
+    flex-direction: column; */
+    display: grid;
+    gap: 1rem;
+    grid-template-rows: 1fr;
+}
+
+/* Popup User Container */
+.popup-user-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+    gap: 2rem;
+    padding: 1rem;
+    border-radius: 15px;
+    background-color: var(--popup-user-bg);
+    border: 2px solid var(--popup-user-border);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Popup User Content */
+.popup-user-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.popup-user-content img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--text-color);
+}
+.popup-username {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Popup Button Group */
+.popup-button-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+.popup-button-group button {
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+    min-width: 120px;
+    transition: 0.3s;
+}
+.popup-button-group span {
+    text-align: center;
+}
+
+/* Popup Button */
+.popup-attachedfile-btn {
+    background: var(--popup-attachedfile-btn-bg);
+    color: white;
+    transition: background 0.3s ease-in-out;
+}
+.popup-attachedfile-btn:hover {
+    background: var(--popup-attachedfile-btn-hover);
+}
+.popup-approve-btn {
+    background: var(--popup-approve-btn-bg);
+    color: white;
+    transition: background 0.3s ease-in-out;
+}
+.popup-approve-btn:hover {
+    background: var(--popup-approve-btn-hover);
+}
+.popup-reject-btn {
+    background: var(--popup-reject-btn-bg);
+    color: white;
+    transition: background 0.3s ease-in-out;
+}
+.popup-reject-btn:hover {
+    background: var(--popup-reject-btn-hover);
+}
+.popup-report-btn {
+    background: var(--popup-report-btn-bg);
+    color: white;
+    transition: background 0.3s ease-in-out;
+}
+.popup-report-btn:hover {
+    background: var(--popup-report-btn-hover);
+}
+.popup-review-btn {
+    background: var(--popup-review-btn-bg);
+    color: white;
+    transition: background 0.3s ease-in-out;
+}
+.popup-review-btn:hover {
+    background: var(--popup-review-btn-hover);
+}
+
+/* Popup Status */
+.popup-status-approved,
+.popup-status-rejected,
+.popup-status-reviewed,
+.popup-status-reported {
+    font-size: 1rem;
+    font-weight: normal;
+    padding: 0.4rem 1rem;
+    border-radius: 8px;
+    opacity: 0.85;
+    border-width: 1px;
+    border-style: solid;
+}
+
+/* Status Approved */
+.popup-status-approved {
+    background-color: var(--popup-status-approved-bg);
+    color: var(--popup-status-approved-text);
+    border-color: var(--popup-status-approved-border);
+}
+
+/* Status Rejected */
+.popup-status-rejected {
+    background-color: var(--popup-status-rejected-bg);
+    color: var(--popup-status-rejected-text);
+    border-color: var(--popup-status-rejected-border);
+}
+
+/* Status Reviewed */
+.popup-status-reviewed {
+    background-color: var(--popup-status-reviewed-bg);
+    color: var(--popup-status-reviewed-text);
+    border-color: var(--popup-status-reviewed-border);
+}
+
+/* Status Reported */
+.popup-status-reported {
+    background-color: var(--popup-status-reported-bg);
+    color: var(--popup-status-reported-text);
+    border-color: var(--popup-status-reported-border);
+}
+
+
+/* Media Query สำหรับมือถือ */
+@media (max-width: 1000px) {
+    .popup-container {
+        width: 100%;
+        max-height: none;
+        max-width: none;
+        height: 100%; /* ปรับให้เต็มหน้าจอ */
+        left: 0;
+        top: 0;
+        transform: translate(0, 0);
+        z-index: 1000000;
+        border-radius: 0;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .popup-content {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
+    }
+    /* .popup-content {
+        grid-template-columns: 1fr 1fr 1fr;
+        padding: 1.2rem;
+    } */
+    .popup-user-container {
+        gap: 1rem;
+        flex-direction: column;
+        justify-content: flex-start;
+        text-align: center;
+    }
+
+    .popup-user-content {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .popup-button-group {
+        width: 100%;
+    }
+
+    .popup-button-group button {
+        width: 90%;
+    }
+    .popup-button-group span {
+        width: 80%;
+    }
+}
+@media (max-width: 820px) {
+    .popup-user-container {
+        justify-content: center;
+    }
+}

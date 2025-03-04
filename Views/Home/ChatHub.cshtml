@@ -7,26 +7,76 @@
     <title>Chat Page</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.9/signalr.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <h1 class="top">Chat Room</h1>
 
     <div class="chatContainer">
-        <div class="chatBox" id="chatBox"></div>
-
-        <!-- ขยับ Input Post ID ลงมาติดแชท -->
-        <div class="chatInput">
-            <label for="postIdInput">Enter Post ID:</label>
-            <input type="text" id="postIdInput" class="inputBox" placeholder="Post ID" required />
-            <button class="buttonStyle" onclick="joinChat()">Join Chat</button>
+        <div class="chatSidebar">
+            <h3>Joined Chats</h3>
+            <ul id="chatList" class="chatList"></ul>
         </div>
 
-        <div class="chatInput">
+        <div class="chatMain">
+            <h2 id="chatTitle">Chat</h2>
+
+            <div class="chatBox" id="chatBox"></div>
+
+            <div class="chatInput">
             <input type="text" id="messageInput" class="inputBox" placeholder="Type your message..." required />
-            <button class="buttonStyle" onclick="sendMessage()">Send</button>
+
+                <div class="theme-menu">
+        <div class="theme-dropdown">
+            <div class="theme-option default-theme" onclick="changeTheme('default')">
+                <span>Default</span>
+            </div>
+            <div class="theme-option dark-theme" onclick="changeTheme('dark-theme')">
+                <span>Dark</span>
+            </div>
+            <div class="theme-option blue-theme" onclick="changeTheme('blue-theme')">
+                <span>Blue</span>
+            </div>
+            <div class="theme-option retro-theme" onclick="changeTheme('retro-theme')">
+                <span>Retro</span>
+            </div>
+            <div class="theme-option sunset-theme" onclick="changeTheme('sunset-theme')">
+                <span>Sunset</span>
+            </div>
+            <div class="theme-option galaxy-theme" onclick="changeTheme('galaxy-theme')">
+                <span>Galaxy</span>
+            </div>
         </div>
+        <button class="theme-button" onclick="toggleThemeMenu()">🎨 Select Theme</button>
     </div>
 
-    <script src="~/js/Chat/Chat.js"></script>
+
+
+        <button id="emojiButton" class="emoji-main" onclick="toggleEmojiPicker()">😃</button>
+        
+         <div class="emoji-container">
+            <div id="emojiPicker" class="emoji-picker">
+                <button onclick="sendEmoji('😀')">😀</button>
+                <button onclick="sendEmoji('😂')">😂</button>
+                <button onclick="sendEmoji('😍')">😍</button>
+                <button onclick="sendEmoji('😎')">😎</button>
+                <button onclick="sendEmoji('😭')">😭</button>
+                <button onclick="sendEmoji('😊')">😊</button>
+                <button onclick="sendEmoji('😡')">😡</button>
+                <button onclick="sendEmoji('👍')">👍</button>
+                <button onclick="sendEmoji('👎')">👎</button>
+                <button onclick="sendEmoji('🎉')">🎉</button>
+                <button onclick="sendEmoji('❤️')">❤️</button>
+                <button onclick="sendEmoji('🔥')">🔥</button>
+            </div>
+        </div>
+            <button id="actionButton" class="sendIcon" onclick="handleSend()"><i class="fa-solid fa-thumbs-up"></i>
+            </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="@Url.Content("~/js/Chat/Chat.js")"></script>
 </body>

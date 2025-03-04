@@ -219,14 +219,25 @@ main {
     position: relative;
 }
 
+.preview_text{
+    display: flex;
+    flex-direction: column;
+}
+
+.preview_text:hover{
+    transform: scale(1.1);
+}
+
 .upload_text {
     color: var(--upload_text-color);
     font-size: 26px;
     user-select: none;
 }
 
-.upload_text:hover{
-    font-size: 28px;
+.upload_text_rec {
+    color: var(--upload_text-color);
+    font-size: 22px;
+    user-select: none;
 }
 
 .preview {
@@ -417,6 +428,8 @@ textarea:focus{
     border-radius: 10px;
     font-size: 16px;
     outline: none;
+    background-color: var(--input-bg);
+    color: var(--input_place_holder_color);
 }
 
 .event_date p, .app_deadline p {

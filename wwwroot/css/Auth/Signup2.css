@@ -1,0 +1,277 @@
+@import url("/css/src.css");
+
+:root {
+    --signup-bg: var(--seasalt);
+    --signup-text: var(--outer-space);
+    --signup-input-bg: var(--antiflash-white);
+    --signup-border: var(--french-gray);
+    --signup-submit-color: var(--bright-pink-crayola);
+    --signup-submit-hover: var(--bright-pink-crayola-2);
+    --signup-input-text: var(--outer-space);
+
+    --signup-google-bg: var(--seasalt);
+    --signup-google-border: var(--french-gray);
+    --signup-google-hover-bg: var(--antiflash-white);
+
+    /* Date Picker - Light Mode */
+    --datepicker-bg: var(--antiflash-white);  
+    --datepicker-text: var(--eerie-black);      
+    --datepicker-border-color: var(--french-gray);    
+    --datepicker-selected-bg: var(--bright-pink-crayola); 
+    --datepicker-today-bg: var(--bright-pink-crayola-2);  
+    --datepicker-hover-bg: var(--salmon-pink);        
+    --datepicker-hover-text: var(--eerie-black); 
+    --datepicker-inactive-day: var(--french-gray-2);   
+}
+[data-theme="dark"] {
+    --signup-bg: black;
+    --signup-text: var(--seasalt);
+    --signup-input-bg: var(--eerie-black);
+    --signup-border: var(--outer-space);
+    --signup-submit-color: var(--amaranth-purple);
+    --signup-submit-hover: var(--rose-red);
+    --signup-input-text: var(--french-gray);
+
+    --signup-google-bg: var(--eerie-black);
+    --signup-google-text: var(--seasalt);
+    --signup-google-border: var(--slate-gray);
+    --signup-google-hover-bg: var(--onyx);
+    --datepicker-hover-bg: var(--amaranth-purple);
+    --datepicker-hover-text: var(--seasalt);
+
+    /* Date Picker - Dark Mode */
+    --datepicker-bg: var(--eerie-black);
+    --datepicker-text: var(--seasalt);
+    --datepicker-border-color: var(--outer-space);
+    --datepicker-selected-bg: var(--amaranth-purple);
+    --datepicker-today-bg: var(--rose-red);
+    --datepicker-hover-bg: var(--claret);
+    --datepicker-hover-text: var(--seasalt);
+    --datepicker-inactive-day: var(--french-gray);  
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* height: 100%; */
+    background: var(--bg-image);
+}
+
+.signup-container {
+    display: flex;
+    flex-direction: column;
+    background: var(--signup-bg);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    height: 80%;
+    max-width: 800px;
+    /* overflow-y: auto; */
+    /* align-items: center; */
+}
+.signup-title {
+    font-size: 2.3rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+.signup-last-step {
+    display: none;
+}
+
+
+.signup-content .label {
+    font-size: 1.2rem;
+}
+.inputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.inputBox {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid var(--signup-border);
+    background: var(--signup-input-bg);
+    color: var(--signup-input-text);
+}
+.inputWrapper .inputBox {
+    padding-right: 3.2rem;
+}
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+.toggle-password i {
+    font-size: 0.8;
+    color: var(--text-color);
+}
+
+.signup-realname {
+    display: grid;
+    grid-template-columns:  1fr 1fr;
+    gap: 1rem;
+}
+#customGenderInput {
+    display: none;
+    flex-direction: column;
+}
+
+
+/* Calender */
+.flatpickr-calendar {
+    transform: translateX(130%);
+    background: var(--datepicker-bg) !important;
+    /* color: var(--datepicker-text) !important; */
+    border: 1px solid var(--datepicker-border-color) !important;
+}
+/* .flatpickr-day {
+    color: var(--datepicker-text) !important;
+} */
+[data-theme="dark"] .flatpickr-day {
+    color: var(--datepicker-text);
+}
+[data-theme="dark"] .flatpickr-day.inactive {
+    color: var(--datepicker-inactive-day) !important; 
+}
+.flatpickr-day.selected {
+    background: var(--datepicker-selected-bg) !important;
+    color: var(--seasalt) !important;
+}
+.flatpickr-day.today {
+    background: var(--datepicker-today-bg) !important;
+    color: var(--seasalt) !important;
+}
+.flatpickr-day:hover {
+    background: var(--datepicker-hover-bg) !important;
+    color: var(--datepicker-hover-text) !important;
+    transition: background 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+.flatpickr-month,
+.flatpickr-year,
+.flatpickr-weekday {
+    color: var(--datepicker-text) !important;
+}
+
+.signup-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+
+
+.signup-button {
+    margin-bottom: 1rem;
+    width: 100%;
+    padding: 1rem;
+    background: var(--signup-submit-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+.signup-button:hover {
+    background: var(--signup-submit-hover);
+}
+
+.signup-google-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0.5rem;
+    background: var(--signup-google-bg);
+    color: var(--signup-google-text);
+    border: 1px solid var(--signup-google-border);
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+.signup-google-link:hover {
+    background: var(--signup-google-hover-bg);
+    border-color: var(--rose-red);
+}
+
+.signup-login-container {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+.signup-login-link {
+    color: var(--signup-submit-color);
+}
+
+/* Media Queries สำหรับหน้าจอเล็ก */
+@media (max-width: 768px) {
+    .signup-container {
+        position: absolute;
+        /* top: 60px; */
+        width: 100%;
+        padding: 1.5rem;
+        padding: 1rem; 
+        height: calc(100% - 60px);
+        border-radius: 0;
+    }
+    .signup-title {
+        font-size: 1.9rem; 
+    }
+    .signup-realname {
+        grid-template-columns:  1fr;
+        gap: 0rem;
+    }
+
+    .inputBox,
+    .signup-button,
+    .signup-google-link {
+        font-size: 1rem;
+    }
+
+    .signup-signup-container {
+        margin-top: 3rem; 
+    }
+
+    .flatpickr-calendar {
+        transform: translateX(0%);
+    }
+}
+
+/* สำหรับหน้าจอมือถือ */
+@media (max-width: 480px) {
+
+    .inputBox {
+        font-size: 0.9rem; /* ลดขนาดตัวอักษรในกล่องกรอกข้อมูล */
+    }
+
+    .signup-title {
+        font-size: 1.6rem; /* ลดขนาดฟอนต์สำหรับชื่อฟอร์ม */
+    }
+
+    .signup-button {
+        padding: 0.8rem; /* ปรับขนาดปุ่ม */
+        font-size: 1rem; /* ลดขนาดฟอนต์ */
+    }
+
+    .signup-google-link {
+        font-size: 1rem; /* ปรับขนาดฟอนต์ของลิงก์ Google */
+    }
+
+    .toggle-password i {
+        font-size: 1.2rem; /* ปรับขนาดไอคอน */
+    }
+}

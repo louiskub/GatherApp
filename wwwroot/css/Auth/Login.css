@@ -1,11 +1,10 @@
 @import url("../src.css");
 
-/* * {
+* {
   padding: 0;
   margin: 0;
-} */
-
-.main {
+}
+body {
   /* background-color: blue; */
   font-family: "Jost", sans-serif;
   color: var(--chocolate-cosmos);
@@ -23,7 +22,7 @@
   text-align: center;
   width: 100%;
   display: flex;
-  font-size: clamp(30px, 2vw, 40px);
+  font-size: 2rem;
   height: 23%;
   padding: 2rem;
   color: white;
@@ -110,11 +109,6 @@
   height: 20px;
 }
 
-/* .nonVisibleButton img {
-    width: 30px;
-    height: 30px;
-  } */
-
 .buttonStyle {
   background-color: var(--bright-pink-crayola-2);
   justify-content: center;
@@ -154,9 +148,10 @@
 
 /* Responsive Styles */
 @media (max-width: 768px) {
-  /* .top {
+  .top {
+    font-size: 0.9rem;
     height: 20%;
-  } */
+  }
 
   .page {
     /* background-color: var(--light-sky-blue); */
@@ -202,8 +197,7 @@
   }
 
   .buttonStyle {
-    width: 255px;
-    border-radius: 10px;
+    width: 80%;
     font-size: 16px;
     padding: 10px;
     margin-top: 20px;
@@ -219,8 +213,8 @@
 
   .showButton {
     position: absolute;
-    top: 12px;
-    right: 6px;
+    transform: translate(50px);
+    right: 50px;
     background: none;
     cursor: pointer;
     border: none;

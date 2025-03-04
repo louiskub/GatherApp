@@ -73,7 +73,6 @@ public class ManageMyPostController : Controller
 
         var activity = new Activity
         {
-            OpenDateTime = dtopost.OpenDateTime,
             CloseDateTime = dtopost.CloseDateTime,
             ActDatetime = dtopost.ActDatetime,
             Province = dtopost.Province,
@@ -106,7 +105,6 @@ public class ManageMyPostController : Controller
             var connectionId = HttpContext.Connection.Id;
             await chathubContext.Groups.AddToGroupAsync(connectionId, post.Id.ToString());
 
-            await chathubContext.Clients.Group(post.Id.ToString()).SendAsync("ReceiveMessage", "System", $"User {userId} joined chat.",  DateTime.UtcNow.ToString("o"));
 
             return Json(new {status = "created"});
         }
@@ -391,7 +389,7 @@ public class ManageMyPostController : Controller
         public async Task<IActionResult> GetChatHistory(string postId)
         {
             var messages = await _db.ChatMessages
-                .Where(m => m.PostId == postId)
+                .Where(m => m.PostId == int.Parse(postId))
                 .OrderBy(m => m.SentAt)
                 .ToListAsync();
 
