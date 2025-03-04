@@ -20,6 +20,15 @@ async function startConnection() {
     }
 }
 
+function chooseImg(coverImage){
+    if (coverImage == "" || coverImage == null) 
+        return "https://www.mcot.net/uploads/article/202409/fc9caee77c607de279ff9116c67c6ddf.jpeg"
+    else if(coverImage.length < 200) 
+        return coverImage
+    else 
+        return "data:image/jpeg;base64," + coverImage
+}
+
 startConnection();
 
 function setupListeners() {
@@ -59,7 +68,7 @@ function setupListeners() {
             let chatItem = document.createElement("li");
             chatItem.classList.add("chatItem");
             let coverImg = document.createElement("img");
-            coverImg.src = post.coverImage || "https://www.mcot.net/uploads/article/202409/fc9caee77c607de279ff9116c67c6ddf.jpeg";
+            coverImg.src = chooseImg(post.coverImage);
             coverImg.alt = post.postName;
             coverImg.classList.add("chatCover");
 

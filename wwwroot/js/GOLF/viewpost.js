@@ -43,6 +43,7 @@ async function showPostDetail() {
     postName.textContent = post.postName;
 
     const postOwner = document.querySelector(".actbox1_left");
+    postOwner.querySelector("a").href = `/profile?username=${owner.username}`
     postOwner.querySelector("img").src = chooseImg(owner.profileImg)
     postOwner.querySelector("h2").textContent = owner.username
 
@@ -167,6 +168,11 @@ function initEventListeners() {
 
   // Create button
   elements.submiteditButton.addEventListener('click', validateForm);
+
+  elements.canceleditButton.addEventListener('click', () => {
+    elements.popup.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  })
 }
 
 // Handle image upload
