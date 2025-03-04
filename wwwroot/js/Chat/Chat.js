@@ -335,3 +335,34 @@ async function loadPreviousMessages() {
     }
 }
 
+function toggleThemeMenu() {
+    let menu = document.querySelector(".theme-dropdown");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+function toggleThemeMenu() {
+    let menu = document.querySelector(".theme-dropdown");
+
+    // เช็คสถานะ ถ้าแสดงอยู่ให้ซ่อน, ถ้าไม่แสดงให้เปิด
+    menu.style.display = (menu.style.display === "block") ? "none" : "block";
+}
+
+function changeTheme(theme) {
+    let chatBox = document.querySelector(".chatBox");
+
+    chatBox.classList.remove("dark-theme", "blue-theme", "retro-theme");
+
+    if (theme !== "default") {
+        chatBox.classList.add(theme);
+    }
+
+    localStorage.setItem("chatTheme", theme);
+
+    document.querySelector(".theme-dropdown").style.display = "none";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    let savedTheme = localStorage.getItem("chatTheme") || "default";
+    changeTheme(savedTheme);
+});
+
