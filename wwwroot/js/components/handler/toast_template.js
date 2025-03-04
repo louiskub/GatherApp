@@ -19,7 +19,7 @@ export default class ToastTemplate{
                 top: 80px;
                 left: 50%;
                 transform: translateX(-50%);
-                z-index: 1010;
+                z-index: 1000005;
             }
 
             .color-info {
