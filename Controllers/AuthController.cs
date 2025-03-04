@@ -12,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication;
 
-
 namespace GatherApp.Controllers;
 
 public class AuthController : Controller
@@ -88,6 +87,27 @@ public class AuthController : Controller
         });
 
         return Ok(new { status = "Login success", token = token });
+    }
+
+
+    [HttpPost]
+    [Route("api/auth/checkPassword")]
+    [Authorize]
+    public IActionResult CheckPassword([FromBody] CheckPassword obj)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var user = _db.Users.Where(u => u.Id == userId)
+                            .FirstOrDefault();
+        if (user == null)
+        {
+            return Unauthorized("User not found");
+        }
+        if (!BCrypt.Net.BCrypt.Verify(obj.Password, user.Password))
+        {
+            return Json(new { status = "Passwords do not match!" });
+        }
+        
+        return Json(new { status = "password correct"});
     }
 
 
