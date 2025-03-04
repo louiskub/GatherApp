@@ -345,7 +345,7 @@ function toggleThemeMenu() {
 function changeTheme(theme) {
     let chatBox = document.querySelector(".chatBox");
 
-    chatBox.classList.remove("dark-theme", "blue-theme", "retro-theme");
+    chatBox.classList.remove("dark-theme", "blue-theme", "retro-theme","sunset-theme", "galaxy-theme");
 
     if (theme !== "default") {
         chatBox.classList.add(theme);
