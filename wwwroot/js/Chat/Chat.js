@@ -335,15 +335,10 @@ async function loadPreviousMessages() {
     }
 }
 
-function toggleThemeMenu() {
-    let menu = document.querySelector(".theme-dropdown");
-    menu.style.display = menu.style.display === "block" ? "none" : "block";
-}
 
 function toggleThemeMenu() {
     let menu = document.querySelector(".theme-dropdown");
 
-    // เช็คสถานะ ถ้าแสดงอยู่ให้ซ่อน, ถ้าไม่แสดงให้เปิด
     menu.style.display = (menu.style.display === "block") ? "none" : "block";
 }
 

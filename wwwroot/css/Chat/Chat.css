@@ -18,6 +18,34 @@
     --button-hover-bg: #003d80;
 }
 
+.dark-theme {
+    --border-color: #444;
+    --chat-bg-color: #121212;
+    --chat-text-color: white;
+    --my-message-bg: #007bff;
+    --other-message-bg: #444;
+    --username-color: #f4d03f;
+}
+
+.blue-theme {
+    --border-color: #007acc;
+    --chat-bg-color: #0099ff;
+    --chat-text-color: white;
+    --my-message-bg: #005f99;
+    --other-message-bg: #0088cc;
+    --username-color: #ffcc00;
+}
+
+.retro-theme {
+    --border-color: #8e44ad;
+    --chat-bg-color: #f4d03f;
+    --chat-text-color: #8e44ad;
+    --my-message-bg: #ff9900;
+    --other-message-bg: #ffcc00;
+    --username-color: #333;
+}
+
+
 body {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
@@ -255,7 +283,7 @@ h1.top {
     font-weight: bold;
     margin-bottom: 5px;
     font-size: 0.9rem;
-    color: var(--chat-hover-color);
+    color: var(--username-color);
 }
 
 .message-details {
@@ -496,7 +524,7 @@ h1.top {
     transition: 0.3s;
 }
 
-.default-theme { background: linear-gradient(to right, #ffffff, #cccccc); }
+.default-theme { background: linear-gradient(to right, #6f6f6f, #242424); }
 .dark-theme { background: linear-gradient(to right, #121212, #444); color: white; }
 .blue-theme { background: linear-gradient(to right, #007acc, #0099ff); color: white; }
 .retro-theme { background: linear-gradient(to right, #f4d03f, #8e44ad); color: white; }
