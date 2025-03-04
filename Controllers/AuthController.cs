@@ -42,40 +42,38 @@ public class AuthController : Controller
     [Route("api/auth/login")]
     public async Task<IActionResult> Login([FromBody] UserDTO obj)
     {
-        if (obj.Password == null || obj.Username == null)
+        if (string.IsNullOrWhiteSpace(obj.Username) || string.IsNullOrWhiteSpace(obj.Password))
         {   
             return BadRequest("Invalid request body");
         }
-        
-        var userDTO = await _db.Users.FirstOrDefaultAsync(s=> s.Username == obj.Username);
 
-        if (userDTO == null)
+        var userExists = await _db.Users.AnyAsync(s => s.Username == obj.Username);
+        if (!userExists)
         {
-            return Json(new { status = "Invalid username or password" });
+            return Unauthorized("Invalid username or password");
+        }
+
+        var userDTO = await _db.Users.FirstOrDefaultAsync(s => s.Username == obj.Username);
+        if (!BCrypt.Net.BCrypt.Verify(obj.Password, userDTO.Password))
+        {
+            return Unauthorized("Invalid username or password");
         }
 
         var userScore = await _db.BehaviorScores.FirstOrDefaultAsync(s => s.UserId == userDTO.Id);
-        if (userScore != null && userScore.IsBanned)
+        if (userScore?.IsBanned == true)
         {
             if (userScore.BannedUntil.HasValue && userScore.BannedUntil > DateTime.Now)
             {
-            return Unauthorized($"You are banned until {userScore.BannedUntil.Value}");
+                return Unauthorized($"You are banned until {userScore.BannedUntil.Value}");
             }
-
-        if (!userScore.BannedUntil.HasValue) // แบนถาวร
+            if (!userScore.BannedUntil.HasValue)
             {
-            return Unauthorized("You have been permanently banned.");
+                return Unauthorized("You have been permanently banned.");
             }
-
-        // ถ้าครบ 7 วันแล้ว ให้ยกเลิกการแบน
-        userScore.IsBanned = false;
-        userScore.BannedUntil = null;
-        await _db.SaveChangesAsync();
-        }
-
-        if (!BCrypt.Net.BCrypt.Verify(obj.Password, userDTO.Password))
-        {
-            return Json(new { status = "Invalid username or password" });
+            
+            userScore.IsBanned = false;
+            userScore.BannedUntil = null;
+            await _db.SaveChangesAsync();
         }
 
         string stId = userDTO.Id.ToString();
@@ -88,9 +86,10 @@ public class AuthController : Controller
             SameSite = SameSiteMode.Strict,
             Expires = DateTime.UtcNow.AddDays(1)
         });
-        
-        return Json(new { status = "Login success", token = token });
+
+        return Ok(new { status = "Login success", token = token });
     }
+
 
     [HttpPost]
     [Route("api/auth/logout")]
