@@ -1,0 +1,41 @@
+@import url('/css/src.css');
+
+:root {
+    --filter-button-border: var(--chocolate-cosmos);
+    --filter-button-bg: var(--cherry-blossom-pink);
+    --filter-button-hover-bg-1: var(--bright-pink-crayola);
+    --filter-button-hover-bg-2: var(--bright-pink-crayola-2);
+}
+[data-theme="dark"] {
+    --filter-button-border: var(--platinum);
+    --filter-button-bg: var(--slate-gray);
+    --filter-button-hover-bg-1: var(--rose-red);
+    --filter-button-hover-bg-2: var(--amaranth-purple);
+}
+
+.filter-button-group{
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 0.5rem;
+}
+.filter-button-group button {
+    flex: 1;
+    padding: 0.6rem 1rem;
+    min-width: 120px; 
+    max-width: 180px; 
+    border: 1.5px solid var(--filter-button-border);
+    background-color: var(--filter-button-bg);
+    color: var(--text-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: background 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+}
+.filter-button-group button.active {
+    background-color: var(--filter-button-hover-bg-1);
+    color: white;
+}
+.filter-button-group button:hover {
+    background-color: var(--filter-button-hover-bg-2);
+    color: white;
+}

@@ -27,11 +27,7 @@
     /* Element backgrounds และ texts สำหรับเนื้อหาหลัก */
     --main-bg: var(--lavender-blush);
     --main-text: var(--eerie-black);
-
-    /* Search filter */
-    --search-text: var(--eerie-black);
     --search-border: var(--chocolate-cosmos);
-    --search-filter-bg: var(--cherry-blossom-pink);
 
     /* Hover สำหรับ Search */
     --hover-bg-1: var(--bright-pink-crayola);
@@ -61,10 +57,7 @@
 
     --main-bg: var(--outer-space);
     --main-text: var(--seasalt);
-
-    --search-text: var(--seasalt);
     --search-border: var(--platinum);
-    --search-filter-bg: var(--slate-gray);
 
     --hover-bg-1: var(--rose-red);
     --hover-bg-2: var(--amaranth-purple);
@@ -143,64 +136,9 @@
     transform: rotate(180deg);
 }
 
-/* Write Button */
-.write-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 60px;
-    height: 60px;
-    background: var(--write-button-bg);
-    color: var(--write-button-text);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 20;
-    box-shadow: 2px 2px 10px var(--write-button-shadow);
-    cursor: pointer;
-    transition: transform 0.2s, background 0.3s;
-}
-.write-button img {
-    width: 30px;
-    height: 30px;
-    filter: brightness(0) invert(1);
-}
-.write-button:hover {
-    background: var(--write-button-hover-bg);
-    color: var(--write-button-hover-text);
-    transform: scale(1.1);
-}
-
 /* Search Content และ Filter */
 .search-content {
     padding: 1rem 2rem;
-}
-.search-filter {
-    display: flex;
-    flex-wrap: wrap; 
-    gap: 0.5rem;
-}
-.search-filter button {
-    flex: 1;
-    padding: 0.6rem 1rem;
-    min-width: 120px; 
-    max-width: 180px; 
-    border: 1.5px solid var(--search-border);
-    background-color: var(--search-filter-bg);
-    color: var(--search-text);
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: background 0.3s ease, color 0.3s ease;
-    cursor: pointer;
-}
-.search-filter button.active {
-    background-color: var(--hover-bg-1);
-    color: var(--hover-text);
-}
-.search-filter button:hover {
-    background-color: var(--hover-bg-2);
-    color: var(--hover-text);
 }
 
 /* Search Results */
@@ -298,6 +236,7 @@
     transform: scale(1.03);
     /* border: 1px solid var(--navbar-text); */
 }
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .sidenav {

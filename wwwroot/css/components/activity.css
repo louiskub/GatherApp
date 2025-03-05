@@ -1,0 +1,298 @@
+@import url("/css/src.css");
+
+:root {
+    --container-shadow: rgba(0, 0, 0, 0.15);
+    --activity-bg: var(--pink);
+    --activity-title-text: black;
+    --activity-detail-text: var(--eerie-black);
+    --activity-border: var(--rose-red);
+    --button-bg: var(--bright-pink-crayola);
+    --button-hover: var(--rose-red);
+    --card-bg: var(--lavender-blush);
+
+    --status-color: #198754;
+    --toggle-bg-on: var(--bright-pink-crayola);
+    --toggle-bg-off: var(--french-gray-2);
+    --toggle-circle-bg: white;
+    --toggle-text-on: var(--seasalt);
+    --toggle-text-off: var(--onyx);
+
+    --view-bg: var(--bright-pink-crayola);
+    --view-hover: var(--rose-red);
+    --cancel-bg: var(--french-gray);
+    --cancel-hover: var(--claret);
+    --report-bg: var(--rose-red);
+    --report-hover: var(--bright-pink-crayola);
+    --review-bg: var(--lavender-blush);
+    --review-hover: var(--rose-red);
+}
+
+[data-theme="dark"] {
+    --container-shadow: rgba(255, 255, 255, 0.15);
+    --activity-bg: var(--onyx);
+    --activity-border: var(--outer-space);
+    --activity-title-text: var(--salmon-pink);
+    --activity-detail-text: var(--lavender-blush);
+    --button-bg: linear-gradient(45deg, var(--bright-pink-crayola), var(--rose-red));
+    --button-hover: linear-gradient(45deg, var(--rose-red), var(--bright-pink-crayola));
+    --card-bg: var(--outer-space);
+
+    --status-color: #32CD32;
+    --toggle-bg-on: var(--rose-red);
+    --toggle-bg-off: var(--slate-gray);
+    --toggle-circle-bg: var(--onyx);
+    --toggle-text-on: var(--seasalt);
+    --toggle-text-off: var(--antiflash-white);
+
+    --view-bg: linear-gradient(45deg, var(--bright-pink-crayola), var(--rose-red));
+    --view-hover: linear-gradient(45deg, var(--rose-red), var(--bright-pink-crayola));
+    --cancel-bg: var(--slate-gray);
+    --cancel-hover: var(--rose-red);
+    --report-bg: var(--rose-red);
+    --report-hover: var(--amaranth-purple);
+    --review-bg: var(--outer-space);
+    --review-hover: var(--onyx);
+}
+
+
+/* Activity Container */
+.activity-container.incomplete, 
+.activity-container.complete {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: var(--activity-bg);
+    padding: 1.5rem;
+    border-radius: 10px;
+    width: 100%;
+    flex-wrap: wrap;
+    border: 1px solid var(--activity-border);
+    transition: background 0.3s ease-in-out, border 0.3s ease-in-out;
+}
+
+/* Activity Left Content */
+.activity-content-left {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+.activity-header {
+    /* width: 100%; */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+.activity-title {
+    width: calc(100% - 80px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 1.7rem;
+    font-weight: bold;
+    color: var(--activity-title-text);
+    flex-grow: 1;
+}
+
+/* Activity Status Switch */
+.activity-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+    color: var(--status-color); /* Temporary */
+}
+.activity-status-toggle {
+    display: none;
+}
+.activity-status-switch {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 85px;
+    height: 30px;
+    border-radius: 20px;
+    position: relative;
+    cursor: pointer;
+    padding: 5px;
+    transition: background 0.3s ease;
+}
+.activity-status-switch-circle {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: var(--toggle-circle-bg);
+    border-radius: 50%;
+    transition: 0.3s ease;
+}
+.activity-status-switch-text {
+    position: absolute;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--toggle-text-off);
+    transition: 0.3s ease;
+}
+
+/* Default state: Checked */
+.activity-status-toggle:checked + .activity-status-switch {
+    background: var(--toggle-bg-on);
+}
+.activity-status-toggle:checked + .activity-status-switch .activity-status-switch-circle {
+    left: calc(100% - 25px); 
+}
+.activity-status-toggle:checked + .activity-status-switch .activity-status-switch-text {
+    color: var(--toggle-text-on);
+    left: 10px;  
+}
+.activity-status-toggle:checked + .activity-status-switch .activity-status-switch-text::after {
+    content: "Open";
+}
+
+.activity-status-toggle:not(:checked) + .activity-status-switch {
+    background: var(--toggle-bg-off);
+}
+.activity-status-toggle:not(:checked) + .activity-status-switch .activity-status-switch-circle {
+    left: 5px; 
+}
+.activity-status-toggle:not(:checked) + .activity-status-switch .activity-status-switch-text {
+    color: var(--toggle-text-off);
+    right: 10px;
+}
+.activity-status-toggle:not(:checked) + .activity-status-switch .activity-status-switch-text::after {
+    content: "Closed";
+}
+
+
+/* Activity Right Content */
+.activity-content-right {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    /* justify-content: flex-end; */
+    flex-wrap: wrap;
+    width: 100%;
+}
+.activity-detail {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--activity-detail-text);
+}
+.activity-container.complete .activity-participants {
+    display: flex;
+    gap: 1.5rem;
+}
+.activity-button {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Buttons */
+.activity-button button {
+    padding: 0.7rem 1.2rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 2px 2px 5px var(--container-shadow);
+    /* width: 48%; */
+    flex: 1 1 45%; /* Makes buttons flexible */
+    text-align: center;
+
+}
+.activity-button button:hover {
+    transform: scale(1.03);
+}
+
+.activity-view-button {
+    background: var(--view-bg);
+    color: var(--seasalt);
+}
+.activity-view-button:hover {
+    background: var(--view-hover);
+}
+
+.activity-cancel-button {
+    background: var(--cancel-bg);
+    color: var(--toggle-text-off);
+}
+.activity-cancel-button:hover {
+    background: var(--cancel-hover);
+    color: var(--toggle-text-on);
+}
+
+.activity-report-button {
+    background: var(--report-bg);
+    color: var(--seasalt);
+}
+.activity-report-button:hover {
+    background: var(--report-hover);
+    color: var(--seasalt);
+}
+
+.activity-review-button {
+    background: var(--review-bg);
+    color: var(--text-color);
+}
+.activity-review-button:hover {
+    background: var(--review-hover);
+    color: var(--seasalt);
+}
+
+/* Responsive Design */
+@media (max-width: 800px) {
+    .activity-container {
+        flex-direction: column;
+        padding: 1rem;
+    }
+    .activity-content-left,
+    .activity-content-right {
+        width: 100%;
+    }
+
+    .activity-button {
+        width: 100%;
+        justify-content: space-between;
+        gap: 0.5rem;
+    }
+    .activity-button button {
+        width: 48%;
+    }
+}
+
+@media (max-width: 545px) {
+    .activity-title {
+        font-size: 1.4rem;
+    }
+    .activity-detail {
+        gap: 1rem;
+        font-size: 0.8rem;
+    }
+    .activity-status{
+        font-size: 0.8rem;
+    }
+    .activity-status-switch {
+        width: 70px;
+        height: 25px;
+    }
+    .activity-status-switch-circle {
+        width: 15px;
+        height: 15px;
+    }
+    .activity-status-switch-text {
+        font-size: 12px;
+    }
+    .activity-button {
+        flex-direction: column;
+    }
+    .activity-button button {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+        width: 100%;
+    }
+}

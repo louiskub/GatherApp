@@ -1,3 +1,5 @@
+import loadCss from '/js/components/reuse_func.js';
+
 async function toggleCustomInput() {
     var selectBox = document.getElementById("genderSelecter");
     var customInput = document.getElementById("customGenderInput");
@@ -132,6 +134,9 @@ document.getElementById("signupButton").addEventListener("click", function (even
 });
 
 document.addEventListener("DOMContentLoaded", function () {
+    loadCss("/css/Auth/Signup2.css");
+    loadCss("https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css");
+
     flatpickr("#datePicker", {
         dateFormat: "d-m-Y",
         theme: document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light"

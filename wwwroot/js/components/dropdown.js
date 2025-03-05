@@ -1,3 +1,6 @@
+import loadCss from "/js/components/reuse_func.js";
+loadCss("/css/components/dropdown.css");
+
 class Dropdown {
     constructor(title, options = [], defaultOption = "") {
         this.title = title;
