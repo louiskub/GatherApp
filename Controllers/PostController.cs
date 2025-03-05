@@ -23,7 +23,7 @@ public class PostController : Controller
         return View();
     }   
 
-    [Route("post/allpost")]
+    [Route("api/post/allpost")]
     public async Task<IActionResult> GetAllPost()
     {
         // ดึงข้อมูลทั้งหมดจากฐานข้อมูล
