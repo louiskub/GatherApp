@@ -51,7 +51,7 @@ async function getMyProfile() {
         });
         window.changeToast(content, "/home")
     }
-
+    window.userProfile = null;
     window.userProfileLoaded = new Promise(async (resolve) => {
         try {
             let response = await fetch("/api/user/myprofile", {
@@ -66,6 +66,7 @@ async function getMyProfile() {
                 response.role = "user";
                 window.userProfile = response;
                 document.dispatchEvent(new CustomEvent("userProfileLoaded", { detail: response }));
+                console.log("✅ userProfile received:", window.userProfile);
                 resolve()
             }else {
                 logOut("Error: Please login again");

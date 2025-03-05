@@ -31,9 +31,8 @@ async function showPostDetail() {
     }
 
     post = await fetchPost();
-    isOwner = post.isOwner;
-    post = post.post;
     owner = post.owner;
+    isOwner = owner.username == window.userProfile.username;
     activity = post.activity;
     actTypes = post.actTypes;
     participants = post.participants;
@@ -683,6 +682,7 @@ async function userButtonHandler(){
 }
 
 document.addEventListener("DOMContentLoaded", async function() {
+  await window.userProfileLoaded;
   await showPostDetail();
   await userButtonHandler();
 
