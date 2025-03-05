@@ -23,7 +23,7 @@ public class PostController : Controller
         return View();
     }   
 
-    [Route("post/allpost")]
+    [Route("api/post/allpost")]
     public async Task<IActionResult> GetAllPost()
     {
         // ดึงข้อมูลทั้งหมดจากฐานข้อมูล
@@ -179,10 +179,10 @@ public class PostController : Controller
         else if (date == "Tomorrow")
             posts = posts.Where(p =>  p.Activity.ActDatetime.Date == DateTime.Now.Date.AddDays(1)).ToList();
         else if (date == "This week")
-            posts = posts.Where(p => p.Activity.ActDatetime.Date <= DateTime.Now.Date.AddDays(7)).ToList();
+            posts = posts.Where(p => p.Activity.ActDatetime.Date <= DateTime.Now.Date.AddDays(7 - (int)DateTime.Now.DayOfWeek)).ToList();
         else if (date == "Next week")
-            posts = posts.Where(p =>  DateTime.Now.Date.AddDays(7) <= p.Activity.ActDatetime.Date 
-                            && p.Activity.ActDatetime.Date <= DateTime.Now.Date.AddDays(14)).ToList();
+            posts = posts.Where(p =>  DateTime.Now.Date.AddDays(8 - (int)DateTime.Now.DayOfWeek) <= p.Activity.ActDatetime.Date 
+                            && p.Activity.ActDatetime.Date <= DateTime.Now.Date.AddDays(14 - (int)DateTime.Now.DayOfWeek)).ToList();
         else if(date == "This month")
             posts = posts.Where(p => p.Activity.ActDatetime.Month == DateTime.Now.Month).ToList();
 
@@ -289,10 +289,10 @@ public class PostController : Controller
         else if (date == "Tomorrow")
             posts = posts.Where(p =>  p.Activity.ActDatetime.Date == DateTime.Now.Date.AddDays(1)).ToList();
         else if (date == "This week")
-            posts = posts.Where(p => p.Activity.ActDatetime.Date <= DateTime.Now.Date.AddDays(7)).ToList();
+            posts = posts.Where(p => p.Activity.ActDatetime.Date <= DateTime.Now.Date.AddDays(7 - (int)DateTime.Now.DayOfWeek)).ToList();
         else if (date == "Next week")
-            posts = posts.Where(p =>  DateTime.Now.Date.AddDays(7) <= p.Activity.ActDatetime.Date 
-                            && p.Activity.ActDatetime.Date <= DateTime.Now.Date.AddDays(14)).ToList();
+            posts = posts.Where(p =>  DateTime.Now.Date.AddDays(8 - (int)DateTime.Now.DayOfWeek) <= p.Activity.ActDatetime.Date 
+                            && p.Activity.ActDatetime.Date <= DateTime.Now.Date.AddDays(14 - (int)DateTime.Now.DayOfWeek)).ToList();
         else if(date == "This month")
             posts = posts.Where(p => p.Activity.ActDatetime.Month == DateTime.Now.Month).ToList();
 

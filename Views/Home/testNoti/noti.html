@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Popup Notifications</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="demo-container">
+    <header class="demo-header">
+      <h1>My Website</h1>
+      <div class="header-actions">
+        <div class="notification-bell" id="notification-bell">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="bell-icon">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span id="notification-count" class="notification-badge">3</span>
+        </div>
+        <div class="user-avatar">
+          <img src="/placeholder.svg?height=40&width=40" alt="User avatar">
+        </div>
+      </div>
+    </header>
+
+    <main class="demo-content">
+      <h2>Welcome to the Notification Demo</h2>
+      <p>Click the bell icon in the header to see your notifications.</p>
+      <div class="demo-actions">
+        <button id="add-info" class="demo-btn info">Add Info Notification</button>
+        <button id="add-success" class="demo-btn success">Add Success Notification</button>
+        <button id="add-warning" class="demo-btn warning">Add Warning Notification</button>
+        <button id="add-error" class="demo-btn error">Add Error Notification</button>
+      </div>
+    </main>
+
+    <!-- Notification Popup -->
+    <div class="notification-popup" id="notification-popup">
+      <div class="notification-header">
+        <h3>Notifications</h3>
+        <div class="notification-actions">
+          <button id="mark-all-read" class="action-btn">Mark all as read</button>
+          <button id="close-popup" class="close-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="notification-filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="unread">Unread</button>
+      </div>
+      <div class="notifications-list" id="notifications-list">
+        <!-- Notifications will be added here by JavaScript -->
+      </div>
+      <div class="notification-footer">
+        <a href="#" class="view-all">View all notifications</a>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container">
+      <!-- Toast notifications will appear here -->
+    </div>
+  </div>
+
+  <!-- Theme Toggle -->
+  <div class="theme-toggle" id="theme-toggle">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+

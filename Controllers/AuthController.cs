@@ -210,4 +210,35 @@ public class AuthController : Controller
             return StatusCode(500, new { status = "Registration failed", errors = new[] { "Transaction failed."} });
         }
     }
+
+    [HttpPost]
+    [Route("api/auth/checkpassword")]
+    public async Task<IActionResult> CheckPassword([FromBody] UserDTO obj)
+    {
+        if (string.IsNullOrWhiteSpace(obj.Password))
+        {
+            return BadRequest("Invalid request body");
+        }
+
+        // ดึง Username ของผู้ใช้ปัจจุบัน (ต้องมีระบบ Authentication)
+        var username = User.Identity?.Name; // ใช้ Identity จาก JWT หรือ Cookie
+        if (string.IsNullOrEmpty(username))
+        {
+            return Unauthorized("User not logged in");
+        }
+
+        var user = await _db.Users.FirstOrDefaultAsync(s => s.Username == username);
+        if (user == null)
+        {
+            return Unauthorized("Invalid username or password");
+        }
+
+        if (!BCrypt.Net.BCrypt.Verify(obj.Password, user.Password))
+        {
+            return Unauthorized("Invalid username or password");
+        }
+
+        return Ok(new { status = "password correct" });
+    }
+
 }
