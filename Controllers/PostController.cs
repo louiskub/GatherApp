@@ -80,8 +80,6 @@ public class PostController : Controller
         if (post == null)
             return NotFound();
 
-        bool isOwner = post.User.Id == reqUserId;
-
         var applications = post.Applications.Where(a => a.AppliedStatus == true)
                             .Select(a => new
                             {
@@ -90,7 +88,7 @@ public class PostController : Controller
                             }).ToList();
         var result = post.ToJson(reqUserId);
         result["participants"] = applications;
-        return Json(new{post = result, isOwner});
+        return Json(result);
     }
     
     [Route("api/post/user")]
