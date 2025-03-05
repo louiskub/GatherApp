@@ -349,13 +349,11 @@ public class PostController : Controller
         var isLiked = existingLike == null;
         if (existingLike != null)
         {
-            // ถ้าเคยไลก์แล้ว → ให้ Unlike
             _db.PostLikes.Remove(existingLike);
             post.Like--;
         }
         else
         {
-            // ถ้ายังไม่เคยไลก์ → ให้ Like
             var postLike = new PostLike
             {
                 PostId = postId,
@@ -366,7 +364,7 @@ public class PostController : Controller
         }
 
         await _db.SaveChangesAsync();
-        return Json(new{like = post.Like, isLiked}); // ส่งจำนวนไลก์กลับไป
+        return Json(new{like = post.Like, isLiked});
     }
 
 

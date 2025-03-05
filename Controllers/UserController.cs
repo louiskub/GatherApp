@@ -170,6 +170,7 @@ public class UserController : Controller
     // เกี่ยวกับ post ที่เรา like ซึ่งเราดูได้คนเดียว
 
     [Route("api/user/mylikedpost")]
+    [HttpGet]
     [Authorize]
     public IActionResult GetMyLikedPost()
     {
@@ -178,18 +179,60 @@ public class UserController : Controller
         if (user == null) 
             return NotFound("User not found");
             
-        var likedPosts = _db.PostLikes.OrderBy(lp => lp.Id)
-                                    .Include(lp => lp.Post)
-                                    .Include(lp => lp.Post.User)
-                                    .Include(lp => lp.Post.Activity)
-                                    .Include(lp => lp.Post.Activity.ActTypes)
-                                    .Where(lp => lp.UserId == user.Id).ToList();
-        if (likedPosts == null || likedPosts.Count == 0) 
-            return NotFound("Liked post not found");
-        var result = likedPosts.Select(lp => lp.Post.ToJson());
-        return Json(result);
+        var likedPosts = _db.PostLikes
+                                .Include(lp => lp.Post)
+                                .ThenInclude(p => p.User)
+                                .Include(lp => lp.Post.Activity)
+                                .ThenInclude(a => a.ActTypes)
+                                .Where(lp => lp.UserId == user.Id)
+                                .Select(lp => new
+                                {
+                                    id = lp.Post.Id,
+                                    postname = lp.Post.PostName,
+                                    image = lp.Post.CoverPageImg ?? "https://storage-wp.thaipost.net/2024/12/Moo-Deng3.jpg",
+                                    Province = lp.Post.Activity.Province,
+                                    District = lp.Post.Activity.District,
+                                    total = lp.Post.Applications.Count,
+                                    Accepted = lp.Post.Applications.Count(a => a.AppliedStatus == true),
+                                    registered = lp.Post.Applications.Count(a => a.AppliedStatus == null || a.AppliedStatus == true),
+                                    actDatetime = lp.Post.Activity.ActDatetime.ToString("dd/MM/yyyy HH:mm"),
+                                    tags = lp.Post.Activity.ActTypes.Select(at => at.ActType).ToList(),
+                                })
+                                .ToList();
+                        
+        if (likedPosts == null || likedPosts.Count == 0)
+            return NotFound("Liked post not found");    
+
+        return Ok(likedPosts);
 
     }
+
+    [Route("api/user/unlikepost")]
+    [HttpPost]
+    [Authorize]
+    public IActionResult UnlikePost([FromBody] unlikedPost unlikePostRequest)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId)) 
+             return Unauthorized("User not found");
+
+        var user = _db.Users.Where(u => u.Id == userId).FirstOrDefault();
+        if (user == null) 
+            return NotFound("User not found");
+
+        var post = _db.Posts.Where(p => p.Id == unlikePostRequest.PostId).FirstOrDefault();
+        if (post == null)
+            return NotFound("Post not found");
+
+        var postLike = _db.PostLikes.Where(pl => pl.UserId == user.Id && pl.PostId == post.Id).FirstOrDefault();
+        if (postLike == null)
+            return NotFound("Post like not found");
+
+        _db.PostLikes.Remove(postLike);
+        _db.SaveChanges();
+        return Ok(new { status = "unliked" });
+    }   
 
 
     [Route("api/user/getmyposts")]
