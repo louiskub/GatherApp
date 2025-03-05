@@ -103,7 +103,7 @@ function setupGlobalChatListeners() {
             <div class="post-details">
                 <h4>${postName}</h4>
                 <p>${postDetail}</p>
-                <button onclick="applyForPost('${postId}')">Apply</button>
+                <button onclick="viewPost('${postId}')">Apply</button>
             </div>
         `;
     
@@ -167,36 +167,18 @@ connection.on("ReceivePostInvitation", (postId, postName, postDetail, username) 
         <div class="post-details">
             <h4>${postName}</h4>
             <p>${postDetail}</p>
-            <button onclick="applyForPost('${postId}')">Apply</button>
+            <button onclick="viewPost('${postId}')">Apply</button>
         </div>
     `;
 
     chatBox.appendChild(inviteContainer);
 });
 
-function applyForPost(postId) {
-    console.log("[DEBUG] Sending POST request to:", `http://localhost:5174/api/user/applypost?postid=${postId}`);
-
-    fetch(`http://localhost:5174/api/user/applypost?postid=${postId}`, {  
-        method: "POST",  
-        headers: {
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.text().then(text => { throw new Error(text); });
-        }
-        return response.json();
-    })
-    .then(data => {
-        alert("Successfully applied for the post!");
-    })
-    .catch(error => {
-        console.error("[ERROR] Failed to apply:", error);
-        alert(`Error: ${error.message}`);
-    });
+function viewPost(postId) {
+    console.log("[DEBUG] Redirecting to post view page:", `http://localhost:5174/post/${postId}`);
+    
+    window.location.href = `http://localhost:5174/post?postId=${postId}`;
 }
-
 
 
 function appendGlobalMessage(IsMine,username, message, sentAt, profileImageUrl) {
