@@ -26,6 +26,13 @@ function setupGlobalChatListeners() {
         return;
     }
 
+    document.getElementById("globalMessageInput").addEventListener("keydown", function (event) {
+        if (event.key === "Enter" && !event.shiftKey) { 
+            event.preventDefault();
+            sendGlobalMessage(); 
+        }
+    });
+
     connection.on("ReceiveGlobalMessage", (isMine,username, message, sentAt, profileImageUrl) => {
         console.log("[DEBUG] ReceiveGlobalMessage:", {isMine, username, message, sentAt, profileImageUrl });
         appendGlobalMessage(isMine,username, message, sentAt, profileImageUrl);
