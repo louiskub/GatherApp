@@ -98,6 +98,7 @@ namespace GatherApp.Controllers
                 Comment = rating.Comment,
                 CreatedAt = DateTime.UtcNow,
             };
+            
             _ = _db.Notifications.Add(new Notification
             {
                 UserId = ratedUser.Id,

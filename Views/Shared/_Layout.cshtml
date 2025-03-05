@@ -23,7 +23,6 @@
     <link rel="stylesheet" href="~/css/nav/navbar.css"/>
 
 </head>
-
 <body>
     <header>
         <nav class="navbar">
@@ -92,8 +91,6 @@
         import ConfirmDialog from "/js/components/handler/confirm_dialog.js"
         const toastTemplate = new ToastTemplate();
         const confirmDialog = new ConfirmDialog();
-
-        window.userProfile = null;
 
         window.redirectToLogin = async function() {
             await toastTemplate.changeToast("You need to log in. Redirecting...", "/login");

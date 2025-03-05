@@ -80,8 +80,6 @@ public class PostController : Controller
         if (post == null)
             return NotFound();
 
-        bool isOwner = post.User.Id == reqUserId;
-
         var applications = post.Applications.Where(a => a.AppliedStatus == true)
                             .Select(a => new
                             {
@@ -90,10 +88,9 @@ public class PostController : Controller
                             }).ToList();
         var result = post.ToJson(reqUserId);
         result["participants"] = applications;
-        return Json(new{post = result, isOwner});
+        return Json(result);
     }
     
-    // ถ้าเป็นเจ้าของ return isOwner = true
     [Route("api/post/user")]
     public IActionResult GetPostsFromUsername(string username)
     {
@@ -182,10 +179,10 @@ public class PostController : Controller
         else if (date == "Tomorrow")
             posts = posts.Where(p =>  p.Activity.ActDatetime.Date == DateTime.Now.Date.AddDays(1)).ToList();
         else if (date == "This week")
-            posts = posts.Where(p => p.Activity.ActDatetime.Date <= DateTime.Now.Date.AddDays(7)).ToList();
+            posts = posts.Where(p => p.Activity.ActDatetime.Date <= DateTime.Now.Date.AddDays(7 - (int)DateTime.Now.DayOfWeek)).ToList();
         else if (date == "Next week")
-            posts = posts.Where(p =>  DateTime.Now.Date.AddDays(7) <= p.Activity.ActDatetime.Date 
-                            && p.Activity.ActDatetime.Date <= DateTime.Now.Date.AddDays(14)).ToList();
+            posts = posts.Where(p =>  DateTime.Now.Date.AddDays(8 - (int)DateTime.Now.DayOfWeek) <= p.Activity.ActDatetime.Date 
+                            && p.Activity.ActDatetime.Date <= DateTime.Now.Date.AddDays(14 - (int)DateTime.Now.DayOfWeek)).ToList();
         else if(date == "This month")
             posts = posts.Where(p => p.Activity.ActDatetime.Month == DateTime.Now.Month).ToList();
 
@@ -292,10 +289,10 @@ public class PostController : Controller
         else if (date == "Tomorrow")
             posts = posts.Where(p =>  p.Activity.ActDatetime.Date == DateTime.Now.Date.AddDays(1)).ToList();
         else if (date == "This week")
-            posts = posts.Where(p => p.Activity.ActDatetime.Date <= DateTime.Now.Date.AddDays(7)).ToList();
+            posts = posts.Where(p => p.Activity.ActDatetime.Date <= DateTime.Now.Date.AddDays(7 - (int)DateTime.Now.DayOfWeek)).ToList();
         else if (date == "Next week")
-            posts = posts.Where(p =>  DateTime.Now.Date.AddDays(7) <= p.Activity.ActDatetime.Date 
-                            && p.Activity.ActDatetime.Date <= DateTime.Now.Date.AddDays(14)).ToList();
+            posts = posts.Where(p =>  DateTime.Now.Date.AddDays(8 - (int)DateTime.Now.DayOfWeek) <= p.Activity.ActDatetime.Date 
+                            && p.Activity.ActDatetime.Date <= DateTime.Now.Date.AddDays(14 - (int)DateTime.Now.DayOfWeek)).ToList();
         else if(date == "This month")
             posts = posts.Where(p => p.Activity.ActDatetime.Month == DateTime.Now.Month).ToList();
 

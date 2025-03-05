@@ -82,7 +82,7 @@ public class UserController : Controller
             RatingScore = user.ReceivedRatings.Count == 0 ? 0 : user.ReceivedRatings.Average(r => r.Score)
         });
     }
-
+    
     // edit my profile
     [HttpPut]
     [Route("api/user/myprofile")]
@@ -114,7 +114,7 @@ public class UserController : Controller
             if (actTypes.Count != 0)
                 user.ActTypeProfile = actTypes;
             else 
-                user.ActTypeProfile = new List<ActivityType>();
+                user.ActTypeProfile = [];
 
             if (myuser.Username != null) 
             {
@@ -211,6 +211,46 @@ public class UserController : Controller
     }   
 
 
+    [Route("api/user/myposts")]
+    [Authorize]
+    public IActionResult GetMyPostHistory()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var user = _db.Users.Where(u => u.Id == userId).FirstOrDefault();
+        if (user == null) 
+            return NotFound("User not found");
+
+        var myposts = _db.Posts.Include(p => p.Activity)
+                                .Include(p => p.Activity.ActTypes)
+                                .Include(p => p.Applications)
+                                .Where(p => p.UserId == userId)
+                                .OrderByDescending(p => p.CreateAt).ToList()
+                                .Select(p => p.ToJsonSmall());
+        if (myposts == null || !myposts.Any())
+            return NotFound("Post not found");
+
+        List<object> inComming = [], future = [], success = [];
+
+        foreach (var post in myposts)
+        {   
+            var res = (dynamic)post;
+            var activity = res.Activity;
+            //incomming
+            if (activity.ActDatetime <= DateTime.Now.AddDays(7))
+                inComming.Add(post);
+            // future
+            else if (activity.ActDatetime > DateTime.Now)
+                future.Add(post);
+            // success
+            else
+                success.Add(post);
+        }
+
+        return Json(new{
+            inComming, future, success
+        });
+    }
+
     // แสดงประวัติการสมัครโพสของ user คนนั้น
     [Route("api/user/myapplication")]
     [Authorize]
@@ -223,7 +263,7 @@ public class UserController : Controller
             return NotFound("User not found" );
 
         var applications = _db.Applications.Include(a => a.Post)
-                                        .ThenInclude(p => p.Activity)
+                                        .Include(a => a.Post.Activity)
                                         .Include(a => a.Post.Activity.ActTypes)
                                         .Include(a => a.Post.User)
                                         .Include(a => a.Post.Applications)
@@ -231,14 +271,40 @@ public class UserController : Controller
                                         .OrderByDescending(a => a.AppliedDateTime).ToList();
         if (applications == null || applications.Count == 0)
             return NotFound("Application not found");
+            
         var result = applications.Select(a => 
             new {
                 a.AppliedDateTime,
                 a.AppliedStatus,
-                post = a.Post.ToJson(),
+                Post = a.Post.ToJsonSmall(),
             }
         );
-        return Json(result);
+
+        List<object> inComming = [], pending = [], success = [], fail = [];
+        foreach (var res in result)
+        {
+            // participant laew
+            var app = (dynamic)res;
+            var post = app.Post.Post;
+            var activity = app.Post.Activity;
+
+            if (app.AppliedStatus == true){
+                // ยังไม่จบ
+                if (activity.ActDatetime > DateTime.Now)
+                    inComming.Add(app);
+                // จบแล้ว
+                else 
+                    success.Add(app);
+            }
+            // pending และ ยังไม่จัด
+            else if (app.AppliedStatus == null && activity.ActDatetime > DateTime.Now)
+                pending.Add(app);
+            // จบแล้ว
+            else
+                fail.Add(app);
+        }
+
+        return Json(new{inComming, success, pending, fail});
     }
 
 

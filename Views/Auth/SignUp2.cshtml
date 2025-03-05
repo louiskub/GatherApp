@@ -4,8 +4,8 @@
     ViewData["Title"] = "Gather-SignUp";
 }
 
-<link rel="stylesheet" href="~/css/Auth/Signup2.css" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+@* <link rel="stylesheet" href="~/css/Auth/Signup2.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> *@
 
 <title>Signup Page</title>
 
@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div class="signup-birthdate">
-                    <label class="label" for="dob">Date of Birth</label>
+                    <label class="label" for="datePicker">Date of Birth</label>
                     @* <input type="date" id="dob" class="inputBox" required /> *@
                     <input type="text" id="datePicker" class="inputBox" placeholder="Select your birthday" required />
                 </div>
@@ -43,7 +43,7 @@
                     <input type="text" id="customGenderInput" class="inputBox" placeholder="Enter your gender">
                 </div>
                 <div class="signup-navigation">
-                    <button id="signupPrevButton" class="signup-prev-button">Previous</button>
+                    <button id="signupPrev" class="signup-prev-button">Previous</button>
                     <button id="signupNextButton" class="signup-next-button">Next</button>
                 </div>
                 <div class="signup-google-link" id="googleLogin">
@@ -84,7 +84,7 @@
                 <button class="signup-button" id="signupButton">Sign Up</button>
                 <div class="signup-navigation">
                     <button id="signupPrevButton" class="signup-prev-button">Previous</button>
-                    <button id="signupNextButton" class="signup-next-button">Next</button>
+                    <button id="signupNext" class="signup-next-button">Next</button>
                 </div>
             </section>
         </div>
@@ -101,4 +101,4 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="~/js/Auth/Signup.js"></script>
+<script type="module" src="~/js/Auth/Signup.js"></script>

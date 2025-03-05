@@ -1,5 +1,5 @@
 class UserProfileImage {
-    constructor(username = "", profileImg = "", imgSize = "50px", imgBorder = "none") {
+    constructor(username = "", profileImg = "", imgSize = "50px", imgBorder = "none", imgClass = "profile-img") {
         if (profileImg == "" || profileImg == null)
             this.profileImg = "https://tr.rbxcdn.com/30DAY-Avatar-310966282D3529E36976BF6B07B1DC90-Png/352/352/Avatar/Png/noFilter"
         else if(profileImg.length < 200)
@@ -7,7 +7,7 @@ class UserProfileImage {
         else 
             this.profileImg = "data:image/jpeg;base64," + profileImg
         this.tagA = document.createElement("a")
-        this.tagA.classList.add("profile-img")
+        this.tagA.classList.add(imgClass)
         if (username != "")
             // this.tagA.href = `/profile?username=${username}`// EncodeURI
             // this.tagA.href = `/profile?username=${encodeURIComponent(username)}`// EncodeURI
@@ -15,6 +15,7 @@ class UserProfileImage {
 
         this.imgSize = imgSize
         this.imgBorder = imgBorder
+        this.imgClass = imgClass
     }
 
     render() {

@@ -1,3 +1,5 @@
+import UserProfileImage from "./user_profile_image.js";
+
 class PopupUserList {
     constructor(imgUrl, username, textList) {
         this.imgUrl = imgUrl;
@@ -27,8 +29,17 @@ class PopupUserList {
         const content = document.createElement("div");
         content.className = "popup-user-content";
 
-        const profileImg = document.createElement("img");
-        profileImg.className = "popup-user-profile";
+        // const profileImg = document.createElement("img");
+        // profileImg.className = "popup-user-profile";
+
+        // 🔹 ใช้ UserProfileImage แทน <img>
+        const profileImg = new UserProfileImage(
+            this.username, 
+            this.imgUrl, 
+            "60px", 
+            "2px solid var(--text-color", 
+            "popup-user-profile"
+        ).render();
         profileImg.src = this.imgUrl;
         profileImg.alt = this.username;
 

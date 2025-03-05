@@ -83,6 +83,7 @@
 .actbox1_left{
     display: flex;
     align-items: center;
+    gap: 5px;
 }
 
 .actbox1_left img {
@@ -93,7 +94,7 @@
 }
 
 .actbox1_left h2{
-    font-size: 18px;
+    font-size: 20px;
     /* color: #333333; */
 }
 
