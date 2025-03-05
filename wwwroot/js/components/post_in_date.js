@@ -1,18 +1,10 @@
+import loadCss from "/js/components/reuse_func.js";
+loadCss("/css/components/post_in_date.css");
+
 class PostInDate {
     constructor(date, posts = []) {
         this.date = date;
         this.posts = posts; // Array ของ Post objects
-
-        // โหลด CSS
-        // this.loadCSS("/wwwroot/css/components/post_in_date.css");
-    }
-
-    loadCSS(url) {
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = url;
-        link.type = "text/css";
-        document.head.appendChild(link);
     }
 
     render() {

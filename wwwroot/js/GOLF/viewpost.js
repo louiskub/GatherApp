@@ -31,9 +31,8 @@ async function showPostDetail() {
     }
 
     post = await fetchPost();
-    isOwner = post.isOwner;
-    post = post.post;
     owner = post.owner;
+    isOwner = owner.username == window.userProfile.username;
     activity = post.activity;
     actTypes = post.actTypes;
     participants = post.participants;
@@ -45,7 +44,7 @@ async function showPostDetail() {
     const postOwner = document.querySelector(".actbox1_left");
     postOwner.querySelector("a").href = `/profile?username=${owner.username}`
     postOwner.querySelector("img").src = chooseImg(owner.profileImg)
-    postOwner.querySelector("h2").textContent = owner.username
+    postOwner.querySelector("h2").textContent = `Posted by: ${owner.username}`;
 
     const deadline = document.querySelector(".deadline")
     deadline.textContent = `Application Deadline: ${new Date(activity.closeDateTime).toLocaleString()}`
@@ -683,6 +682,7 @@ async function userButtonHandler(){
 }
 
 document.addEventListener("DOMContentLoaded", async function() {
+  await window.userProfileLoaded;
   await showPostDetail();
   await userButtonHandler();
 

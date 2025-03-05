@@ -8,7 +8,7 @@
 [data-theme="dark"] {
     --user-menu-bg: var(--chocolate-cosmos);
     --user-menu-a-bg: var(--slate-gray);
-    --logout-btn-bg: var(--outer-space);
+    --logout-btn-bg: var(--rose-red);
 }
 
 /* 1. Noti */
@@ -53,7 +53,7 @@
     justify-content: space-between;
     text-decoration: none;
     width: 100%;
-    padding: 8px 12px;
+    padding: 8px 15px;
     font-size: 1rem;
     font-weight: 400;
     gap: 3rem;
@@ -79,7 +79,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 0.6rem;
 }
 /* .menu-list a {
     border: 1px solid white;

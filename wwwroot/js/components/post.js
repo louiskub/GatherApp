@@ -1,4 +1,7 @@
 import LikePostHandler from "/js/components/handler/like_post_handler.js";
+import loadCss from "/js/components/reuse_func.js";
+
+loadCss("/css/components/post.css");
 
 class Post {
     constructor(postId, date, title, location, accepted, limitAccepted, registered, categories = [], imageUrl, like = 0, isLiked = false) {

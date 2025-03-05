@@ -24,3 +24,4 @@ Menu.innerHTML = `
 
 window.userProfile = {role: "visitor" };
 window.userProfileLoaded = Promise.resolve(window.userProfile);
+console.log("✅ userProfile received:", window.userProfile);
