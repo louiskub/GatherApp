@@ -2,6 +2,101 @@
     ViewData["Title"] = "Gather-AboutUs";
 }
 
+<link rel="stylesheet" href="~/css/GOLF/aboutus.css">
+
 <div class="main">
-    <h1> This is About Us page </h1>
+    <div class="aboutus_background">
+        <svg class="bubbles-container" width="100%" height="100%">
+            <!-- Bubbles will be added here by JavaScript -->
+        </svg>
+        <div class="aboutus_container">
+            <div class="aboutus_content">
+                <h1>Meet the Team</h1>
+                <p class="subtitle">These are the people responsible for all the coding happening backstage.</p>
+                
+                <div class="team-showcase">
+                    <button id="prevBtn" class="nav-btn">←</button>
+                    <div class="team-member-container">
+                        <div class="team-member" data-index="0">
+                            <p class="position">Frontend Developer</p>
+                            <div class="photo-container">
+                                <img src="/assets/img/golf.jpg" alt="golf">
+                            </div>
+                        </div>
+                        <div class="team-member" data-index="1">
+                            <p class="position">Backend Developer</p>
+                            <div class="photo-container">
+                                <img src="/assets/img/louis.jpg" alt="louis">
+                            </div>
+                        </div>
+                        <div class="team-member" data-index="2">
+                            <p class="position">Frontend Developer</p>
+                            <div class="photo-container">
+                                <img src="/assets/img/prae.jpg" alt="prae">
+                            </div>
+                        </div>
+                        <div class="team-member" data-index="3">
+                            <p class="position">Frontend Developer</p>
+                            <div class="photo-container">
+                                <img src="/assets/img/team.jpg" alt="team">
+                            </div>
+                        </div>
+                        <div class="team-member" data-index="4">
+                            <p class="position">Backend Developer</p>
+                            <div class="photo-container">
+                                <img src="/assets/img/beam.jpg" alt="beam">
+                            </div>
+                        </div>
+                        <div class="team-member" data-index="5">
+                            <p class="position">Frontend Developer</p>
+                            <div class="photo-container">
+                                <img src="/assets/img/little.png" alt="little">
+                            </div>
+                        </div>
+                    </div>
+                    <button id="nextBtn" class="nav-btn">→</button>
+                </div>
+                
+                <div class="team-info">
+                    <div class="member-details" id="memberDetails-0">
+                        <h2>Korawit Sawuddee</h2>
+                        <p class="student_id">66010016</p>
+                        <p class="bio">Work hard today, enjoy tomorrow.</p>
+                        <p class="bio">Be lazy today, enjoy today!😆</p>
+                    </div>
+                    <div class="member-details" id="memberDetails-1">
+                        <h2>Louis</h2>
+                        <p class="student_id">66010016</p>
+                        <p class="bio">Work hard today, enjoy tomorrow.</p>
+                        <p class="bio">Be lazy today, enjoy today!😆</p>
+                    </div>
+                    <div class="member-details" id="memberDetails-2">
+                        <h2>Prae</h2>
+                        <p class="student_id">66010016</p>
+                        <p class="bio">Work hard today, enjoy tomorrow.</p>
+                        <p class="bio">Be lazy today, enjoy today!😆</p>
+                    </div>
+                    <div class="member-details" id="memberDetails-3">
+                        <h2>Team</h2>
+                        <p class="student_id">66010016</p>
+                        <p class="bio">Work hard today, enjoy tomorrow.</p>
+                        <p class="bio">Be lazy today, enjoy today!😆</p>
+                    </div>
+                    <div class="member-details" id="memberDetails-4">
+                        <h2>Beam</h2>
+                        <p class="student_id">66010016</p>
+                        <p class="bio">Work hard today, enjoy tomorrow.</p>
+                        <p class="bio">Be lazy today, enjoy today!😆</p>
+                    </div>
+                    <div class="member-details" id="memberDetails-5">
+                        <h2>Little</h2>
+                        <p class="student_id">66010016</p>
+                        <p class="bio">Work hard today, enjoy tomorrow.</p>
+                        <p class="bio">Be lazy today, enjoy today!😆</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<script src="~/js/GOLF/aboutus.js"></script>

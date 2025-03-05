@@ -80,8 +80,6 @@ public class PostController : Controller
         if (post == null)
             return NotFound();
 
-        bool isOwner = post.User.Id == reqUserId;
-
         var applications = post.Applications.Where(a => a.AppliedStatus == true)
                             .Select(a => new
                             {
@@ -90,10 +88,9 @@ public class PostController : Controller
                             }).ToList();
         var result = post.ToJson(reqUserId);
         result["participants"] = applications;
-        return Json(new{post = result, isOwner});
+        return Json(result);
     }
     
-    // ถ้าเป็นเจ้าของ return isOwner = true
     [Route("api/post/user")]
     public IActionResult GetPostsFromUsername(string username)
     {
@@ -370,6 +367,28 @@ public class PostController : Controller
 
         await _db.SaveChangesAsync();
         return Json(new{like = post.Like, isLiked}); // ส่งจำนวนไลก์กลับไป
+    }
+
+
+    [Route("api/chat/getactiveinvites")]
+    [HttpGet]
+    public async Task<IActionResult> GetActiveInvites()
+    {
+        var activeInvites = await _db.PostInvitations
+            .OrderByDescending(i => i.SentAt)
+            .Select(i => new
+            {
+                i.PostId,
+                i.PostName,
+                i.PostDetail,
+                Username = _db.Users
+                    .Where(u => u.Id == i.InviterUserId)
+                    .Select(u => u.Username)
+                    .FirstOrDefault() ?? "Unknown"
+            })
+            .ToListAsync();
+
+        return Ok(activeInvites);
     }
 }
 

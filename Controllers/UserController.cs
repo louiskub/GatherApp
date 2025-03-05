@@ -70,10 +70,16 @@ public class UserController : Controller
         return Json(new
         {
             username = user.Username,
+            name = user.FirstName,
+            surname = user.LastName,
+            email = user.Email,
+            bio = user.Bio,
+            birthdate = user.DateOfBirth,
+            // tag = user.ActTypeProfile.Select(at => at.ActType),
             profileImg = user.ProfileImg,
             notification = user.Notifications,
             totalBehaviorScore = user.BehaviorScores.Sum(b => b.Score),
-            RatingScore = user.ReceivedRatings.Count == 0 ? 0 : user.ReceivedRatings.Average(r => r.Score),
+            RatingScore = user.ReceivedRatings.Count == 0 ? 0 : user.ReceivedRatings.Average(r => r.Score)
         });
     }
 
@@ -184,6 +190,25 @@ public class UserController : Controller
         return Json(result);
 
     }
+
+
+    [Route("api/user/getmyposts")]
+    [HttpGet]
+    public async Task<IActionResult> GetMyPosts()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+        var posts = await _db.Posts
+            .Where(p => p.UserId == userId)
+            .Select(p => new { p.Id, p.PostName })
+            .ToListAsync();
+
+        return Ok(posts);
+    }   
 
 
     // แสดงประวัติการสมัครโพสของ user คนนั้น

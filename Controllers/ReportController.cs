@@ -167,5 +167,48 @@ public async Task<IActionResult> CreateReport([FromBody] Report report)
     await _db.SaveChangesAsync();
     return Ok(new { message = "Report submitted successfully." });
     }   
+
+    [HttpPut]
+    [Route("api/reports/update/{postId}/{reportedUserId}")]
+    public async Task<IActionResult> UpdateReportByPostId(int postId, string reportedUserId, [FromBody] Report updatedReport)
+    {
+        var reporterId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(reporterId))
+        {
+            return Unauthorized("Invalid token");
+        }
+
+        var post = await _db.Posts.Include(p => p.Activity).FirstOrDefaultAsync(p => p.Id == postId);
+        if (post == null)
+        {
+            return NotFound("Post not found.");
+        }
+
+        if (post.UserId != reporterId)
+        {
+            return BadRequest("You are not authorized to update reports for this post.");
+        }
+
+        var report = await _db.Reports
+            .FirstOrDefaultAsync(r => r.PostId == postId && r.ReportedUserId == reportedUserId);
+
+        if (report == null)
+        {
+            return NotFound("Report not found.");
+        }
+
+        if (DateTime.Now < post.Activity.ActDatetime)
+        {
+            return BadRequest("Reports can only be updated after the event date.");
+        }
+
+        report.Reason = updatedReport.Reason;
+
+        await _db.SaveChangesAsync();
+
+        return Ok(new { message = "Report updated successfully." });
+    }
+
+
 }
 

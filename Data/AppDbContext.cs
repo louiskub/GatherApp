@@ -26,6 +26,10 @@ public class AppDbContext : DbContext
 
     public DbSet<UserLogin> UserLogins { get; set; }
 
+    public DbSet<ChatGlobal> ChatGlobals {get; set;}
+
+    public DbSet<PostInvitation> PostInvitations { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder options) 
     {
         options.UseMySql(

@@ -87,3 +87,8 @@ public class UserProfileResponse
     public string Bio { get; set; }
     public string Message { get; set; }
 }
+
+public class CheckPassword
+{
+    public string Password { get; set; }
+}

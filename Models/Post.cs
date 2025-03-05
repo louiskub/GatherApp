@@ -110,6 +110,12 @@ public class Post{
     public Dictionary<string, object> ToJson(string? reqUserId=null)
     {
         CurParticipant = Applications.Count(a => a.AppliedStatus == true);
+        var isAppliedApp = Applications.Where(x => x.UserId == reqUserId).FirstOrDefault();
+        var isApplied = isAppliedApp != null;
+        var isParticipant = false;
+        if (isApplied)
+            isParticipant = isAppliedApp.AppliedStatus == true;
+
         return new Dictionary<string, object> {
             { "owner", new Dictionary<string, object> {
                 { "username", User.Username },
@@ -128,7 +134,8 @@ public class Post{
                 { "curParticipant", CurParticipant },
                 { "totalApplicant", Applications.Count },
                 { "isLiked", PostLikes.Any(x => x.UserId == reqUserId) },
-                { "isApplied", Applications.Any(x => x.UserId == reqUserId)}
+                { "isApplied", isApplied},
+                { "isParticipant",  isParticipant}
             }},
             { "activity", Activity },
             { "actTypes", Activity.ActTypes.Select(x => x.ActType).ToList() }

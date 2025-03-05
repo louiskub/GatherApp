@@ -74,4 +74,45 @@ html, body {
   line-height: 60px;
   padding-left: 30px;
   border-top: 1px solid #e5e5e5;
-} */
+} */  
+
+
+.sakura-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+}
+
+.sakura-petal {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle, pink, #ff69b4);
+    border-radius: 50%;
+    opacity: 0.8;
+    pointer-events: none;
+    animation: sakuraMotion linear infinite;
+}
+
+@keyframes sakuraMotion {
+    0% { 
+        transform: translateY(-10vh) translateX(0) rotate(0deg) rotateY(0deg);
+        opacity: 1;
+    }
+    25% { 
+        transform: translateY(25vh) translateX(30px) rotate(90deg) rotateY(90deg);
+    }
+    50% { 
+        transform: translateY(50vh) translateX(-30px) rotate(180deg) rotateY(180deg);
+    }
+    75% { 
+        transform: translateY(75vh) translateX(30px) rotate(270deg) rotateY(270deg);
+    }
+    100% { 
+        transform: translateY(100vh) translateX(-30px) rotate(360deg) rotateY(360deg);
+        opacity: 0;
+    }
+}

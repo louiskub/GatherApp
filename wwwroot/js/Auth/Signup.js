@@ -83,15 +83,16 @@ document.getElementById("signupButton").addEventListener("click", function (even
     const email = document.getElementById("email").value;
     const firstName = document.getElementById("firstName").value;
     const lastName = document.getElementById("lastName").value;
-    const dob = document.getElementById("dob").value;
+    let dob = document.getElementById("datePicker").value;
     const password = document.getElementById("password").value;
-    const confirmPassword = document.getElementById("confirmPassword").value;
+    const confirmPassword = document.getElementById("confirm-password").value;
     const gender = document
-        .getElementById("genderSelecter")
-        .value === "Custom"
+        .getElementById("genderSelecter").value === "Custom"
         ? document.getElementById("customgenderInput").value
-        : document
+        : document.getElementById("genderSelecter").value
 
+    // 02-03-2025   dd mm yyyy to 2025-02-12T14:30:00
+    dob = dob.split("-").reverse().join("-") + "T00:00:00"; // Change date format to yyyy-mm-dd
     // Validate the passwords match
     if (password !== confirmPassword) {
         alert("Passwords do not match!"); // change to display password errors
@@ -104,7 +105,8 @@ document.getElementById("signupButton").addEventListener("click", function (even
         FirstName: firstName,
         LastName: lastName,
         DateOfBirth: dob,
-        Password: password
+        Password: password,
+        Sex: gender
     };
 
     // Send registration request to the backend
@@ -118,8 +120,7 @@ document.getElementById("signupButton").addEventListener("click", function (even
     .then(response => response.json())
     .then(data => {
         if (data.status === "Registration successful") {
-            alert('Registration successful.'); // change to display success message
-            window.location.href = '/auth/login';
+            window.changePage("Registration successful.", "/", "success")
         } else if (data.errors) {
             alert('Registration failed: ' + data.errors.join('\n')); // change to display all errors
         } else {

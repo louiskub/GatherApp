@@ -101,6 +101,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 app.MapHub<ChatHub>("/chatHub");
+app.MapHub<GlobalChatHub>("/globalChatHub");
 
 
 app.UseHttpsRedirection();
