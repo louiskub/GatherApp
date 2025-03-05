@@ -638,10 +638,6 @@ h1.top {
 }
 
 
-
-
-
-
 @media (max-width: 768px) {
     .chatContainer {
         flex-direction: column;

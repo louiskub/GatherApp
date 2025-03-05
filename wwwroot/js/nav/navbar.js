@@ -68,3 +68,32 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const sakuraContainer = document.createElement("div");
+    sakuraContainer.classList.add("sakura-container");
+    document.body.appendChild(sakuraContainer);
+
+    function createSakura() {
+        const petal = document.createElement("div");
+        petal.classList.add("sakura-petal");
+
+        const size = Math.random() * 15 + 10;
+        petal.style.width = `${size}px`;
+        petal.style.height = `${size}px`;
+
+        petal.style.left = Math.random() * window.innerWidth + "px";
+        petal.style.animationDuration = Math.random() * 5 + 5 + "s"; 
+        petal.style.animationDelay = Math.random() * 3 + "s"; 
+        petal.style.opacity = Math.random() * 0.5 + 0.5; 
+
+        sakuraContainer.appendChild(petal);
+
+        setTimeout(() => {
+            petal.remove();
+        }, 10000);
+    }
+
+    setInterval(createSakura, 200);
+});
+

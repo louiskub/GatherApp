@@ -1,5 +1,4 @@
 import LikePostHandler from "/js/components/handler/like_post_handler.js";
-import ToastTemplate from "/js/components/handler/toast_template.js";
 
 const urlParams = new URLSearchParams(window.location.search);
 const postId = urlParams.get('postid') || urlParams.get('postId');
@@ -44,6 +43,7 @@ async function showPostDetail() {
     postName.textContent = post.postName;
 
     const postOwner = document.querySelector(".actbox1_left");
+    postOwner.querySelector("a").href = `/profile?username=${owner.username}`
     postOwner.querySelector("img").src = chooseImg(owner.profileImg)
     postOwner.querySelector("h2").textContent = owner.username
 
@@ -168,6 +168,11 @@ function initEventListeners() {
 
   // Create button
   elements.submiteditButton.addEventListener('click', validateForm);
+
+  elements.canceleditButton.addEventListener('click', () => {
+    elements.popup.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  })
 }
 
 // Handle image upload
@@ -689,6 +694,3 @@ document.addEventListener("DOMContentLoaded", async function() {
   if (isOwner)
     editPostInit();
 });
-
-// For testing
-console.log("Refactored post creation script loaded");

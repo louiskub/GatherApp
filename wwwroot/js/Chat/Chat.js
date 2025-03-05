@@ -20,6 +20,15 @@ async function startConnection() {
     }
 }
 
+function chooseImg(coverImage){
+    if (coverImage == "" || coverImage == null) 
+        return "https://www.mcot.net/uploads/article/202409/fc9caee77c607de279ff9116c67c6ddf.jpeg"
+    else if(coverImage.length < 200) 
+        return coverImage
+    else 
+        return "data:image/jpeg;base64," + coverImage
+}
+
 startConnection();
 
 function setupListeners() {
@@ -59,7 +68,7 @@ function setupListeners() {
             let chatItem = document.createElement("li");
             chatItem.classList.add("chatItem");
             let coverImg = document.createElement("img");
-            coverImg.src = post.coverImage || "https://www.mcot.net/uploads/article/202409/fc9caee77c607de279ff9116c67c6ddf.jpeg";
+            coverImg.src = chooseImg(post.coverImage);
             coverImg.alt = post.postName;
             coverImg.classList.add("chatCover");
 
@@ -334,4 +343,30 @@ async function loadPreviousMessages() {
         console.error("Full error details:", JSON.stringify(err, null, 2));
     }
 }
+
+
+function toggleThemeMenu() {
+    let menu = document.querySelector(".theme-dropdown");
+
+    menu.style.display = (menu.style.display === "block") ? "none" : "block";
+}
+
+function changeTheme(theme) {
+    let chatBox = document.querySelector(".chatBox");
+
+    chatBox.classList.remove("dark-theme", "blue-theme", "retro-theme","sunset-theme", "galaxy-theme");
+
+    if (theme !== "default") {
+        chatBox.classList.add(theme);
+    }
+
+    localStorage.setItem("chatTheme", theme);
+
+    document.querySelector(".theme-dropdown").style.display = "none";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    let savedTheme = localStorage.getItem("chatTheme") || "default";
+    changeTheme(savedTheme);
+});
 
