@@ -44,7 +44,7 @@ async function showPostDetail() {
     const postOwner = document.querySelector(".actbox1_left");
     postOwner.querySelector("a").href = `/profile?username=${owner.username}`
     postOwner.querySelector("img").src = chooseImg(owner.profileImg)
-    postOwner.querySelector("h2").textContent = owner.username
+    postOwner.querySelector("h2").textContent = `Posted by: ${owner.username}`;
 
     const deadline = document.querySelector(".deadline")
     deadline.textContent = `Application Deadline: ${new Date(activity.closeDateTime).toLocaleString()}`
