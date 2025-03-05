@@ -93,7 +93,6 @@ public class PostController : Controller
         return Json(new{post = result, isOwner});
     }
     
-    // ถ้าเป็นเจ้าของ return isOwner = true
     [Route("api/post/user")]
     public IActionResult GetPostsFromUsername(string username)
     {

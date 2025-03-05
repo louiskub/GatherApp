@@ -47,7 +47,7 @@
 
 .sunset-theme {
     --border-color: #ff9a8b;
-    --chat-bg-color: rgba(255, 221, 225, 0.8); /* สีชมพูอ่อนโปร่งแสง */
+    --chat-bg-color: rgba(255, 221, 225, 0.8);
     --chat-text-color: #4a4a4a;
     --my-message-bg: linear-gradient(135deg, #ff9a8b, #ff6a88, #ff99ac);
     --other-message-bg: rgba(255, 182, 193, 0.7);
@@ -56,7 +56,7 @@
 
 .galaxy-theme {
     --border-color: #4b0082;
-    --chat-bg-color: rgba(25, 25, 112, 0.8); /* สีกรมโปร่งแสง */
+    --chat-bg-color: rgba(25, 25, 112, 0.8);
     --chat-text-color: #f8f8ff;
     --my-message-bg: linear-gradient(135deg, #4b0082, #6a5acd);
     --other-message-bg: rgba(123, 104, 238, 0.7);
