@@ -27,6 +27,7 @@
 
     --label: var(#333);
     --container-bg: var(--lavender-blush);
+    --bg-shade: var(--pink-shade);
 
 }
 /* Dark Mode */
@@ -52,6 +53,7 @@
 
     --label: var(--seasalt);
     --container-bg: var(--pinkpink);
+    --bg-shade: var(--eerie-black);
 }
 
 
@@ -62,9 +64,87 @@ main {
     flex-direction: column;
     margin-top: 50px;
     font-family: 'Arial', sans-serif;
-    background: var(--sidenav-bg);
+    /* background: var(--sidenav-bg); */
     min-height: 100vh;
 }
+
+/* Sakura background styles */
+.sakura-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* background: linear-gradient(to bottom, #fff5f8, var(--sidenav-bg)); */
+    background: linear-gradient(to bottom, var(--sidenav-bg), var(--bg-shade));
+    overflow: hidden;
+}
+  
+/* Sakura petals */
+.sakura-petal {
+    position: absolute;
+    top: -50px;
+    width: 25px;
+    height: 25px;
+    background-color: #ffcad4;
+    border-radius: 150% 0 150% 0;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    animation: sakura-fall linear infinite;
+}
+  
+.sakura-petal::after {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: -10%;
+    width: 100%;
+    height: 100%;
+    background-color: inherit;
+    border-radius: 150% 0 150% 0;
+    transform: rotate(45deg);
+}
+  
+.sakura-petal.light {
+    background-color: #ffdbeb;
+    opacity: 0.8;
+}
+  
+.sakura-petal.medium {
+    background-color: #ffc0cb;
+    opacity: 0.9;
+}
+  
+.sakura-petal.dark {
+    background-color: #ffb6c1;
+    opacity: 1;
+}
+  
+  /* Animation for falling petals */
+@keyframes sakura-fall {
+    0% {
+      transform: translateY(0) rotate(0deg);
+      opacity: 0.8;
+    }
+    100% {
+      transform: translateY(100vh) rotate(360deg);
+      opacity: 0.4;
+    }
+}
+  
+/* Example content styling - you can remove this */
+/* .example-content {
+    text-align: center;
+    padding-top: 40vh;
+    position: relative;
+    z-index: 1;
+} */
+  
+  /* h1 {
+    font-size: 3rem;
+    color: #d4688a;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+  } */
 
 .container {
     display: flex;
@@ -205,6 +285,7 @@ main {
     background: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
+    z-index: 1000;
 }
 .popup {
     background: white;
@@ -212,6 +293,7 @@ main {
     border-radius: 10px;
     text-align: center;
     width: 300px;
+    z-index: 1001;
 }
 .popup input {
     width: 90%;
@@ -344,14 +426,18 @@ main {
     color: var(--post-category-text);
 }
 
-label {
+.form-group label, .namebox label {
     font-weight: bold;
     margin-bottom: 5px;
     font-size: 18px;
     color: var(--label);
 }
 
-label:hover {
+.form-group label:hover {
+    color: var(--post-category-text);
+}
+
+.namebox label:hover {
     color: var(--post-category-text);
 }
 
@@ -371,27 +457,83 @@ input:focus, textarea:focus {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
+
+/* Add these styles to your existing CSS file */
+
+/* Sex dropdown container */
+#sex-container {
+    width: 100%;
+    position: relative;
+}
+
+/* Style for the sex dropdown to match the original input */
+.sex-dropdown {
+    padding: 12px;
+    border: 2px solid #000;
+    border-radius: 8px;
+    font-size: 18px;
+    width: 100%;
+    transition: all 0.3s ease-in-out;
+    background: rgba(255, 255, 255, 0.8);
+    appearance: none; /* Remove default arrow */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+/* Style for the custom sex input */
+#custom-sex {
+    margin-top: 8px;
+    width: 100%;
+}
+
+/* Focus styles to match original */
+.sex-dropdown:focus, #custom-sex:focus {
+    border-color: #555;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    outline: none;
+}
+
+/* Hover effect to match original */
+.sex-dropdown:hover, #custom-sex:hover {
+    border-color: #555;
+}
+
 .rating-container {
     margin-top: 35px;
     margin-bottom: 10px;
     /* background-color: white; */
-    border-radius: 8px;
+    /* border-radius: 8px; */
     padding: 20px;
     /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
     text-align: center;
 }
 
-.rating-container h2 {
-    font-size: 28px;
+.rating-container label {
+    font-size: 30px;
     font-weight: bold;
-    margin-bottom: 23px;
+    margin-bottom: 25px;
+    display: inline-block; /* สำคัญมาก - เพิ่มบรรทัดนี้ */
+    transition: transform 0.3s ease-in-out;
+    position: relative; /* อาจช่วยให้ transform ทำงานได้ดีขึ้น */
+}
+
+.rating-container label:hover {
+    transform: scale(1.05);
+    color: #e71797 ;
+    text-shadow: 0px 10px 20px rgb(252, 197, 207);
 }
   
 .stars {
     display: flex;
     justify-content: center;
-    gap:20px;
+    gap: 25px;
     margin: 15px 0;
+    
 }
   
 .star {
@@ -400,6 +542,11 @@ input:focus, textarea:focus {
     width: 24px;
     height: 24px;
     margin: 0 2px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.star:hover {
+    transform: scale(1.15);
 }
   
 .star-empty {
@@ -415,7 +562,7 @@ input:focus, textarea:focus {
     top: 0;
     left: 0;
     width: 83%;
-    overflow: hiddei;
+    overflow: hidden;;
     color: #fbbf24;
 }
 
@@ -459,3 +606,45 @@ input:focus, textarea:focus {
 .posttitle:hover {
     transform: scale(1.03);
 }
+
+.post-card {
+    background: #ffe6eb;
+    border-radius: 12px;
+    padding: 15px;
+    max-width: 300px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.post-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.post-content {
+    padding: 10px;
+}
+
+.post-title {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.post-location {
+    color: red;
+    font-weight: bold;
+}
+
+.post-tags {
+    display: flex;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.tag {
+    background: #ffb6c1;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+
