@@ -122,8 +122,8 @@ async function createProvincesAndDistricts() {
 
 async function showPost(allPosts){
     const homeContent = document.querySelector(".home-content");
-    console.log(homeContent);
-    console.log(allPosts);
+    // console.log(homeContent);
+    // console.log(allPosts);
 
     allPosts.forEach((eachDate) => {
         let date = new Date(eachDate.date);
