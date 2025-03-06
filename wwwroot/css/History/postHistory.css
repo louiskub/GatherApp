@@ -90,7 +90,7 @@
   flex-direction: column;
   justify-content: center;
   padding: 5px;
-  width: 30%;
+  width: 100%;
   min-width: 300px;
   overflow-wrap: break-word;
   word-wrap: break-word;
@@ -102,9 +102,10 @@
 }
 
 .activityTagContainer {
+  background-color: aquamarine;
   display: flex;
   flex-wrap: wrap;
-  width: 30%;
+  width: 50%;
   height: fit-content;
   padding-top: 6px;
   margin-bottom: 1.1rem;
@@ -136,13 +137,13 @@
 } */
 
 .statusContainer {
+  background-color: aqua;
   padding: 0rem 1rem;
   gap: 1.5rem;
   display: flex;
   align-items: center;
-  width: 25vw;
-  min-width: 350px;
-  justify-content: flex-end;
+  width: fit-content;
+  margin-left: auto;
 }
 
 .textStyle {
