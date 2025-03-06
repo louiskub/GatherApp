@@ -70,7 +70,7 @@
     height: 80%;
     max-width: 800px;
     /* overflow-y: auto; */
-    align-items: center;
+    /* align-items: center; */
     justify-content: center;
 }
 .signup-title {
@@ -168,25 +168,71 @@
 .signup-navigation {
     display: flex;
     justify-content: space-between;
+    gap: 1rem; /* ระยะห่างระหว่างปุ่ม */
     margin-bottom: 1rem;
 }
 
+.signup-prev-button,
+.signup-next-button {
+    padding: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100px; /* กำหนดให้ปุ่มมีขนาดเท่ากัน */
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
 
+/* ปุ่มก่อนหน้า */
+.signup-prev-button {
+    background-color: #ffb6c1; /* โทนชมพูอ่อน */
+    color: #fff;
+}
 
+.signup-prev-button:hover {
+    background-color: #ff8aa8; /* โทนชมพูเข้มขึ้น */
+    transform: scale(1.05);
+}
+
+/* ปุ่มถัดไป */
+.signup-next-button {
+    background-color: #fe86c2; /* โทนชมพูสด */
+    color: #fff;
+}
+
+.signup-next-button:hover {
+    background-color: #e75480; /* โทนชมพูเข้มขึ้น */
+    transform: scale(1.05);
+}
+
+/* ปุ่มสมัคร */
 .signup-button {
-    margin-bottom: 1rem;
     width: 100%;
+    max-width: 350px; /* กำหนดขนาดสูงสุดให้ไม่กว้างเกินไป */
     padding: 1rem;
-    background: var(--signup-submit-color);
+    background: #ff69b4; /* ชมพูสด */
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 1.1rem;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(255, 105, 180, 0.3);
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    margin-bottom: 10px;
 }
+
 .signup-button:hover {
-    background: var(--signup-submit-hover);
+    background: #e75480; /* ชมพูเข้มขึ้น */
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(231, 84, 128, 0.4);
 }
+
 
 .signup-google-link {
     display: flex;
@@ -234,7 +280,7 @@
 }
   
 .pw-strength-strong {
-    color: #52c41a;
+    color: #e91e63;
 }
   
 /* Password Strength Meter */
@@ -260,7 +306,7 @@
 }
   
 .pw-strength-meter-fill.pw-strength-strong {
-    background-color: #52c41a;
+    background-color: #f48fb1;
 }
   
 /* Password Requirements */
@@ -302,7 +348,7 @@
 /* Media Queries สำหรับหน้าจอเล็ก */
 @media (max-width: 768px) {
     .signup-container {
-        position: absolute;
+        position: relative;
         /* top: 60px; */
         width: 100%;
         padding: 1rem; 
