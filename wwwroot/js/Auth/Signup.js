@@ -83,7 +83,7 @@ document.getElementById("signupButton").addEventListener("click", function (even
     const email = document.getElementById("email").value;
     const firstName = document.getElementById("firstName").value;
     const lastName = document.getElementById("lastName").value;
-    const dob = document.getElementById("dob").value;
+    let dob = document.getElementById("datePicker").value;
     const password = document.getElementById("password").value;
     const confirmPassword = document.getElementById("confirm-password").value;
     const gender = document
