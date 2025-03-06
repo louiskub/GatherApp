@@ -38,7 +38,7 @@
 .pageContainer {
   background-color: var(-bg-color);
   padding: 100px 100px 60px 55px;
-  height: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
@@ -75,6 +75,7 @@
 .indicator {
   border-radius: 0.5rem 0 0 0.5rem;
   width: 1rem;
+  min-width: 1rem;
 }
 
 .indicator.onGoing {
@@ -102,7 +103,7 @@
 }
 
 .activityTagContainer {
-  background-color: aquamarine;
+  /* background-color: aquamarine; */
   display: flex;
   flex-wrap: wrap;
   width: 50%;
@@ -137,7 +138,7 @@
 } */
 
 .statusContainer {
-  background-color: aqua;
+  /* background-color: aqua; */
   padding: 0rem 1rem;
   gap: 1.5rem;
   display: flex;

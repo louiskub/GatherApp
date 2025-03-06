@@ -3,12 +3,11 @@
 }
 
 <link rel="stylesheet" href="~/css/History/appHistory.css">
-}
 
 
 <script src="~/js/History/historyContainer.js"></script>
 
-<div class="pageLayout">
+<div class="pageContainer">
    <h1 class="top">Application History</h1>
 
     <!-- <div class="containerStyle">
@@ -83,7 +82,7 @@
 </div>
 
 <script> 
-  const ActivityList = document.querySelector(".pageLayout");
+  const ActivityList = document.querySelector(".pageContainer");
 
   const Activity2 = new HistoryActivity(12, 20, 'Thu, Jan 30, 6:30 PM - 9:30 PM', 'finishhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh', 'finish', 'Cartoon','Japan', 'Crayon Shin Chan')
   ActivityList.appendChild(Activity2.render())

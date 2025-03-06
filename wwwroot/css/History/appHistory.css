@@ -33,10 +33,10 @@
   margin-bottom: 1rem;
 }
 
-.pageLayout {
+.pageContainer {
   background-color: var(--bg-color);
-  padding: 100px 100px 60px 55px;
-  height: 100%;
+  padding: 100px 55px 60px 55px;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
@@ -73,6 +73,7 @@
 .indicator {
   border-radius: 0.5rem 0 0 0.5rem;
   width: 1rem;
+  min-width: 1rem;
 }
 
 .indicator.finish {
@@ -212,7 +213,7 @@
     font-size: 1.7rem;
   }
 
-  .pageLayout {
+  .pageContainer {
     padding: 90px 30px 30px 30px;
     gap: 0.5rem;
   }
