@@ -27,9 +27,9 @@ async function setNavbar(){
     </div>
 
     <div class="menu-list">
+        <a href="/history/likes">Liked Posts<i class="fa fa-heart"></i></a>
         <a href="/history/post">Post History<i class="fa fa-history"></i></a>
         <a href="/history/application">Application History<i class="fa fa-file-alt"></i></a>
-        <a href="/history/likes">Liked Posts<i class="fa fa-heart"></i></a>
         <a href="#" id="change-password-btn">Change Password<i class="fa fa-lock"></i></a>
         <a class="log-out" href="#">Logout<i class="fa fa-fw fa-sign-out"></i></a>
     </div>`;

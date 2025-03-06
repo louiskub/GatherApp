@@ -211,7 +211,7 @@ public class ManageMyPostController : Controller
         {
             post.IsOpened = !post.IsOpened;
             _db.SaveChanges();
-            return Json(new{status = post.IsOpened});
+            return Json(new{IsOpened = post.IsOpened});
         }
         catch (Exception ex)
         {
