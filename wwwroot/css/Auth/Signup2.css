@@ -218,6 +218,87 @@
     color: var(--signup-submit-color);
 }
 
+.pw-strength-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    font-size: 14px;
+}
+  
+.pw-strength-weak {
+    color: #ff4d4f;
+}
+  
+.pw-strength-medium {
+    color: #faad14;
+}
+  
+.pw-strength-strong {
+    color: #52c41a;
+}
+  
+/* Password Strength Meter */
+.pw-strength-meter {
+    height: 6px;
+    background-color: #f0f0f0;
+    border-radius: 3px;
+    margin: 8px 0;
+}
+  
+.pw-strength-meter-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+  
+.pw-strength-meter-fill.pw-strength-weak {
+    background-color: #ff4d4f;
+}
+  
+.pw-strength-meter-fill.pw-strength-medium {
+    background-color: #faad14;
+}
+  
+.pw-strength-meter-fill.pw-strength-strong {
+    background-color: #52c41a;
+}
+  
+/* Password Requirements */
+.pw-requirements-box {
+    background-color: #fff8f8;
+    border: 1px solid #ffcdd2;
+    border-radius: 4px;
+    padding: 10px 15px;
+    margin-top: 10px;
+    font-size: 14px;
+}
+  
+.pw-requirements-box p {
+    margin: 0 0 8px 0;
+    font-weight: 500;
+}
+  
+.pw-requirements-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+  
+.pw-req-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    color: #ff4d4f;
+}
+  
+.pw-req-item.pw-req-met {
+    color: #52c41a;
+}
+  
+.pw-req-item i {
+    margin-right: 8px;
+}
+
 /* Media Queries สำหรับหน้าจอเล็ก */
 @media (max-width: 768px) {
     .signup-container {

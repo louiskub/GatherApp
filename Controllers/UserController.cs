@@ -268,7 +268,7 @@ public class UserController : Controller
                                 .Include(p => p.Activity.ActTypes)
                                 .Include(p => p.Applications)
                                 .Where(p => p.UserId == userId)
-                                .OrderByDescending(p => p.CreateAt).ToList()
+                                .OrderBy(p => p.Activity.ActDatetime).ToList()
                                 .Select(p => p.ToJsonSmall());
         if (myposts == null || !myposts.Any())
             return NotFound("Post not found");
@@ -279,15 +279,16 @@ public class UserController : Controller
         {   
             var res = (dynamic)post;
             var activity = res.Activity;
+            // success
+            // Console.WriteLine(res.post.postName, activity.ActDatetime);
+            if (activity.ActDatetime < DateTime.Now)
+                success.Add(post);
             //incomming
-            if (activity.ActDatetime <= DateTime.Now.AddDays(7))
+            else if (activity.ActDatetime <= DateTime.Now.AddDays(7))
                 inComming.Add(post);
             // future
-            else if (activity.ActDatetime > DateTime.Now)
-                future.Add(post);
-            // success
             else
-                success.Add(post);
+                future.Add(post);
         }
 
         return Json(new{
