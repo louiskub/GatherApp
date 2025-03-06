@@ -218,7 +218,7 @@ export default class ChangePassword
             toggleBtns.forEach((btn) => {
               btn.addEventListener("click", function () {
                 const inputId = this.getAttribute("data-for")
-                const input = this.div.getElementById(inputId)
+                const input = this.div.querySelector("#"+inputId)
                 const eyeIcon = this.querySelector(".pwd-change-eye-icon")
                 const eyeOffIcon = this.querySelector(".pwd-change-eye-off-icon")
           
@@ -407,7 +407,7 @@ export default class ChangePassword
                 eyeOffIcon.classList.add("hidden")
           
                 const inputId = btn.getAttribute("data-for")
-                const input = this.div.getElementById(inputId)
+                const input = this.div.querySelector("#"+inputId)
                 input.type = "password"
                 input.classList.remove("error")
               })
@@ -424,13 +424,15 @@ export default class ChangePassword
             }
     }
 
-
     render(){
         const linkChangePassword = document.createElement("link");
         linkChangePassword.rel = "stylesheet";
         linkChangePassword.href = "/css/GOLF/change_password.css";
         document.querySelector("head").appendChild(linkChangePassword);
-        this.addJs()
-        return this.div
+
+        setTimeout(()=>{
+          this.addJs()
+          document.body.appendChild(this.div)
+        }, 100)
     }
 }

@@ -34,7 +34,7 @@ async function setNavbar(){
         <a class="log-out" href="#">Logout<i class="fa fa-fw fa-sign-out"></i></a>
     </div>`;
 
-    document.body.appendChild(new ChangePassword().render());
+    new ChangePassword().render();
     
     Menu.querySelector("#change-password-btn").addEventListener("click", {
         
