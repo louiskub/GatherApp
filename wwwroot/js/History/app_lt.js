@@ -19,22 +19,27 @@ async function loadContent(){
     await fetchMyApp()
     const ActivityList = document.querySelector(".pageLayout");
     ActivityList.appendChild(document.createElement("hr"))
-    let textHeader = document.createElement("h1")
 
-    textHeader.innerText = "Incoming"
-    ActivityList.appendChild(textHeader)
-    fail.forEach(act => {
-        let post = act.post
-        let activity = post.activity
-        let actTypes = post.actTypes
-        post = post.post
-        const Post = new HistoryActivity(post.id, post.curParticipant, post.maxParticipant
-            , activity.actDatetime, post.postName, "reject", actTypes, post.isOpened).render()
-        ActivityList.appendChild(Post)
-    });
-    ActivityList.appendChild(document.createElement("hr"))
+    function appendType(header, apps, typ){
+        let textHeader = document.createElement("h1")
+        textHeader.innerText = header
+        ActivityList.appendChild(textHeader)
+        apps.forEach(act => {
+            let post = act.post
+            let activity = post.activity
+            let actTypes = post.actTypes
+            post = post.post
+            const Post = new HistoryActivity(post.id, post.curParticipant, post.maxParticipant
+                , activity.actDatetime, post.postName, typ, actTypes, post.isOpened, act.isAttached).render()
+            ActivityList.appendChild(Post)
+        });
+        ActivityList.appendChild(document.createElement("hr"))
+    }
 
-    
+    appendType("Incoming", inComming, "accept")
+    appendType("Pending", pending, "pending")
+    appendType("Success", success, "finish")
+    appendType("Fail", fail, "reject")
 }
 
 async function main(){

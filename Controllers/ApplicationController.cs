@@ -102,8 +102,10 @@ public class ApplicationController : Controller
     [Authorize]
     public IActionResult CancelApplyPost(int postId)
     {
+        // return Json(new { status = "deleted" });
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var user = _db.Users.Where(u => u.Id == userId).FirstOrDefault();
+        // Console.WriteLine("\n\n{0} {1}\n\n", userId, "ets");
         if (user == null)
             return NotFound("User not found");
 
@@ -111,7 +113,7 @@ public class ApplicationController : Controller
                                         .FirstOrDefault();
         if (application == null)
             return NotFound("Application not found");
-        
+        Console.WriteLine("\n\nApp Found\n\n");
         try 
         {
             _db.Applications.Remove(application);

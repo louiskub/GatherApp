@@ -313,7 +313,7 @@ public class UserController : Controller
                                         .Include(a => a.Post.User)
                                         .Include(a => a.Post.Applications)
                                         .Where(a => a.UserId == user.Id)
-                                        .OrderByDescending(a => a.AppliedDateTime).ToList();
+                                        .OrderBy(a => a.AppliedDateTime).ToList();
         if (applications == null || applications.Count == 0)
             return NotFound("Application not found");
             
@@ -321,6 +321,7 @@ public class UserController : Controller
             new {
                 a.AppliedDateTime,
                 a.AppliedStatus,
+                isAttached = a.FileAttached != null,
                 Post = a.Post.ToJsonSmall(),
             }
         );
