@@ -67,6 +67,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  align-items: center;
   padding: 1rem;
 }
 
@@ -115,6 +116,15 @@
   padding-top: 6px;
   margin-bottom: 1.1rem;
   gap: 6px;
+}
+
+.activityTitle{
+  a{color: var(--text-color);}
+  transition: transform 0.4s ease;
+}
+
+.activityTitle:hover{
+  transform: scale(1.01);
 }
 
 .activityTag {
@@ -247,7 +257,7 @@
   }
 
   .buttonStyle {
-    width: 1.5rem;
+    width: fit-content;
     min-width: 60px;
     height: fit-content;
     font-size: 0.9rem;

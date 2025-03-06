@@ -30,7 +30,7 @@ async function loadContent(){
             let actTypes = post.actTypes
             post = post.post
             const Post = new HistoryActivity(post.id, post.curParticipant, post.maxParticipant
-                , activity.actDatetime, post.postName, typ, actTypes, post.isOpened).render()
+                , activity.actDatetime, post.postName, typ, actTypes, post.isOpened, act.isAttached).render()
             ActivityList.appendChild(Post)
         });
         ActivityList.appendChild(document.createElement("hr"))

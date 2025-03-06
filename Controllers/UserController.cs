@@ -320,6 +320,7 @@ public class UserController : Controller
             new {
                 a.AppliedDateTime,
                 a.AppliedStatus,
+                isAttached = a.FileAttached != null,
                 Post = a.Post.ToJsonSmall(),
             }
         );

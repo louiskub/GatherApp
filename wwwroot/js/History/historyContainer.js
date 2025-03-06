@@ -7,7 +7,8 @@ export default class HistoryActivity {
     title,
     status,
     tag,
-    isOpened
+    isOpened,
+    isAttached=false
   ) {
     this.postId = postId;
     this.curParticipant = curParticipant;
@@ -15,7 +16,8 @@ export default class HistoryActivity {
     this.title = title ?? "Untitled";
     this.status = status ?? "Pending";
     this.tag = tag ?? [];
-    this.checked = isOpened
+    this.checked = isOpened;
+    this.isAttached = isAttached;
 
     let formattedDate = new Date(date).toLocaleString('en-US', {
         weekday: 'short',
@@ -165,22 +167,16 @@ export default class HistoryActivity {
     const statusContainer = document.createElement("div");
     statusContainer.classList.add("statusContainer");
 
-    const statusName = document.createElement("p");
-    statusName.textContent = "Pending";
-    statusName.classList.add("textStyle");
+    statusContainer.innerHTML = `
+      <div class="statusContainer">
+        <p class="textStyle">Pending</p>
+        <div class="buttonContainer"></div>
+      </div>`
+    if (this.isAttached)
+      statusContainer.querySelector(".buttonContainer").innerHTML = `<button class="buttonStyle review">Attached File</button>`
 
-    const reviewButton = document.createElement("button");
-    reviewButton.classList.add("buttonStyle", "review");
-    reviewButton.textContent = "Review";
-
-    const cancelButton = document.createElement("button");
-    cancelButton.classList.add("buttonStyle", "report");
-    cancelButton.textContent = "Cancel";
-
-    statusContainer.appendChild(statusName);
-    statusContainer.appendChild(cancelButton);
-
-    cancelButton.addEventListener("click", async () => {
+    statusContainer.querySelector(".buttonContainer").innerHTML += `<button class="buttonStyle report">Cancel</button>`
+    statusContainer.querySelector(".report").addEventListener("click", async () => {
       let head, cont, noText, yesText;
       let apiPath, successMessage, failMessage, successRedirect;
       head = "Cancel this registration?"
@@ -211,6 +207,11 @@ export default class HistoryActivity {
       )
     })
 
+    if (this.isAttached)
+    statusContainer.querySelector(".review").addEventListener("click", () => {
+      if(window.userProfile.role != "visitor")
+        window.open(`/api/post/getfile?postId=${this.postId}&participantName=${window.userProfile.username}`,'_blank').focus();
+    })
     return statusContainer;
   }
 
