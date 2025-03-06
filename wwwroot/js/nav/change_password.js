@@ -424,13 +424,15 @@ export default class ChangePassword
             }
     }
 
-
     render(){
         const linkChangePassword = document.createElement("link");
         linkChangePassword.rel = "stylesheet";
         linkChangePassword.href = "/css/GOLF/change_password.css";
         document.querySelector("head").appendChild(linkChangePassword);
-        this.addJs()
-        return this.div
+
+        setTimeout(()=>{
+          this.addJs()
+          document.body.appendChild(this.div)
+        }, 100)
     }
 }
