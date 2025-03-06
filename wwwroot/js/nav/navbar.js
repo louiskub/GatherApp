@@ -48,7 +48,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("click", function (event) {
         if (
             menu.classList.contains("active") &&
-            !menu.contains(event.target) &&
             !menuToggle.contains(event.target) &&
             !themeIcon.contains(event.target) // เช็คว่าไม่ใช่ theme toggle
         ) {

@@ -218,7 +218,7 @@ export default class ChangePassword
             toggleBtns.forEach((btn) => {
               btn.addEventListener("click", function () {
                 const inputId = this.getAttribute("data-for")
-                const input = this.div.querySelector("#"+inputId)
+                const input = overlay.querySelector("#"+inputId)
                 const eyeIcon = this.querySelector(".pwd-change-eye-icon")
                 const eyeOffIcon = this.querySelector(".pwd-change-eye-off-icon")
           

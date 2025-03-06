@@ -19,8 +19,8 @@ async function setNavbar(){
     RightNavbar.innerHTML = `                
     <button class="noti-toggle" aria-label="Notifications"><i class="fa fa-fw fa-bell"></i></button>
     <button class="menu-toggle" aria-label="Open Menu">
-        <img class="fa fa-bars open-icon" src="https://craftycotton.co/wp-content/uploads/2024/09/d987aaeb-e902-495b-805e-91cb90e56215.png"></img>
-        <img class="fa fa-times close-icon" src="https://craftycotton.co/wp-content/uploads/2024/09/d987aaeb-e902-495b-805e-91cb90e56215.png"></img>
+        <img class="open-icon"></img>
+        <img class="close-icon"></img>
     </button>`;
 
     Menu.innerHTML = `
@@ -38,7 +38,7 @@ async function setNavbar(){
     <div class="notification-container" id="notificationContainer">
         <div class="noti-header">
             <span>Notifications</span>
-            <span class="badge">5</span>
+            <span class="badge">0</span>
         </div>
         <div class="filter-container">
             <div class="filter-label">
@@ -136,6 +136,8 @@ async function getMyProfile() {
 }
 
 async function setNotifications() {
+    const themeToggle = document.querySelector('.theme-switch');
+    const menuToggle = document.querySelector('.menu-toggle');
     const notiToggle = document.querySelector('.noti-toggle');
     const notificationContainer = document.getElementById('notificationContainer');
     const filterButtons = document.querySelectorAll('.filter-notifications button');
@@ -147,11 +149,11 @@ async function setNotifications() {
     const notifications = [
         { type: "report", title: "Report Notification", message: "Your report has been received and is being reviewed.", time: "10:30 AM" },
         { type: "review", title: "Review Notification", message: "Your content is being reviewed by our team.", time: "10:45 AM" },
-        { type: "approved", title: "Post Approved", message: "Your post has been approved and is now live.", time: "11:00 AM" },
-        { type: "rejected", title: "Post Rejected", message: "Your post was rejected. Please review our guidelines.", time: "11:15 AM" },
-        { type: "apply post", title: "Apply Post", message: "Your application has been submitted successfully.", time: "11:30 AM" },
-        { type: "update", title: "System Update", message: "A new system update is available. Please review the changes.", time: "12:00 PM" },
-        { type: "comment", title: "New Comment", message: "Someone commented on your recent post.", time: "12:30 PM" }
+        // { type: "approved", title: "Post Approved", message: "Your post has been approved and is now live.", time: "11:00 AM" },
+        // { type: "rejected", title: "Post Rejected", message: "Your post was rejected. Please review our guidelines.", time: "11:15 AM" },
+        // { type: "apply post", title: "Apply Post", message: "Your application has been submitted successfully.", time: "11:30 AM" },
+        // { type: "update", title: "System Update", message: "A new system update is available. Please review the changes.", time: "12:00 PM" },
+        // { type: "comment", title: "New Comment", message: "Someone commented on your recent post.", time: "12:30 PM" }
     ];
 
 
@@ -171,7 +173,7 @@ async function setNotifications() {
             item.style.display = (filterType === 'all' || item.classList.contains(filterType)) ? 'flex' : 'none';
             visibleCount += item.style.display === 'flex' ? 1 : 0;
         });
-        emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+        emptyState.style.display = visibleCount === 0 ? 'flex' : 'none';
         badge.textContent = visibleCount;
     }
 
@@ -185,10 +187,18 @@ async function setNotifications() {
         });
     });
 
-    window.addEventListener('load', () => {
-        updateFilterSlider();
-        filterNotifications('all');
+    // ปิดการแจ้งเตือนเมื่อคลิกข้างนอก
+    document.addEventListener('click', (event) => {
+        if (!notificationContainer.contains(event.target) 
+            && !notiToggle.contains(event.target)
+            && !themeToggle.contains(event.target)
+            && menuToggle.contains(event.target)) {
+            notificationContainer.classList.remove('show');
+        }
     });
+
+    filterNotifications('all');
+    updateFilterSlider();
 }
 
 async function main() {
