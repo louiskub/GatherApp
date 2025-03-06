@@ -40,6 +40,7 @@ public class UserController : Controller
         return Json(new
         {
             user = user.ToJson(isOwner),
+            RatingScore = user.ReceivedRatings.Count == 0 ? 0 : user.ReceivedRatings.Average(r => r.Score),
             isOwner
         });
     }
@@ -82,7 +83,7 @@ public class UserController : Controller
             RatingScore = user.ReceivedRatings.Count == 0 ? 0 : user.ReceivedRatings.Average(r => r.Score)
         });
     }
-
+    
     // edit my profile
     [HttpPut]
     [Route("api/user/myprofile")]
@@ -114,7 +115,7 @@ public class UserController : Controller
             if (actTypes.Count != 0)
                 user.ActTypeProfile = actTypes;
             else 
-                user.ActTypeProfile = new List<ActivityType>();
+                user.ActTypeProfile = [];
 
             if (myuser.Username != null) 
             {
@@ -170,6 +171,7 @@ public class UserController : Controller
     // เกี่ยวกับ post ที่เรา like ซึ่งเราดูได้คนเดียว
 
     [Route("api/user/mylikedpost")]
+    [HttpGet]
     [Authorize]
     public IActionResult GetMyLikedPost()
     {
@@ -178,18 +180,60 @@ public class UserController : Controller
         if (user == null) 
             return NotFound("User not found");
             
-        var likedPosts = _db.PostLikes.OrderBy(lp => lp.Id)
-                                    .Include(lp => lp.Post)
-                                    .Include(lp => lp.Post.User)
-                                    .Include(lp => lp.Post.Activity)
-                                    .Include(lp => lp.Post.Activity.ActTypes)
-                                    .Where(lp => lp.UserId == user.Id).ToList();
-        if (likedPosts == null || likedPosts.Count == 0) 
-            return NotFound("Liked post not found");
-        var result = likedPosts.Select(lp => lp.Post.ToJson());
-        return Json(result);
+        var likedPosts = _db.PostLikes
+                                .Include(lp => lp.Post)
+                                .ThenInclude(p => p.User)
+                                .Include(lp => lp.Post.Activity)
+                                .ThenInclude(a => a.ActTypes)
+                                .Where(lp => lp.UserId == user.Id)
+                                .Select(lp => new
+                                {
+                                    id = lp.Post.Id,
+                                    postname = lp.Post.PostName,
+                                    image = lp.Post.CoverPageImg ?? "https://storage-wp.thaipost.net/2024/12/Moo-Deng3.jpg",
+                                    Province = lp.Post.Activity.Province,   
+                                    District = lp.Post.Activity.District,
+                                    total = lp.Post.MaxParticipant,
+                                    Accepted = lp.Post.Applications.Count(a => a.AppliedStatus == true),
+                                    registered = lp.Post.Applications.Count(a => a.AppliedStatus == null || a.AppliedStatus == true),
+                                    actDatetime = lp.Post.Activity.ActDatetime.ToString("dd/MM/yyyy HH:mm"),
+                                    tags = lp.Post.Activity.ActTypes.Select(at => at.ActType).ToList(),
+                                })
+                                .ToList();
+                        
+        if (likedPosts == null || likedPosts.Count == 0)
+            return NotFound("Liked post not found");    
+
+        return Ok(likedPosts);
 
     }
+
+    [Route("api/user/unlikepost")]
+    [HttpPost]
+    [Authorize]
+    public IActionResult UnlikePost([FromBody] unlikedPost unlikePostRequest)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId)) 
+             return Unauthorized("User not found");
+
+        var user = _db.Users.Where(u => u.Id == userId).FirstOrDefault();
+        if (user == null) 
+            return NotFound("User not found");
+
+        var post = _db.Posts.Where(p => p.Id == unlikePostRequest.PostId).FirstOrDefault();
+        if (post == null)
+            return NotFound("Post not found");
+
+        var postLike = _db.PostLikes.Where(pl => pl.UserId == user.Id && pl.PostId == post.Id).FirstOrDefault();
+        if (postLike == null)
+            return NotFound("Post like not found");
+
+        _db.PostLikes.Remove(postLike);
+        _db.SaveChanges();
+        return Ok(new { status = "unliked" });
+    }   
 
 
     [Route("api/user/getmyposts")]
@@ -211,6 +255,47 @@ public class UserController : Controller
     }   
 
 
+    [Route("api/user/myposts")]
+    [Authorize]
+    public IActionResult GetMyPostHistory()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var user = _db.Users.Where(u => u.Id == userId).FirstOrDefault();
+        if (user == null) 
+            return NotFound("User not found");
+
+        var myposts = _db.Posts.Include(p => p.Activity)
+                                .Include(p => p.Activity.ActTypes)
+                                .Include(p => p.Applications)
+                                .Where(p => p.UserId == userId)
+                                .OrderBy(p => p.Activity.ActDatetime).ToList()
+                                .Select(p => p.ToJsonSmall());
+        if (myposts == null || !myposts.Any())
+            return NotFound("Post not found");
+
+        List<object> inComming = [], future = [], success = [];
+
+        foreach (var post in myposts)
+        {   
+            var res = (dynamic)post;
+            var activity = res.Activity;
+            // success
+            // Console.WriteLine(res.post.postName, activity.ActDatetime);
+            if (activity.ActDatetime < DateTime.Now)
+                success.Add(post);
+            //incomming
+            else if (activity.ActDatetime <= DateTime.Now.AddDays(7))
+                inComming.Add(post);
+            // future
+            else
+                future.Add(post);
+        }
+
+        return Json(new{
+            inComming, future, success
+        });
+    }
+
     // แสดงประวัติการสมัครโพสของ user คนนั้น
     [Route("api/user/myapplication")]
     [Authorize]
@@ -223,7 +308,7 @@ public class UserController : Controller
             return NotFound("User not found" );
 
         var applications = _db.Applications.Include(a => a.Post)
-                                        .ThenInclude(p => p.Activity)
+                                        .Include(a => a.Post.Activity)
                                         .Include(a => a.Post.Activity.ActTypes)
                                         .Include(a => a.Post.User)
                                         .Include(a => a.Post.Applications)
@@ -231,14 +316,40 @@ public class UserController : Controller
                                         .OrderByDescending(a => a.AppliedDateTime).ToList();
         if (applications == null || applications.Count == 0)
             return NotFound("Application not found");
+            
         var result = applications.Select(a => 
             new {
                 a.AppliedDateTime,
                 a.AppliedStatus,
-                post = a.Post.ToJson(),
+                Post = a.Post.ToJsonSmall(),
             }
         );
-        return Json(result);
+
+        List<object> inComming = [], pending = [], success = [], fail = [];
+        foreach (var res in result)
+        {
+            // participant laew
+            var app = (dynamic)res;
+            var post = app.Post.Post;
+            var activity = app.Post.Activity;
+
+            if (app.AppliedStatus == true){
+                // ยังไม่จบ
+                if (activity.ActDatetime > DateTime.Now)
+                    inComming.Add(app);
+                // จบแล้ว
+                else 
+                    success.Add(app);
+            }
+            // pending และ ยังไม่จัด
+            else if (app.AppliedStatus == null && activity.ActDatetime > DateTime.Now)
+                pending.Add(app);
+            // จบแล้ว
+            else
+                fail.Add(app);
+        }
+
+        return Json(new{inComming, success, pending, fail});
     }
 
 

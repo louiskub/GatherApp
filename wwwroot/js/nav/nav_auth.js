@@ -1,5 +1,6 @@
 import UserProfileImage from "/js/components/user_profile_image.js";
 import { Notification, renderNotifications } from '/js/components/notification.js';
+import ChangePassword from "/js/nav/change_password.js";
 
 const Head = document.querySelector("head");
 // const Body = document.querySelector("body");
@@ -29,7 +30,7 @@ async function setNavbar(){
         <a href="/history/post">Post History<i class="fa fa-history"></i></a>
         <a href="/history/application">Application History<i class="fa fa-file-alt"></i></a>
         <a href="/history/likes">Liked Posts<i class="fa fa-heart"></i></a>
-        <a href="/user/changepassword">Change Password<i class="fa fa-lock"></i></a>
+        <a href="#" id="change-password-btn">Change Password<i class="fa fa-lock"></i></a>
         <a class="log-out" href="#">Logout<i class="fa fa-fw fa-sign-out"></i></a>
     </div>`;
 
@@ -59,6 +60,11 @@ async function setNavbar(){
             <p>No notifications to display</p>
         </div>
     </div>`;
+    new ChangePassword().render();
+    
+    Menu.querySelector("#change-password-btn").addEventListener("click", {
+        
+    })
 }
 
 async function getMyProfile() {

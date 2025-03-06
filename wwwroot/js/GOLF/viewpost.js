@@ -7,7 +7,7 @@ const postId = urlParams.get('postid') || urlParams.get('postId');
 const $ = selector => document.querySelector(selector);
 const $$ = selector => document.querySelectorAll(selector);
 
-var post, isOwner, owner, activity, actTypes, participants
+var post, isOwner=false, owner, activity, actTypes, participants
 
 async function showPostDetail() {
     async function fetchPost() {
@@ -32,7 +32,9 @@ async function showPostDetail() {
 
     post = await fetchPost();
     owner = post.owner;
-    isOwner = owner.username == window.userProfile.username;
+    console.log(window.userProfile)
+    if (window.userProfile.role != "visitor")
+      isOwner = owner.username == window.userProfile.username;
     activity = post.activity;
     actTypes = post.actTypes;
     participants = post.participants;
@@ -44,7 +46,7 @@ async function showPostDetail() {
     const postOwner = document.querySelector(".actbox1_left");
     postOwner.querySelector("a").href = `/profile?username=${owner.username}`
     postOwner.querySelector("img").src = chooseImg(owner.profileImg)
-    postOwner.querySelector("h2").textContent = owner.username
+    postOwner.querySelector("h2").textContent = `Posted by: ${owner.username}`;
 
     const deadline = document.querySelector(".deadline")
     deadline.textContent = `Application Deadline: ${new Date(activity.closeDateTime).toLocaleString()}`
@@ -574,13 +576,18 @@ async function userButtonHandler(){
   const appBut = document.querySelector(".app_but");
   if (isOwner) {
       editBut.style.display = "block";
-      // viewBut.style.display = "block";
       cancelBut.style.display = "block";
   }else {
       if (!post.isApplied){
-          regBut.style.display = "block";
-          if (post.isAttached)
-              appBut.style.display = "block";
+          if (post.isOpened && post.curParticipant < post.maxParticipant && new Date(activity.closeDateTime) > new Date()){
+              regBut.style.display = "block";
+              if (post.isAttached)
+                  appBut.style.display = "block";
+          }
+          else {
+              regBut.style.display = "block";
+              regBut.textContent = "Registration closed"
+          }
       }
       else {
           if (post.isParticipant){
@@ -593,12 +600,16 @@ async function userButtonHandler(){
   }
 
   ///////////////// Button Event /////////////////
-  if (!post.isParticipant)
-    regBut.addEventListener("click", async function() {        
+  if (!post.isParticipant && post.isOpened && post.curParticipant < post.maxParticipant)
+    regBut.addEventListener("click", async function() {    
+      console.log(window.userProfile.role)
+      if(window.userProfile.role == "visitor")
+          window.showToast("Please login to register for this activity", "warning")
+      else{
         let apiSettings = {
-            method: "POST",
-            credentials: 'include',
-            headers: {'Content-Type': 'application/json'}
+          method: "POST",
+          credentials: 'include',
+          headers: {'Content-Type': 'application/json'}
         }
 
         const fileToBase64 = (file) => {
@@ -634,6 +645,8 @@ async function userButtonHandler(){
                 }
             }
         }
+      }
+
     })
 
   cancelBut.addEventListener("click", async function() {
@@ -682,6 +695,7 @@ async function userButtonHandler(){
 }
 
 document.addEventListener("DOMContentLoaded", async function() {
+  console.log("testt")
   await window.userProfileLoaded;
   await showPostDetail();
   await userButtonHandler();

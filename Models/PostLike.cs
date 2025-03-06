@@ -19,3 +19,9 @@ public class PostLike
     [JsonIgnore]
     public User User { get; set; }
 }
+
+public class unlikedPost
+{
+    public int PostId { get; set; }
+
+}

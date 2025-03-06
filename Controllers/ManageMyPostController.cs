@@ -88,9 +88,9 @@ public class ManageMyPostController : Controller
             Detail = dtopost.Detail,
             IsAttached = dtopost.IsAttached,
             MaxParticipant = dtopost.MaxParticipant,
-            CoverPageImg = dtopost.CoverPageImg,
+            CoverPageImg = dtopost.CoverPageImg ?? "https://images.squarespace-cdn.com/content/v1/57263bf8f8baf385ff61bb09/1535668320137-NZQPOXCGLFT34I9E4Z1E/Screen+Shot+2018-08-30+at+6.17.10+PM.png",
             Activity = activity,
-            UserId = user.Id,  // ระบุ User ที่โพสต์
+            UserId = user.Id,
             User = user
         };
 

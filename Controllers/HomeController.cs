@@ -80,7 +80,8 @@ public class HomeController : Controller
         ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
         return View("~/Views/Home/ViewProfile.cshtml");
     }
-        [Route("report")]
+    
+    [Route("report")]
     public IActionResult Report()
     {
         return View("~/Views/Home/Report.cshtml");
