@@ -2,7 +2,7 @@
     ViewData["Title"] = "Gather-PopupHistory";
 }
 
-<link rel="stylesheet" href="~/css/History/popupHistory.css">
+<link rel="stylesheet" href="~/css/History/popup_history.css">
 
 <div class="main">
     <button class="buttonStyle review" data-action="review">Review</button>
@@ -10,12 +10,12 @@
     <button class="buttonStyle view" data-action="view">View</button>
 
 
-    <div class="popup-container">
-        <i class="fa-solid fa-xmark close-popup-icon"></i>
-        <div class="popup-header">
+    <div class="history-popup-container">
+        <i class="fa-solid fa-xmark close-history-popup-icon"></i>
+        <div class="history-popup-header">
             <h2>Registrant: 57</h2>
         </div>
-        <div class="popup-content">
+        <div class="history-popup-content">
             @* <div class="popup-user-container">
                 <div class="popup-user-content">
                     <img class="popup-user-profile" 
@@ -75,12 +75,12 @@
 
     </div>
 </div>
-<script type="module">
 
+<script>
     import PopupUserList from '/js/components/popup_userlist.js';
 
-    var popupContent = document.querySelector('.popup-content');
-    var popup = document.querySelector('.popup-container');
+    var popupContent = document.querySelector('.history-popup-content');
+    var popup = document.querySelector('.history-popup-container');
 
     const users = [
         {
@@ -169,11 +169,5 @@
     document.querySelector('.review').addEventListener('click', () => openPopup("review"));
     document.querySelector('.report').addEventListener('click', () => openPopup("report"));
     document.querySelector('.view').addEventListener('click', () => openPopup("view"));
-    document.querySelector('.close-popup-icon').addEventListener('click', closePopup);
-
-    @* window.addEventListener('click', function (e) {
-        if (e.target == popup) {
-            closePopup();
-        }
-    }); *@
+    document.querySelector('.close-history-popup-icon').addEventListener('click', closePopup);
 </script>

@@ -176,12 +176,13 @@
   </div>  -->
 
 </div>
+<script src="/js/History/post_lt.js" type="module"></script>
 <script src="~/js/History/historyContainer.js" asp-append-verion="true"></script>
 <script>
   const ActivityList = document.querySelector(".pageContainer");
-  const Activity1 = new HistoryActivity(12, 20, 'Thu, Jan 30, 6:30 PM - 9:30 PM', 'Random Dance', 'onGoing', 'Dance','Performance')
+  const Activity1 = new HistoryActivity(12, 20, 'Thu, Jan 30, 6:30 PM - 9:30 PM', 'Random Dance', 'onGoing', 'Dance', 'Freestyle','Performance')
   ActivityList.appendChild(Activity1.render())
 
-  const Activity6 = new HistoryActivity(12, 20,'Thu, Jan 30, 6:30 PM - 9:30 PM', 'done', 'done', 'Paddleboarding','Rock Climbling', 'Scuba Diving')
+  const Activity6 = new HistoryActivity(12, 20,'Thu, Jan 30, 6:30 PM - 9:30 PM', 'done', 'done', 'Hiking ', 'Nature')
   ActivityList.appendChild(Activity6.render())
 </script>

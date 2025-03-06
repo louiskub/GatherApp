@@ -82,6 +82,10 @@
   background-color: var(--mustard);
 }
 
+.indicator.future {
+  background-color: var(--mustard);
+}
+
 .indicator.activityDone {
   background-color: var(--honolulu-blue);
 }
@@ -100,6 +104,15 @@
 
 .contentStyle p {
   color: var(--slate-gray);
+}
+
+.activityTitle{
+  a{color: var(--text-color);}
+  transition: transform 0.4s ease;
+}
+
+.activityTitle:hover{
+  transform: scale(1.01);
 }
 
 .activityTagContainer {

@@ -141,4 +141,22 @@ public class Post{
             { "actTypes", Activity.ActTypes.Select(x => x.ActType).ToList() }
         };
     }
+
+    public object ToJsonSmall()
+    {
+        return new{
+            Post = new {
+                Id,
+                CreateAt,
+                IsOpened,
+                PostName,
+                IsAttached,
+                MaxParticipant,
+                CurParticipant,
+                TotalApplicant = Applications.Count
+            },
+            Activity,
+            ActTypes = Activity.ActTypes.Select(x => x.ActType).ToList()
+        };
+    } 
 }

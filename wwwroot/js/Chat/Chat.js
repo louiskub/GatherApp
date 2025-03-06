@@ -251,6 +251,13 @@ async function getUserChats() {
     }
 }
 
+document.getElementById("messageInput").addEventListener("keydown", function (event) {
+    if (event.key === "Enter" && !event.shiftKey) { 
+        event.preventDefault();
+        sendMessage(); 
+    }
+});
+
 async function sendMessage() {
     console.log("postId before sending:", currentPostId);
     if (!currentPostId) {

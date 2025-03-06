@@ -2,6 +2,8 @@ import Dropdown from "/js/components/dropdown.js";
 import Post from "/js/components/post.js";
 import PostInDate from "/js/components/post_in_date.js";
 import UserSearchCard from "/js/components/user_search_card.js";
+import FilterButton from "/js/components/filter_button.js";
+import loadCss from "/js/components/reuse_func.js";
 
 async function createDropDown(){
     async function fetchAllActTypes(){
@@ -301,12 +303,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     const sidenav = document.querySelector(".sidenav");
     const themeToggle = document.querySelector(".theme-switch");
     const dropdownToggle = document.querySelector(".dropdown-toggle");
-    const searchPostContainer = document.querySelector(".search-post-container");
-    const searchAll = document.getElementById("search-all");
-    const searchUser = document.getElementById("search-user");
-    const searchPost = document.getElementById("search-post");
-    const searchResultsUser = document.querySelector(".search-results-user");
-    const searchResultsPost = document.querySelector(".search-results-post");
     const searchBar = document.querySelector("#search-bar input");
     searchBar.value = window.location.search.split("=")[1];
     // const mobileMediaQuery = window.matchMedia("(max-width: 768px)");
@@ -319,11 +315,24 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
+    await loadCss("/css/search/search.css");
     await createDropDown();
     await createPostAndUser();
     await createProvincesAndDistricts();
 
     const dropdowns = document.querySelectorAll(".sidenav .dropdown .dropdown-btn");
+    const searchFilter = document.querySelector(".search-filter");
+    const buttonList = ["All", "User", "Post"];
+    const filterMap = {
+        all: ["search-results-user", "search-results-post"],
+        user: ["search-results-user"],
+        post: ["search-results-post"]
+    };
+
+    const filterButton = new FilterButton(buttonList, filterMap);
+    searchFilter.appendChild(filterButton.render());
+    filterButton.filter("all");
+    
     dropdowns.forEach((dropdown) => {
         let span = dropdown.querySelector("span")
         const observer = new MutationObserver(() => {
@@ -373,33 +382,34 @@ document.addEventListener("DOMContentLoaded", async function () {
     typeObserver.observe(typeDropdownElement, { childList: true });
     window.addEventListener("resize", updateBodyScroll); // ตรวจสอบขนาดหน้าจอเมื่อเปลี่ยนขนาด
 
-    const isActiveAll = searchAll.classList.contains("active");
-    if (isActiveAll) {
-        searchResultsPost.classList.add("active");
-        searchResultsUser.classList.add("active");
-    }
+
+    // const isActiveAll = searchAll.classList.contains("active");
+    // if (isActiveAll) {
+    //     searchResultsPost.classList.add("active");
+    //     searchResultsUser.classList.add("active");
+    // }
     
-    searchAll.addEventListener("click", function () {
-        searchResultsPost.classList.add("active");
-        searchResultsUser.classList.add("active");
-        searchPost.classList.remove("active");
-        searchUser.classList.remove("active");
-        searchAll.classList.add("active");
-    });
+    // searchAll.addEventListener("click", function () {
+    //     searchResultsPost.classList.add("active");
+    //     searchResultsUser.classList.add("active");
+    //     searchPost.classList.remove("active");
+    //     searchUser.classList.remove("active");
+    //     searchAll.classList.add("active");
+    // });
 
-    searchUser.addEventListener("click", function () {
-        searchResultsPost.classList.remove("active");
-        searchResultsUser.classList.add("active");
-        searchAll.classList.remove("active");
-        searchPost.classList.remove("active");
-        searchUser.classList.add("active");
-    });     
+    // searchUser.addEventListener("click", function () {
+    //     searchResultsPost.classList.remove("active");
+    //     searchResultsUser.classList.add("active");
+    //     searchAll.classList.remove("active");
+    //     searchPost.classList.remove("active");
+    //     searchUser.classList.add("active");
+    // });     
 
-    searchPost.addEventListener("click", function () {
-        searchResultsPost.classList.add("active");
-        searchResultsUser.classList.remove("active");
-        searchAll.classList.remove("active");
-        searchUser.classList.remove("active");
-        searchPost.classList.add("active");
-    });
+    // searchPost.addEventListener("click", function () {
+    //     searchResultsPost.classList.add("active");
+    //     searchResultsUser.classList.remove("active");
+    //     searchAll.classList.remove("active");
+    //     searchUser.classList.remove("active");
+    //     searchPost.classList.add("active");
+    // });
 });

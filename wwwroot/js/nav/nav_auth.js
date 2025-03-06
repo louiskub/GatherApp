@@ -1,4 +1,5 @@
 import UserProfileImage from "/js/components/user_profile_image.js";
+import ChangePassword from "/js/nav/change_password.js";
 
 const Head = document.querySelector("head");
 const Body = document.querySelector("body");
@@ -26,12 +27,18 @@ async function setNavbar(){
     </div>
 
     <div class="menu-list">
-        <a href="/history/likes">Liked Posts<i class="fa fa-heart"></i></a>
         <a href="/history/post">Post History<i class="fa fa-history"></i></a>
         <a href="/history/application">Application History<i class="fa fa-file-alt"></i></a>
-        <a href="/user/changepassword">Change Password<i class="fa fa-lock"></i></a>
+        <a href="/history/likes">Liked Posts<i class="fa fa-heart"></i></a>
+        <a href="#" id="change-password-btn">Change Password<i class="fa fa-lock"></i></a>
         <a class="log-out" href="#">Logout<i class="fa fa-fw fa-sign-out"></i></a>
     </div>`;
+
+    new ChangePassword().render();
+    
+    Menu.querySelector("#change-password-btn").addEventListener("click", {
+        
+    })
 }
 
 async function getMyProfile() {
@@ -51,7 +58,7 @@ async function getMyProfile() {
         });
         window.changeToast(content, "/home")
     }
-
+    window.userProfile = null;
     window.userProfileLoaded = new Promise(async (resolve) => {
         try {
             let response = await fetch("/api/user/myprofile", {
@@ -66,6 +73,7 @@ async function getMyProfile() {
                 response.role = "user";
                 window.userProfile = response;
                 document.dispatchEvent(new CustomEvent("userProfileLoaded", { detail: response }));
+                console.log("✅ userProfile received:", window.userProfile);
                 resolve()
             }else {
                 logOut("Error: Please login again");
