@@ -1,10 +1,12 @@
 import UserProfileImage from "/js/components/user_profile_image.js";
+import { Notification, renderNotifications } from '/js/components/notification.js';
 import ChangePassword from "/js/nav/change_password.js";
 
 const Head = document.querySelector("head");
-const Body = document.querySelector("body");
+// const Body = document.querySelector("body");
 const RightNavbar = document.querySelector(".right-navbar");
 const Menu = document.querySelector(".menu");
+const Nav = document.querySelector("nav");
 
 async function setNavbar(){
     const link = document.createElement("link");
@@ -15,16 +17,14 @@ async function setNavbar(){
     Head.appendChild(link);
 
     RightNavbar.innerHTML = `                
-    <button class="noti" href="#" aria-label="Notifications"><i class="fa fa-fw fa-bell"></i></button>
+    <button class="noti-toggle" aria-label="Notifications"><i class="fa fa-fw fa-bell"></i></button>
     <button class="menu-toggle" aria-label="Open Menu">
         <img class="fa fa-bars open-icon" src="https://craftycotton.co/wp-content/uploads/2024/09/d987aaeb-e902-495b-805e-91cb90e56215.png"></img>
         <img class="fa fa-times close-icon" src="https://craftycotton.co/wp-content/uploads/2024/09/d987aaeb-e902-495b-805e-91cb90e56215.png"></img>
     </button>`;
 
     Menu.innerHTML = `
-    <div class="profile">
-        
-    </div>
+    <div class="profile"></div>
 
     <div class="menu-list">
         <a href="/history/post">Post History<i class="fa fa-history"></i></a>
@@ -34,6 +34,32 @@ async function setNavbar(){
         <a class="log-out" href="#">Logout<i class="fa fa-fw fa-sign-out"></i></a>
     </div>`;
 
+    Nav.innerHTML += `    
+    <div class="notification-container" id="notificationContainer">
+        <div class="noti-header">
+            <span>Notifications</span>
+            <span class="badge">5</span>
+        </div>
+        <div class="filter-container">
+            <div class="filter-label">
+                <i class="fas fa-filter"></i>
+                <span>Filter by type</span>
+            </div>
+            <div class="filter-notifications">
+                <div class="filter-slider" id="filterSlider"></div>
+                <button class="filter-all active" data-index="0">All</button>
+                <button class="filter-inform-noti" data-index="1">Inform</button>
+                <button class="filter-post-noti" data-index="2">Post</button>
+            </div>
+        </div>
+        <div class="noti-list" id="notiList">
+            
+        </div>
+        <div class="empty-state" id="emptyState">
+            <i class="fas fa-bell-slash"></i>
+            <p>No notifications to display</p>
+        </div>
+    </div>`;
     new ChangePassword().render();
     
     Menu.querySelector("#change-password-btn").addEventListener("click", {
@@ -109,9 +135,66 @@ async function getMyProfile() {
     }
 }
 
+async function setNotifications() {
+    const notiToggle = document.querySelector('.noti-toggle');
+    const notificationContainer = document.getElementById('notificationContainer');
+    const filterButtons = document.querySelectorAll('.filter-notifications button');
+    const filterSlider = document.getElementById('filterSlider');
+    const emptyState = document.getElementById('emptyState');
+    const notiList = document.getElementById('notiList');
+    const badge = document.querySelector('.noti-header .badge');
+
+    const notifications = [
+        { type: "report", title: "Report Notification", message: "Your report has been received and is being reviewed.", time: "10:30 AM" },
+        { type: "review", title: "Review Notification", message: "Your content is being reviewed by our team.", time: "10:45 AM" },
+        { type: "approved", title: "Post Approved", message: "Your post has been approved and is now live.", time: "11:00 AM" },
+        { type: "rejected", title: "Post Rejected", message: "Your post was rejected. Please review our guidelines.", time: "11:15 AM" },
+        { type: "apply post", title: "Apply Post", message: "Your application has been submitted successfully.", time: "11:30 AM" },
+        { type: "update", title: "System Update", message: "A new system update is available. Please review the changes.", time: "12:00 PM" },
+        { type: "comment", title: "New Comment", message: "Someone commented on your recent post.", time: "12:30 PM" }
+    ];
+
+
+    renderNotifications(notiList, notifications);
+
+    function updateFilterSlider() {
+        const activeButton = document.querySelector('.filter-notifications button.active');
+        if (activeButton) {
+            filterSlider.style.width = `${activeButton.offsetWidth}px`;
+            filterSlider.style.transform = `translateX(${activeButton.offsetLeft}px)`;
+        }
+    }
+
+    function filterNotifications(filterType) {
+        let visibleCount = 0;
+        document.querySelectorAll('.noti-item').forEach(item => {
+            item.style.display = (filterType === 'all' || item.classList.contains(filterType)) ? 'flex' : 'none';
+            visibleCount += item.style.display === 'flex' ? 1 : 0;
+        });
+        emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+        badge.textContent = visibleCount;
+    }
+
+    notiToggle.addEventListener('click', () => notificationContainer.classList.toggle('show'));
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            updateFilterSlider();
+            filterNotifications(button.classList[0].replace('filter-', ''));
+        });
+    });
+
+    window.addEventListener('load', () => {
+        updateFilterSlider();
+        filterNotifications('all');
+    });
+}
+
 async function main() {
     await setNavbar();
     await getMyProfile();
+    await setNotifications();
 }
 
 main();
