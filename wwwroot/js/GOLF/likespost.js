@@ -87,7 +87,7 @@ function fetchLikedPosts() {
 function createPostComponent(post) {
     return `
         <a href="/post/${post.id}" class="like-card" data-post-id="${post.id}">
-            <img src="${post.image}" alt="${post.postname}">
+            <img src="data:image/jpeg;base64,${post.image}" alt="${post.postname}">
             <div class="card-content">
                 <h2 class="card-title">${post.postname}</h2>
                 <p class="time">
@@ -131,6 +131,7 @@ function handleLikeButtonClick(e) {
     const card = likeBtn.closest(".like-card");
     animateCardRemoval(card);
 }
+
 
 function animateCardRemoval(card) {
     card.style.transition = "opacity 0.5s, transform 0.5s";
