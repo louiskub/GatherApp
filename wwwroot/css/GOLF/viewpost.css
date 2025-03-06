@@ -3,6 +3,7 @@
     --miniinfo-bg: #F1F1F1;
     --miniinfo_date-color: #bec121;
     --miniinfo_locate-color: #d14232;
+    --postedby-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 /* Dark Mode */
@@ -10,6 +11,7 @@
     --miniinfo-bg: rgb(120, 28, 54);
     --miniinfo_date-color: #e0b20a;
     --miniinfo_locate-color: #fd1c03;
+    --postedby-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 
@@ -91,6 +93,7 @@
     height: 50px; 
     border-radius: 50%;
     object-fit: cover;
+    box-shadow: var(--postedby-shadow);
 }
 
 .actbox1_left h2{
