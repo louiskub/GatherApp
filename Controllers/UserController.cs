@@ -40,6 +40,7 @@ public class UserController : Controller
         return Json(new
         {
             user = user.ToJson(isOwner),
+            RatingScore = user.ReceivedRatings.Count == 0 ? 0 : user.ReceivedRatings.Average(r => r.Score),
             isOwner
         });
     }
