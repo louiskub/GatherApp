@@ -5,10 +5,7 @@
 <link rel="stylesheet" href="~/css/History/appHistory.css">
 }
 
-
-<script src="~/js/History/historyContainer.js"></script>
-
-<div class="pageLayout">
+<div class="pageLayout main">
    <h1 class="top">Application History</h1>
 
     <!-- <div class="containerStyle">
@@ -82,20 +79,4 @@
 
 </div>
 
-<script> 
-  const ActivityList = document.querySelector(".pageLayout");
-
-  const Activity2 = new HistoryActivity(12, 20, 'Thu, Jan 30, 6:30 PM - 9:30 PM', 'finish', 'finish', 'Cartoon','Japan', 'Crayon Shin Chan')
-  ActivityList.appendChild(Activity2.render())
-
-  const Activity3 = new HistoryActivity(12, 20, 'Thu, Jan 30, 6:30 PM - 9:30 PM', 'accept', 'accept', 'Artificial Intelligence','Support & Coaching', 'Virtual Reality')
-  ActivityList.appendChild(Activity3.render())
-
-  const Activity4 = new HistoryActivity(12, 20, 'Thu, Jan 30, 6:30 PM - 9:30 PM', 'pending', 'pending', 'Documentary Photography')
-  ActivityList.appendChild(Activity4.render())
-
-  const Activity5 = new HistoryActivity(12, 20, 'Thu, Jan 30, 6:30 PM - 9:30 PM', 'reject', 'reject', 'Game', 'Indoor')
-  ActivityList.appendChild(Activity5.render())
-
-  
-</script>
+<script type="module" src="/js/History/app_lt.js"></script>

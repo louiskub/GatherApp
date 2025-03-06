@@ -1,22 +1,36 @@
-class HistoryActivity {
+export default class HistoryActivity {
   constructor(
+    postId,
     curParticipant,
     maxParticipant,
     date,
     title,
     status,
-    tag1,
-    tag2,
-    tag3
+    tag,
+    isOpened
   ) {
+    this.postId = postId;
     this.curParticipant = curParticipant;
     this.maxParticipant = maxParticipant;
-    this.date = date ?? "Unknown Date";
     this.title = title ?? "Untitled";
     this.status = status ?? "Pending";
-    this.tag1 = tag1;
-    this.tag2 = tag2;
-    this.tag3 = tag3;
+    this.tag = tag ?? [];
+    this.checked = isOpened
+
+    let formattedDate = new Date(date).toLocaleString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+    }).toUpperCase().split(" ")
+    formattedDate[2] = formattedDate[2].replace(",", " -")
+    formattedDate = formattedDate.join(" ")
+    this.date = formattedDate ?? "Unknown Date";
+
+    this.containerStyle = document.createElement("div");
+    this.containerStyle.classList.add("containerStyle");
   }
 
   createActivityInfo() {
@@ -24,8 +38,11 @@ class HistoryActivity {
     activityInfo.classList.add("contentStyle");
 
     const activityTitle = document.createElement("h2");
-    activityTitle.textContent = this.title;
     activityTitle.classList.add("activityTitle");
+    let titleA = document.createElement("a");
+    titleA.textContent = this.title;
+    titleA.href = `/post?postId=${this.postId}`;
+    activityTitle.appendChild(titleA);
 
     const displayUsr = document.createElement("div");
     displayUsr.classList.add("displayIcon");
@@ -75,10 +92,9 @@ class HistoryActivity {
         tagContainer.appendChild(tag);
       }
     };
-
-    addTag(this.tag1);
-    addTag(this.tag2);
-    addTag(this.tag3);
+    this.tag.forEach(tag => {
+      addTag(tag);
+    });
 
     return tagContainer;
   }
@@ -184,11 +200,12 @@ class HistoryActivity {
 
     const switchLabel = document.createElement("p");
     switchLabel.classList.add("switchLabel");
-    switchLabel.textContent = "OFF";
+    switchLabel.textContent = this.checked ? "ON" : "OFF";
 
     const switchBox = document.createElement("label");
     switchBox.classList.add("activitySwitch");
     const switchInput = document.createElement("input");
+    switchInput.checked = this.checked;
     switchInput.type = "checkbox";
     switchInput.id = "toggleSwitch";
 
@@ -209,6 +226,33 @@ class HistoryActivity {
 
   //   post
   createActivityStatusOnGoing() {
+    async function cancelPost(postId){
+        console.log(postId)
+        let head, cont, noText, yesText;
+        let apiPath, successMessage, failMessage, successRedirect;
+        head = "Delete this post?"
+        cont = "Are you sure you want to delete this post? This action cannot be undone."
+        noText = "Keep it"
+        yesText = "Delete post"
+        apiPath = `/api/post?postid=${postId}`
+        successMessage = "Post deleted successfully"
+        failMessage = "Failed to delete post"
+        successRedirect = "/home"
+      window.confirmAction(head,cont,noText,yesText,
+        async () => await fetch(apiPath, {
+          method: 'DELETE',
+          headers: {'Content-Type': 'application/json'}
+        })
+          .then(response => {
+              if (response.ok) {
+                  window.changePage(successMessage, "/history/post", "success");
+              } else {
+                  window.showToast(failMessage, "error");
+              }
+          })
+      );
+    }
+
     const statusContainer = document.createElement("div");
     statusContainer.classList.add("statusContainer");
 
@@ -228,7 +272,22 @@ class HistoryActivity {
     statusContainer.appendChild(this.createStatusSwitch());
     statusContainer.appendChild(buttonContainer);
 
+    // รอแพรมาใส่ event ให้ปุ่ม
+    viewButton.addEventListener("click", () => {
+
+    })
+
+    cancelButton.addEventListener("click", () => {
+      cancelPost(this.postId)
+    });
+
     return statusContainer;
+  }
+
+  initEventBtn(){
+    const toggleSwitch = this.containerStyle.querySelector("#toggleSwitch")
+    const view = this.containerStyle.querySelector(".view")
+    const cancel = this.containerStyle.querySelector(".report")
   }
 
   render() {
@@ -237,9 +296,6 @@ class HistoryActivity {
 
     const indicator = document.createElement("div");
 
-    const containerStyle = document.createElement("div");
-    containerStyle.classList.add("containerStyle");
-
     const activityInfo = this.createActivityInfo();
     innerContainer.appendChild(activityInfo);
     innerContainer.appendChild(this.createTags());
@@ -247,13 +303,19 @@ class HistoryActivity {
     const displayUsr = activityInfo.querySelector(".displayIcon");
     indicator.classList.add("indicator");
 
-    containerStyle.appendChild(indicator);
+    this.containerStyle.appendChild(indicator);
 
     switch (this.status) {
       case "onGoing": //post
         innerContainer.appendChild(this.createActivityStatusOnGoing());
         indicator.classList.add("indicator", "onGoing");
-        containerStyle.appendChild(innerContainer);
+        this.containerStyle.appendChild(innerContainer);
+        break;
+      
+      case "future": //post
+        innerContainer.appendChild(this.createActivityStatusOnGoing());
+        indicator.classList.add("indicator", "future");
+        this.containerStyle.appendChild(innerContainer);
         break;
 
       case "done": //post
@@ -262,7 +324,7 @@ class HistoryActivity {
         if (displayUsr.parentNode) {
           activityInfo.removeChild(displayUsr);
         }
-        containerStyle.appendChild(innerContainer);
+        this.containerStyle.appendChild(innerContainer);
         break;
 
       case "finish": //application
@@ -272,7 +334,7 @@ class HistoryActivity {
           displayUsr.parentNode.removeChild(displayUsr);
         }
 
-        containerStyle.appendChild(innerContainer);
+        this.containerStyle.appendChild(innerContainer);
         break;
 
       case "accept": //application
@@ -281,7 +343,7 @@ class HistoryActivity {
         if (displayUsr.parentNode) {
           activityInfo.removeChild(displayUsr);
         }
-        containerStyle.appendChild(innerContainer);
+        this.containerStyle.appendChild(innerContainer);
         break;
 
       case "pending": //application
@@ -290,7 +352,7 @@ class HistoryActivity {
         if (displayUsr.parentNode) {
           activityInfo.removeChild(displayUsr);
         }
-        containerStyle.appendChild(innerContainer);
+        this.containerStyle.appendChild(innerContainer);
         break;
 
       case "reject": //application
@@ -299,7 +361,7 @@ class HistoryActivity {
         if (displayUsr.parentNode) {
           activityInfo.removeChild(displayUsr);
         }
-        containerStyle.appendChild(innerContainer);
+        this.containerStyle.appendChild(innerContainer);
         break;
 
       default:
@@ -307,6 +369,6 @@ class HistoryActivity {
         break;
     }
 
-    return containerStyle;
+    return this.containerStyle;
   }
 }
