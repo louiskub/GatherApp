@@ -23,42 +23,18 @@ async function loadContent(){
 
     textHeader.innerText = "Incoming"
     ActivityList.appendChild(textHeader)
-    inComming.forEach(post => {
+    fail.forEach(act => {
+        let post = act.post
         let activity = post.activity
         let actTypes = post.actTypes
         post = post.post
         const Post = new HistoryActivity(post.id, post.curParticipant, post.maxParticipant
-            , activity.actDatetime, post.postName, "onGoing", actTypes, post.isOpened).render()
+            , activity.actDatetime, post.postName, "reject", actTypes, post.isOpened).render()
         ActivityList.appendChild(Post)
     });
     ActivityList.appendChild(document.createElement("hr"))
 
-    textHeader = document.createElement("h1")
-    textHeader.innerText = "Future"
-    ActivityList.appendChild(textHeader)
-    future.forEach(post => {
-        let activity = post.activity
-        let actTypes = post.actTypes
-        post = post.post
-        const Post = new HistoryActivity(post.id, post.curParticipant, post.maxParticipant
-            , activity.actDatetime, post.postName, "future", actTypes, post.isOpened).render()
-        ActivityList.appendChild(Post)
-    });
-    ActivityList.appendChild(document.createElement("hr"))
-
-    textHeader = document.createElement("h1")
-    textHeader.innerText = "Success"
-    ActivityList.appendChild(textHeader)
-    'Thu, Jan 30, 6:30 PM - 9:30 PM'
-    success.forEach(post => {
-        let activity = post.activity
-        let actTypes = post.actTypes
-        post = post.post
-        const Post = new HistoryActivity(post.id, post.curParticipant, post.maxParticipant
-            , activity.actDatetime, post.postName, "done", actTypes, post.isOpened).render()
-        ActivityList.appendChild(Post)
-    });
-    ActivityList.appendChild(document.createElement("hr"))
+    
 }
 
 async function main(){
