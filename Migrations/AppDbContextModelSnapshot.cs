@@ -225,6 +225,14 @@ namespace GatherApp.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.HasKey("UserId", "CreatedAt");
 
                     b.ToTable("Notifications");

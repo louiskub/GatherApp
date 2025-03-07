@@ -293,6 +293,8 @@ public class ManageMyPostController : Controller
 
         _db.Notifications.Add(new Notification
         {
+            Type = "approved",
+            Title = "Application accepted",
             UserId = application.User.Id,
             Content = $"Your application({application.Post.PostName}) has been accepted"
         });
@@ -349,6 +351,8 @@ public class ManageMyPostController : Controller
         application.AppliedStatus = false;
         _db.Notifications.Add(new Notification
         {
+            Type = "rejected",
+            Title = "Application rejected",
             UserId = application.User.Id,
             Content = $"Your application({application.Post.PostName}) has been rejected"
         });

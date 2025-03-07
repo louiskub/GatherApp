@@ -1,6 +1,7 @@
 import UserProfileImage from "/js/components/user_profile_image.js";
 import { Notification, renderNotifications } from '/js/components/notification.js';
 import ChangePassword from "/js/nav/change_password.js";
+import { fetchNotifications } from "/js/notiApi/notiApi.js"; 
 
 const Head = document.querySelector("head");
 // const Body = document.querySelector("body");
@@ -146,15 +147,7 @@ async function setNotifications() {
     const notiList = document.getElementById('notiList');
     const badge = document.querySelector('.noti-header .badge');
 
-    const notifications = [
-        { type: "report", title: "Report Notification", message: "Your report has been received and is being reviewed.", time: "10:30 AM" },
-        { type: "review", title: "Review Notification", message: "Your content is being reviewed by our team.", time: "10:45 AM" },
-        { type: "approved", title: "Post Approved", message: "Your post has been approved and is now live.", time: "11:00 AM" },
-        { type: "rejected", title: "Post Rejected", message: "Your post was rejected. Please review our guidelines.", time: "11:15 AM" },
-        { type: "apply post", title: "Apply Post", message: "Your application has been submitted successfully.", time: "11:30 AM" },
-        { type: "update", title: "System Update", message: "A new system update is available. Please review the changes.", time: "12:00 PM" },
-        { type: "comment", title: "New Comment", message: "Someone commented on your recent post.", time: "12:30 PM" }
-    ];
+    const notifications = await fetchNotifications();
 
 
     renderNotifications(notiList, notifications);

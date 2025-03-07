@@ -12,6 +12,20 @@ namespace GatherApp.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<string>(
+                name: "Title",
+                table: "Notifications",
+                type: "longtext",
+                nullable: false)
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.AddColumn<string>(
+                name: "Type",
+                table: "Notifications",
+                type: "longtext",
+                nullable: false)
+                .Annotation("MySql:CharSet", "utf8mb4");
+
             migrationBuilder.AlterColumn<int>(
                 name: "PostId",
                 table: "ChatMessages",
@@ -122,6 +136,14 @@ namespace GatherApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserLogins");
+
+            migrationBuilder.DropColumn(
+                name: "Title",
+                table: "Notifications");
+
+            migrationBuilder.DropColumn(
+                name: "Type",
+                table: "Notifications");
 
             migrationBuilder.DropColumn(
                 name: "ProfileImg",

@@ -133,8 +133,14 @@ public class ChangePasswordRequest
 public class Notification
 {
     [Required]
+    public string Type { get; set; }
+    
+    [Required]
     [JsonIgnore]
     public string UserId { get; set; }
+
+    [Required]
+    public string Title { get; set; }
 
     [Required]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

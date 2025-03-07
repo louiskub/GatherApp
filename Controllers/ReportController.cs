@@ -87,6 +87,8 @@ public async Task<IActionResult> CreateReport([FromBody] Report report)
 
             _db.Notifications.Add(new Notification
             {
+                Type = "report",
+                Title = "Behavior Score",
                 UserId = report.ReportedUserId,
                 Content = "Your behavior score has been reduced by 20 due to a report."
             });
@@ -98,6 +100,8 @@ public async Task<IActionResult> CreateReport([FromBody] Report report)
 
                 _db.Notifications.Add(new Notification
                 {
+                    Type = "report",
+                    Title = "Behavior Score",
                     UserId = report.ReportedUserId,
                     Content = "Your behavior score is below 50, and you have been temporarily banned for 7 days."
                 });
@@ -110,6 +114,8 @@ public async Task<IActionResult> CreateReport([FromBody] Report report)
 
                 _db.Notifications.Add(new Notification
                 {
+                    Type = "report",
+                    Title = "Behavior Score",
                     UserId = report.ReportedUserId,
                     Content = "Your behavior score has reached 0, and you have been permanently banned."
                 });
@@ -129,6 +135,8 @@ public async Task<IActionResult> CreateReport([FromBody] Report report)
 
         _db.Notifications.Add(new Notification
         {
+            Type = "report",
+            Title = "Behavior Score",
             UserId = report.ReportedUserId,
             Content = $"Your behavior score has been reduced by 20 due to a report."
         });
@@ -142,6 +150,8 @@ public async Task<IActionResult> CreateReport([FromBody] Report report)
 
         _db.Notifications.Add(new Notification
             {
+                Type = "report",
+                Title = "Behavior Score",
                 UserId = report.ReportedUserId,
                 Content = "Your behavior score is below 50, and you have been temporarily banned for 7 days."
             });
@@ -154,6 +164,8 @@ public async Task<IActionResult> CreateReport([FromBody] Report report)
 
         _db.Notifications.Add(new Notification
             {
+                Type = "report",
+                Title = "Behavior Score",
                 UserId = report.ReportedUserId,
                 Content = "Your behavior score has reached 0, and you have been permanently banned."
             });

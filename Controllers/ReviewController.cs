@@ -101,6 +101,8 @@ namespace GatherApp.Controllers
             
             _ = _db.Notifications.Add(new Notification
             {
+                Type = "review",
+                Title = "New Rating",
                 UserId = ratedUser.Id,
                 Content = $"You have received a new rating for the post"
             });

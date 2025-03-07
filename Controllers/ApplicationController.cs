@@ -79,6 +79,8 @@ public class ApplicationController : Controller
 
             _ = _db.Notifications.Add(new Notification
             {
+                Type = "update",
+                Title = "Behavior Score",
                 UserId = user.Id,
                 Content = $"You Have Add Behavoir Score 10",
                 CreatedAt = DateTime.Now,

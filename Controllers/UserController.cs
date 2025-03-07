@@ -390,5 +390,31 @@ public class UserController : Controller
     
     }
 
+    [Authorize]
+    [HttpGet]
+    [Route("api/user/notifications")]
+    public async Task<IActionResult> GetNotifications()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+        var notifications = await _db.Notifications
+                                    .Where(n => n.UserId == userId)
+                                    .OrderByDescending(n => n.CreatedAt)
+                                    .Select(n => new
+                                    {
+                                        n.Type,
+                                        n.Title,
+                                        n.CreatedAt,
+                                        n.Content
+                                    })
+                                    .ToListAsync();
+
+        return Ok(notifications);
+    }
+
     
 }
