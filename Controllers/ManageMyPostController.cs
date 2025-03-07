@@ -241,11 +241,66 @@ public class ManageMyPostController : Controller
         if (applications == null || applications.Count == 0) 
             return NotFound("Applicant not found");
         
-        var result = applications.OrderBy(a => a.AppliedStatus == null)
-                                .ThenBy(a => a.AppliedStatus)
+        var result = applications.OrderByDescending(a => a.AppliedStatus == null)
+                                .ThenByDescending(a => a.AppliedStatus)
                                 .ThenBy(a => a.AppliedDateTime)
                                 .Select(a => a.ToJson()
                                 ).ToList();
+        return Json(result);
+    }
+
+    [Route("api/post/participant")]
+    [Authorize]
+    public IActionResult GetAllParticipantsMyPost(int postId)
+    {
+        // return Json("kuy");
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var user = _db.Users.Where(u => u.Id == userId)
+                            .FirstOrDefault();
+        if (user == null) 
+            return NotFound("User not found");
+        
+        var post = _db.Posts.Where(p => p.Id == postId).FirstOrDefault();
+        if (post == null) 
+            return NotFound("Post not found");
+
+        var applications = _db.Applications.Include(a => a.User)
+                                        .OrderBy(a => a.AppliedDateTime)
+                                        .Where(a => a.PostId == postId && a.AppliedStatus == true).ToList();
+
+        if (applications == null || applications.Count == 0) 
+            return NotFound("Applicant not found");
+        if (applications.Any(a => a.UserId == user.Id) == false && post.UserId != user.Id)
+            return Unauthorized("User Unauthorized");
+        
+        // ดูว่าเราเคยให้คะแนนคนนี้ไปแล้วหรือยัง
+        var reviews = _db.RatingScores.Include(r => r.Rater)
+                                    .Where(r => r.PostId == postId && r.RaterId == user.Id)
+                                    .Select(r => r.RatedUserId)
+                                    .ToList();
+
+        var reports = _db.Reports.Include(r => r.Reporter)
+                                .Where(r => r.PostId == postId && r.ReporterId == user.Id)
+                                .Select(r => r.ReportedUserId)
+                                .ToList();
+
+        var result = applications.Select(a => new {
+            a.User.Username,
+            a.User.ProfileImg,
+            isReviewed = reviews.Any(r => r == a.UserId),
+            isReported = reports.Any(r => r == a.UserId)
+        }).ToList();
+
+        // add owner
+        result.Add(new {
+            Username = post.User.Username+"(Owner)",
+            ProfileImg = post.User.ProfileImg,
+            isReviewed = reviews.Any(r => r == post.UserId),
+            isReported = reports.Any(r => r == post.UserId)
+        });
+
+        // เอาเราออกจาก list
+        result = result.Where(r => r.Username != user.Username).ToList();
         return Json(result);
     }
 

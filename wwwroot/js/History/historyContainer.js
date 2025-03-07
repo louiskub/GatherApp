@@ -1,3 +1,101 @@
+import PopupUserList from '/js/components/popup_userlist.js';
+import PopupHistory from '/js/components/popup_history.js';
+
+function getButtonsByType(type, hasAttachment, appliedStatus, isReviewed, isReported) {
+  let textList = [];
+
+  if (type === "reportByOwner") {
+      textList.push(isReviewed === 1 ? "Reviewed" : "Review")
+      textList.push(isReported === 1 ? "Reported" : "Report")
+  }
+
+  if (type === "review"){
+      textList = isReviewed === 1 ? ["Reviewed"] : ["Review"];
+  }
+  if (type === "report"){
+      textList = isReported === 1 ? ["Reported"] : ["Report"];
+  }
+  if (type === "view") {
+      if (appliedStatus === null) {
+          textList = hasAttachment ? ["Attached File", "Approve", "Reject"] : ["Approve", "Reject"];
+      }
+      else {
+          textList = appliedStatus === 0 ? ["Rejected"] : ["Approved"];
+      }
+  }
+  return textList || [];
+}
+
+
+// ฟังก์ชันเปิด popup
+function openPopup(type, users, postId) {
+  const popupContainer = document.querySelector('.popup-container');
+  popupContainer.innerHTML = ""; // ล้าง popup ก่อน render ใหม่
+
+  const userList = users.map(userData => {
+      const buttons = getButtonsByType(type, userData.isAttached, userData.appliedStatus, userData.isReviewed, userData.isReported);
+      return new PopupUserList(userData.profileImg, userData.username, buttons, postId);
+  });
+
+  const popupHeader = type === "view" ? "Registrants" : "Participants";
+  const popup = new PopupHistory(popupHeader, users.length, userList, postId).render();
+  popupContainer.appendChild(popup);
+
+  popup.style.display = 'grid';
+  document.body.classList.add("no-scroll");
+  return popupContainer
+}
+
+
+async function fetchAllRegistrant(postId){
+    let response = await fetch(`/api/post/application?postId=${postId}`)
+    if (!response.ok){
+      response = await response.text()
+      window.showToast(response, "error")
+    }
+    else if (response.redirected)
+      window.changePage("Please Login First", "/login", "warning")
+    else {
+      response = await response.json()
+      return response
+    }
+}
+// for report or review
+async function fetchAllParticipant(postId) {
+  let response = await fetch(`/api/post/participant?postId=${postId}`)
+  if (!response.ok){
+    response = await response.text()
+    window.showToast(response, "error")
+  }
+  else if (response.redirected)
+    window.changePage("Please Login First", "/login", "warning")
+  else {
+    response = await response.json()
+    return response
+  }
+}
+
+async function viewRegistrantByPostOwner(postId){
+  let userList = await fetchAllRegistrant(postId)
+  if (userList)
+    openPopup("view", userList, postId)
+}
+
+async function viewParticipantsByPostOwner(postId){
+  let userList = await fetchAllParticipant(postId)
+  console.log(userList)
+  if (userList)
+    openPopup("reportByOwner", userList, postId)
+}
+
+async function reportByParticipant(postId){
+
+}
+
+async function reviewByParticipant(postId){
+}
+
+
 export default class HistoryActivity {
   constructor(
     postId,
@@ -120,25 +218,6 @@ export default class HistoryActivity {
     buttonContainer.appendChild(reviewButton);
     buttonContainer.appendChild(reportButton);
     statusContainer.appendChild(buttonContainer);
-
-    return statusContainer;
-  }
-
-  //post done
-  createActivityStatusDone() {
-    const statusContainer = document.createElement("div");
-    statusContainer.classList.add("statusContainer");
-
-    const statusName = document.createElement("p");
-    statusName.textContent = "Success";
-    statusName.classList.add("textStyle");
-
-    const reportButton = document.createElement("button");
-    reportButton.classList.add("buttonStyle", "report");
-    reportButton.textContent = "Report";
-
-    statusContainer.appendChild(statusName);
-    statusContainer.appendChild(reportButton);
 
     return statusContainer;
   }
@@ -336,12 +415,40 @@ export default class HistoryActivity {
 
     // รอแพรมาใส่ event ให้ปุ่ม
     viewButton.addEventListener("click", () => {
-
+      viewRegistrantByPostOwner(this.postId)
     })
 
     cancelButton.addEventListener("click", () => {
       cancelPost(this.postId)
     });
+
+    return statusContainer;
+  }
+
+  //post done
+  createActivityStatusDone() {
+    const statusContainer = document.createElement("div");
+    statusContainer.classList.add("statusContainer");
+
+    const statusName = document.createElement("p");
+    statusName.textContent = "Success";
+    statusName.classList.add("textStyle");
+    
+    const buttonContainer = document.createElement("div");
+    buttonContainer.classList.add("buttonContainer");
+
+    const reviewButton = document.createElement("button");
+    reviewButton.classList.add("buttonStyle", "view");
+    reviewButton.textContent = "View Participants";
+
+    buttonContainer.appendChild(reviewButton);
+    statusContainer.appendChild(statusName);
+    statusContainer.appendChild(buttonContainer);
+
+    reviewButton.addEventListener("click",() => {
+      viewParticipantsByPostOwner(this.postId)
+    })
+
 
     return statusContainer;
   }
