@@ -46,7 +46,7 @@
         height: 100vh;
         top: 60px;
         left: 0;
-        background-color: var(--bg-color);
+        background: var(--menu-bg);
     }
 
     .menu.active {
