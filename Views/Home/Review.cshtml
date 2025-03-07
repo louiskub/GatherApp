@@ -1,21 +1,65 @@
 @* <link rel="stylesheet" href="~/css/inform/review.css"> *@
 
 <div class="main">
+        <div class="review-container">
+
+            <!-- Review Section -->
+            <div class="review-profile-container">
+                <img src="https://devforum-uploads.s3.dualstack.us-east-2.amazonaws.com/uploads/original/4X/9/0/f/90f25d6a2527e12dedbe03da1f6c5670d0c4902d.png" alt="profile" class="profile-img">
+                <div class="profile-username">Username</div>
+            </div>
+
+            <div class="review-all">
+                <!-- Section: Post Information -->
+                @* <div class="post-info">
+                    <img src="https://media.istockphoto.com/id/1434150819/th/%E0%B8%A3%E0%B8%B9%E0%B8%9B%E0%B8%96%E0%B9%88%E0%B8%B2%E0%B8%A2/%E0%B8%94%E0%B8%AD%E0%B8%A2%E0%B8%AD%E0%B8%B4%E0%B8%99%E0%B8%97%E0%B8%99%E0%B8%99%E0%B8%97%E0%B9%8C-%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B9%80%E0%B8%8A%E0%B8%B5%E0%B8%A2%E0%B8%87%E0%B9%83%E0%B8%AB%E0%B8%A1%E0%B9%88-%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%97%E0%B8%A8%E0%B9%84%E0%B8%97%E0%B8%A2.jpg?s=612x612&w=0&k=20&c=apydflyhZVs-g88s3Isql-Plx94MwFkDYnAoNPt964c=" alt="Post Image" class="post-img">
+                    <div class="post-details">
+                        <h2 class="post-title">Post Title</h2>
+                        <p class="post-author">by Username</p>
+                    </div>
+                </div> *@
+                <div class="review-info">
+                    <input type="text" class="review-title" placeholder="Review title">
+                    <textarea class="review-text" placeholder="Write your review here" maxlength="200"></textarea>
+                </div>
+
+                <div class="review-content">
+                    <h2>Your Review</h2>
+                    <div class="stars" id="star-container">
+                        <span class="star" data-value="5">&#9733;</span>
+                        <span class="star" data-value="4">&#9733;</span>
+                        <span class="star" data-value="3">&#9733;</span>
+                        <span class="star" data-value="2">&#9733;</span>
+                        <span class="star" data-value="1">&#9733;</span>
+                    </div>
+                    <p class="rating-text" id="ratingText">Choose your score</p>
+                </div>
+            </div>
+
+            <div class="submit-button-container">
+                <button class="cancel-btn">Not Now</button>
+                <button class="submit-btn">Submit Review</button>
+            </div>
+
+        </div>
+    </div>
+
+@* <div class="main">
     <div class="review-container">
         <div class="review-profile-container">
             <img 
                 src="https://devforum-uploads.s3.dualstack.us-east-2.amazonaws.com/uploads/original/4X/9/0/f/90f25d6a2527e12dedbe03da1f6c5670d0c4902d.png" 
                 alt="profile"
                 class="profile-img" >
-            <div class="profile-username">Usernamenamenamenamename</div>
+            <div class="profile-username">Usename</div>
         </div>
         <div class="review-all">
-            <div class="reviewer-info">
+            <div class="review-info">
                 <input type="text" class="review-title" placeholder="Review title">
                 <textarea class="review-text" placeholder="Write your review here" maxlength="50"></textarea>
             </div>
 
-            <div class="reviewer-content">
+            <div class="review-content">
                 <h2>Your Review</h2>
                 <div class="stars" id="star-container">
                     <span class="star" data-value="5">&#9733;</span>
@@ -25,6 +69,10 @@
                     <span class="star" data-value="1">&#9733;</span>
                 </div>
                 <p id="ratingText">choose your score</p>
+                <div class="submit-button-container">
+                    <button class="cancel-btn">Not Now</button>
+                    <button class="submit-btn">Submit Review</button>
+                </div>
             </div>
         </div>
 
@@ -33,7 +81,7 @@
             <button class="submit-btn">Submit Review</button>
         </div>
     </div>
-</div>
+</div> *@
     
 <script type="module">
     import loadCss from "/js/components/reuse_func.js";

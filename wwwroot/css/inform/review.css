@@ -2,10 +2,10 @@
 
 :root {
 
-    --review-bg-color: var(--lavender-blush); /* ชมพูอ่อน */
+    --review-bg-color: var(--lavender-blush); 
     --review-text-color: var(--claret);
     
-    --star-color: var(--bright-pink-crayola); /* สีเหลืองทอง */
+    --star-color: var(--bright-pink-crayola); 
     --star-shadow: 0px 0px 12px rgba(255, 77, 109, 0.9), 0px 0px 20px rgba(255, 77, 109, 0.6);
     
     --text-area-bg: white;
@@ -47,6 +47,8 @@
     background-repeat: no-repeat;
     background-image: var(--bg-image);
 }
+
+
 .review-container {
     display: flex;
     flex-direction: column;
@@ -54,10 +56,10 @@
     align-items: center;
     background-color: var(--review-bg-color);
     border-radius: 20px;
-    padding: 2rem;
+    padding: 1.5rem;
     box-shadow: 0px 4px 10px var(--box-shadow-color);
-    max-width: 900px;
-    width: 100%;
+    max-width: 850px;
+    width: 85%;
 }
 
 .review-profile-container {
@@ -67,18 +69,26 @@
     width: 100%;
 }
 .profile-img {
-    width: 70px;
-    height: 70px;
+    width: 75px;
+    height: 75px;
     border-radius: 50%;
     border: 2px solid var(--text-color);
     margin: 10px;
 }
 .profile-username {
-    font-size: 1.5rem;
+    font-size: 1.7rem;
     font-weight: bold;
     color: var(--text-color);
 }
 
+.review-all {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    width: 100%;
+}
 .review-info {
     display: flex;
     flex-direction: column;
@@ -88,7 +98,8 @@
 }
 .review-title,
 .review-text {
-    width: 100%;
+    width: 90%;
+    max-width: 550px;
     padding: 10px;
     margin: 10px 0;
     border: 1px solid var(--text-area-border);
@@ -100,7 +111,6 @@
 }
 .review-title {
     font-size: 1.1rem;
-    font-weight: bold;
 }
 .review-text {
     resize: none;
@@ -114,12 +124,13 @@
     align-items: center;
     text-align: center;
     width: 100%;
+    margin-top: 1rem;
 }
-h2 {
-    font-size: 1.6rem;
+.review-content h2 {
+    font-size: 1.4rem;
     font-weight: bold;
     text-align: center;
-    color: var(--review-text-color); /* เปลี่ยนหัวข้อให้สดใสขึ้น */
+    color: var(--review-text-color);
 }
 
 #ratingText {
@@ -143,24 +154,26 @@ h2 {
 }
 
 .star.active {
-    color: var(--star-color); /* ใช้สีชมพูที่กำหนด */
+    color: var(--star-color); 
     text-shadow: var(--star-shadow);
 }
 
 .rating-text {
-    margin-top: 15px;
+    margin-top: 0.5rem;
     font-size: 18px;
 }
 
-.submit-btn-container {
+.submit-button-container {
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
     align-items: center;
+    gap: 0.7rem;
     width: 100%;
+    justify-content: space-between;
+    
 }
-
 .submit-btn {
-    margin-top: 20px;
+    /* margin-top: 20px; */
     padding: 10px 20px;
     border: none;
     border-radius: 10px;
@@ -171,14 +184,12 @@ h2 {
     transition: background 0.3s, box-shadow 0.3s;
     box-shadow: 0px 2px 5px var(--box-shadow-color);
 }
-
 .submit-btn:hover {
     background-color: var(--button-hover);
     box-shadow: 0px 4px 10px var(--box-shadow-color);
 }
-
 .cancel-btn {
-    margin-top: 20px;
+    margin-top: 0.4rem;
     padding: 10px 20px;
     border: none;
     border-radius: 10px;
@@ -189,7 +200,72 @@ h2 {
     transition: background 0.3s;
 }
 
-@media (max-width: 768px) {}
+/* .post-info img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid var(--text-color);
+} */
+
+
+@media (max-width: 768px) {
+    .review-container {
+        width: 90%;
+        padding: 1rem;
+    }
+    .review-profile-container {
+        flex-direction: column;
+    }
+    .profile-img {
+        width: 65px;
+        height: 65px;
+    }
+    .profile-username {
+        font-size: 1.4rem;
+    }
+    .review-content h2 {
+        font-size: 1.2rem;
+    }
+    .review-title,
+    .review-text {
+        width: 95%;
+    }
+
+    .star {
+        font-size: 24px;
+    }
+
+    .submit-button-container {
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .submit-button-container button {
+        width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
+    .review-container {
+        padding: 0.8rem;
+    }
+
+    .profile-img {
+        width: 55px;
+        height: 55px;
+    }
+
+    .profile-username {
+        font-size: 1.3rem;
+    }
+
+    .star {
+        font-size: 22px;
+    }
+}
+
 
 
 /* [data-theme="dark"] {
@@ -226,3 +302,4 @@ h2 {
 .cancel-btn {
     background-color: #666; 
 } */
+
