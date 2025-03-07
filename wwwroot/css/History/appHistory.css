@@ -33,10 +33,10 @@
   margin-bottom: 1rem;
 }
 
-.pageLayout {
+.pageContainer {
   background-color: var(--bg-color);
-  padding: 100px 100px 60px 55px;
-  height: 100%;
+  padding: 100px 55px 60px 55px;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
@@ -67,12 +67,14 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  align-items: center;
   padding: 1rem;
 }
 
 .indicator {
   border-radius: 0.5rem 0 0 0.5rem;
   width: 1rem;
+  min-width: 1rem;
 }
 
 .indicator.finish {
@@ -92,11 +94,12 @@
 }
 
 .contentStyle {
+  /* background-color: lightblue; */
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 5px;
-  width: 30%;
+  width: 100%;
   min-width: 300px;
   overflow-wrap: break-word;
   word-wrap: break-word;
@@ -108,13 +111,23 @@
 }
 
 .activityTagContainer {
+  /* background-color: aqua; */
   display: flex;
   flex-wrap: wrap;
-  width: 30%;
+  width: 45%;
   height: fit-content;
   padding-top: 6px;
   margin-bottom: 1.1rem;
   gap: 6px;
+}
+
+.activityTitle{
+  a{color: var(--text-color);}
+  transition: transform 0.4s ease;
+}
+
+.activityTitle:hover{
+  transform: scale(1.01);
 }
 
 .activityTag {
@@ -142,12 +155,13 @@
 } */
 
 .statusContainer {
+  /* background-color: lightgreen; */
   padding: 1rem;
   gap: 1.5rem;
   display: flex;
   align-items: center;
-  width: 25vw;
-  min-width: 350px;
+  width: fit-content;
+  /* min-width: 350px; */
   justify-content: flex-end;
 }
 
@@ -209,7 +223,7 @@
     font-size: 1.7rem;
   }
 
-  .pageLayout {
+  .pageContainer {
     padding: 90px 30px 30px 30px;
     gap: 0.5rem;
   }
@@ -247,7 +261,7 @@
   }
 
   .buttonStyle {
-    width: 1.5rem;
+    width: fit-content;
     min-width: 60px;
     height: fit-content;
     font-size: 0.9rem;

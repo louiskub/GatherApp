@@ -7,7 +7,8 @@ export default class HistoryActivity {
     title,
     status,
     tag,
-    isOpened
+    isOpened,
+    isAttached=false
   ) {
     this.postId = postId;
     this.curParticipant = curParticipant;
@@ -15,7 +16,8 @@ export default class HistoryActivity {
     this.title = title ?? "Untitled";
     this.status = status ?? "Pending";
     this.tag = tag ?? [];
-    this.checked = isOpened
+    this.checked = isOpened;
+    this.isAttached = isAttached;
 
     let formattedDate = new Date(date).toLocaleString('en-US', {
         weekday: 'short',
@@ -165,17 +167,51 @@ export default class HistoryActivity {
     const statusContainer = document.createElement("div");
     statusContainer.classList.add("statusContainer");
 
-    const statusName = document.createElement("p");
-    statusName.textContent = "Pending";
-    statusName.classList.add("textStyle");
+    statusContainer.innerHTML = `
+      <div class="statusContainer">
+        <p class="textStyle">Pending</p>
+        <div class="buttonContainer"></div>
+      </div>`
+    if (this.isAttached)
+      statusContainer.querySelector(".buttonContainer").innerHTML = `<button class="buttonStyle review">Attached File</button>`
 
-    const cancelButton = document.createElement("button");
-    cancelButton.classList.add("buttonStyle", "report");
-    cancelButton.textContent = "Cancel";
+    statusContainer.querySelector(".buttonContainer").innerHTML += `<button class="buttonStyle report">Cancel</button>`
+    statusContainer.querySelector(".report").addEventListener("click", async () => {
+      let head, cont, noText, yesText;
+      let apiPath, successMessage, failMessage, successRedirect;
+      head = "Cancel this registration?"
+      cont = "Are you sure you want to cancel this registration? This action cannot be undone."
+      noText = "Keep it"
+      yesText = "Cancel registration"
 
-    statusContainer.appendChild(statusName);
-    statusContainer.appendChild(cancelButton);
+      apiPath = `api/user/applypost?postid=${this.postId}`
+      successMessage = "Post registration canceled successfully"
+      failMessage = "Failed to cancel post registration"
+      window.confirmAction(head,cont,noText,yesText,
+        async () => await fetch(`/api/user/applypost?postid=${this.postId}`, {
+            method: 'DELETE'
+          }).then(async (response) => {
+            if (response.ok) {
+              // non auth
+              if (response.redirected)
+                window.redirectToLogin();
+              else
+                window.changePage(successMessage, "/history/application", "success");
+            }
+            // error
+            else {
+              response = await response.text()
+              window.showToast(response, "error");
+            }
+          }).catch((e) => {throw e})
+      )
+    })
 
+    if (this.isAttached)
+    statusContainer.querySelector(".review").addEventListener("click", () => {
+      if(window.userProfile.role != "visitor")
+        window.open(`/api/post/getfile?postId=${this.postId}&participantName=${window.userProfile.username}`,'_blank').focus();
+    })
     return statusContainer;
   }
 
@@ -200,7 +236,7 @@ export default class HistoryActivity {
 
     const switchLabel = document.createElement("p");
     switchLabel.classList.add("switchLabel");
-    switchLabel.textContent = this.checked ? "ON" : "OFF";
+    switchLabel.textContent = this.checked ? "Open" : "Close";
 
     const switchBox = document.createElement("label");
     switchBox.classList.add("activitySwitch");
@@ -212,22 +248,42 @@ export default class HistoryActivity {
     const switchSlider = document.createElement("span");
     switchSlider.classList.add("activitySlider");
 
-    switchInput.addEventListener("change", function () {
-      switchLabel.textContent = this.checked ? "ON" : "OFF";
-    });
 
     switchBox.appendChild(switchInput);
     switchBox.appendChild(switchSlider);
     switchContainer.appendChild(switchLabel);
-    switchContainer.appendChild(switchBox);
-
+    switchContainer.appendChild(switchBox);    
+    
+    switchInput.addEventListener("click", async() => {
+      await fetch(`/api/post/toggle?postid=${this.postId}`, {
+        method: 'PATCH',
+      })
+        .then(async (response) => {
+            if (response.ok) {
+                if (response.redirected) {
+                    window.redirectToLogin();
+                }
+                else {
+                    response = await response.json();
+                    this.checked = response.isOpened;
+                    switchLabel.textContent = this.checked ? "Open" : "Close";
+                    switchInput.checked = this.checked;
+                }
+            } else {
+                response = await response.text();
+                window.showToast(response, "error");
+            }
+        })
+      .catch((error) => {
+          console.log(error)
+      })
+    }) 
     return switchContainer;
   }
 
   //   post
   createActivityStatusOnGoing() {
     async function cancelPost(postId){
-        console.log(postId)
         let head, cont, noText, yesText;
         let apiPath, successMessage, failMessage, successRedirect;
         head = "Delete this post?"
@@ -245,12 +301,18 @@ export default class HistoryActivity {
         })
           .then(response => {
               if (response.ok) {
-                  window.changePage(successMessage, "/history/post", "success");
+                  if(response.redirected){
+                    window.redirectToLogin();
+                  }
+                  else {
+                    window.changePage(successMessage, "/history/post", "success");
+                  }
               } else {
                   window.showToast(failMessage, "error");
               }
-          })
-      );
+          }).catch(() => {
+              window.showToast(failMessage, "error");
+          }))
     }
 
     const statusContainer = document.createElement("div");
