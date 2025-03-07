@@ -17,11 +17,14 @@ function getButtonsByType(type, hasAttachment, appliedStatus, isReviewed, isRepo
   }
   if (type === "view") {
       if (appliedStatus === null) {
-          textList = hasAttachment ? ["Attached File", "Approve", "Reject"] : ["Approve", "Reject"];
+          textList = ["Approve", "Reject"];
       }
       else {
-          textList = appliedStatus === 0 ? ["Rejected"] : ["Approved"];
-      }
+          textList = appliedStatus === false ? ["Rejected", "Approve"] : ["Approved", "Reject"];
+          console.log("adsd",appliedStatus, textList)
+        }
+      if (hasAttachment)
+          textList.splice(1, 0, "Attached File");
   }
   return textList || [];
 }
@@ -130,6 +133,7 @@ export default class HistoryActivity {
     this.date = formattedDate ?? "Unknown Date";
 
     this.containerStyle = document.createElement("div");
+    this.containerStyle.id = "postId"+this.postId;
     this.containerStyle.classList.add("containerStyle");
   }
 

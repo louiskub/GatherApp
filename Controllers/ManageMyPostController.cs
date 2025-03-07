@@ -378,7 +378,7 @@ public class ManageMyPostController : Controller
         _chathubContext.Clients.Group(postId.ToString()).SendAsync("ReceiveMessage", "Post", $"User {username} has been accepted to join the chat.",DateTime.UtcNow);
         post.CurParticipant = post.Applications.Count(a => a.AppliedStatus == true);
         _db.SaveChanges();
-        return Json(new {status = "accepted"});
+        return Json(new {status = "accepted", curParticipant = post.CurParticipant});
     }
 
 
@@ -411,7 +411,7 @@ public class ManageMyPostController : Controller
         _db.SaveChanges();
         post.CurParticipant = post.Applications.Count(a => a.AppliedStatus == true);
         _db.SaveChanges();
-        return Json(new {status = "rejected"});
+        return Json(new {status = "rejected", curParticipant = post.CurParticipant});
     }
 
 
@@ -420,6 +420,7 @@ public class ManageMyPostController : Controller
     [Authorize]
     public IActionResult GetFile(int postId, string participantName)
     {
+        Console.WriteLine("\n\nGetFile {0} {1}\n\n", postId, participantName);
         var ownerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var application = _db.Applications.Include(a => a.User)
                             .Include(a => a.Post)

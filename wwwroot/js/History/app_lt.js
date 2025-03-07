@@ -25,9 +25,8 @@ function addContent(appList, appType, appContainer){
     }
     appList.forEach(app => {
         let post = app.post.post
-        let activity = post.activity
-        let actTypes = post.actTypes
-        post = post.post
+        let activity = app.post.activity
+        let actTypes = app.post.actTypes
         const App = new HistoryActivity(post.id, post.curParticipant, post.maxParticipant
             , activity.actDatetime, post.postName, appType, actTypes, post.isOpened).render()
             appContainer.appendChild(App)

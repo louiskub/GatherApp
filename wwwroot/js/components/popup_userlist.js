@@ -1,7 +1,9 @@
 import UserProfileImage from "./user_profile_image.js";
 
 async function acceptRejectParticipant(postId, username, type, buttonGroup){
-    type = "accept" ? "accept" : "reject"
+    console.log("old : ", type)
+    type = type==="Approve" ? "accept" : "reject"
+    console.log("new", type)
     let response = await fetch(`/api/post/${type}?postId=${postId}&username=${username}`, {
         method: "PATCH",
     });
@@ -14,10 +16,13 @@ async function acceptRejectParticipant(postId, username, type, buttonGroup){
         window.changePage("Please Login First", "/login", "warning")
     else {
         response = await response.json()
-        type = "accept" ? "Approved" : "Rejected"
+        type = type==="accept" ? "Approved" : "Rejected"
         buttonGroup.innerHTML = '';
         const newSpan = new PopupUserList().createButtonOrText(type);
         buttonGroup.appendChild(newSpan);
+
+        const updateParticipant = document.querySelector(`#postId${postId} #participant`)
+        updateParticipant.textContent = response.curParticipant + "/" + updateParticipant.textContent.split("/")[1]
     }
 }
 
@@ -38,6 +43,7 @@ class PopupUserList {
     }
 
     createButtonOrText(text, buttonGroup) {
+        if (text == "Attached File") { console.log("Attached File ksadd"); }
         if (text === "Reviewed" || text === "Reported" || text === "Rejected" || text === "Approved") {
             const span = document.createElement("span");
             span.textContent = text;
@@ -55,6 +61,11 @@ class PopupUserList {
             }
             else if (text == "Report") {
                 button.addEventListener("click", () => window.location.href = `/post/${this.postId}/report`)
+            }
+            else if (text == "Attached File") {
+                button.addEventListener("click", () => {
+                    window.open(`/api/post/getfile?postId=${this.postId}&participantName=${this.username}`,'_blank').focus();
+                })
             }
             return button;
         }
