@@ -150,19 +150,24 @@ public class UserController : Controller
         var user = _db.Users.Where(u => u.Id == userId).FirstOrDefault();
         if (user == null)
             return NotFound("User not found");
+        
+        if (string.IsNullOrEmpty(user.Password))
+        return BadRequest("User password is empty");
 
         if (!BCrypt.Net.BCrypt.Verify(changePasswordRequest.OldPassword, user.Password))
             return BadRequest("Old password is incorrect");
+    
 
         user.Password = BCrypt.Net.BCrypt.HashPassword(changePasswordRequest.NewPassword);
         try 
         {
+            _db.Users.Update(user);
             _db.SaveChanges();
             return Json(new { status = "updated" });
         }
         catch (Exception e)
         {
-            return BadRequest(e.Message);
+            return StatusCode(500, new { error = e.Message });
         }
     }
 

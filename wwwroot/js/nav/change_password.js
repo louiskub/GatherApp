@@ -169,35 +169,165 @@ export default class ChangePassword
                     </div>
                     </form>
                 </div>
-            </div>`
+            </div>`;
+    document.body.appendChild(this.div);
+    this.initEventListeners();
     }
+
+    initEventListeners() {
+      const form = this.div.querySelector("#passwordChangeForm");
+      const cancelBtn = this.div.querySelector("#cancelBtn");
+  
+      if (!form || !cancelBtn) return;
+  
+      form.removeEventListener("submit", this.handleSubmit);
+      cancelBtn.removeEventListener("click", this.handleCancel);
+  
+      this.handleSubmit = (e) => {
+          e.preventDefault();
+          this.fetchChangePassword();
+      };
+      this.handleCancel = () => {
+          this.resetForm();
+          this.closePopup();
+      };
+  
+      form.addEventListener("submit", this.handleSubmit);
+      cancelBtn.addEventListener("click", this.handleCancel);
+  }
+
+    fetchChangePassword(){
+      const form = document.getElementById("passwordChangeForm");
+      const currentPassword = this.div.querySelector("#currentPassword");
+      const newPassword = this.div.querySelector("#newPassword");
+      const errorMessage = this.div.querySelector("#errorMessage");
+      const successMessage = this.div.querySelector("#successMessage");
+
+      const requestBody = {
+          oldPassword: currentPassword.value,
+          newPassword: newPassword.value
+      };
+
+      errorMessage.classList.add("hidden");
+      successMessage.classList.add("hidden");
+
+      fetch("/api/user/myprofile/changepassword", {
+          method: "PATCH",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+      })
+      .then(async (response) => {
+          if (!response.ok) {
+              return response.text().then((text) => {
+                  throw new Error(text);
+              });
+          }
+          return response.json();
+      })
+      .then(() => {
+        form.style.display = "none";
+        successMessage.classList.add("active"); 
+
+        setTimeout(() => {
+            this.closePopup(); 
+            this.resetForm();
+            form.style.display = "flex";
+            successMessage.classList.remove("active");
+        }, 2000);
+      })
+      .catch((error) => {
+          alert(error.message);
+          errorMessage.textContent = error.message;
+          errorMessage.classList.remove("hidden");
+
+          successMessage.classList.add("hidden");
+      });
+  }
+
+  closePopup() {
+    const overlay = document.getElementById('passwordChangeOverlay');
+    if (overlay) overlay.style.display = 'none';
+  
+    this.resetForm();
+  }
+
+resetForm() {
+  if (!this.div) return;
+
+  const form = this.div.querySelector("#passwordChangeForm");
+  const errorMessage = this.div.querySelector("#errorMessage");
+  const strengthMeter = this.div.querySelector("#strengthMeter");
+  const matchMessage = this.div.querySelector("#matchMessage");
+  const toggleBtns = this.div.querySelectorAll(".pwd-change-toggle-btn");
+  const submitBtn = this.div.querySelector("#submitBtn");
+  const spinner = this.div.querySelector("#spinner");
+  const submitText = this.div.querySelector("#submitText");
+
+  if (form) form.reset(); 
+  if (errorMessage) errorMessage.classList.remove("active");
+  if (strengthMeter) strengthMeter.classList.remove("active");
+
+  if (matchMessage) {
+      matchMessage.className = "pwd-change-match-message";
+      matchMessage.textContent = "";
+  }
+
+  toggleBtns.forEach((btn) => {
+      const eyeIcon = btn.querySelector(".pwd-change-eye-icon");
+      const eyeOffIcon = btn.querySelector(".pwd-change-eye-off-icon");
+      if (eyeIcon) eyeIcon.classList.remove("hidden");
+      if (eyeOffIcon) eyeOffIcon.classList.add("hidden");
+
+      const inputId = btn.getAttribute("data-for");
+      const input = this.div.querySelector("#" + inputId);
+      if (input) {
+          input.type = "password";
+          input.classList.remove("error");
+      }
+  });
+
+  ["reqLength", "reqUppercase", "reqLowercase", "reqNumber", "reqSpecial"].forEach((id) => {
+      const req = this.div.querySelector("#" + id);
+      if (req) req.classList.remove("valid");
+  });
+
+  if (submitBtn) submitBtn.disabled = true;
+  if (spinner) spinner.classList.add("hidden");
+  if (submitText) submitText.textContent = "Change Password";
+}
+
+
+
+
 
     addJs(){
             const triggerBtn = document.querySelector("#change-password-btn")
             const overlay = this.div
-            const closeBtn = this.div.querySelector("#cancelBtn")
-            const form = this.div.querySelector("#passwordChangeForm")
-            const currentPasswordInput = this.div.querySelector("#currentPassword")
-            const newPasswordInput = this.div.querySelector("#newPassword")
-            const confirmPasswordInput = this.div.querySelector("#confirmPassword")
-            const toggleBtns = this.div.querySelectorAll(".pwd-change-toggle-btn")
-            const errorMessage = this.div.querySelector("#errorMessage")
-            const errorText = this.div.querySelector("#errorText")
-            const strengthMeter = this.div.querySelector("#strengthMeter")
-            const strengthProgress = this.div.querySelector("#strengthProgress")
-            const strengthText = this.div.querySelector("#strengthText")
-            const matchMessage = this.div.querySelector("#matchMessage")
-            const submitBtn = this.div.querySelector("#submitBtn")
-            const spinner = this.div.querySelector(".pwd-change-spinner")
-            const submitText = this.div.querySelector(".pwd-change-submit-text")
-            const successMessage = this.div.querySelector("#successMessage")
+            const closeBtn = overlay.querySelector("#cancelBtn")
+            const form = overlay.querySelector("#passwordChangeForm")
+            const currentPasswordInput = overlay.querySelector("#currentPassword")  
+            const newPasswordInput = overlay.querySelector("#newPassword")
+            const confirmPasswordInput = overlay.querySelector("#confirmPassword")
+            const toggleBtns = overlay.querySelectorAll(".pwd-change-toggle-btn")
+            const errorMessage = overlay.querySelector("#errorMessage")
+            const errorText = overlay.querySelector("#errorText")
+            const strengthMeter = overlay.querySelector("#strengthMeter")
+            const strengthProgress = overlay.querySelector("#strengthProgress")
+            const strengthText = overlay.querySelector("#strengthText")
+            const matchMessage = overlay.querySelector("#matchMessage")
+            const submitBtn = overlay.querySelector("#submitBtn")
+            const spinner = overlay.querySelector(".pwd-change-spinner")
+            const submitText = overlay.querySelector(".pwd-change-submit-text")
+            const successMessage = overlay.querySelector("#successMessage")
           
             // Password requirement elements
-            const reqLength = this.div.querySelector("#req-length")
-            const reqUppercase = this.div.querySelector("#req-uppercase")
-            const reqLowercase = this.div.querySelector("#req-lowercase")
-            const reqNumber = this.div.querySelector("#req-number")
-            const reqSpecial = this.div.querySelector("#req-special")
+            const reqLength = overlay.querySelector("#req-length")
+            const reqUppercase = overlay.querySelector("#req-uppercase")
+            const reqLowercase = overlay.querySelector("#req-lowercase")
+            const reqNumber = overlay.querySelector("#req-number")
+            const reqSpecial = overlay.querySelector("#req-special")
           
             // Open popup
             console.log(
@@ -206,19 +336,20 @@ export default class ChangePassword
               overlay.classList.add("active")
               resetForm()
             })
+        
           
             // Close popup
-            function closePopup() {
-              overlay.classList.remove("active")
-            }
+            // function closePopup() {
+            //   overlay.classList.remove("active")
+            // }
           
-            closeBtn.addEventListener("click", closePopup)
+            // closeBtn.addEventListener("click", closePopup)
           
             // Toggle password visibility
             toggleBtns.forEach((btn) => {
               btn.addEventListener("click", function () {
                 const inputId = this.getAttribute("data-for")
-                const input = this.div.querySelector("#"+inputId)
+                const input = overlay.querySelector("#"+inputId)
                 const eyeIcon = this.querySelector(".pwd-change-eye-icon")
                 const eyeOffIcon = this.querySelector(".pwd-change-eye-off-icon")
           
@@ -348,37 +479,7 @@ export default class ChangePassword
           
               submitBtn.disabled = !isValid
             }
-          
-            // Form submission
-            form.addEventListener("submit", (e) => {
-              e.preventDefault()
-          
-              // Validate current password
-              if (!currentPasswordInput.value) {
-                showError("Please enter your current password")
-                return
-              }
-          
-              // Start loading state
-              submitBtn.disabled = true
-              spinner.classList.remove("hidden")
-              submitText.textContent = "Saving..."
-          
-              // Simulate API call
-              setTimeout(() => {
-                // Hide form and show success message
-                form.style.display = "none"
-                successMessage.classList.add("active")
-          
-                // Reset and close after 2 seconds
-                setTimeout(() => {
-                  closePopup()
-                  resetForm()
-                  form.style.display = "flex"
-                  successMessage.classList.remove("active")
-                }, 2000)
-              }, 1500)
-            })
+        
           
             // Show error message
             function showError(message) {
@@ -391,7 +492,6 @@ export default class ChangePassword
               }, 3000)
             }
           
-            // Reset form
             function resetForm() {
               form.reset()
               errorMessage.classList.remove("active")
@@ -407,7 +507,7 @@ export default class ChangePassword
                 eyeOffIcon.classList.add("hidden")
           
                 const inputId = btn.getAttribute("data-for")
-                const input = this.div.querySelector("#"+inputId)
+                const input = overlay.querySelector("#"+inputId)
                 input.type = "password"
                 input.classList.remove("error")
               })
