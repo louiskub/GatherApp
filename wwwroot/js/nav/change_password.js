@@ -177,7 +177,7 @@ export default class ChangePassword
     initEventListeners() {
       const form = this.div.querySelector("#passwordChangeForm");
       const cancelBtn = this.div.querySelector("#cancelBtn");
-  
+
       if (!form || !cancelBtn) return;
   
       form.removeEventListener("submit", this.handleSubmit);
@@ -190,6 +190,11 @@ export default class ChangePassword
       this.handleCancel = () => {
           this.resetForm();
           this.closePopup();
+          location.reload();
+      };
+
+      this.handleChangePassword = () => {
+        location.reload(); 
       };
   
       form.addEventListener("submit", this.handleSubmit);
@@ -235,6 +240,7 @@ export default class ChangePassword
             this.resetForm();
             form.style.display = "flex";
             successMessage.classList.remove("active");
+            location.reload();
         }, 2000);
       })
       .catch((error) => {
