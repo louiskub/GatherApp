@@ -1,6 +1,24 @@
 import HistoryActivity from "/js/History/historyContainer.js"
-
+import FilterButton from '/js/components/filter_button.js';
 var inComming, future, success
+
+function addContent(postList, postType, postContainer){
+    if (postList.length == 0) {
+        let div = document.createElement("div")
+        div.className = "noContent"
+        div.innerHTML = "<h3>No Post</h3>"
+        postContainer.appendChild(div)
+    }
+    postList.forEach(post => {
+        let activity = post.activity
+        let actTypes = post.actTypes
+        post = post.post
+        const Post = new HistoryActivity(post.id, post.curParticipant, post.maxParticipant
+            , activity.actDatetime, post.postName, postType, actTypes, post.isOpened).render()
+            postContainer.appendChild(Post)
+    });
+}
+
 
 async function fetchMyPost(){
     let response = await fetch('/api/user/myposts')
@@ -16,54 +34,32 @@ async function fetchMyPost(){
 
 async function loadContent(){
     await fetchMyPost()
-    const ActivityList = document.querySelector(".pageContainer");
-    ActivityList.appendChild(document.createElement("hr"))
-    let textHeader = document.createElement("h1")
-
-    textHeader.innerText = "Incoming"
-    ActivityList.appendChild(textHeader)
-    inComming.forEach(post => {
-        let activity = post.activity
-        let actTypes = post.actTypes
-        post = post.post
-        const Post = new HistoryActivity(post.id, post.curParticipant, post.maxParticipant
-            , activity.actDatetime, post.postName, "onGoing", actTypes, post.isOpened).render()
-        ActivityList.appendChild(Post)
-    });
-    ActivityList.appendChild(document.createElement("hr"))
-
-    textHeader = document.createElement("h1")
-    textHeader.innerText = "Future"
-    ActivityList.appendChild(textHeader)
-    future.forEach(post => {
-        let activity = post.activity
-        let actTypes = post.actTypes
-        post = post.post
-        const Post = new HistoryActivity(post.id, post.curParticipant, post.maxParticipant
-            , activity.actDatetime, post.postName, "future", actTypes, post.isOpened).render()
-        ActivityList.appendChild(Post)
-    });
-    ActivityList.appendChild(document.createElement("hr"))
-
-    textHeader = document.createElement("h1")
-    textHeader.innerText = "Success"
-    ActivityList.appendChild(textHeader)
-    'Thu, Jan 30, 6:30 PM - 9:30 PM'
-    success.forEach(post => {
-        let activity = post.activity
-        let actTypes = post.actTypes
-        post = post.post
-        const Post = new HistoryActivity(post.id, post.curParticipant, post.maxParticipant
-            , activity.actDatetime, post.postName, "done", actTypes, post.isOpened).render()
-        ActivityList.appendChild(Post)
-    });
-    ActivityList.appendChild(document.createElement("hr"))
+    const filterMap = {
+        all: ["post-history-content.incoming", "post-history-content.future", "post-history-content.success"],
+        incoming: [".post-history-content.incoming"],
+        future: [".post-history-content.future"],
+        completed: [".post-history-content.completed"]
+    };
+    
+    console.log("test : ", document.querySelector(".post-history-content.incoming"))
+    addContent(inComming, "onGoing", document.querySelector(filterMap.incoming[0]))
+    addContent(future, "future", document.querySelector(filterMap.future[0]))
+    addContent(success, "done", document.querySelector(filterMap.completed[0]))
 }
 
-async function main(){
+document.addEventListener("DOMContentLoaded", async function () {
     await window.userProfileLoaded
+    const historyFilter = document.querySelector(".history-filter");
+    const buttonList = ["All", "Incoming", "Future", "Completed"];
+    const filterMap = {
+        all: ["post-history-content.incoming", "post-history-content.future", "post-history-content.success"],
+        incoming: ["post-history-content.incoming"],
+        future: ["post-history-content.future"],
+        completed: ["post-history-content.completed"]
+    };
+
+    const filterButton = new FilterButton(buttonList, filterMap);
+    historyFilter.appendChild(filterButton.render());
+    filterButton.filter("all");
     loadContent()
-}
-
-
-main()
+});

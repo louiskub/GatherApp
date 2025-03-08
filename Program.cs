@@ -115,7 +115,7 @@ app.Use(async (context, next) =>
 {
     await next();
 
-    if (context.Response.StatusCode == 404) // If page not found
+    if (context.Response.StatusCode == 404 && !context.Response.HasStarted) // Ensure response has not started
     {
         context.Response.Redirect("/home");
     }

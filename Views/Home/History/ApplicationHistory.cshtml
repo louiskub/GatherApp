@@ -3,98 +3,27 @@
 }
 
 <link rel="stylesheet" href="~/css/History/appHistory.css">
+<link rel="stylesheet" href="~/css/History/post_history.css">
+<link rel="stylesheet" href="~/css/History/popup_history.css">
 
 
-<script src="~/js/History/historyContainer.js"></script>
-
-<div class="pageLayout">
-   <h1 class="top">Application History</h1>
-
-    <!-- <div class="containerStyle">
-    <div class="indicator finish"></div>
-    <div class="innerContainer">
-
-      <div class="contentStyle">
-        <h2>Activity Name 1</h2>
-        <div class="displayIcon">
-          <img src="~/assets/img/dateIcon.svg">
-          <p>Thu, Jan 30, 16:30 PM - 19:30 PM</p>
-        </div>
-      </div> -->
-<!--
-      <div class="statusContainer">
-        <div class="buttonContainer">
-          <button class="buttonStyle review">Review</button>
-          <button class="buttonStyle report">Report</button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-
-  <div class="containerStyle">
-    <div class="indicator accept"></div>
-    <div class="innerContainer">
-      <div class="contentStyle">
-        <h2>Movie Night</h2>
-        <p>Date: Thu, Jan 30, 6:30 PM - 9:30 PM</p>
-      </div>
-
-      <div class="statusContainer">
-        <p class="textStyle">Accepted</p>
-        <button class="buttonStyle report">Cancel</button>
-      </div>
-    </div> 
-  </div>
-
-
-  <div class="containerStyle">
-    <div class="indicator pending"></div>
-    <div class="innerContainer">
-      <div class="contentStyle">
-        <h2>Activity Name 1</h2>
-        <p>Date: Thu, Jan 30, 6:30 PM - 9:30 PM</p>
-      </div>
-
-      <div class="statusContainer">
-          <p class="textStyle"> Pending </p>
-          <button class="buttonStyle report">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="containerStyle">
-    <div class="indicator reject"></div>
-    <div class="innerContainer">
-      <div class="contentStyle">
-        <h2>Activity Name 1</h2>
-        <p>Date: Thu, Jan 30, 6:30 PM - 9:30 PM</p>
-      </div>
-
-      <div class="statusContainer" id="reject">
-        <p class="textStyle">Rejected</p>
-      </div>
-    </div>
-  </div> -->
-
-
+<div class="pageLayout main">
+    @* <h1 class="top">Application History</h1> *@
+    <header class="post-history-header">
+        <div class="history-filter"></div>
+    </header>
+    <section class="post-history-content incoming">
+        <h2>Incoming</h2>
+    </section>
+    <section class="post-history-content pending">
+        <h2>Pending</h2>
+    </section>
+    <section class="post-history-content completed">
+        <h2>Completed</h2>
+    </section>
+    <section class="post-history-content fail">
+        <h2>Fail</h2>
+    </section>
+    <div class="popup-container"></div>
 </div>
 <script type="module" src="/js/History/app_lt.js"></script>
-<script> 
-  const ActivityList = document.querySelector(".pageLayout");
-
-  const Activity2 = new HistoryActivity(12, 20, 'Thu, Jan 30, 6:30 PM - 9:30 PM', 'finish', 'finish', 'Cartoon','Japan', 'Crayon Shin Chan')
-  ActivityList.appendChild(Activity2.render())
-
-  const Activity3 = new HistoryActivity(12, 20, 'Thu, Jan 30, 6:30 PM - 9:30 PM', 'accept', 'accept', 'Artificial Intelligence','Support & Coaching', 'Virtual Reality')
-  ActivityList.appendChild(Activity3.render())
-
-  const Activity4 = new HistoryActivity(12, 20, 'Thu, Jan 30, 6:30 PM - 9:30 PM', 'pending', 'pending', 'Documentary Photography')
-  ActivityList.appendChild(Activity4.render())
-
-  const Activity5 = new HistoryActivity(12, 20, 'Thu, Jan 30, 6:30 PM - 9:30 PM', 'reject', 'reject', 'Game', 'Indoor')
-  ActivityList.appendChild(Activity5.render())
-
-  
-</script>

@@ -1,13 +1,49 @@
 import UserProfileImage from "./user_profile_image.js";
 
+async function acceptRejectParticipant(postId, username, type, buttonGroup){
+    console.log("old : ", type)
+    type = type==="Approve" ? "accept" : "reject"
+    console.log("new", type)
+    let response = await fetch(`/api/post/${type}?postId=${postId}&username=${username}`, {
+        method: "PATCH",
+    });
+    console.log(response)
+    if (!response.ok){
+        response = await response.text()
+        window.showToast(response, "error")
+    }
+    else if (response.redirected)
+        window.changePage("Please Login First", "/login", "warning")
+    else {
+        response = await response.json()
+        type = type==="accept" ? "Approved" : "Rejected"
+        buttonGroup.innerHTML = '';
+        const newSpan = new PopupUserList().createButtonOrText(type);
+        buttonGroup.appendChild(newSpan);
+
+        const updateParticipant = document.querySelector(`#postId${postId} #participant`)
+        updateParticipant.textContent = response.curParticipant + "/" + updateParticipant.textContent.split("/")[1]
+    }
+}
+
+async function reviewParticipant(postId, username, type){
+
+}
+
+async function reportParticipant(postId, username, type){
+
+}
+
 class PopupUserList {
-    constructor(imgUrl, username, textList) {
+    constructor(imgUrl, username, textList, postId) {
         this.imgUrl = imgUrl;
         this.username = username;
         this.textList = textList;
+        this.postId = postId
     }
 
-    createButtonOrText(text) {
+    createButtonOrText(text, buttonGroup) {
+        if (text == "Attached File") { console.log("Attached File ksadd"); }
         if (text === "Reviewed" || text === "Reported" || text === "Rejected" || text === "Approved") {
             const span = document.createElement("span");
             span.textContent = text;
@@ -17,7 +53,20 @@ class PopupUserList {
             const button = document.createElement("button");
             button.textContent = text;
             button.className = `popup-${text.toLowerCase().replace(" ", "")}-btn`;
-            console.log(button.className);
+            if (text == "Approve" || text == "Reject") {
+                button.addEventListener("click", async() => acceptRejectParticipant(this.postId, this.username, text, buttonGroup))
+            }
+            else if (text == "Review") {
+                button.addEventListener("click", () => window.location.href = `/post/${this.postId}/review`)
+            }
+            else if (text == "Report") {
+                button.addEventListener("click", () => window.location.href = `/post/${this.postId}/report`)
+            }
+            else if (text == "Attached File") {
+                button.addEventListener("click", () => {
+                    window.open(`/api/post/getfile?postId=${this.postId}&participantName=${this.username}`,'_blank').focus();
+                })
+            }
             return button;
         }
     }
@@ -29,10 +78,6 @@ class PopupUserList {
         const content = document.createElement("div");
         content.className = "popup-user-content";
 
-        // const profileImg = document.createElement("img");
-        // profileImg.className = "popup-user-profile";
-
-        // 🔹 ใช้ UserProfileImage แทน <img>
         const profileImg = new UserProfileImage(
             this.username, 
             this.imgUrl, 
@@ -54,10 +99,10 @@ class PopupUserList {
         const buttonGroup = document.createElement("div");
         buttonGroup.className = "popup-button-group";
         this.textList.forEach(text => {
-            buttonGroup.appendChild(this.createButtonOrText(text));
+            buttonGroup.appendChild(this.createButtonOrText(text, buttonGroup));
         });
 
-        container.appendChild(buttonGroup);
+        container.appendChild(buttonGroup); // Fixed typo here
         return container;
     }
 }
