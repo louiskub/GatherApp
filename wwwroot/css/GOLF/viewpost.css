@@ -823,6 +823,7 @@ textarea:focus{
     align-items: flex-start;
     text-align: center;
     position: relative;
+    margin-bottom: 10px;
 }
 
 .location_container select {
@@ -968,4 +969,31 @@ textarea:focus{
 
 .tag-options::-webkit-scrollbar-thumb:hover {
     background: #aaa;
+}
+
+.event_type_selection {
+    width: 100%;
+}
+
+.event-type-select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    background-color: var(--input-bg);
+    color: var(--input_place_holder_color);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.event-type-select:hover {
+    transform: scale(1.05);
+}
+
+.event-type-select option {
+    background: var(--option-bg);
+    color: var(--option-color);
+    padding: 10px;
 }

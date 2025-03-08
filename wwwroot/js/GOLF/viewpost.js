@@ -80,8 +80,12 @@ async function showPostDetail() {
     formattedDate = formattedDate.join(" ")
     miniLeft.querySelector("h1").textContent = formattedDate;
     miniLeft.querySelector("h2").textContent = post.postName;
-    miniLeft.querySelector("h3").innerHTML = `<i class="fa-solid fa-location-dot"></i> ` + activity.province + ", " + activity.district;
-    miniLeft.querySelectorAll("p")[0].textContent = `Accepted : ${post.curParticipant}/ ${post.maxParticipant}`;
+    const locationElement = miniLeft.querySelector("h3");
+    if (activity.online) {
+        locationElement.innerHTML = '<i class="fa-solid fa-globe"></i> Online Event';
+    } else {
+        locationElement.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${activity.province}, ${activity.district}`;
+    }    miniLeft.querySelectorAll("p")[0].textContent = `Accepted : ${post.curParticipant}/ ${post.maxParticipant}`;
     miniLeft.querySelectorAll("p")[1].textContent = `Registered : ${post.totalApplicant}`;
     
     ///////////////// หัวใจ /////////////////
@@ -134,7 +138,9 @@ const elements = {
   tagPlaceholder: $('#tag-placeholder'),
   tagLimitMsg: $('#tag-limit-msg'),
   preview: $('.preview'),
-  locationContainer: $('.location_container')
+  locationContainer: $('.location_container'),
+  locationFields: $('#locationFields'),
+  eventTypeSelect: $('#eventTypeSelect')
 };
 
 // Constants
@@ -146,6 +152,17 @@ function initEventListeners() {
   // Image upload
   elements.preview.addEventListener('click', () => elements.imageUpload.click());
   elements.imageUpload.addEventListener('change', handleImageUpload);
+
+  // Event Type Selection
+  if (elements.eventTypeSelect) {
+    elements.eventTypeSelect.addEventListener('change', function() {
+      if (this.value === 'onsite') {
+        elements.locationFields.style.display = 'block';
+      } else if (this.value === 'online') {
+        elements.locationFields.style.display = 'none';
+      }
+    });
+  }
 
   // Tag selection
   elements.tagContainer.style.position = 'relative';
@@ -384,11 +401,9 @@ async function validateForm() {
     const eventDate = $('#eventdate').value;
     const deadline = $('#deadline').value;
     const participantsNeeded = $('.parti_needed input').value;
-    const googleMapLink = $('.input_map_link input').value;
     const selectedTags = $$('.tag-item');
-    const provinceSelect = $('#Province');
-    const amphureSelect = $('#Amphure');
-  
+    const eventType = elements.eventTypeSelect ? elements.eventTypeSelect.value : 'onsite';
+    
     // Check each field individually
     if (!elements.imageUpload.files.length) {
         window.showToast("Please upload an image.", "warning");
@@ -414,20 +429,32 @@ async function validateForm() {
         window.showToast("Please select at least one tag.", "warning");
         return false;
     }
+    
+    if (elements.eventTypeSelect && !eventType) {
+        window.showToast("Please select event type (Online or Onsite).", "warning");
+        return false;
+    }
 
-    if (!provinceSelect || provinceSelect.value === "null") {
-        window.showToast("Please select a province.", "warning");
-        return false;
-    }
-    
-    if (!amphureSelect || amphureSelect.value === "null") {
-        window.showToast("Please select an amphure.", "warning");
-        return false;
-    }
-    
-    if (!googleMapLink) {
-        window.showToast("Please enter a Google Map Link.", "warning");
-        return false;
+    // Only check location fields if event type is onsite
+    if (eventType === 'onsite') {
+        const provinceSelect = $('#Province');
+        const amphureSelect = $('#Amphure');
+        const googleMapLink = $('.input_map_link input').value;
+        
+        if (!provinceSelect || provinceSelect.value === "null") {
+            window.showToast("Please select a province.", "warning");
+            return false;
+        }
+        
+        if (!amphureSelect || amphureSelect.value === "null") {
+            window.showToast("Please select an amphure.", "warning");
+            return false;
+        }
+        
+        if (!googleMapLink) {
+            window.showToast("Please enter a Google Map Link.", "warning");
+            return false;
+        }
     }
     
     if (!eventDate) {
@@ -451,26 +478,37 @@ async function validateForm() {
     }
   
     await editPost();
-  }
+}
 
 // Edit post
 async function editPost() {
   const isAttached = $('.check_attach_file input').checked;
-  const provinceSelect = $('#Province');
-  const amphureSelect = $('#Amphure');
-  const provinceText = provinceSelect.options[provinceSelect.selectedIndex].text;
-  const amphureText = amphureSelect.options[amphureSelect.selectedIndex].text;
-  const googleMapLink = $('.input_map_link input').value;
   const activityName = $('.create_act_name input').value;
   const description = $('.descript_create').value;
   const participantsNeeded = $('.parti_needed input').value;
   const deadline = $('#deadline').value;
   const eventDate = $('#eventdate').value;
   const selectedTags = $$('.tag-item');
+  const eventType = elements.eventTypeSelect ? elements.eventTypeSelect.value : 'onsite';
+  const isOnline = eventType === 'online';
+  
+  let provinceText = '';
+  let amphureText = '';
+  let resultMap = null;
+  
+  // Only get location data if event type is onsite
+  if (!isOnline) {
+    const provinceSelect = $('#Province');
+    const amphureSelect = $('#Amphure');
+    const googleMapLink = $('.input_map_link input').value;
+    
+    provinceText = provinceSelect.options[provinceSelect.selectedIndex].text;
+    amphureText = amphureSelect.options[amphureSelect.selectedIndex].text;
 
-  // Extract iframe src if present
-  const match = googleMapLink.match(/<iframe[^>]*\bsrc=["']([^"']+)["']/i);
-  const resultMap = match ? match[1] : googleMapLink;
+    // Extract iframe src if present
+    const match = googleMapLink.match(/<iframe[^>]*\bsrc=["']([^"']+)["']/i);
+    resultMap = match ? match[1] : googleMapLink;
+  }
 
   // Prepare image data
   const sendImg = elements.previewImage.src.split(",")[1];
@@ -497,7 +535,7 @@ async function editPost() {
         actDatetime: eventDate,
         province: provinceText,
         district: amphureText,
-        online: false,
+        online: isOnline,
         googleMapLink: resultMap,
         actTypes: tags,
         coverPageImg: sendImg
@@ -508,7 +546,7 @@ async function editPost() {
       elements.popup.style.display = 'none';
       window.redirectToLogin();
     } else if (!response.ok) {
-      window.showToast("Failed to create post.", "error");
+      window.showToast("Failed to update post.", "error");
     } else {
       elements.popup.style.display = 'none';
       await window.showToast("Post updated successfully", "success");
@@ -516,7 +554,7 @@ async function editPost() {
     }
   } catch (error) {
     console.error("Error:", error);
-    window.showToast("Failed to create post.", "error");
+    window.showToast("Failed to update post.", "error");
   }
 }
 
@@ -528,7 +566,18 @@ function editPostInit(){
   const deadline = $('#deadline');
   const participantsNeeded = $('.parti_needed input');
   const googleMapLink = $('.input_map_link input');
-  // ไม่ใช้ .value
+  
+  // Set event type if it exists
+  if (elements.eventTypeSelect) {
+    elements.eventTypeSelect.value = activity.online ? 'online' : 'onsite';
+    
+    // Show/hide location fields based on event type
+    if (activity.online) {
+      elements.locationFields.style.display = 'none';
+    } else {
+      elements.locationFields.style.display = 'block';
+    }
+  }
   
   isAttached.checked = post.isAttached;
   activityName.value = post.postName;
@@ -542,7 +591,12 @@ function editPostInit(){
   deadline.value = temp.toISOString().slice(0, 16);
 
   participantsNeeded.value = post.maxParticipant
-  googleMapLink.value = `<iframe src="${activity.googleMapLink}" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`  
+  
+  // Only set Google Map link if not online
+  if (!activity.online && activity.googleMapLink) {
+    googleMapLink.value = `<iframe src="${activity.googleMapLink}" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`  
+  }
+  
   actTypes.forEach(actType => {
     const div = document.createElement('div');
     div.dataset.value = actType;

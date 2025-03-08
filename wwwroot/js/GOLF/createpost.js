@@ -6,6 +6,25 @@ const imageUpload = document.getElementById('imageUpload');
 const previewImage = document.getElementById('previewImage');
 const uploadText = document.querySelector('.preview_text');
 
+// Event Type Selection
+const eventTypeSelect = document.getElementById('eventTypeSelect');
+const locationFields = document.getElementById('locationFields');
+
+// Initialize event type selection
+document.addEventListener('DOMContentLoaded', function() {
+    // Hide location fields initially until user selects an event type
+    locationFields.style.display = 'none';
+    
+    // Add event listener for event type selection
+    eventTypeSelect.addEventListener('change', function() {
+        if (this.value === 'onsite') {
+            locationFields.style.display = 'block';
+        } else if (this.value === 'online') {
+            locationFields.style.display = 'none';
+        }
+    });
+});
+
 // ฟังก์ชันแสดง Popup เมื่อคลิกปุ่ม Cancel
 cancelButton.addEventListener('click', () => {
     popup.style.display = 'none';
@@ -260,9 +279,6 @@ async function ProvincesAndAmphures(){
 
 ProvincesAndAmphures();
 
-
-
-
 /////////////////Check Input Before Create/////////////////////////////////////////////////////////
 // ฟังก์ชันตรวจสอบการกรอกข้อมูลในฟอร์มทั้งหมด
 async function validateForm() {
@@ -271,6 +287,8 @@ async function validateForm() {
     const eventDate = document.getElementById('eventdate').value;
     const deadline = document.getElementById('deadline').value;
     const participantsNeeded = document.querySelector('.parti_needed input').value;
+    const eventType = document.getElementById('eventTypeSelect').value;
+    
     // ตรวจสอบว่าแต่ละฟิลด์ถูกกรอกหรือไม่
     // ตรวจสอบการอัปโหลดภาพ (Preview Image)
     const imageUpload = document.getElementById('imageUpload');
@@ -293,12 +311,11 @@ async function validateForm() {
         window.showToast("Please enter activity name.", "warning");
         return false;
     }
-
-    // if (!activityName || !description || !eventDate || !deadline || !participantsNeeded) {
-    //     // window.showToast("Please fill out all required fields.");
-    //     window.showToast("Please fill out all required fields.", "warning");
-    //     return false;
-    // }
+    
+    if (!eventType) {
+        window.showToast("Please select event type (Online or Onsite).", "warning");
+        return false;
+    }
 
     // ตรวจสอบว่าได้เลือกแท็กหรือไม่
     const selectedTags = document.querySelectorAll('.tag-item');
@@ -307,24 +324,27 @@ async function validateForm() {
         return false;
     }
 
-    // ตรวจสอบการเลือก Province และ Amphure
-    const provinceSelect = document.querySelector('#Province');
-    const amphureSelect = document.querySelector('#Amphure');
-    if (provinceSelect && provinceSelect.value === "null") {
-        window.showToast("Please select a province.", "warning");
-        return false;
-    }
+    // ตรวจสอบการเลือก Province และ Amphure เฉพาะเมื่อเลือก Onsite
+    if (eventType === 'onsite') {
+        const provinceSelect = document.querySelector('#Province');
+        const amphureSelect = document.querySelector('#Amphure');
+        
+        if (provinceSelect && provinceSelect.value === "null") {
+            window.showToast("Please select a province.", "warning");
+            return false;
+        }
 
-    if (amphureSelect && amphureSelect.value === "null") {
-        window.showToast("Please select an amphure.", "warning");
-        return false;
-    }
+        if (amphureSelect && amphureSelect.value === "null") {
+            window.showToast("Please select an amphure.", "warning");
+            return false;
+        }
 
-    // ตรวจสอบ Google Map Link (กรอกลิงก์ iframe หรือ link ปกติ)
-    const googleMapLink = document.querySelector('.input_map_link input').value;
-    if (!googleMapLink) {
-        window.showToast("Please enter a Google Map Link.", "warning");
-        return false;
+        // ตรวจสอบ Google Map Link (กรอกลิงก์ iframe หรือ link ปกติ)
+        const googleMapLink = document.querySelector('.input_map_link input').value;
+        if (!googleMapLink) {
+            window.showToast("Please enter a Google Map Link.", "warning");
+            return false;
+        }
     }
 
     if (!eventDate) {
@@ -349,13 +369,23 @@ async function validateForm() {
     }
     
     async function createPost() {
-        const isAttached = document.querySelector(".check_attach_file input").checked
-        const provinceText = provinceSelect.options[provinceSelect.selectedIndex].text;
-        const amphureText = amphureSelect.options[amphureSelect.selectedIndex].text;
+        const isAttached = document.querySelector(".check_attach_file input").checked;
+        const isOnline = eventType === 'online';
+        
+        let provinceText = '';
+        let amphureText = '';
+        let resultMap = null;
+        
+        if (!isOnline) {
+            const provinceSelect = document.querySelector('#Province');
+            const amphureSelect = document.querySelector('#Amphure');
+            provinceText = provinceSelect.options[provinceSelect.selectedIndex].text;
+            amphureText = amphureSelect.options[amphureSelect.selectedIndex].text;
 
-        const mapSrc = googleMapLink
-        const match = mapSrc.match(/<iframe[^>]*\bsrc=["']([^"']+)["']/i);
-        const resultMap = match ? match[1] : null;
+            const mapSrc = document.querySelector('.input_map_link input').value;
+            const match = mapSrc.match(/<iframe[^>]*\bsrc=["']([^"']+)["']/i);
+            resultMap = match ? match[1] : mapSrc;
+        }
 
         let sendImg = previewImage.src.split(",")[1]
         let tags = []
@@ -384,7 +414,7 @@ async function validateForm() {
     
                 province: provinceText,
                 district: amphureText,
-                online: false,
+                online: isOnline,
                 googleMapLink: resultMap,
     
                 actTypes: tags,
