@@ -37,10 +37,10 @@ function adjustInputSize() {
         });
         
         // สำหรับ textarea
-        if (textarea.value) {
-            textarea.style.height = 'auto'; // รีเซ็ตความสูง
-            textarea.style.height = (textarea.scrollHeight) + 'px'; // ปรับความสูงให้พอดีกับข้อความ
-        }
+        // if (textarea.value) {
+        //     textarea.style.height = 'auto'; // รีเซ็ตความสูง
+        //     textarea.style.height = (textarea.scrollHeight) + 'px'; // ปรับความสูงให้พอดีกับข้อความ
+        // }
 
         // textarea.addEventListener('textarea', function() {
         //     textarea.style.height = 'auto';  // รีเซ็ตความสูงทุกครั้ง
