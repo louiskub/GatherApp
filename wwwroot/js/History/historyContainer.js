@@ -234,7 +234,9 @@ export default class HistoryActivity {
       reviewByParticipant(this.postId)
     })
 
-    reportButton.addEventListener("click", () => {})
+    reportButton.addEventListener("click", () => {
+      window.location.href = `/report?postId=${this.postId}`
+    })
 
     return statusContainer;
   }
