@@ -33,6 +33,11 @@ public class UserController : Controller
                             .Include(u => u.ReceivedRatings)
                             .Include(u => u.GivenRatings)
                             .Where(u => u.Username == username).FirstOrDefault();
+
+        var rating = _db.RatingScores.Where(r => r.RatedUserId == user.Id)
+                                .Select(r => r.Score)
+                                .ToList();
+
         if (user == null) 
             return NotFound("User not found");
 
@@ -40,6 +45,7 @@ public class UserController : Controller
         return Json(new
         {
             user = user.ToJson(isOwner),
+            RatingScore = user.ReceivedRatings.Count == 0 ? 0 : user.ReceivedRatings.Average(r => r.Score),
             isOwner
         });
     }

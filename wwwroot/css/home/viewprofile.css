@@ -52,7 +52,7 @@
     --write-button-shadow: var(--outer-space);
 
     --label: var(--seasalt);
-    --container-bg: var(--pinkpink);
+    --container-bg: #3a1a24;
     --bg-shade: var(--eerie-black);
 }
 
@@ -77,6 +77,7 @@ main {
     height: 100%;
     /* background: linear-gradient(to bottom, #fff5f8, var(--sidenav-bg)); */
     background: linear-gradient(to bottom, var(--sidenav-bg), var(--bg-shade));
+    /* background: linear-gradient(to bottom, #212529ff, var(--pink-shade)); */
     overflow: hidden;
 }
   
@@ -130,21 +131,6 @@ main {
       opacity: 0.4;
     }
 }
-  
-/* Example content styling - you can remove this */
-/* .example-content {
-    text-align: center;
-    padding-top: 40vh;
-    position: relative;
-    z-index: 1;
-} */
-  
-  /* h1 {
-    font-size: 3rem;
-    color: #d4688a;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 1rem;
-  } */
 
 .container {
     display: flex;
@@ -163,6 +149,7 @@ main {
     animation: fadeIn 0.8s ease-in-out;
     border: 2px dashed #aaa;
     border-radius: 25px;
+    z-index: 10;
 }
 
 /* .container::before {
@@ -216,8 +203,9 @@ main {
 
 .edit-button {
     position: absolute;
-    left: 50px; /* จัดให้อยู่ทางขวาแบบยืดหยุ่น */
-    top: 45px; /* ค่าต่ำสุดจากด้านล่าง */
+    margin-bottom: -50px;
+    left: 75px; /* จัดให้อยู่ทางขวาแบบยืดหยุ่น */
+    top: 60px; /* ค่าต่ำสุดจากด้านล่าง */
     display: flex;
     justify-content: flex-end;
     align-items: end;
@@ -294,6 +282,7 @@ main {
     text-align: center;
     width: 300px;
     z-index: 1001;
+    background-color: var(--bg-shade);
 }
 .popup input {
     width: 90%;
@@ -325,8 +314,8 @@ main {
 
 
 .upload_container {
-    margin-top: 80px;
-    margin-bottom: -280px;
+    margin-top: 40px;
+    margin-bottom: -220px;
     width: 100% ;
     height: 200px ;
     overflow: hidden ;
@@ -356,8 +345,8 @@ main {
 
 .behavior-score {
     position: absolute;
-    right: 50px; /* จัดให้อยู่ทางขวาแบบยืดหยุ่น */
-    top: 45px; /* ค่าต่ำสุดจากด้านล่าง */
+    right: 75px; /* จัดให้อยู่ทางขวาแบบยืดหยุ่น */
+    top: 61px; /* ค่าต่ำสุดจากด้านล่าง */
     display: flex;
     justify-content: flex-end;
     align-items: end;
@@ -385,7 +374,7 @@ main {
 
 .form-container {
     width: 100%;
-    margin-top: 120px;
+    margin-top: 80px;
 }
 
 .form-group {
@@ -415,6 +404,7 @@ main {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    margin-bottom: 15px;
 }
 
 .namebox:first-child:hover, .namebox:last-child:hover {
@@ -429,7 +419,7 @@ main {
 
 .form-group label, .namebox label {
     font-weight: bold;
-    margin-bottom: 5px;
+    /* margin-bottom: 5px; */
     font-size: 20px;
     color: var(--label);
 }
@@ -462,13 +452,13 @@ input:focus, textarea:focus {
 /* Add these styles to your existing CSS file */
 
 /* Sex dropdown container */
-#sex-container {
+#sex-container, #tag-container {
     width: 100%;
     position: relative;
 }
 
 /* Style for the sex dropdown to match the original input */
-.sex-dropdown {
+.sex-dropdown, .tag-dropdown {
     padding: 12px;
     border: 2px solid #000;
     border-radius: 8px;
@@ -487,26 +477,26 @@ input:focus, textarea:focus {
 }
 
 /* Style for the custom sex input */
-#custom-sex {
+#custom-sex, #custom-tax {
     margin-top: 8px;
     width: 100%;
 }
 
 /* Focus styles to match original */
-.sex-dropdown:focus, #custom-sex:focus {
+.sex-dropdown:focus, #custom-sex:focus ,.tag-dropdown:focus, #custom-tag:focus{
     border-color: #555;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     outline: none;
 }
 
 /* Hover effect to match original */
-.sex-dropdown:hover, #custom-sex:hover {
+.sex-dropdown:hover, #custom-sex:hover, .tag-dropdown:hover, #custom-tag:hover {
     border-color: #555;
 }
 
+
 .rating-container {
     margin-top: 35px;
-    margin-bottom: 10px;
     /* background-color: white; */
     /* border-radius: 8px; */
     padding: 20px;
@@ -514,10 +504,41 @@ input:focus, textarea:focus {
     text-align: center;
 }
 
+.ratingvalue {
+    margin-top: 40px;
+    margin-left: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#taglabel label{
+    margin-top: 10px;
+    margin-bottom: 25px;
+}
+
+.profile-tags {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.profile-tag {
+    background: #d33;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 23px;
+    font-size: 20px;
+    margin-right: 20px;
+    white-space: nowrap;
+    gap: 20px;
+}
+
 .rating-container label {
     font-size: 30px;
     font-weight: bold;
-    margin-bottom: 25px;
+    margin-top: 25px;
+    margin-bottom: 10px;
     display: inline-block; /* สำคัญมาก - เพิ่มบรรทัดนี้ */
     transition: transform 0.3s ease-in-out;
     position: relative; /* อาจช่วยให้ transform ทำงานได้ดีขึ้น */
@@ -572,7 +593,7 @@ input:focus, textarea:focus {
     flex-direction: column;
     align-items: center;
     background-color: var(--container-bg);
-    width: 80vw;
+    width: 75vw;
     max-width: 1600px;
     padding: 40px;
     box-shadow: 0px 10px 20px rgb(252, 197, 207);
@@ -584,6 +605,7 @@ input:focus, textarea:focus {
     animation: fadeIn 0.8s ease-in-out;
     border: 2px dashed #aaa;
     border-radius: 25px;
+    z-index: 10;
 }
 
 .posttitle {

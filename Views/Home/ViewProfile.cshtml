@@ -1,148 +1,126 @@
 @{
     ViewData["Title"] = "Gather-Profile";
 }
-    <link rel="stylesheet" href="~/css/Home/viewprofile.css">
-    <link rel="stylesheet" href="~/css/src.css">
-    <script defer src="~/js/home/viewprofile.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js"></script>
+<link rel="stylesheet" href="~/css/Home/viewprofile.css">
+<link rel="stylesheet" href="~/css/src.css">
+<script defer src="~/js/home/viewprofile.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js"></script>
 
-    <main>
-        <div class="sakura-bg" id="sakura-container"></div>
+<main>
+    <div class="sakura-bg" id="sakura-container"></div>
 
-        <div class="container">
-            <img class="profile-pic" id="profilepic" src="" alt="Profile Picture">
+    <div class="container">
+        <img class="profile-pic" id="profilepic" src="" alt="Profile Picture">
 
-            <div class="edit-button">
-                <button id="editbtn" onclick="toggleEdit()">✏️ Edit</button>
-                <button id="savebtn" onclick="saveProfile()">✅ Save</button>
-                <button id="cancelbtn" onclick="cancelEdit()">❌ Cancel</button>
-            </div>
-
-            <div class="popup-container" id="popupContainer">
-                <div class="popup">
-                    <h2>Confirm Password</h2>
-                    
-                    <div class="password-container">
-                        <input type="password" id="checkpassword" placeholder="Enter password">
-                        <span class="toggle-password" onclick="togglePassword()">👁️‍🗨️</span>
-                    </div>
-                    
-                    <p id="error-message" style="color: red;"></p>
-                    <button onclick="confirmPassword()">Confirm</button>
-                    <button onclick="closePopup()">Cancel</button>
-                </div>
-            </div>
-
-            <div class="upload_container" id="upload_container" style="display: none;">
-                <input type="file" id="imageUpload" accept="image/*" />
-                    <div class="preview">
-                        <span class="upload_text">Upload Profile Picture</span>
-                            @* <img id="previewImage" src="" alt="Preview"> *@
-                    </div>
-            </div>
-
-            <div class="behavior-score">
-                <input class="box" id="behaviorscore" type="text" value="" disabled>
-            </div>
-
-            <div class="form-container">
-                <div class="form-group">
-                    <label>Username 🩷</label>
-                    <input class="box" id="username" type="text" value="" disabled>
-                </div>
-
-                <div class="allnamebox">
-                    <div class="namebox">
-                        <label>Name ⛱️</label>
-                        <input class="box" id="name" type="text" value="" disabled>
-                    </div>
-                    <div class="namebox">
-                        <label>Surname 🌸</label>
-                        <input class="box" id="surname" type="text" value="" disabled>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Email 💌</label>
-                    <input class="box" id="email" type="text" value="" disabled>
-                </div>
-                <div class="form-group">
-                    <label>Birthdate 🎂</label>
-                    <input class="box" id="birthdate" type="date" value="" disabled>
-                </div>
-                <div class="form-group">
-                    <label>Sex ♂️♀️</label>
-                    <div id="sex-container">
-                        <input class="box" id="sex" type="text" value="" disabled>
-                        <div id="sex-dropdown-container" style="display: none;">
-                            <select class="box sex-dropdown" id="sex-dropdown">
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Non-Binary">Non-Binary</option>
-                                <option value="Prefer not to say">Prefer not to say</option>
-                                <option value="custom">Custom...</option>
-                            </select>
-                            <input class="box" id="custom-sex" type="text" placeholder="Enter custom gender" style="display: none;">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Bio 💭</label>
-                    <textarea class="box" id="bio" disabled></textarea>
-                    @* <input class="box" id="bio" type="text" value="" disabled> *@
-                </div>
-
-                <div class="form-group">
-                    <label>Tags 🏷️</label>
-                    <input class="box" id="tags" type="text"  value="" disabled>
-                </div>
-            </div>
-
-            @* <div class="form-group review-score">
-                        <label>🎀🍭❤️ Review Score ❤️🍭🎀</label>
-                        <div class="hearts-container">
-                            <span class="heart" data-score="1">&#9733;</span>
-                            <span class="heart" data-score="2">&#9733;</span>
-                            <span class="heart" data-score="3">&#9733;</span>
-                            <span class="heart" data-score="4">&#9733;</span>
-                            <span class="heart" data-score="5">&#9733;</span>
-                            &#9733; ⭐
-                        </div>
-                    </div> *@
-
-            @* <div class="form-group review-score">
-                <label>🎀🍭❤️ Review Score ❤️🍭🎀</label>
-                <div class="hearts-container" id="hearts-container">
-                    <span class="heart" data-score="1">&#9733;</span>
-                    <span class="heart" data-score="1.5">&#9733;</span>
-                    <span class="heart" data-score="2">&#9733;</span>
-                    <span class="heart" data-score="2.5">&#9733;</span>
-                    <span class="heart" data-score="3"></span>
-                    <span class="heart" data-score="3.5"></span>
-                    <span class="heart" data-score="4"></span>
-                    <span class="heart" data-score="4.5"></span>
-                    <span class="heart" data-score="5"></span>
-                </div>
-            </div> *@
-
-            <div class="rating-container">
-                <label>🎀🍭❤️ Review Score ❤️🍭🎀</label>
-                <div class="stars" id="stars-container"></div>
-            </div>
-
-
+        <div class="edit-button">
+            <button id="editbtn" onclick="toggleEdit()">✏️ Edit</button>
+            <button id="savebtn" onclick="saveProfile()">✅ Save</button>
+            <button id="cancelbtn" onclick="cancelEdit()">❌ Cancel</button>
         </div>
 
-        <div class="postcontainer">
-            <input class="posttitle" type="text" value="My Post" disabled>
-            <div id="posts-list">
-                <!-- Posts will be inserted here dynamically via JavaScript -->
+        <div class="popup-container" id="popupContainer">
+            <div class="popup">
+                <h2>Confirm Password</h2>
+
+                <div class="password-container">
+                    <input type="password" id="checkpassword" placeholder="Enter password">
+                    <span class="toggle-password" onclick="togglePassword()">👁️‍🗨️</span>
+                </div>
+
+                <p id="error-message" style="color: red;"></p>
+                <button onclick="confirmPassword()">Confirm</button>
+                <button onclick="closePopup()">Cancel</button>
             </div>
         </div>
 
-        <script> 
-            @* var path = window.location.search;
+        <div class="upload_container" id="upload_container" style="display: none;">
+            <input type="file" id="imageUpload" accept="image/*" />
+            <div class="preview">
+                <span class="upload_text">Upload Profile Picture</span>
+                @* <img id="previewImage" src="" alt="Preview"> *@
+            </div>
+        </div>
+
+        <div class="behavior-score">
+            <input class="box" id="behaviorscore" type="text" value="" disabled>
+        </div>
+
+        <div class="form-container">
+            <div class="form-group">
+                <label>Username 🩷</label>
+                <input class="box" id="username" type="text" value="" disabled>
+            </div>
+
+            <div class="allnamebox">
+                <div class="namebox">
+                    <label>Name ⛱️</label>
+                    <input class="box" id="name" type="text" value="" disabled>
+                </div>
+                <div class="namebox">
+                    <label>Surname 🌸</label>
+                    <input class="box" id="surname" type="text" value="" disabled>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Email 💌</label>
+                <input class="box" id="email" type="text" value="" disabled>
+            </div>
+            <div class="form-group">
+                <label>Birthdate 🎂</label>
+                <input class="box" id="birthdate" type="date" value="" disabled>
+            </div>
+            <div class="form-group">
+                <label>Sex ♂️♀️</label>
+                <div id="sex-container">
+                    <input class="box" id="sex" type="text" value="" disabled>
+                    <div id="sex-dropdown-container" style="display: none;">
+                        <select class="box sex-dropdown" id="sex-dropdown">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Non-Binary">Non-Binary</option>
+                            <option value="Prefer not to say">Prefer not to say</option>
+                            <option value="custom">Custom...</option>
+                        </select>
+                        <input class="box" id="custom-sex" type="text" placeholder="Enter custom gender"
+                            style="display: none;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Bio 💭</label>
+                <textarea class="box" id="bio" disabled></textarea>
+                @* <input class="box" id="bio" type="text" value="" disabled> *@
+            </div>
+
+            <div class="form-group" id="taglabel">
+                <label>Tags 🏷️</label>
+                @* <input class="box" id="tag" type="text" value="" disabled> *@
+                <div id="tag-list">
+                    <!-- Posts will be inserted here dynamically via JavaScript -->
+                </div>
+            </div>
+
+        </div>
+
+        <div class="rating-container">
+            <label>🎀🍭❤️ Review Score ❤️🍭🎀</label>
+            <div class="stars" id="stars-container"></div>
+            <div class="ratingvalue" id="ratingvalue"></div>
+        </div>
+
+    </div>
+
+    <div class="postcontainer">
+        <input class="posttitle" type="text" value="My Post" disabled>
+        <div id="posts-list">
+            <!-- Posts will be inserted here dynamically via JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        @* var path = window.location.search;
             var url = new URL(window.location).searchParams.get("username");
             console.log("URL:", url);
             (async() => {await window.userProfileLoaded;} )();
@@ -152,12 +130,15 @@
             } else {
                 document.getElementById("editbtn").style.display = "none";
             } *@
-            
+
             // Store original sex value to restore if editing is canceled
             let originalSexValue = "";
-            let currentSexValue = "";
+        let currentSexValue = "";
 
-            async function fetchMyProfile(){
+        @* let originalTagValue = "";
+            let currentTagValue = ""; *@
+
+            async function fetchMyProfile() {
                 try {
                     var path = window.location.search;
                     let response = await fetch(`api/user/profile${path}`, {
@@ -169,7 +150,7 @@
                     response = response.user;
                     document.getElementById("profilepic").src = `data:image/jpeg;base64,${response.profileImg}`;
                     document.getElementById("profilepic").src = `data:image/png;base64,${response.profileImg}`;
-                    document.getElementById("behaviorscore").value = "✨ Behavior Score ✨ : " + response.behaviorScores || "---"; 
+                    document.getElementById("behaviorscore").value = "✨ Behavior Score ✨ : " + response.behaviorScores || "---";
                     document.getElementById("username").value = response.username || "---";
                     document.getElementById("name").value = response.firstName || "---";
                     document.getElementById("surname").value = response.lastName || "---";
@@ -178,14 +159,15 @@
                     document.getElementById("sex").value = response.sex || "---";
                     currentSexValue = response.sex;
                     document.getElementById("bio").value = response.bio || "---";
-                    document.getElementById("tags").value = response.tags ? response.tags.join(", ") : "---";
-                    receivedRatings = 3.5;
-                    @* receivedRatings = response.receivedRatings; *@
+                    @* document.getElementById("tag").value = response.actTypeProfile ? response.tags.join(", ") : "---"; *@
+                        @* receivedRatings = 0; *@
+                        receivedRatings = response.receivedRatings;
+                    console.log("ratingscore", response.receivedRatings);
                     @* password = response.userpassword; *@
-                       
-                    setTimeout(() => {
-                        adjustTextareaHeight();
-                    }, 200);
+
+                        setTimeout(() => {
+                            adjustTextareaHeight();
+                        }, 200);
 
                     if (receivedRatings !== undefined) {
                         renderStars(receivedRatings);
@@ -196,397 +178,249 @@
                 }
             }
 
-            function adjustTextareaHeight() {
-                const textarea = document.getElementById("bio");
-                if (textarea) {
-                    textarea.style.height = 'auto';  // รีเซ็ตก่อน
-                    textarea.style.height = textarea.scrollHeight + 'px'; // ปรับขนาดให้พอดีกับข้อความ
-                }
+        function adjustTextareaHeight() {
+            const textarea = document.getElementById("bio");
+            if (textarea) {
+                textarea.style.height = 'auto';  // รีเซ็ตก่อน
+                textarea.style.height = textarea.scrollHeight + 'px'; // ปรับขนาดให้พอดีกับข้อความ
+            }
+        }
+        
+        async function toggleEdit() {
+            document.getElementById('popupContainer').style.display = 'flex';
+            document.getElementById("checkpassword").value = "";
+        }
+
+        function togglePassword() {
+            var passwordField = document.getElementById("checkpassword");
+            if (!passwordField.value) {  
+                passwordField.value = ""; // ล้างค่า ถ้าช่องว่าง
+                return; 
+            }
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+            } else {
+                passwordField.type = "password";
+            }
+        }
+
+        async function confirmPassword() {
+            let checkpass = document.getElementById('checkpassword').value;
+            let errorMessage = document.getElementById('error-message');
+
+            if (!checkpass) {
+                errorMessage.innerText = "Please enter your password!";
+                errorMessage.style.display = "block";
+                return;
             }
 
-            @* function updateReviewScore(score) {
-                const hearts = document.querySelectorAll(".heart");
-                hearts.forEach(heart => {
-                    let heartScore = parseFloat(heart.getAttribute("data-score"));
-                    heart.classList.toggle("full", heartScore <= score);
-                    heart.classList.toggle("half", heartScore === score - 0.5);
-                });
-            } *@
+            let response = await fetch("/api/auth/checkpassword", {
+                method: "POST",
+                credentials: 'include',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ password: checkpass })
+            });
 
-            function updateReviewScore(score) {
-                const hearts = document.querySelectorAll(".heart");
-                hearts.forEach(heart => {
-                    let heartScore = parseFloat(heart.getAttribute("data-score"));
-                    heart.classList.remove("full", "half");
-
-                    if (heartScore <= score) {
-                        heart.classList.add("full"); // ดาวเต็ม
-                    } else if (heartScore - 0.5 === score) {
-                        heart.classList.add("half"); // ดาวครึ่ง
-                    }
-                });
+            let result = await response.json();
+            console.log("passstatus",result);
+            if (result.status === "success") {
+                closePopup();
+                enableEditMode(); // แยกฟังก์ชันการเปิดโหมดแก้ไข
+            } else {
+                errorMessage.innerText = "Passwords do not match!";
+                errorMessage.style.display = "block";
             }
+        }
 
-            function togglePassword() {
-                var passwordField = document.getElementById("checkpassword");
-                if (passwordField.type === "password") {
-                    passwordField.type = "text";
-                } else {
-                    passwordField.type = "password";
-                }
-            }
+        // ฟังก์ชันใหม่เพื่อเปิดโหมดแก้ไขหลังจากยืนยันรหัสผ่าน
+        function enableEditMode() {
+            isEditMode = true;
+            document.getElementById("editbtn").style.display = "none";
+            document.getElementById("savebtn").style.display = "inline-block";
+            document.getElementById("cancelbtn").style.display = "inline-block";
+            document.getElementById("upload_container").style.display = "inline-block";
+            document.getElementById('imageUpload').value = "";
 
-            async function confirmPassword() {
-                let checkpass = document.getElementById('checkpassword').value;
-                let errorMessage = document.getElementById('error-message');
+            document.getElementById("username").disabled = false;
+            document.getElementById("name").disabled = false;
+            document.getElementById("surname").disabled = false;
+            document.getElementById("email").disabled = false;
+            document.getElementById("birthdate").disabled = false;
 
-                if (!checkpass) {
-                    errorMessage.innerText = "Please enter your password!";
-                    return;
-                }
+            // Hide regular sex input and show dropdown
+            document.getElementById("sex").style.display = "none";
+            document.getElementById("sex-dropdown-container").style.display = "block";
 
-                let response = await fetch("/api/auth/checkPassword", {
-                    method: "POST",
-                    credentials: 'include',
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ password: checkpass })
-                });
+            @* enableTagEdit();
+                document.getElementById("tag").style.display = "none";
+                document.getElementById("tag-dropdown-container").style.display = "block"; *@
 
-                let result = await response.json();
-
-                if (result.status === "password correct") {
-                    closePopup();
-                    enableEditMode(); // แยกฟังก์ชันการเปิดโหมดแก้ไข
-                } else {
-                    errorMessage.innerText = "Passwords do not match!";
-                }
-            }
-
-            // ฟังก์ชันใหม่เพื่อเปิดโหมดแก้ไขหลังจากยืนยันรหัสผ่าน
-            function enableEditMode() {
-                isEditMode = true;
-                document.getElementById("editbtn").style.display = "none";
-                document.getElementById("savebtn").style.display = "inline-block";
-                document.getElementById("cancelbtn").style.display = "inline-block";
-                document.getElementById("upload_container").style.display = "inline-block";
-                document.getElementById('imageUpload').value = "";
-            
-                document.getElementById("username").disabled = false;
-                document.getElementById("name").disabled = false;
-                document.getElementById("surname").disabled = false;
-                document.getElementById("email").disabled = false;
-                document.getElementById("birthdate").disabled = false;
-                
-                // Hide regular sex input and show dropdown
-                document.getElementById("sex").style.display = "none";
-                document.getElementById("sex-dropdown-container").style.display = "block";
-                
                 // Set dropdown value based on current sex value
                 const sexDropdown = document.getElementById("sex-dropdown");
-                const standardSexes = ["Male", "Female", "Non-Binary", "Prefer not to say" ];
+            const standardSexes = ["Male", "Female", "Non-Binary", "Prefer not to say"];
+
+            @* const tagDropdown = document.getElementById("tag-dropdown");
+                const standardtags = ["Male", "Female", "Non-Binary", "Prefer not to say" ]; *@
                 
                 if (standardSexes.includes(currentSexValue)) {
-                    sexDropdown.value = currentSexValue;
-                    document.getElementById("custom-sex").style.display = "none";
+                sexDropdown.value = currentSexValue;
+                document.getElementById("custom-sex").style.display = "none";
+            } else {
+                sexDropdown.value = "custom";
+                document.getElementById("custom-sex").style.display = "block";
+                document.getElementById("custom-sex").value = currentSexValue;
+            }
+
+            @* if (standardtags.includes(currentTagValue)) {
+                    tagDropdown.value = currentTagValue;
+                    document.getElementById("custom-tag").style.display = "none";
                 } else {
-                    sexDropdown.value = "custom";
-                    document.getElementById("custom-sex").style.display = "block";
-                    document.getElementById("custom-sex").value = currentSexValue;
-                }
-                
+                    tagDropdown.value = "custom";
+                    document.getElementById("custom-tag").style.display = "block";
+                    document.getElementById("custom-tag").value = currentTagValue;
+                } *@
+
                 document.getElementById("bio").disabled = false;
-                document.getElementById("tags").disabled = false;
-            }
-
-            async function toggleEdit() {
-                document.getElementById('popupContainer').style.display = 'flex';
-            }    
-            
-            function closePopup() {
-                document.getElementById('popupContainer').style.display = 'none';
-                document.getElementById('error-message').innerText = '';
-                @* cancelEdit(); *@
+            @* document.getElementById("tag").disabled = false; *@
             }
             
-            function cancelEdit() {
-                document.getElementById("editbtn").style.display = "inline-block";
-                document.getElementById("savebtn").style.display = "none";
-                document.getElementById("cancelbtn").style.display = "none";
+        function closePopup() {
+            document.getElementById('popupContainer').style.display = 'none';
+            document.getElementById("checkpassword").value = "";
+            @* cancelEdit(); *@
+        }
+        
+        function cancelEdit() {
+            document.getElementById("editbtn").style.display = "inline-block";
+            document.getElementById("savebtn").style.display = "none";
+            document.getElementById("cancelbtn").style.display = "none";
 
-                document.getElementById("username").disabled = true;
-                document.getElementById("name").disabled = true;
-                document.getElementById("surname").disabled = true;
-                document.getElementById("email").disabled = true;
-                document.getElementById("birthdate").disabled = true;
+            document.getElementById("username").disabled = true;
+            document.getElementById("name").disabled = true;
+            document.getElementById("surname").disabled = true;
+            document.getElementById("email").disabled = true;
+            document.getElementById("birthdate").disabled = true;
 
-                // Restore original sex display
-                document.getElementById("sex").style.display = "block";
-                document.getElementById("sex-dropdown-container").style.display = "none";
-                document.getElementById("sex").value = originalSexValue;
-                currentSexValue = originalSexValue;
+            // Restore original sex display
+            document.getElementById("sex").style.display = "block";
+            document.getElementById("sex-dropdown-container").style.display = "none";
+            document.getElementById("sex").value = originalSexValue;
+            currentSexValue = originalSexValue;
 
-                document.getElementById("bio").disabled = true;
-                document.getElementById("tags").disabled = true;
+            document.getElementById("bio").disabled = true;
+            @* document.getElementById("tag").disabled = true; *@
                 reloadPage();
+        }
+
+        // Handle sex dropdown change
+        document.getElementById("sex-dropdown").addEventListener("change", function () {
+            const selectedValue = this.value;
+            if (selectedValue === "custom") {
+                document.getElementById("custom-sex").style.display = "block";
+                currentSexValue = document.getElementById("custom-sex").value;
+            } else {
+                document.getElementById("custom-sex").style.display = "none";
+                currentSexValue = selectedValue;
             }
+        });
 
-            // Handle sex dropdown change
-            document.getElementById("sex-dropdown").addEventListener("change", function() {
-                const selectedValue = this.value;
-                if (selectedValue === "custom") {
-                    document.getElementById("custom-sex").style.display = "block";
-                    currentSexValue = document.getElementById("custom-sex").value;
-                } else {
-                    document.getElementById("custom-sex").style.display = "none";
-                    currentSexValue = selectedValue;
-                }
-            });
-            
-            // Handle custom sex input change
-            document.getElementById("custom-sex").addEventListener("input", function() {
-                currentSexValue = this.value;
-            });
+        // Handle custom sex input change
+        document.getElementById("custom-sex").addEventListener("input", function () {
+            currentSexValue = this.value;
+        });
 
-            const imageUpload = document.getElementById('imageUpload');
-            let base64Image = ""; // ตัวแปรเก็บค่า Base64
+        const imageUpload = document.getElementById('imageUpload');
+        let base64Image = ""; // ตัวแปรเก็บค่า Base64
 
-            imageUpload.addEventListener('change', (event) => {
-                const file = event.target.files[0]; // รับไฟล์ที่เลือก
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        base64Image = e.target.result;
-                        document.getElementById("profilepic").src = base64Image; adjustTextareaHeight // แสดงภาพที่เลือก
-                        base64Image = e.target.result.replace(/^data:image\/[a-z]+;base64,/, ''); // ตัดส่วนของ data:image/jpeg;base64, ออก
-                        console.log(base64Image);
-                         
-                    };
-                    reader.readAsDataURL(file); // อ่านไฟล์ที่เลือก
-                }
-            });
-
-            async function saveProfile() {
-                @* const image = document.getElementById('imageUpload');
-                imageUpload.addEventListener('change', (event) => {
-                    const file = event.target.files[0]; // รับไฟล์ที่เลือก
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = function (e) {
-                            previewImage.src = e.target.result; // แสดงภาพที่เลือก
-                            previewImage.style.display = 'block'; // แสดงภาพที่เลือก
-                            uploadText.style.display = 'none'; // ซ่อนข้อความ "Upload Image"
-                        };
-                        reader.readAsDataURL(file); // อ่านไฟล์ที่เลือกเพื่อแสดงในรูปแบบ Base64
-                    }
-                }); *@
-                    
-                @* const reader = new FileReader();
+        imageUpload.addEventListener('change', (event) => {
+            const file = event.target.files[0]; // รับไฟล์ที่เลือก
+            if (file) {
+                const reader = new FileReader();
                 reader.onload = function (e) {
-                    userData.profilepic = e.target.result;
-                }; *@
+                    base64Image = e.target.result;
+                    document.getElementById("profilepic").src = base64Image; adjustTextareaHeight // แสดงภาพที่เลือก
+                    base64Image = e.target.result.replace(/^data:image\/[a-z]+;base64,/, ''); // ตัดส่วนของ data:image/jpeg;base64, ออก
+                    console.log(base64Image);
 
-                const userData = {
-                    username: document.getElementById("username").value,
-                    firstName: document.getElementById("name").value,
-                    lastName: document.getElementById("surname").value,
-                    email: document.getElementById("email").value,
-                    dateOfBirth: document.getElementById("birthdate").value,
-                    sex: currentSexValue,
-                    bio: document.getElementById("bio").value,
-                    tags: document.getElementById("tags").value.split(",").map(tag => tag.trim()),
-                    profileImg: base64Image
+                };
+                reader.readAsDataURL(file); // อ่านไฟล์ที่เลือก
+            }
+        });
+
+        async function saveProfile() {
+            const userData = {
+                username: document.getElementById("username").value,
+                firstName: document.getElementById("name").value,
+                lastName: document.getElementById("surname").value,
+                email: document.getElementById("email").value,
+                dateOfBirth: document.getElementById("birthdate").value,
+                sex: currentSexValue,
+                bio: document.getElementById("bio").value,
+                profileImg: base64Image
                     @* profileImg: document.getElementById("profilepic").src *@
                 };
 
-                try {
-                    let response = await fetch("/api/user/myprofile", {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        credentials: "include",
-                        body: JSON.stringify(userData)
-                    });
-
-                    if (!response.ok) {
-                        throw new Error("Failed to update profile");
-                    }
-
-                    let result = await response.json();
-
-                    if (result.status === "updated") {
-                        if (result.token) {
-                            localStorage.setItem("authToken", result.token);
-                        }
-                        // Update original sex value after successful save
-                        originalSexValue = currentSexValue;
-                    } else {
-                        alert("Profile update failed");
-                    }
-
-                    document.getElementById("editbtn").style.display = "inline-block";
-                    document.getElementById("savebtn").style.display = "none";
-                    document.getElementById("cancelbtn").style.display = "none";
-
-                    document.getElementById("username").disabled = true;
-                    document.getElementById("name").disabled = true;
-                    document.getElementById("surname").disabled = true;
-                    document.getElementById("email").disabled = true;
-                    document.getElementById("birthdate").disabled = true;
-                    // Restore sex display but with updated value
-                    document.getElementById("sex").style.display = "block";
-                    document.getElementById("sex-dropdown-container").style.display = "none";
-                    document.getElementById("sex").value = currentSexValue;
-                    document.getElementById("bio").disabled = true;
-                    document.getElementById("tags").disabled = true;
-                    
-                    location.reload();
-
-                } catch (error) {
-                    console.error("Error updating profile:", error);
-                    alert("Error updating profile: " + error.message);
-                }
-            }
-
-            function reloadPage() {
-                location.reload();
-            }
-
-            @* imageUpload.addEventListener('change', (event) => {
-                const file = event.target.files[0]; // รับไฟล์ที่เลือก
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        previewImage.src = e.target.result; // แสดงภาพที่เลือก
-                        previewImage.style.display = 'block'; // แสดงภาพที่เลือก
-                        uploadText.style.display = 'none'; // ซ่อนข้อความ "Upload Image"
-                    };
-                    reader.readAsDataURL(file); // อ่านไฟล์ที่เลือกเพื่อแสดงในรูปแบบ Base64
-                }
-            }); *@
-
-            // ดาว review
-            const starSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
-
-            // Function to render stars based on rating
-            function renderStars(receivedRatings) {
-            const starsContainer = document.getElementById('stars-container');
-            starsContainer.innerHTML = '';
-            
-            const fullStars = Math.floor(receivedRatings);
-            const hasHalfStar = receivedRatings % 1 >= 0.5;
-            
-            // Render full stars
-            for (let i = 0; i < fullStars; i++) {
-                const star = document.createElement('div');
-                star.className = 'star star-full';
-                star.innerHTML = starSvg;
-                starsContainer.appendChild(star);
-            }
-            
-            // Render half star if needed
-            if (hasHalfStar) {
-                const starContainer = document.createElement('div');
-                starContainer.className = 'star';
-                
-                const emptyStar = document.createElement('div');
-                emptyStar.className = 'star-empty';
-                emptyStar.innerHTML = starSvg;
-                
-                const halfStar = document.createElement('div');
-                halfStar.className = 'star-half';
-                halfStar.innerHTML = starSvg;
-                
-                starContainer.appendChild(emptyStar);
-                starContainer.appendChild(halfStar);
-                starsContainer.appendChild(starContainer);
-            }
-            
-            // Fill remaining with empty stars
-            const remainingStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-            for (let i = 0; i < remainingStars; i++) {
-                const star = document.createElement('div');
-                star.className = 'star star-empty';
-                star.innerHTML = starSvg;
-                starsContainer.appendChild(star);
-            }
-
-            // Create and animate sakura petals
-            (function() {
-            const sakuraContainer = document.getElementById('sakura-container');
-            const windowWidth = window.innerWidth;
-            
-            // Create 50 petals
-            for (let i = 0; i < 50; i++) {
-                createPetal();
-            }
-            
-            function createPetal() {
-                // Create petal element
-                const petal = document.createElement('div');
-                petal.className = 'sakura-petal';
-                
-                // Random properties
-                const left = Math.random() * windowWidth;
-                const size = Math.random() * 15 + 15; // 15-30px
-                const durationFall = Math.random() * 10 + 8; // 8-18s
-                const delay = Math.random() * 15;
-                
-                // Random petal color
-                const colors = ['light', 'medium', 'dark'];
-                const colorClass = colors[Math.floor(Math.random() * colors.length)];
-                petal.classList.add(colorClass);
-                
-                // Apply styles
-                petal.style.left = `${left}px`;
-                petal.style.width = `${size}px`;
-                petal.style.height = `${size}px`;
-                petal.style.animationDuration = `${durationFall}s`;
-                petal.style.animationDelay = `${delay}s`;
-                
-                // Add to container
-                sakuraContainer.appendChild(petal);
-                
-                // Remove petal after animation completes
-                setTimeout(() => {
-                petal.remove();
-                }, (durationFall + delay) * 1000);
-            }
-            
-            // Create new petals occasionally
-            setInterval(createPetal, 300);
-            
-            // Handle window resize
-            window.addEventListener('resize', () => {
-                windowWidth = window.innerWidth;
+        try {
+            let response = await fetch("/api/user/myprofile", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify(userData)
             });
-            })();
-            
-            // Update rating text
-            document.getElementById('rating-text').textContent = `Current rating: ${receivedRatings} out of 5`;
-            }
-            
-            // Initialize with default rating
-            @* let currentRating = receivedRatings;
-            renderStars(currentRating); *@
-            
-            @* // Update stars when input changes
-            const ratingInput = document.getElementById('rating-input');
-            ratingInput.addEventListener('input', function() {
-            const newRating = parseFloat(this.value);
-            if (!isNaN(newRating) && newRating >= 0 && newRating <= 5) {
-                currentRating = newRating;
-                renderStars(currentRating);
-            }
-            }); *@
 
+            if (!response.ok) {
+                throw new Error("Failed to update profile");
+            }
 
-            document.addEventListener("DOMContentLoaded", function() {
-                fetchMyProfile(); // โหลดข้อมูลและปรับขนาด textarea หลังจากนั้น
-            });
-            
-            document.addEventListener("DOMContentLoaded", async function () {
-                async function fetchPosts() {
+            let result = await response.json();
+
+            if (result.status === "updated") {
+                if (result.token) {
+                    localStorage.setItem("authToken", result.token);
+                }
+                // Update original sex value after successful save
+                originalSexValue = currentSexValue;
+                @* originalTagValue = currentTagValue *@
+            } else {
+                alert("Profile update failed");
+            }
+
+            document.getElementById("editbtn").style.display = "inline-block";
+            document.getElementById("savebtn").style.display = "none";
+            document.getElementById("cancelbtn").style.display = "none";
+
+            document.getElementById("username").disabled = true;
+            document.getElementById("name").disabled = true;
+            document.getElementById("surname").disabled = true;
+            document.getElementById("email").disabled = true;
+            document.getElementById("birthdate").disabled = true;
+            // Restore sex display but with updated value
+            document.getElementById("sex").style.display = "block";
+            document.getElementById("sex-dropdown-container").style.display = "none";
+            document.getElementById("sex").value = currentSexValue;
+
+            @* document.getElementById("tag").style.display = "block"; *@
+            @* document.getElementById("tag-dropdown-container").style.display = "none"; *@
+            @* document.getElementById("tag").value = currentTagValue; *@
+            document.getElementById("bio").disabled = true;
+            @* document.getElementById("tag").disabled = true; *@
+
+            location.reload();
+
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            alert("Error updating profile: " + error.message);
+        }
+            }
+
+        function reloadPage() {
+            location.reload();
+        }
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            async function fetchTags() {
                 try {
                     var path = window.location.search;
                     let response = await fetch(`/api/post/user${path}`, {
@@ -606,34 +440,251 @@
                 }
             }
 
-
-
-                function renderPosts(postWrapper) {
-                    const postsList = document.getElementById("posts-list");
+            function rendersTags(postWrapper) {
+                const postsList = document.getElementById("tag-list");
 
                     // ดึงค่าต่างๆ ออกมาใช้งาน
-                    const post = postWrapper.post;
+                    @* const post = postWrapper.post;
                     const owner = postWrapper.owner || { username: "Unknown", profilePicture: "" };
-                    const activity = postWrapper.activity || { province: "Unknown", district: "Unknown" };
-                    const actTypes = postWrapper.actTypes && postWrapper.actTypes.length > 0 ? postWrapper.actTypes : [];
-                
-                    // สร้าง container ของโพสต์
-                    const postItem = document.createElement("div");
-                    postItem.classList.add("post-card");
+                    const activity = postWrapper.activity || { province: "Unknown", district: "Unknown" }; *@
+                    const actTypes = postWrapper && postWrapper.length > 0 ? postWrapper : [];
+                    console.log("Tag",actTypes);
 
-                    // กำหนดรูปภาพโพสต์ ถ้าไม่มีให้ใช้ Placeholder
-                    const imageUrl = post.coverPageImg || "https://via.placeholder.com/300";
-                    console.log("actdate :",postWrapper.post);
-                    @* console.log(post.post.maxParticipant); *@
+                // สร้าง container ของโพสต์
+                const postItem = document.createElement("profile-tags");
+                    @* postItem.classList.add("post-card"); *@
+
+                    postItem.innerHTML = `
+                        <span class="profile-tag">#${actTypes}</span>
+                    `;
+
+                postsList.appendChild(postItem);
+            }
+
+            const allTags = await fetchTags();
+            console.log("All Posts Data:", allTags);
+
+            const existingTags = new Set(); // เก็บค่าที่สร้างไปแล้ว
+
+            if (Array.isArray(allTags.posts)) {
+                allTags.posts.forEach(postWrapper => {
+                    if (Array.isArray(postWrapper.actTypes)) {
+                        postWrapper.actTypes.forEach(actType => {
+                            if (!existingTags.has(actType)) { // ถ้ายังไม่มี actType นี้
+                                existingTags.add(actType); // เพิ่มลงใน Set
+                                rendersTags(actType); // สร้าง element
+                            }
+                        });
+                    }
+                });
+            } else {
+                console.error("Invalid posts structure:", allTags);
+            }
+        });
+
+
+
+        @* async function fetchAllActTypes() {
+                try {
+                    let response = await fetch("/api/acttype");
+                    if (!response.ok) {
+                        return [];
+                    }
+                    const actTypes = await response.json();
+                    console.log("Fetched act types:", actTypes);
+                    return actTypes;
+                } catch (error) {
+                    console.error("Error loading JSON:", error);
+                    return [];
+                }
+            }
+
+            async function enableTagEdit() {
+                const actTypes = await fetchAllActTypes();
+                const tagContainer = document.getElementById("tag-container");
+                const currentValue = document.getElementById("tag").value;
+                
+                let dropdownHtml = `<select class='box tag-dropdown' id='tag-dropdown'>`;
+                actTypes.forEach(type => {
+                    const selected = type === currentValue ? 'selected' : '';
+                    dropdownHtml += `<option value='${type}' ${selected}>${type}</option>`;
+                });
+                dropdownHtml += `<option value='custom'>Custom...</option>`;
+                dropdownHtml += `</select>`;
+                dropdownHtml += `<input class='box' id='custom-tag' type='text' placeholder='Enter custom tag' style='display: none;'>`;
+                
+                document.getElementById("tag-dropdown-container").innerHTML = dropdownHtml;
+                document.getElementById("tag-dropdown-container").style.display = "block";
+                document.getElementById("tag").style.display = "none";
+                
+                document.getElementById("tag-dropdown").addEventListener("change", function () {
+                    const customInput = document.getElementById("custom-tag");
+                    if (this.value === "custom") {
+                        customInput.style.display = "block";
+                    } else {
+                        customInput.style.display = "none";
+                    }
+                });
+                document.getElementById("custom-sex").addEventListener("input", function() {
+                    currentTagValue = this.value;
+                    
+                });
+            }
+
+            fetchAllActTypes(); *@
+
+            // ดาว review
+            const starSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
+
+        // Function to render stars based on rating
+        function renderStars(receivedRatings) {
+            const starsContainer = document.getElementById('stars-container');
+            starsContainer.innerHTML = '';
+
+            const fullStars = Math.floor(receivedRatings);
+            const hasHalfStar = receivedRatings % 1 >= 0.5;
+
+            // Render full stars
+            for (let i = 0; i < fullStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star star-full';
+                star.innerHTML = starSvg;
+                starsContainer.appendChild(star);
+            }
+
+            // Render half star if needed
+            if (hasHalfStar) {
+                const starContainer = document.createElement('div');
+                starContainer.className = 'star';
+
+                const emptyStar = document.createElement('div');
+                emptyStar.className = 'star-empty';
+                emptyStar.innerHTML = starSvg;
+
+                const halfStar = document.createElement('div');
+                halfStar.className = 'star-half';
+                halfStar.innerHTML = starSvg;
+
+                starContainer.appendChild(emptyStar);
+                starContainer.appendChild(halfStar);
+                starsContainer.appendChild(starContainer);
+            }
+
+            // Fill remaining with empty stars
+            const remainingStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+            for (let i = 0; i < remainingStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star star-empty';
+                star.innerHTML = starSvg;
+                starsContainer.appendChild(star);
+            }
+
+            const ratingvalue = document.getElementById('ratingvalue');
+            ratingvalue.innerHTML = "(" + receivedRatings + ")";
+
+            // Create and animate sakura petals
+            (function () {
+                const sakuraContainer = document.getElementById('sakura-container');
+                const windowWidth = window.innerWidth;
+
+                // Create 50 petals
+                for (let i = 0; i < 50; i++) {
+                    createPetal();
+                }
+
+                function createPetal() {
+                    // Create petal element
+                    const petal = document.createElement('div');
+                    petal.className = 'sakura-petal';
+
+                    // Random properties
+                    const left = Math.random() * windowWidth;
+                    const size = Math.random() * 15 + 15; // 15-30px
+                    const durationFall = Math.random() * 10 + 8; // 8-18s
+                    const delay = Math.random() * 15;
+
+                    // Random petal color
+                    const colors = ['light', 'medium', 'dark'];
+                    const colorClass = colors[Math.floor(Math.random() * colors.length)];
+                    petal.classList.add(colorClass);
+
+                    // Apply styles
+                    petal.style.left = `${left}px`;
+                    petal.style.width = `${size}px`;
+                    petal.style.height = `${size}px`;
+                    petal.style.animationDuration = `${durationFall}s`;
+                    petal.style.animationDelay = `${delay}s`;
+
+                    // Add to container
+                    sakuraContainer.appendChild(petal);
+
+                    // Remove petal after animation completes
+                    setTimeout(() => {
+                        petal.remove();
+                    }, (durationFall + delay) * 1000);
+                }
+
+                // Create new petals occasionally
+                setInterval(createPetal, 300);
+
+                // Handle window resize
+                window.addEventListener('resize', () => {
+                    windowWidth = window.innerWidth;
+                });
+            })();
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            fetchMyProfile(); // โหลดข้อมูลและปรับขนาด textarea หลังจากนั้น
+        });
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            async function fetchPosts() {
+                try {
+                    var path = window.location.search;
+                    let response = await fetch(`/api/post/user${path}`, {
+                        method: "GET",
+                        credentials: "include"
+                    });
+
+                    if (!response.ok) throw new Error("Failed to fetch posts");
+
+                    let data = await response.json();  // ✅ แก้ให้รอ await
+                    console.log("Fetched data:", data);
+
+                    return data;  // ✅ คืนค่าทั้ง object { posts: [...], isOwner: true }
+                } catch (error) {
+                    console.error("Error loading posts:", error);
+                    return { posts: [] }; // ✅ ป้องกัน error
+                }
+            }
+
+            function renderPosts(postWrapper) {
+                const postsList = document.getElementById("posts-list");
+
+                // ดึงค่าต่างๆ ออกมาใช้งาน
+                const post = postWrapper.post;
+                const owner = postWrapper.owner || { username: "Unknown", profilePicture: "" };
+                const activity = postWrapper.activity || { province: "Unknown", district: "Unknown" };
+                const actTypes = postWrapper.actTypes && postWrapper.actTypes.length > 0 ? postWrapper.actTypes : [];
+
+                // สร้าง container ของโพสต์
+                const postItem = document.createElement("div");
+                postItem.classList.add("post-card");
+
+                // กำหนดรูปภาพโพสต์ ถ้าไม่มีให้ใช้ Placeholder
+                const imageUrl = post.coverPageImg || "https://via.placeholder.com/300";
+                console.log("actdate :", postWrapper.post);
+                @* console.log(post.post.maxParticipant); *@
 
                     postItem.innerHTML = `
                         <div class="post-image-container">
                             <img src="data:image/jpeg;base64,${imageUrl}" alt="Post Image" class="post-image">
                         </div>
                         <div class="post-content">
-                            <span class="post-date">${new Date(post.actDatetime).toLocaleString('en-US', {
-                                weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
-                            })}</span>
+                            <span class="post-date">${new Date(activity.actDatetime).toLocaleString('en-US', {
+                        weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                    })}</span>
                             <h3 class="post-title">${post.postName}</h3>
                             <p class="post-location">📍 <span>${activity.province}, ${activity.district}</span></p>
                             <p class="post-status">Accepted: ${post.curParticipant || 0}/${post.maxParticipant || 5}</p>
@@ -648,36 +699,36 @@
                         </div>
                     `;
 
-                    postsList.appendChild(postItem);
-                }
+                postsList.appendChild(postItem);
+            }
 
 
 
 
-                @* const allPosts = await fetchPosts();
+            @* const allPosts = await fetchPosts();
                 console.log("All posts:", allPosts);
                 
                 renderPosts(allPosts); *@
 
                 @* document.addEventListener("DOMContentLoaded", async function () { *@
                     const allPosts = await fetchPosts();
-                    console.log("All Posts Data:", allPosts);
+            console.log("All Posts Data:", allPosts);
 
-                    if (Array.isArray(allPosts.posts)) {
-                        allPosts.posts.forEach(postWrapper => {
-                            @* console.log(postWrapper.post);
+            if (Array.isArray(allPosts.posts)) {
+                allPosts.posts.forEach(postWrapper => {
+                    @* console.log(postWrapper.post);
                             console.log(postWrapper.post.postName);
                             renderPosts(postWrapper.post); // ✅ ส่งเฉพาะ `post`
                             renderPosts(postWrapper.owner);
                             renderPosts(postWrapper.activity);
                             renderPosts(postWrapper.actTypes); *@
-                            @* console.log("actdate",postWrapper.post.actDatetime); *@
-                            renderPosts(postWrapper);
-                        });
-                    } else {
-                        console.error("Invalid posts structure:", allPosts);
-                    }
-                @* }); *@
+                        @* console.log("actdate",postWrapper.post.actDatetime); *@
+                        renderPosts(postWrapper);
+                });
+            } else {
+                console.error("Invalid posts structure:", allPosts);
+            }
+            @* }); *@
 
                 @* const allPosts = await fetchPosts();
                 console.log("post",allPosts.post);
@@ -702,7 +753,7 @@
                 }); *@
 
             });
-            
-        </script> 
 
-    </main>
+    </script>
+
+</main>

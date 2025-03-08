@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.VisualBasic;
 
 
 namespace GatherApp.Models;
@@ -83,7 +84,6 @@ public class User{
 
     [JsonIgnore]
     public ICollection<RatingScore> ReceivedRatings { get; set; } = new List<RatingScore>();
-
     public object ToJson(bool isOwner)
     {
         var obj = new Dictionary<string, object>
@@ -98,7 +98,7 @@ public class User{
             { "dateOfBirth", DateOfBirth },
             { "actTypeProfile", ActTypeProfile.Select(a => a.ActType).ToList() },
             { "behaviorScores", BehaviorScores.Sum(b => b.Score) },
-            { "receivedRatings", ReceivedRatings }
+            { "receivedRatings", ReceivedRatings.Count == 0 ? 0 : ReceivedRatings.Average(r => r.Score) }
         };
         if (isOwner == true)
             obj.Add("givenRatings", GivenRatings);
