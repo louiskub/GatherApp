@@ -1,6 +1,6 @@
 import HistoryActivity from "/js/History/historyContainer.js"
 import FilterButton from '/js/components/filter_button.js';
-var inComming, pending, success, fail
+var inComming, pending, completed, fail
 
 async function fetchMyApp(){
     let response = await fetch('/api/user/myapplication')
@@ -10,7 +10,7 @@ async function fetchMyApp(){
         window.changePage("Please Login First", "/login", "warning")
     response = await response.json()
     inComming = response.inComming
-    success = response.success
+    completed = response.success
     pending = response.pending
     fail = response.fail
 }
@@ -23,12 +23,13 @@ function addContent(appList, appType, appContainer){
         div.innerHTML = "<h3>No Activity</h3>"
         appContainer.appendChild(div)
     }
+    console.log("appList", appList)
     appList.forEach(app => {
         let post = app.post.post
         let activity = app.post.activity
         let actTypes = app.post.actTypes
         const App = new HistoryActivity(post.id, post.curParticipant, post.maxParticipant
-            , activity.actDatetime, post.postName, appType, actTypes, post.isOpened).render()
+            , activity.actDatetime, post.postName, appType, actTypes, post.isOpened, app.isAttached).render()
             appContainer.appendChild(App)
     });
 }
@@ -43,35 +44,11 @@ async function loadContent(){
         completed: [".post-history-content.completed"],
         fail: [".post-history-content.fail"]
     };
-    // console.log(inComming, pending, success, fail)
     
     addContent(inComming, "accept", document.querySelector(filterMap.incoming[0]))
     addContent(pending, "pending", document.querySelector(filterMap.pending[0]))
     addContent(completed, "finish", document.querySelector(filterMap.completed[0]))
     addContent(fail, "reject", document.querySelector(filterMap.fail[0]))
-    const ActivityList = document.querySelector(".pageLayout");
-    ActivityList.appendChild(document.createElement("hr"))
-
-    function appendType(header, apps, typ){
-        let textHeader = document.createElement("h1")
-        textHeader.innerText = header
-        ActivityList.appendChild(textHeader)
-        apps.forEach(act => {
-            let post = act.post
-            let activity = post.activity
-            let actTypes = post.actTypes
-            post = post.post
-            const Post = new HistoryActivity(post.id, post.curParticipant, post.maxParticipant
-                , activity.actDatetime, post.postName, typ, actTypes, post.isOpened, act.isAttached).render()
-            ActivityList.appendChild(Post)
-        });
-        ActivityList.appendChild(document.createElement("hr"))
-    }
-
-    appendType("Incoming", inComming, "accept")
-    appendType("Pending", pending, "pending")
-    appendType("Success", success, "finish")
-    appendType("Fail", fail, "reject")
 }
 
 

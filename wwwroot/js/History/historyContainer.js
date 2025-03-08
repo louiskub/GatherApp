@@ -18,13 +18,16 @@ function getButtonsByType(type, hasAttachment, appliedStatus, isReviewed, isRepo
   if (type === "view") {
       if (appliedStatus === null) {
           textList = ["Approve", "Reject"];
+          if (hasAttachment)
+            textList.unshift("Attached File");
       }
       else {
           textList = appliedStatus === false ? ["Rejected", "Approve"] : ["Approved", "Reject"];
           console.log("adsd",appliedStatus, textList)
+          if (hasAttachment)
+            textList.splice(1, 0, "Attached File");
         }
-      if (hasAttachment)
-          textList.splice(1, 0, "Attached File");
+      
   }
   return textList || [];
 }
@@ -96,6 +99,9 @@ async function reportByParticipant(postId){
 }
 
 async function reviewByParticipant(postId){
+  let userList = await fetchAllParticipant(postId)
+  if (userList)
+    openPopup("review", userList, postId)
 }
 
 
@@ -222,6 +228,12 @@ export default class HistoryActivity {
     buttonContainer.appendChild(reviewButton);
     buttonContainer.appendChild(reportButton);
     statusContainer.appendChild(buttonContainer);
+
+    reviewButton.addEventListener("click", () => {
+      reviewByParticipant(this.postId)
+    })
+
+    reportButton.addEventListener("click", () => {})
 
     return statusContainer;
   }

@@ -260,7 +260,8 @@ public class ManageMyPostController : Controller
         if (user == null) 
             return NotFound("User not found");
         
-        var post = _db.Posts.Where(p => p.Id == postId).FirstOrDefault();
+        var post = _db.Posts.Include(p => p.User)
+                            .Where(p => p.Id == postId).FirstOrDefault();
         if (post == null) 
             return NotFound("Post not found");
 
@@ -292,8 +293,8 @@ public class ManageMyPostController : Controller
         }).ToList();
 
         // add owner
-        result.Add(new {
-            Username = post.User.Username+"(Owner)",
+        result.Insert(0, new {
+            Username = post.User.Username + "(Owner)",
             ProfileImg = post.User.ProfileImg,
             isReviewed = reviews.Any(r => r == post.UserId),
             isReported = reports.Any(r => r == post.UserId)
