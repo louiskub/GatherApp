@@ -531,14 +531,7 @@ resetForm() {
     }
 
     render(){
-        const linkChangePassword = document.createElement("link");
-        linkChangePassword.rel = "stylesheet";
-        linkChangePassword.href = "/css/GOLF/change_password.css";
-        document.querySelector("head").appendChild(linkChangePassword);
-
-        setTimeout(()=>{
-          this.addJs()
-          document.body.appendChild(this.div)
-        }, 100)
+        this.addJs()
+        document.body.appendChild(this.div)
     }
 }

@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="~/css/nav/navbar.css"/>
 
 </head>
-<body>
+<body class="preload">
     <header>
         <nav class="navbar">
             <div class="left-navbar">
@@ -87,6 +87,9 @@
         </div>
     </footer> *@
     <script type="module">
+        setTimeout(() => {
+            document.body.classList.remove("preload");
+        }, 50); // Adjust the delay as needed
         import ToastTemplate from "/js/components/handler/toast_template.js"
         import ConfirmDialog from "/js/components/handler/confirm_dialog.js"
         const toastTemplate = new ToastTemplate();
