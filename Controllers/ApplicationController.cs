@@ -172,4 +172,54 @@ public class ApplicationController : Controller
     }
 
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // get data review report
+    [HttpGet]
+    [Route("api/user/reviewreport/{type}")]
+    [Authorize]
+    public IActionResult GetReviewReportUser(int postId, string? username, string type)
+    {
+        var voterId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var post = _db.Posts.Include(p => p.User)
+                            .Include(p => p.Applications)
+                            .ThenInclude(a => a.User).Where(p => p.Id == postId).FirstOrDefault();
+        if (post == null)
+            return NotFound("Post not found");
+        
+        var voter = post.Applications.Where(a => a.UserId == voterId).Select(a => a.User).FirstOrDefault();
+        if (voter == null)
+            return NotFound("User not found");
+
+        User? participant = null;
+        if (post.UserId == voter.Id)
+            participant = post.Applications.Where(a => a.User.Username == username).Select(a => a.User).FirstOrDefault();
+        else {
+            if (username == post.User.Username || type == "report")
+                participant = post.User;
+            else if (type == "review"){
+                participant = post.Applications.Where(a => a.User.Username == username).Select(a => a.User).FirstOrDefault();
+            }
+        }
+            
+
+        if (participant == null)
+            return NotFound("Participant not found");
+        if (voter.Username == participant.Username)
+            return BadRequest("You cannot review yourself");
+
+        if (type == "review")
+            if (_db.RatingScores.Any(r => r.PostId == postId && r.RaterId == voter.Id && r.RatedUserId == participant.Id))
+                return BadRequest("You have already reviewed this participant.");
+        else 
+            if (_db.Reports.Any(r => r.PostId == postId && r.ReporterId == voter.Id && r.ReportedUserId == participant.Id))
+                return BadRequest("You have already reported this participant.");
+        
+        return Json(new{
+            postId,
+            CoverPageImg = post.CoverPageImg,
+            username = participant.Username,
+            profileImg = participant.ProfileImg
+        });
+    }
+
 }

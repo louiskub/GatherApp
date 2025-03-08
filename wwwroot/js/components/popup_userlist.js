@@ -35,11 +35,12 @@ async function reportParticipant(postId, username, type){
 }
 
 class PopupUserList {
-    constructor(imgUrl, username, textList, postId) {
+    constructor(imgUrl, username, textList, postId, isOwner) {
         this.imgUrl = imgUrl;
         this.username = username;
         this.textList = textList;
         this.postId = postId
+        this.isOwner = isOwner
     }
 
     createButtonOrText(text, buttonGroup) {
@@ -57,10 +58,10 @@ class PopupUserList {
                 button.addEventListener("click", async() => acceptRejectParticipant(this.postId, this.username, text, buttonGroup))
             }
             else if (text == "Review") {
-                button.addEventListener("click", () => window.location.href = `/post/${this.postId}/review`)
+                button.addEventListener("click", () => window.location.href = `/review?postId=${this.postId}&username=${this.username}`) // Fixed typo here
             }
             else if (text == "Report") {
-                button.addEventListener("click", () => window.location.href = `/post/${this.postId}/report`)
+                button.addEventListener("click", () => window.location.href = `/report?postId=${this.postId}&username=${this.username}`)
             }
             else if (text == "Attached File") {
                 button.addEventListener("click", () => {
@@ -77,7 +78,11 @@ class PopupUserList {
 
         const content = document.createElement("div");
         content.className = "popup-user-content";
-
+        
+        this.displayUsernane = this.username;
+        if (this.isOwner){
+            this.displayUsernane += " (Owner)";
+        }
         const profileImg = new UserProfileImage(
             this.username, 
             this.imgUrl, 
@@ -86,11 +91,11 @@ class PopupUserList {
             "popup-user-profile"
         ).render();
         profileImg.src = this.imgUrl;
-        profileImg.alt = this.username;
+        profileImg.alt = this.displayUsernane;
 
         const namePara = document.createElement("p");
         namePara.className = "popup-username";
-        namePara.textContent = this.username;
+        namePara.textContent = this.displayUsernane;
 
         content.appendChild(profileImg);
         content.appendChild(namePara);

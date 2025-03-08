@@ -40,7 +40,7 @@ function openPopup(type, users, postId) {
 
   const userList = users.map(userData => {
       const buttons = getButtonsByType(type, userData.isAttached, userData.appliedStatus, userData.isReviewed, userData.isReported);
-      return new PopupUserList(userData.profileImg, userData.username, buttons, postId);
+      return new PopupUserList(userData.profileImg, userData.username, buttons, postId, userData.isOwner);
   });
 
   const popupHeader = type === "view" ? "Registrants" : "Participants";
@@ -101,6 +101,7 @@ async function reportByParticipant(postId){
 async function reviewByParticipant(postId){
   let userList = await fetchAllParticipant(postId)
   if (userList)
+    userList[0].isOwner = true
     openPopup("review", userList, postId)
 }
 

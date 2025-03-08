@@ -289,15 +289,15 @@ public class ManageMyPostController : Controller
             a.User.Username,
             a.User.ProfileImg,
             isReviewed = reviews.Any(r => r == a.UserId),
-            isReported = reports.Any(r => r == a.UserId)
+            isReported = reports.Any(r => r == a.UserId),
         }).ToList();
 
         // add owner
         result.Insert(0, new {
-            Username = post.User.Username + "(Owner)",
+            Username = post.User.Username,
             ProfileImg = post.User.ProfileImg,
             isReviewed = reviews.Any(r => r == post.UserId),
-            isReported = reports.Any(r => r == post.UserId)
+            isReported = reports.Any(r => r == post.UserId),
         });
 
         // เอาเราออกจาก list
