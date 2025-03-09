@@ -181,38 +181,43 @@ public class ApplicationController : Controller
     {
         var voterId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var post = _db.Posts.Include(p => p.User)
+                            .Include(p => p.Activity)
                             .Include(p => p.Applications)
                             .ThenInclude(a => a.User).Where(p => p.Id == postId).FirstOrDefault();
         if (post == null)
             return NotFound("Post not found");
-        
-        var voter = post.Applications.Where(a => a.UserId == voterId).Select(a => a.User).FirstOrDefault();
-        if (voter == null)
-            return NotFound("User not found");
+        if (post.Activity.ActDatetime > DateTime.Now)
+            return BadRequest("You can only rate after the event has ended." + post.Activity.ActDatetime);
+        if (DateTime.Now > post.Activity.ActDatetime.AddDays(7))
+            return BadRequest("You can only rate within 7 days after the event has ended.");
 
-        User? participant = null;
-        if (post.UserId == voter.Id)
+        User? voter = null, participant = null;
+        if (post.UserId == voterId){
+            voter = post.User;
             participant = post.Applications.Where(a => a.User.Username == username).Select(a => a.User).FirstOrDefault();
+        }
         else {
+            voter = post.Applications.Where(a => a.User.Username == username).Select(a => a.User).FirstOrDefault();
             if (username == post.User.Username || type == "report")
                 participant = post.User;
             else if (type == "review"){
                 participant = post.Applications.Where(a => a.User.Username == username).Select(a => a.User).FirstOrDefault();
             }
         }
-            
-
+        
+        if (voter == null)
+            return NotFound("User not found2");
         if (participant == null)
-            return NotFound("Participant not found");
+            return NotFound("Participant not found3");
         if (voter.Username == participant.Username)
-            return BadRequest("You cannot review yourself");
+            return BadRequest("You cannot review yourself4");
 
         if (type == "review")
             if (_db.RatingScores.Any(r => r.PostId == postId && r.RaterId == voter.Id && r.RatedUserId == participant.Id))
-                return BadRequest("You have already reviewed this participant.");
+                return BadRequest("You have already reviewed this participant.5");
         else 
             if (_db.Reports.Any(r => r.PostId == postId && r.ReporterId == voter.Id && r.ReportedUserId == participant.Id))
-                return BadRequest("You have already reported this participant.");
+                return BadRequest("You have already reported this participant.6");
         
         return Json(new{
             postId,

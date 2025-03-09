@@ -83,28 +83,4 @@
     </div>
 </div> *@
     
-<script type="module">
-    import loadCss from "/js/components/reuse_func.js";
-
-    document.addEventListener("DOMContentLoaded", async function() {
-        const stars = document.querySelectorAll(".star");
-        const ratingText = document.getElementById("ratingText");
-            
-        await loadCss("/css/inform/review.css");
-
-        stars.forEach(star => {
-            star.addEventListener("click", function() {
-                let rating = this.getAttribute("data-value");
-                updateStars(rating);
-                ratingText.textContent = `You give ${rating} ${rating == 1 ? 'star' : 'stars'}`;
-            });
-        });
-        
-        function updateStars(rating) {
-            stars.forEach(star => {
-                star.classList.toggle("active", star.getAttribute("data-value") <= rating);
-            });
-        }
-    });
-    
-</script>
+<script type="module" src="/js/inform/review.js"></script>

@@ -96,7 +96,7 @@
         const confirmDialog = new ConfirmDialog();
 
         window.redirectToLogin = async function() {
-            await toastTemplate.changeToast("You need to log in. Redirecting...", "/login");
+            await toastTemplate.changeToast("You need to log in. Redirecting...", "/login", "warning");
             await toastTemplate.redirect("error");
         };
         window.changeToast = async (content, redirectPath, type) => {
