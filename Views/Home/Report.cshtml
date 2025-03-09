@@ -48,16 +48,4 @@
 </div>
 
 
-<script type="module">
-    import loadCss from "/js/components/reuse_func.js";
-
-    document.querySelectorAll(".report-choice").forEach((element) => {
-        element.addEventListener("click", () => {
-            element.classList.toggle("report-active");
-        });
-    });
-
-    document.addEventListener("DOMContentLoaded", async function() {
-        await loadCss("/css/inform/report.css");
-    });
-</script>
+<script type="module" src="/js/inform/report.js"></script>

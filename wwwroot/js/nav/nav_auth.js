@@ -9,11 +9,16 @@ const RightNavbar = document.querySelector(".right-navbar");
 const Menu = document.querySelector(".menu");
 const Nav = document.querySelector("nav");
 
-async function setNavbar(){
+function setNavbar(){
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = "/css/nav/nav_auth.css";
     console.log('Authorized');
+    
+    const linkChangePassword = document.createElement("link");
+    linkChangePassword.rel = "stylesheet";
+    linkChangePassword.href = "/css/GOLF/change_password.css";
+    Head.appendChild(linkChangePassword);
 
     Head.appendChild(link);
 
@@ -63,9 +68,9 @@ async function setNavbar(){
     </div>`;
     new ChangePassword().render();
     
-    Menu.querySelector("#change-password-btn").addEventListener("click", {
+    // Menu.querySelector("#change-password-btn").addEventListener("click", {
         
-    })
+    // })
 }
 
 async function getMyProfile() {
@@ -195,9 +200,10 @@ async function setNotifications() {
 }
 
 async function main() {
-    await setNavbar();
+    setNavbar();
     await getMyProfile();
     await setNotifications();
 }
 
+// document.addE
 main();

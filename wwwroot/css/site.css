@@ -59,6 +59,10 @@ html, body {
   background-repeat: no-repeat;
 }
 
+.preload * {
+  transition: none !important;
+}
+
 /* body {
   display: flex;
   flex-direction: column;

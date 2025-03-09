@@ -3,10 +3,11 @@ import PopupHistory from '/js/components/popup_history.js';
 
 function getButtonsByType(type, hasAttachment, appliedStatus, isReviewed, isReported) {
   let textList = [];
-
+  console.log(`reviewed : ${isReviewed} , reported : ${isReported}`)
   if (type === "reportByOwner") {
-      textList.push(isReviewed === 1 ? "Reviewed" : "Review")
-      textList.push(isReported === 1 ? "Reported" : "Report")
+      textList.push(isReviewed == 1 ? "Reviewed" : "Review")
+      textList.push(isReported == 1 ? "Reported" : "Report")
+      console.log(textList)
   }
 
   if (type === "review"){
@@ -40,7 +41,7 @@ function openPopup(type, users, postId) {
 
   const userList = users.map(userData => {
       const buttons = getButtonsByType(type, userData.isAttached, userData.appliedStatus, userData.isReviewed, userData.isReported);
-      return new PopupUserList(userData.profileImg, userData.username, buttons, postId);
+      return new PopupUserList(userData.profileImg, userData.username, buttons, postId, userData.isOwner);
   });
 
   const popupHeader = type === "view" ? "Registrants" : "Participants";
@@ -101,6 +102,7 @@ async function reportByParticipant(postId){
 async function reviewByParticipant(postId){
   let userList = await fetchAllParticipant(postId)
   if (userList)
+    userList[0].isOwner = true
     openPopup("review", userList, postId)
 }
 
@@ -233,7 +235,9 @@ export default class HistoryActivity {
       reviewByParticipant(this.postId)
     })
 
-    reportButton.addEventListener("click", () => {})
+    reportButton.addEventListener("click", () => {
+      window.location.href = `/report?postId=${this.postId}`
+    })
 
     return statusContainer;
   }
