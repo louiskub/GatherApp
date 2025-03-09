@@ -4,7 +4,7 @@ import loadCss from "/js/components/reuse_func.js";
 loadCss("/css/components/post.css");
 
 class Post {
-    constructor(postId, date, title, location, accepted, limitAccepted, registered, categories = [], imageUrl, like = 0, isLiked = false) {
+    constructor(postId, date, title, location, accepted, limitAccepted, registered, categories = [], imageUrl, like = 0, isLiked = false, isOnline=false) {
     // constructor(date, title, location, accepted, limitAccepted, registered, categories = [], imageUrl, like = 0) {
         this.postId = postId;
         this.date = date ?? "Unknown Date";
@@ -22,6 +22,8 @@ class Post {
             this.imageUrl = "https://neilpatel.com/wp-content/uploads/2017/09/blog-post-image-guide.jpg";
         this.like = like;
         this.isLiked = isLiked;
+        this.isOnline = isOnline;
+        console.log(isOnline)
     }
 
     createPostImage() {
@@ -57,11 +59,18 @@ class Post {
         const postDetail = document.createElement("div");
         postDetail.classList.add("post-detail");
 
-        postDetail.innerHTML = `
-            <div class="post-location"><i class="fa-solid fa-location-dot"></i> ${this.location}</div>
-            <p class="post-accepted">Accepted: ${this.accepted}/${this.limitAccepted}</p>
-            <p class="post-registered">Registered: ${this.registered}</p>
-        `;
+        if (this.isOnline)
+            postDetail.innerHTML = `
+                <div class="post-location"><i class="fa-solid fa-globe"></i> Online Event</div>
+                <p class="post-accepted">Accepted: ${this.accepted}/${this.limitAccepted}</p>
+                <p class="post-registered">Registered: ${this.registered}</p>
+            `;
+        else
+            postDetail.innerHTML = `
+                <div class="post-location"><i class="fa-solid fa-location-dot"></i> ${this.location}</div>
+                <p class="post-accepted">Accepted: ${this.accepted}/${this.limitAccepted}</p>
+                <p class="post-registered">Registered: ${this.registered}</p>
+            `;
 
         const postCategory = document.createElement("div");
         postCategory.classList.add("post-category");

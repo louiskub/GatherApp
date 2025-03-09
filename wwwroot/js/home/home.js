@@ -145,13 +145,11 @@ async function showPost(allPosts){
             }).toUpperCase().split(" ")
             formattedDate[2] = formattedDate[2].replace(",", " -")
             formattedDate = formattedDate.join(" ")
-            // console.log(formattedDate);
-
             postList.push(new Post(
-                post.id,formattedDate, post.postName, activity.province +", "+ activity.district, 
+                post.id, formattedDate, post.postName, activity.province +", "+ activity.district, 
                 post.curParticipant, post.maxParticipant, post.totalApplicant, 
                 actType, 
-                post.coverPageImg, post.like, post.isLiked
+                post.coverPageImg, post.like, post.isLiked, activity.online
             ));
         })
         let formattedDate
