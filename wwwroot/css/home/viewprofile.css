@@ -719,6 +719,7 @@ textarea:focus {
 
 .post-likes {
   font-size: 14px;
+  color: black;
 }
 
 .post-favorite {
