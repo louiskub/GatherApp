@@ -55,6 +55,7 @@ function fetchLikedPosts() {
 })
     .then(response => {
         const contentType = response.headers.get("content-type");
+        console.log("f1",response)
         if (!response.ok) {
             return response.text().then(text => {throw new Error(text)});
         }
@@ -65,6 +66,7 @@ function fetchLikedPosts() {
     })
     .then(posts => {
         let likesGrid = document.getElementById("likes-grid");
+        console.log("f2",posts)
         likesGrid.innerHTML = "";
 
         if(posts.length === 0) {
@@ -85,7 +87,8 @@ function fetchLikedPosts() {
 }
 
 function createPostComponent(post) {
-    return `
+    let div1 = 
+    `
         <a href="/post/${post.id}" class="like-card" data-post-id="${post.id}">
             <img src="data:image/jpeg;base64,${post.image}" alt="${post.postname}">
             <div class="card-content">
@@ -97,6 +100,9 @@ function createPostComponent(post) {
                     </svg>
                     ${post.actDatetime}
                 </p>
+    `
+    let div2 =  
+    `
                 <p class="location">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
@@ -104,6 +110,16 @@ function createPostComponent(post) {
                     </svg>
                     ${post.district}, ${post.province}
                 </p>
+    `
+    if (post.province == null && post.district == null) {
+        div2 = `
+                <p class="location">
+                    <i class="fa-solid fa-globe"></i> Online Event
+                </p>
+        `
+    }
+
+    let div3 = `
                 <div class="stats">
                     <span>Accepted: ${post.accepted}/${post.total}</span>
                     <span>Registered: ${post.registered}</span>
@@ -121,6 +137,8 @@ function createPostComponent(post) {
             </div>
         </a>
     `;
+
+    return div1+div2+div3;
 }
 
 
