@@ -192,12 +192,14 @@ public class ApplicationController : Controller
             return BadRequest("You can only rate within 7 days after the event has ended.");
 
         User? voter = null, participant = null;
-        if (post.UserId == voterId){
+        if (post.UserId == voterId)
+        {
             voter = post.User;
             participant = post.Applications.Where(a => a.User.Username == username).Select(a => a.User).FirstOrDefault();
         }
-        else {
-            voter = post.Applications.Where(a => a.User.Username == username).Select(a => a.User).FirstOrDefault();
+        else 
+        {
+            voter = post.Applications.Where(a => a.UserId == voterId).Select(a => a.User).FirstOrDefault();
             if (username == post.User.Username || type == "report")
                 participant = post.User;
             else if (type == "review"){

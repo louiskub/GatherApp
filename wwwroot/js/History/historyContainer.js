@@ -3,10 +3,11 @@ import PopupHistory from '/js/components/popup_history.js';
 
 function getButtonsByType(type, hasAttachment, appliedStatus, isReviewed, isReported) {
   let textList = [];
-
+  console.log(`reviewed : ${isReviewed} , reported : ${isReported}`)
   if (type === "reportByOwner") {
-      textList.push(isReviewed === 1 ? "Reviewed" : "Review")
-      textList.push(isReported === 1 ? "Reported" : "Report")
+      textList.push(isReviewed == 1 ? "Reviewed" : "Review")
+      textList.push(isReported == 1 ? "Reported" : "Report")
+      console.log(textList)
   }
 
   if (type === "review"){

@@ -1,9 +1,7 @@
 import UserProfileImage from "./user_profile_image.js";
 
 async function acceptRejectParticipant(postId, username, type, buttonGroup){
-    console.log("old : ", type)
     type = type==="Approve" ? "accept" : "reject"
-    console.log("new", type)
     let response = await fetch(`/api/post/${type}?postId=${postId}&username=${username}`, {
         method: "PATCH",
     });
