@@ -4,15 +4,20 @@ var inComming, pending, completed, fail
 
 async function fetchMyApp(){
     let response = await fetch('/api/user/myapplication')
-    if (!response.ok)
-        window.changePage("Error Fetching Data", "/home", "warning")
-    if (response.redirected)
-        window.changePage("Please Login First", "/login", "warning")
-    response = await response.json()
-    inComming = response.inComming
-    completed = response.success
-    pending = response.pending
-    fail = response.fail
+    if (!response.ok){
+        response = await response.text()
+        return window.showToast(response, "warning")
+    }
+    else if (response.redirected)
+        return window.changePage("Please Login First", "/login", "warning")
+    else {
+        response = await response.json()
+        inComming = response.inComming
+        completed = response.success
+        pending = response.pending
+        fail = response.fail
+    }
+    
 }
 
 

@@ -22,14 +22,18 @@ function addContent(postList, postType, postContainer){
 
 async function fetchMyPost(){
     let response = await fetch('/api/user/myposts')
-    if (!response.ok)
-        window.changePage("Error Fetching Data", "/home", "warning")
-    if (response.redirected)
-        window.changePage("Please Login First", "/login", "warning")
-    response = await response.json()
-    inComming = response.inComming
-    future = response.future
-    success = response.success
+    if (!response.ok){
+        response = await response.text()
+        return window.showToast(response, "warning")
+    }
+    else if (response.redirected)
+        return window.changePage("Please Login First", "/login", "warning")
+    else {
+        response = await response.json()
+        inComming = response.inComming
+        future = response.future
+        success = response.success
+    }
 }
 
 async function loadContent(){

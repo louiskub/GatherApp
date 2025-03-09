@@ -78,7 +78,7 @@ public class PostController : Controller
                             .Include(p => p.PostLikes)
                             .Where(p => p.Id == postId).FirstOrDefault();   // ดึงข้อมูล post+user
         if (post == null)
-            return NotFound();
+            return NotFound("Post not found");
 
         var applications = post.Applications.Where(a => a.AppliedStatus == true)
                             .Select(a => new
@@ -138,8 +138,7 @@ public class PostController : Controller
                             
         if(posts == null || !posts.Any()) 
         {
-            Console.WriteLine("No posts found");  
-            return NotFound();
+            return NotFound("No posts found");
         }
         var groupedPosts = posts.GroupBy(p => p.Activity.ActDatetime.Date)
                                 .OrderBy(g => g.Key)

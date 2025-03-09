@@ -34,11 +34,23 @@
 }
 
 .pageContainer {
-  background-color: var(--bg-color);
-  padding: 100px 55px 60px 55px;
+  background-color: var(-bg-color);
+  padding: 100px 100px 60px 55px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  gap:2rem;
+  align-items: center;
+  width: 100%;
+}
+
+.noContent{
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  margin: 5px;
+  align-self: center;
+  width: 90%;
 }
 
 .displayIcon {
