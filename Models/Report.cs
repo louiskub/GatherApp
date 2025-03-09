@@ -43,3 +43,11 @@ public enum ReportType
     Owner,   
     User    
 }
+
+
+public class CreateReportRequest
+{
+    public string ReportedUsername { get; set; }
+    public int PostId { get; set; }
+    public string Reason { get; set; }
+}
