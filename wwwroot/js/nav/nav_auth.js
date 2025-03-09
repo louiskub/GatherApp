@@ -13,7 +13,6 @@ function setNavbar(){
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = "/css/nav/nav_auth.css";
-    console.log('Authorized');
     
     const linkChangePassword = document.createElement("link");
     linkChangePassword.rel = "stylesheet";

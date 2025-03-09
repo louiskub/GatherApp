@@ -15,22 +15,6 @@ public class PostController : Controller
     {
         _db = db;
     }
-
-
-    [Route("post/aboutpost")]
-    public IActionResult AboutPost()
-    {
-        return View();
-    }   
-
-    [Route("api/post/allpost")]
-    public async Task<IActionResult> GetAllPost()
-    {
-        // ดึงข้อมูลทั้งหมดจากฐานข้อมูล
-        var posts = await _db.Posts.Include(p => p.User).ToListAsync();
-        // ส่งข้อมูลไปยัง View
-        return View(posts);
-    }
     
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // เกี่ยวกับการดึงโพส

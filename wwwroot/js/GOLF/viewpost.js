@@ -13,7 +13,7 @@ async function showPostDetail() {
     async function fetchPost() {
         let response = await fetch(`/api/post?postid=${postId}`);
         if (!response.ok) {
-            alert("Post not found");
+            window.changePage("Post not found", "/home", "error");
             return;
         }
         post = await response.json();
@@ -749,7 +749,6 @@ async function userButtonHandler(){
 }
 
 document.addEventListener("DOMContentLoaded", async function() {
-  console.log("testt")
   await window.userProfileLoaded;
   await showPostDetail();
   await userButtonHandler();
@@ -761,4 +760,5 @@ document.addEventListener("DOMContentLoaded", async function() {
   updateTagPlaceholder();
   if (isOwner)
     editPostInit();
+  document.querySelector(".main").classList.remove("hide-content");
 });
