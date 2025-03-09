@@ -6,10 +6,6 @@ document.addEventListener("DOMContentLoaded", function () {
 function attachEventListeners() {
     const likeBtns = document.querySelectorAll('.like-btn');
 
-    if (likeBtns.length === 0) {
-        console.log("No like buttons found.");
-    }
-
     likeBtns.forEach((btn) => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -55,7 +51,6 @@ function fetchLikedPosts() {
 })
     .then(response => {
         const contentType = response.headers.get("content-type");
-        console.log("f1",response)
         if (!response.ok) {
             return response.text().then(text => {throw new Error(text)});
         }
@@ -66,7 +61,6 @@ function fetchLikedPosts() {
     })
     .then(posts => {
         let likesGrid = document.getElementById("likes-grid");
-        console.log("f2",posts)
         likesGrid.innerHTML = "";
 
         if(posts.length === 0) {
