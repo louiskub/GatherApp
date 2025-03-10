@@ -7,13 +7,10 @@ async function startGlobalChatConnection() {
             .withAutomaticReconnect()
             .build();
 
-        console.log("Connecting to Global Chat...");
         await connection.start();
-        console.log("Connected to Global ChatHub");
 
         setupGlobalChatListeners();
     } catch (err) {
-        console.error("Global Chat connection failed: ", err);
         setTimeout(startGlobalChatConnection, 5000);
     }
 }
@@ -41,7 +38,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function setupGlobalChatListeners() {
     if (!connection) {
-        console.error("Connection is not initialized!");
         return;
     }
 
@@ -53,16 +49,13 @@ function setupGlobalChatListeners() {
     });
 
     connection.on("ReceiveGlobalMessage", (isMine,username, message, sentAt, profileImageUrl) => {
-        console.log("[DEBUG] ReceiveGlobalMessage:", {isMine, username, message, sentAt, profileImageUrl });
         appendGlobalMessage(isMine,username, message, sentAt, profileImageUrl);
     });
 
     connection.on("LoadPreviousGlobalMessages", (messages , postInvitations) => {
-        console.log("[Debug] Received Messages from Server:", messages);
-        console.log("[Debug] Received Post Invitations:", postInvitations);
     
         if (!Array.isArray(messages) || !Array.isArray(postInvitations)) {
-            console.error("Invalid response from server! Messages or Post Invitations are not arrays.");
+            // console.error("Invalid response from server! Messages or Post Invitations are not arrays.");
             return;
         }
     
@@ -89,19 +82,15 @@ function setupGlobalChatListeners() {
             }))
         ];
     
-        console.log("[Debug] All items before sort:", allItems);
     
         allItems.forEach(item => item.sentAt = new Date(item.sentAt));
     
         allItems.forEach(item => {
             if (isNaN(item.sentAt.getTime())) {
-                console.error("[ERROR] Invalid Date detected:", item);
             }
         });
     
         allItems.sort((a, b) => a.sentAt - b.sentAt);
-    
-        console.log("[Debug] All items after sort:", allItems);
     
         allItems.forEach(item => {
             if (item.type === "message") {
@@ -111,13 +100,11 @@ function setupGlobalChatListeners() {
             }
         });
     
-        console.log("[Debug] Messages and invitations rendered.");
     });
 
     function appendPostInvitation(postId, postName, postDetail, username) {
 
         if (!postId || !postName || !postDetail || !username) {
-            console.error("[ERROR] appendPostInvitation received undefined values", { postId, postName, postDetail, username });
             return;
         }
         const chatBox = document.getElementById("globalChatBox");
@@ -143,7 +130,6 @@ function setupGlobalChatListeners() {
         alert("Error: " + errorMessage);
     });
 
-    console.log("Global Chat listeners set up!");
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -164,7 +150,7 @@ function loadUserPosts() {
                 dropdown.appendChild(option);
             });
         })
-        .catch(error => console.error("Error loading posts:", error));
+        // .catch(error => console.error("Error loading posts:", error));
 }
 
 
@@ -178,9 +164,7 @@ function SendPostInvitation() {
     }
 
     postId = parseInt(postId, 10);
-    console.log("[DEBUG] postId (before conversion):", postId, "Type:", typeof postId);
     connection.invoke("SendPostInvitation", postId)
-    .catch(err => console.error("[ERROR] SendPostInvitation failed:", err));
 }
 
 connection.on("ReceivePostInvitation", (postId, postName, postDetail, username) => {
@@ -201,17 +185,14 @@ connection.on("ReceivePostInvitation", (postId, postName, postDetail, username) 
 });
 
 function viewPost(postId) {
-    console.log("[DEBUG] Redirecting to post view page:", `http://localhost:5174/post/${postId}`);
     
     window.location.href = `http://localhost:5174/post?postId=${postId}`;
 }
 
 
 function appendGlobalMessage(IsMine,username, message, sentAt, profileImageUrl) {
-    console.log("Adding global message:", {IsMine, username, message, sentAt, profileImageUrl });
     let chatBox = document.getElementById("globalChatBox");
     if (!chatBox) {
-        console.error("globalChatBox not found!");
         return;
     }
 
@@ -227,10 +208,10 @@ function appendGlobalMessage(IsMine,username, message, sentAt, profileImageUrl) 
                 hour12: false,
             });
         } else {
-            console.error("Invalid Date Format:", sentAt);
+
         }
     } catch (error) {
-        console.error("Error parsing date:", error, "Raw value:", sentAt);
+
     }
     let isMine = Boolean(IsMine);
 
@@ -276,16 +257,16 @@ async function sendGlobalMessage() {
         document.getElementById("actionButton").innerHTML = '<i class="fa-solid fa-thumbs-up"></i>';
         document.getElementById("actionButton").classList.remove("active");
     } catch (err) {
-        console.error("Failed to send global message: ", err);
+
     }
 }
 
 async function loadGlobalMessages() {
     try {
-        console.log("Sending LoadGlobalMessages request");
+
         await connection.invoke("LoadGlobalMessages");
     } catch (err) {
-        console.error("Failed to load global messages:", err);
+
     }
 }
 document.addEventListener("DOMContentLoaded", function () {
@@ -340,7 +321,7 @@ async function sendEmoji(emoji) {
         await connection.invoke("sendGlobalMessage", emoji);
         document.getElementById("emojiPicker").style.display = "none"; 
     } catch (err) {
-        console.error("Failed to send emoji: ", err);
+
     }
 }
 
@@ -363,7 +344,7 @@ async function sendLike() {
     try {
         await connection.invoke("sendGlobalMessage",'<i class="fa-solid fa-thumbs-up"></i>');
     } catch (err) {
-        console.error("Failed to send like: ", err);
+
     }
 }
 
