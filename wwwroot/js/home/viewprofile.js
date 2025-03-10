@@ -545,14 +545,6 @@ function adjustLayoutForScreenSize() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('upload_container').style.display = 'inline-block';
-  
-  // Make the container clickable to trigger the file input
-  document.getElementById('upload_container').addEventListener('click', function() {
-    document.getElementById('imageUpload').click();
-  });
-});
 
 window.addEventListener("DOMContentLoaded", adjustLayoutForScreenSize);
 window.addEventListener("resize", adjustLayoutForScreenSize);
