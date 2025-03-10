@@ -85,6 +85,19 @@ public async Task<IActionResult> GoogleResponse()
 
         _db.Users.Add(newUser);
         await _db.SaveChangesAsync();
+
+         var behaviorScore = new BehaviorScore
+                {
+                    UserId = newUser.Id,  
+                    Score = 100,     
+                    IsBanned = false,
+                    BannedUntil = null
+                };
+
+
+                _db.BehaviorScores.Add(behaviorScore);
+                await _db.SaveChangesAsync();
+        
         existingUser = newUser;
         isFirstTimeLogin = true;
     }
