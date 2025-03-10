@@ -1,6 +1,8 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
 
     // 📌 Search Toggle
+    await window.userProfileLoaded
+    await window.navAuthLoaded
     const searchContainer = document.querySelector(".search-container");
     const searchIcon = document.querySelector(".search-icon");
     searchIcon.addEventListener("click", function () {

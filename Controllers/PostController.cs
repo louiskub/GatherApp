@@ -84,19 +84,18 @@ public class PostController : Controller
         if (user == null) 
             return NotFound("User not found");
 
-        bool isOwner = user.Id == reqUserId;
-        
         var posts = _db.Posts.Include(p => p.Activity)
                             .ThenInclude(a => a.ActTypes)
                             .Include(p => p.Applications)
+                            .Include(p => p.PostLikes)
                             .Where(p => p.UserId == user.Id)
-                            .OrderByDescending(p => p.CreateAt)
+                            .OrderByDescending(p => p.Id)
                             .ToList();
 
         if (posts == null || posts.Count == 0) 
             return NotFound("Post not found" );
-        var result = posts.Select(p => p.ToJson());
-        return Json(new{posts = result, isOwner});
+        var result = posts.Select(p => p.ToJson(reqUserId)).ToList();
+        return Json(new{posts = result, isOwner=true});
     }
 
 

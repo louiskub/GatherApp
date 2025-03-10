@@ -209,10 +209,14 @@ main {
   height: 60px;
   font-size: 20px;
   font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   border: none;
   border-radius: 30px;
   width: auto;
+  cursor: pointer;
 }
 
 .edit-button #editbtn {

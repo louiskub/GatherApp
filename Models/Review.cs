@@ -40,8 +40,10 @@ public class RatingScore
     [Required]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+    [JsonIgnore]
     public User RatedUser { get; set; }
 
+    [JsonIgnore]
     public User Rater { get; set; }
 
 }
