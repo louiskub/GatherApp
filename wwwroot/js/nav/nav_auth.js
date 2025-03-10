@@ -9,18 +9,53 @@ const RightNavbar = document.querySelector(".right-navbar");
 const Menu = document.querySelector(".menu");
 const Nav = document.querySelector("nav");
 
-function setNavbar(){
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = "/css/nav/nav_auth.css";
+function chooseImg(profileImg){
+    if (profileImg == "" || profileImg == null) 
+        return "https://tr.rbxcdn.com/30DAY-Avatar-310966282D3529E36976BF6B07B1DC90-Png/352/352/Avatar/Png/noFilter"
+    else if(profileImg.length < 200) 
+        return profileImg
+    else 
+        return "data:image/jpeg;base64," + profileImg
+}
+
+async function logOut(content="Logout successfully") {
+    await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: 'include'
+    });
+    window.changeToast(content, "/home")
+}
+
+async function getMyProfile() {
+    window.userProfile = null;
+    window.userProfileLoaded = new Promise(async (resolve) => {
+        try {
+            let response = await fetch("/api/user/myprofile", {
+                method: "GET",
+                credentials: 'include'
+            });
+            if (response.ok){
+                if (response.redirected){
+                    window.redirectToLogin();
+                }
+                response = await response.json();
+                response.role = "user";
+                window.userProfile = response;
+                document.dispatchEvent(new CustomEvent("userProfileLoaded", { detail: response }));
+                resolve()
+            }else {
+                logOut("Error: Please login again");
+            }
+        } catch (error) {
+            logOut("Error: Occured");
+        }
+    });
     
-    const linkChangePassword = document.createElement("link");
-    linkChangePassword.rel = "stylesheet";
-    linkChangePassword.href = "/css/GOLF/change_password.css";
-    Head.appendChild(linkChangePassword);
+    await window.userProfileLoaded;
+}
 
-    Head.appendChild(link);
 
+function setNavbar(){
     RightNavbar.innerHTML = `                
     <button class="noti-toggle" aria-label="Notifications"><i class="fa fa-fw fa-bell"></i></button>
     <button class="menu-toggle" aria-label="Open Menu">
@@ -28,16 +63,27 @@ function setNavbar(){
         <img class="close-icon"></img>
     </button>`;
 
-    Menu.innerHTML = `
+    let div = `
     <div class="profile"></div>
 
     <div class="menu-list">
         <a href="/history/likes">Liked Posts<i class="fa fa-heart"></i></a>
         <a href="/history/post">Post History<i class="fa fa-history"></i></a>
         <a href="/history/application">Application History<i class="fa fa-file-alt"></i></a>
+    `
+    if (!window.userProfile.isGoogle)
+        div +=`
         <a href="#" id="change-password-btn">Change Password<i class="fa fa-lock"></i></a>
+        `;
+
+    div +=
+    `
         <a class="log-out" href="#">Logout<i class="fa fa-fw fa-sign-out"></i></a>
-    </div>`;
+    </div>
+    `;
+
+    Menu.innerHTML = div;
+
 
     Nav.innerHTML += `    
     <div class="notification-container" id="notificationContainer">
@@ -65,55 +111,14 @@ function setNavbar(){
             <p>No notifications to display</p>
         </div>
     </div>`;
-    new ChangePassword().render();
     
-    // Menu.querySelector("#change-password-btn").addEventListener("click", {
-        
-    // })
+    if (!window.userProfile.isGoogle)
+        new ChangePassword().render();
 }
 
-async function getMyProfile() {
-    function chooseImg(profileImg){
-        if (profileImg == "" || profileImg == null) 
-            return "https://tr.rbxcdn.com/30DAY-Avatar-310966282D3529E36976BF6B07B1DC90-Png/352/352/Avatar/Png/noFilter"
-        else if(profileImg.length < 200) 
-            return profileImg
-        else 
-            return "data:image/jpeg;base64," + profileImg
-    }
-    
-    async function logOut(content="Logout successfully") {
-        await fetch("/api/auth/logout", {
-            method: "POST",
-            credentials: 'include'
-        });
-        window.changeToast(content, "/home")
-    }
-    window.userProfile = null;
-    window.userProfileLoaded = new Promise(async (resolve) => {
-        try {
-            let response = await fetch("/api/user/myprofile", {
-                method: "GET",
-                credentials: 'include'
-            });
-            if (response.ok){
-                if (response.redirected){
-                    window.redirectToLogin();
-                }
-                response = await response.json();
-                response.role = "user";
-                window.userProfile = response;
-                document.dispatchEvent(new CustomEvent("userProfileLoaded", { detail: response }));
-                resolve()
-            }else {
-                logOut("Error: Please login again");
-            }
-        } catch (error) {
-            logOut("Error: Occured");
-        }
-    });
-    
-    await window.userProfileLoaded;
+
+
+function setMyProfile(){
     let userProfile = window.userProfile;
     let profile = document.querySelector(".profile")
     
@@ -198,8 +203,22 @@ async function setNotifications() {
 }
 
 async function main() {
-    setNavbar();
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "/css/nav/nav_auth.css";
+    const linkChangePassword = document.createElement("link");
+    linkChangePassword.rel = "stylesheet";
+    linkChangePassword.href = "/css/GOLF/change_password.css";
+    Head.appendChild(linkChangePassword);
+    Head.appendChild(link);
+    
     await getMyProfile();
+    window.navAuthLoaded = new Promise(async (resolve) => {
+        await setNavbar();
+        resolve();
+    })
+    window.navAuthLoaded;
+    setMyProfile();
     await setNotifications();
 }
 
