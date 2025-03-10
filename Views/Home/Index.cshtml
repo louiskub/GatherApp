@@ -66,25 +66,30 @@
                             </div>
                         </div>
 
-                        <div class="create_location">
-                            <div class="location_container"></div>
-                            <!-- <div class="location_province">
-                                <input type="text" placeholder="Province">
-                            </div>
-                            <div class="location_district">
-                                <input type="text" placeholder="District">
-                            </div> -->
+                        <div class="event_type_selection">
+                            <select id="eventTypeSelect" class="event-type-select">
+                                <option value="" disabled selected>Select Event Type</option>
+                                <option value="onsite">Onsite</option>
+                                <option value="online">Online</option>
+                            </select>
                         </div>
-                        <div class="google_map_link">
-                            <div class="input_map_link">
-                                <input type="text" placeholder="Google Map Link">
+
+                        <div id="locationFields">
+                            <div class="create_location">
+                                <div class="location_container"></div>
                             </div>
-                            <div class="map_teach">
-                                <a href="https://www.youtube.com/watch?v=IiWCCFtKU8c" target="_blank" class="map-link">
-                                    🌍<span class="link-text">Discover how to get the Google Map link</span>🗺️
-                                </a>
+                            <div class="google_map_link">
+                                <div class="input_map_link">
+                                    <input type="text" placeholder="Google Map Link">
+                                </div>
+                                <div class="map_teach">
+                                    <a href="https://www.youtube.com/watch?v=IiWCCFtKU8c" target="_blank" class="map-link">
+                                        🌍<span class="link-text">Discover how to get the Google Map link</span>🗺️
+                                    </a>
+                                </div>
                             </div>
                         </div>
+                        
                         <div class="event_date">
                             <label for="eventdate">📅Event Date</label>
                             <input type="datetime-local" id="eventdate" class="event-date-input">

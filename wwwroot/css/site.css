@@ -41,6 +41,8 @@ body {
   border-top: 1px solid #e5e5e5;
 } */
 
+
+@import url('src.css');
 /* 1. Global Reset */
 * {
   margin: 0;
@@ -53,7 +55,12 @@ body {
 html, body {
   height: 100%;
   color: var(--text-color);
-  background-color: var(--bg-color);
+  background: var(--bg-color);
+  background-repeat: no-repeat;
+}
+
+.preload * {
+  transition: none !important;
 }
 
 /* body {
@@ -66,6 +73,7 @@ html, body {
   padding-top: 60px;
   width: 100%;
   min-height: 100%;
+  background: var(--bg-color);
 }
 
 /* .footer-container {
@@ -75,6 +83,7 @@ html, body {
   padding-left: 30px;
   border-top: 1px solid #e5e5e5;
 } */  
+
 
 
 .sakura-container {

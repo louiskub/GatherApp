@@ -45,3 +45,12 @@ public class RatingScore
     public User Rater { get; set; }
 
 }
+
+
+public class CreateRatingRequest
+{
+    public int PostId { get; set; }
+    public string RatedUsername { get; set; }
+    public int Score { get; set; }
+    public string Comment { get; set; }
+}

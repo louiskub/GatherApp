@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="~/css/nav/navbar.css"/>
 
 </head>
-<body>
+<body class="preload">
     <header>
         <nav class="navbar">
             <div class="left-navbar">
@@ -87,13 +87,16 @@
         </div>
     </footer> *@
     <script type="module">
+        setTimeout(() => {
+            document.body.classList.remove("preload");
+        }, 50); // Adjust the delay as needed
         import ToastTemplate from "/js/components/handler/toast_template.js"
         import ConfirmDialog from "/js/components/handler/confirm_dialog.js"
         const toastTemplate = new ToastTemplate();
         const confirmDialog = new ConfirmDialog();
 
         window.redirectToLogin = async function() {
-            await toastTemplate.changeToast("You need to log in. Redirecting...", "/login");
+            await toastTemplate.changeToast("You need to log in. Redirecting...", "/login", "warning");
             await toastTemplate.redirect("error");
         };
         window.changeToast = async (content, redirectPath, type) => {

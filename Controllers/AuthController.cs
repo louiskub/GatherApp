@@ -215,30 +215,32 @@ public class AuthController : Controller
     [Route("api/auth/checkpassword")]
     public async Task<IActionResult> CheckPassword([FromBody] UserDTO obj)
     {
-        if (string.IsNullOrWhiteSpace(obj.Password))
+        if (obj == null || string.IsNullOrWhiteSpace(obj.Password))
         {
-            return BadRequest("Invalid request body");
+            return BadRequest(new { status = "error", message = "Password is required" });
         }
 
-        // ดึง Username ของผู้ใช้ปัจจุบัน (ต้องมีระบบ Authentication)
-        var username = User.Identity?.Name; // ใช้ Identity จาก JWT หรือ Cookie
+        // ดึง Username ของผู้ใช้ปัจจุบันจาก Authentication (JWT, Cookie)
+        var username = User.Identity?.Name; 
         if (string.IsNullOrEmpty(username))
         {
-            return Unauthorized("User not logged in");
+            return Unauthorized(new { status = "error", message = "User not logged in" });
         }
 
+        // ค้นหาผู้ใช้ใน Database
         var user = await _db.Users.FirstOrDefaultAsync(s => s.Username == username);
         if (user == null)
         {
-            return Unauthorized("Invalid username or password");
+            return Unauthorized(new { status = "error", message = "User not found" });
         }
 
+        // ตรวจสอบรหัสผ่าน
         if (!BCrypt.Net.BCrypt.Verify(obj.Password, user.Password))
         {
-            return Unauthorized("Invalid username or password");
+            return Unauthorized(new { status = "error", message = "Incorrect password" });
         }
 
-        return Ok(new { status = "password correct" });
+        return Ok(new { status = "success", message = "password correct" });
     }
 
 }

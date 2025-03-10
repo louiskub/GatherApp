@@ -36,13 +36,13 @@
     flex-direction: column;
     /* display: grid;
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); */
-    justify-content: center;
-    align-items: center;
-    background-color: var(--card-bg);
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* background-color: var(--card-bg); */
     padding: 1rem;
     border-radius: 15px;
-    box-shadow: 4px 4px 8px var(--container-shadow);
-    max-width: 1000px;
+    /* box-shadow: 4px 4px 8px var(--container-shadow); */
+    max-width: 1400px;
     width: 95%;
     gap: 1rem;
     font-size: 1.4rem;

@@ -22,13 +22,13 @@ public class ReportController : ControllerBase
 
 [HttpPost]
 [Route("api/reports/create")]
-public async Task<IActionResult> CreateReport([FromBody] Report report)
+public async Task<IActionResult> CreateReport([FromBody] CreateReportRequest report)
 {
     var reporterId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-    if (string.IsNullOrEmpty(reporterId))
-    {
-        return Unauthorized("Invalid token");
-    }
+    var reporter = await _db.Users.FirstOrDefaultAsync(u => u.Id == reporterId);
+    var reported = await _db.Users.FirstOrDefaultAsync(u => u.Username == report.ReportedUsername);
+    if (reporter == null || reported == null)
+        return NotFound("User not found.");
 
     var postOwner = await _db.Posts
         .Where(p => p.Id == report.PostId && p.UserId == reporterId)
@@ -39,7 +39,7 @@ public async Task<IActionResult> CreateReport([FromBody] Report report)
         return BadRequest("You must be the owner of the post to report users in it.");
     }
 
-    if (report.ReportedUserId == reporterId)
+    if (reported.Id == reporter.Id)
     {
         return BadRequest("You cannot report yourself.");
     }
@@ -56,7 +56,7 @@ public async Task<IActionResult> CreateReport([FromBody] Report report)
     }
 
     bool alreadyReported = await _db.Reports
-        .AnyAsync(r => r.ReporterId == reporterId && r.ReportedUserId == report.ReportedUserId && r.PostId == report.PostId);
+        .AnyAsync(r => r.ReporterId == reporterId && r.ReportedUserId == reported.Id && r.PostId == report.PostId);
 
     if (alreadyReported)
     {
@@ -66,10 +66,10 @@ public async Task<IActionResult> CreateReport([FromBody] Report report)
     var newReport = new Report
     {
         ReporterId = reporterId,
-        ReportedUserId = report.ReportedUserId,
+        ReportedUserId = reported.Id,
         PostId = report.PostId,
         Reason = report.Reason,
-        ReportType = report.ReportedUserId == post.UserId ? ReportType.Owner : ReportType.User,
+        ReportType = reported.Id == post.UserId ? ReportType.Owner : ReportType.User,
     };
 
     _db.Reports.Add(newReport);
@@ -89,7 +89,7 @@ public async Task<IActionResult> CreateReport([FromBody] Report report)
             {
                 Type = "report",
                 Title = "Behavior Score",
-                UserId = report.ReportedUserId,
+                UserId = reported.Id,
                 Content = "Your behavior score has been reduced by 20 due to a report."
             });
 
@@ -102,7 +102,7 @@ public async Task<IActionResult> CreateReport([FromBody] Report report)
                 {
                     Type = "report",
                     Title = "Behavior Score",
-                    UserId = report.ReportedUserId,
+                    UserId = reported.Id,
                     Content = "Your behavior score is below 50, and you have been temporarily banned for 7 days."
                 });
             }
@@ -116,7 +116,7 @@ public async Task<IActionResult> CreateReport([FromBody] Report report)
                 {
                     Type = "report",
                     Title = "Behavior Score",
-                    UserId = report.ReportedUserId,
+                    UserId = reported.Id,
                     Content = "Your behavior score has reached 0, and you have been permanently banned."
                 });
             }
@@ -127,7 +127,7 @@ public async Task<IActionResult> CreateReport([FromBody] Report report)
 
 
 
-    var reportedUserScore = await _db.BehaviorScores.FirstOrDefaultAsync(s => s.UserId == report.ReportedUserId);
+    var reportedUserScore = await _db.BehaviorScores.FirstOrDefaultAsync(s => s.UserId == reported.Id);
 
     if (reportedUserScore != null)
     {
@@ -137,7 +137,7 @@ public async Task<IActionResult> CreateReport([FromBody] Report report)
         {
             Type = "report",
             Title = "Behavior Score",
-            UserId = report.ReportedUserId,
+            UserId = reported.Id,
             Content = $"Your behavior score has been reduced by 20 due to a report."
         });
 
@@ -152,7 +152,7 @@ public async Task<IActionResult> CreateReport([FromBody] Report report)
             {
                 Type = "report",
                 Title = "Behavior Score",
-                UserId = report.ReportedUserId,
+                UserId = reported.Id,
                 Content = "Your behavior score is below 50, and you have been temporarily banned for 7 days."
             });
 
@@ -166,7 +166,7 @@ public async Task<IActionResult> CreateReport([FromBody] Report report)
             {
                 Type = "report",
                 Title = "Behavior Score",
-                UserId = report.ReportedUserId,
+                UserId = reported.Id,
                 Content = "Your behavior score has reached 0, and you have been permanently banned."
             });
         
