@@ -216,6 +216,7 @@ main {
   border: none;
   border-radius: 30px;
   width: auto;
+  cursor: pointer;
 }
 
 .edit-button #editbtn {

@@ -1,3 +1,6 @@
+import Post from "/js/components/post.js";
+import PostInDate from "/js/components/post_in_date.js";
+
 function imgSelection(img, failed="https://tr.rbxcdn.com/30DAY-Avatar-310966282D3529E36976BF6B07B1DC90-Png/352/352/Avatar/Png/noFilter"){
   if (img == "" || img == null) 
       return failed
@@ -20,6 +23,7 @@ async function fetchMyProfile() {
     console.log("res :", response)
     response = await response.json();
     console.log("My profile:", response);
+    let isOwner = response.isOwner;
     response = response.user;
     document.getElementById(
       "profilepic"
@@ -35,7 +39,7 @@ async function fetchMyProfile() {
     currentSexValue = response.sex;
     document.getElementById("bio").value = response.bio || "---";
 
-    receivedRatings = response.receivedRatings;
+    let receivedRatings = response.receivedRatings;
     console.log("ratingscore", response.receivedRatings);
 
     setTimeout(() => {
@@ -44,6 +48,10 @@ async function fetchMyProfile() {
 
     if (receivedRatings !== undefined) {
       renderStars(receivedRatings);
+    }
+    console.log("res Owner :", isOwner)
+    if (!isOwner){
+      document.querySelector(".edit-button").innerHTML = ""
     }
   } catch (error) {
     console.error("Logout error:", error);
@@ -109,7 +117,6 @@ async function confirmPassword() {
 }
 
 function enableEditMode() {
-  isEditMode = true;
   document.getElementById("editbtn").style.display = "none";
   document.getElementById("savebtn").style.display = "inline-block";
   document.getElementById("cancelbtn").style.display = "flex";
@@ -255,9 +262,15 @@ async function saveProfile() {
 function reloadPage() {
   location.reload();
 }
-
+// user Tags
 document.addEventListener("DOMContentLoaded", async function () {
   await window.userProfileLoaded;
+  document.getElementById("editbtn").addEventListener("click", toggleEdit);
+  document.getElementById("savebtn").addEventListener("click", saveProfile);
+  document.getElementById("cancelbtn").addEventListener("click", cancelEdit);
+  document.querySelector(".toggle-password").addEventListener("click", togglePassword);
+  document.getElementById("confirm-btn").addEventListener("click", confirmPassword);
+  document.getElementById("close-pop-btn").addEventListener("click", closePopup);
   async function fetchTags() {
     try {
       var path = window.location.search;
@@ -360,7 +373,7 @@ function renderStars(receivedRatings) {
 
   (function () {
     const sakuraContainer = document.getElementById("sakura-container");
-    const windowWidth = window.innerWidth;
+    let windowWidth = window.innerWidth;
 
     for (let i = 0; i < 50; i++) {
       createPetal();

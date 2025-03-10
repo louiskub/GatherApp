@@ -12,9 +12,9 @@
         <img class="profile-pic" id="profilepic" src="" alt="Profile Picture">
 
         <div class="edit-button">
-            <button id="editbtn" onclick="toggleEdit()">✏️ Edit</button>
-            <button id="savebtn" onclick="saveProfile()">✅ Save</button>
-            <button id="cancelbtn" onclick="cancelEdit()">
+            <button id="editbtn" >✏️ Edit</button>
+            <button id="savebtn" >✅ Save</button>
+            <button id="cancelbtn">
                 <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e8eaed"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
                 Cancel</button>
         </div>
@@ -25,12 +25,12 @@
 
                 <div class="password-container">
                     <input type="password" id="checkpassword" placeholder="Enter password">
-                    <span class="toggle-password" onclick="togglePassword()">👁️‍🗨️</span>
+                    <span class="toggle-password">👁️‍🗨️</span>
                 </div>
 
                 <p id="error-message" style="color: red;"></p>
-                <button onclick="confirmPassword()">Confirm</button>
-                <button onclick="closePopup()">Cancel</button>
+                <button id="confirm-btn">Confirm</button>
+                <button id="close-pop-btn">Cancel</button>
             </div>
         </div>
 
@@ -114,6 +114,6 @@
         <p class="postfooter"></p>
     </div>
 
-    <script defer src="/js/Home/viewprofile.js"></script>
+    <script defer src="/js/Home/viewprofile.js" type="module"></script>
 
 </main>
