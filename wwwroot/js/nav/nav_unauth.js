@@ -7,7 +7,6 @@ const link = document.createElement("link");
 link.rel = "stylesheet";
 
 
-console.log("Unauthorized");
 
 link.href = "/css/nav/nav_unauth.css";
 Head.appendChild(link);
@@ -24,4 +23,3 @@ Menu.innerHTML = `
 
 window.userProfile = {role: "visitor" };
 window.userProfileLoaded = Promise.resolve(window.userProfile);
-console.log("✅ userProfile received:", window.userProfile);

@@ -45,7 +45,6 @@ async function loadContent(){
         completed: [".post-history-content.completed"]
     };
     
-    console.log("test : ", document.querySelector(".post-history-content.incoming"))
     addContent(inComming, "onGoing", document.querySelector(filterMap.incoming[0]))
     addContent(future, "future", document.querySelector(filterMap.future[0]))
     addContent(success, "done", document.querySelector(filterMap.completed[0]))

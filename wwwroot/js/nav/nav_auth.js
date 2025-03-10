@@ -13,7 +13,6 @@ function setNavbar(){
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = "/css/nav/nav_auth.css";
-    console.log('Authorized');
     
     const linkChangePassword = document.createElement("link");
     linkChangePassword.rel = "stylesheet";
@@ -105,7 +104,6 @@ async function getMyProfile() {
                 response.role = "user";
                 window.userProfile = response;
                 document.dispatchEvent(new CustomEvent("userProfileLoaded", { detail: response }));
-                console.log("✅ userProfile received:", window.userProfile);
                 resolve()
             }else {
                 logOut("Error: Please login again");

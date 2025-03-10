@@ -26,17 +26,6 @@ public class AuthController : Controller
         _db = db;
         _jwtService = jwtService;
     }
-    
-    public IActionResult Index()
-    {
-        return View();
-    }
-
-    public IActionResult Login()
-    {
-        return View();
-    }
-
 
     [HttpPost]
     [Route("api/auth/login")]
@@ -99,12 +88,6 @@ public class AuthController : Controller
         Response.Cookies.Delete("token");
         // await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return Json(new { status = "Logout success" });
-    }
-
-    public IActionResult Register()
-    {
-
-        return View();
     }
 
     [HttpPost]

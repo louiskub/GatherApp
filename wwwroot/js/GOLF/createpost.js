@@ -292,7 +292,6 @@ async function validateForm() {
     // ตรวจสอบว่าแต่ละฟิลด์ถูกกรอกหรือไม่
     // ตรวจสอบการอัปโหลดภาพ (Preview Image)
     const imageUpload = document.getElementById('imageUpload');
-    console.log(previewImage.src.length)
     if (!imageUpload.files.length) {
         window.showToast("Please upload an image.", "warning");
         return false;
@@ -396,7 +395,6 @@ async function validateForm() {
         let today = new Date();
         today.setHours(7, 0, 0, 0); // Set hour, minute, second, and millisecond to zero
         today = today.toISOString().split('.')[0]; // Remove milliseconds
-        console.log("POSTING...")
         let response = await fetch("/api/post", {
             method: 'POST',
             headers: {

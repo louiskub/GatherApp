@@ -245,4 +245,17 @@ input:checked + .switch .dark-text {
     .menu-toggle {
         display: block;
     }
+    /* .theme-switch {
+        width: fit-content;
+    } */
+    .text {
+        display: none;
+    }
+    .theme-switch {
+        position: relative;
+        width: 30px;
+    }
+    .moon-icon {
+        left: 7px;
+    }
 }

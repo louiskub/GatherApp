@@ -115,7 +115,6 @@ async function createProvincesAndDistricts() {
             prevProvince = selectedProv;
         } else {
             districtElement.style.display = "none";
-            console.log("No province selected");
         }
     });
     provinceObserver.observe(provinceBtn, { childList: true });        
@@ -123,7 +122,6 @@ async function createProvincesAndDistricts() {
 
 async function showPost(allPosts){
     const searchPostContainer = document.querySelector(".search-post-container");
-    console.log(allPosts);
 
     allPosts.forEach((eachDate) => {
         let date = new Date(eachDate.date);
@@ -193,7 +191,6 @@ async function createPostAndUser(){
         }
     }
     let res = await fetchSearch()
-    console.log(res)
     createUserSearchCard(res.users)
     showPost(res.posts)
 }
@@ -211,28 +208,22 @@ async function filterPostInDate(){
                 province: span[3].innerText,
                 district: span[4].innerText
             });
-            console.log(`/api/searchAndFilter?${queryParams.toString()}`)
             let response = await fetch(`/api/searchAndFilter?${queryParams.toString()}`);
             if (!response.ok) {
-                console.log("case1")
                 return [];
             }
             else {
-                console.log("case2")
                 response = await response.json();
                 return response;
             }
         } catch (error) {
-            console.log("case3")
             console.error("Error loading JSON:", error);
             return [];
         }
     }
-    console.log("change")
     const elementsToDelete = document.querySelectorAll(".search-post-container .post-in-date");
     elementsToDelete.forEach(element => element.remove());
     let filterPosts = await fetchFilterSearchPosts();
-    console.log(filterPosts)
     showPost(filterPosts)
 }
 

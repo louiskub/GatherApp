@@ -23,7 +23,6 @@ class Post {
         this.like = like;
         this.isLiked = isLiked;
         this.isOnline = isOnline;
-        console.log(isOnline)
     }
 
     createPostImage() {

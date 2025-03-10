@@ -39,11 +39,6 @@ async function initBtn(){
         selected.forEach((el) => reasons.push(el.textContent))
         reasons = reasons.join(", ") + ": " + reason
 
-        console.log(JSON.stringify({
-            reportedUsername: urlParams.get('username'),
-            postId: urlParams.get('postId') || urlParams.get('postid'),
-            reason: reasons,
-    }))
 
         let response = await fetch(`api/reports/create`, {
             method: "POST",

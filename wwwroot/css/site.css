@@ -76,6 +76,10 @@ html, body {
   background: var(--bg-color);
 }
 
+.hide-content{
+  display: none;
+}
+
 /* .footer-container {
   position: relative;
   width: 100%;

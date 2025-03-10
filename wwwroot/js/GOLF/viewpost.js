@@ -13,11 +13,10 @@ async function showPostDetail() {
     async function fetchPost() {
         let response = await fetch(`/api/post?postid=${postId}`);
         if (!response.ok) {
-            alert("Post not found");
+            window.changePage("Post not found", "/home", "error");
             return;
         }
         post = await response.json();
-        console.log(post)
         return post;
     }
 
@@ -32,7 +31,6 @@ async function showPostDetail() {
 
     post = await fetchPost();
     owner = post.owner;
-    console.log(window.userProfile)
     if (window.userProfile.role != "visitor")
       isOwner = owner.username == window.userProfile.username;
     activity = post.activity;
@@ -656,7 +654,6 @@ async function userButtonHandler(){
   ///////////////// Button Event /////////////////
   if (!post.isParticipant && post.isOpened && post.curParticipant < post.maxParticipant)
     regBut.addEventListener("click", async function() {    
-      console.log(window.userProfile.role)
       if(window.userProfile.role == "visitor")
           window.showToast("Please login to register for this activity", "warning")
       else{
@@ -683,8 +680,10 @@ async function userButtonHandler(){
             )
         }
         let response = await fetch(`/api/user/applypost?postid=${postId}`, apiSettings)
-        if (!response.ok) 
-            console.log(response)
+        if (!response.ok) {
+            response = await response.text();
+            window.showToast(response, "error");
+        }
         else {
             if (response.redirected)
                 window.redirectToLogin();
@@ -749,7 +748,6 @@ async function userButtonHandler(){
 }
 
 document.addEventListener("DOMContentLoaded", async function() {
-  console.log("testt")
   await window.userProfileLoaded;
   await showPostDetail();
   await userButtonHandler();
@@ -761,4 +759,5 @@ document.addEventListener("DOMContentLoaded", async function() {
   updateTagPlaceholder();
   if (isOwner)
     editPostInit();
+  document.querySelector(".main").classList.remove("hide-content");
 });

@@ -114,7 +114,6 @@ async function createProvincesAndDistricts() {
             prevProvince = selectedProv;
         } else {
             districtElement.style.display = "none";
-            console.log("No province selected");
         }
     });
     provinceObserver.observe(provinceBtn, { childList: true });        
@@ -122,8 +121,6 @@ async function createProvincesAndDistricts() {
 
 async function showPost(allPosts){
     const homeContent = document.querySelector(".home-content");
-    // console.log(homeContent);
-    // console.log(allPosts);
 
     allPosts.forEach((eachDate) => {
         let date = new Date(eachDate.date);
@@ -204,19 +201,15 @@ async function filterPostInDate(){
                 province: span[3].innerText,
                 district: span[4].innerText
             });
-            console.log(`/api/post/filter?${queryParams.toString()}`)
             let response = await fetch(`/api/post/filter?${queryParams.toString()}`);
             if (!response.ok) {
-                console.log("case1")
                 return [];
             }
             else {
-                console.log("case2")
                 response = await response.json();
                 return response;
             }
         } catch (error) {
-            console.log("case3")
             console.error("Error loading JSON:", error);
             return [];
         }

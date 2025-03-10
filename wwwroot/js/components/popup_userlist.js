@@ -5,7 +5,6 @@ async function acceptRejectParticipant(postId, username, type, buttonGroup){
     let response = await fetch(`/api/post/${type}?postId=${postId}&username=${username}`, {
         method: "PATCH",
     });
-    console.log(response)
     if (!response.ok){
         response = await response.text()
         window.showToast(response, "error")
@@ -42,7 +41,6 @@ class PopupUserList {
     }
 
     createButtonOrText(text, buttonGroup) {
-        if (text == "Attached File") { console.log("Attached File ksadd"); }
         if (text === "Reviewed" || text === "Reported" || text === "Rejected" || text === "Approved") {
             const span = document.createElement("span");
             span.textContent = text;
