@@ -20,6 +20,25 @@ async function startGlobalChatConnection() {
 
 startGlobalChatConnection();
 
+
+function changeChatPage() {
+    let selectedPage = document.getElementById("chatTypeDropdown").value;
+    window.location.href = selectedPage; 
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    let currentPath = window.location.pathname.toLowerCase(); 
+    let dropdown = document.getElementById("chatTypeDropdown");
+
+    for (let option of dropdown.options) {
+        if (currentPath.includes(option.value.toLowerCase())) {
+            option.selected = true;
+            break;
+        }
+    }
+});
+
+
 function setupGlobalChatListeners() {
     if (!connection) {
         console.error("Connection is not initialized!");
@@ -357,5 +376,6 @@ async function handleSend() {
     } else {
         await sendLike();
     }
+
 }
 

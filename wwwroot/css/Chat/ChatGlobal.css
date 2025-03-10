@@ -199,6 +199,52 @@ h1.top {
     gap: 5px;
     margin-bottom: 5px;
 }
+    
+#chatTypeDropdown {
+    background: linear-gradient(135deg, #3498db, #8e44ad);
+    color: #000000;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+    outline: none;
+    appearance: none;
+    text-align: center;
+}
+
+.chat-dropdown-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+#chatTypeDropdown:hover {
+    background: linear-gradient(135deg, #2980b9, #9b59b6);
+    transform: scale(1.05);
+}
+
+#chatTypeDropdown:focus {
+    background: linear-gradient(135deg, #1abc9c, #e74c3c);
+    border: none;
+}
+
+.chat-dropdown-container::after {
+    content: "\f107";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 18px;
+    color: white;
+    position: absolute;
+    right: 15px;
+    pointer-events: none;
+}
+
 
 .message-content {
     display: inline-block;

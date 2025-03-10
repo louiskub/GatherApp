@@ -8,11 +8,19 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.9/signalr.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <h1 class="top">Chat Room</h1>
+
+     <div class="chat-dropdown-container">
+    <select id="chatTypeDropdown" onchange="changeChatPage()">
+        <option value="/GlobalChat">🌍 Global Chat</option>
+        <option value="/Chat">📌 Post Chat</option>
+        </select>
+    </div>
 
     <div class="chatContainer">
         <div class="chatSidebar">
