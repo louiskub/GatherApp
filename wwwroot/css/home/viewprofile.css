@@ -876,6 +876,11 @@ textarea:focus {
     white-space: normal;
   }
 
+  .upload_container {
+    margin-top: -10px;
+    margin-bottom: -180px;
+  }
+
   #imageUpload {
     margin-top: 80px;
   }
@@ -931,19 +936,23 @@ textarea:focus {
   }
 
   .behavior-score {
-    margin-top: 80px;
+    margin-top: 20px;
     margin-bottom: -40px;
     width: 100%;
   }
 
   .upload_container {
-    margin-top: -50px;
+    margin-top: -10px;
     margin-right: 100px;
     width: 400px;
   }
 
   .upload_text {
     margin-left: 100px;
+  }
+
+  #usernamelabel label {
+    margin-top: -50px;
   }
 
   .form-group input,
