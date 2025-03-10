@@ -41,8 +41,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     builder.Services.AddAuthentication(options =>
     {
         options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme; 
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; 
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; // Use JWT first
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     })
     .AddCookie() 
     .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>

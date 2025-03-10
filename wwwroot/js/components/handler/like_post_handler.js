@@ -27,7 +27,6 @@ class LikePostHandler{
         let heart = this.heart;
         let likeNum = this.likeNumEle;
         let postId = this.postId
-        console.log(postId)
         heart.addEventListener("click", async (event) => {
             event.stopPropagation();
             event.preventDefault();

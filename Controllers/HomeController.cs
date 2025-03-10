@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using GatherApp.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GatherApp.Controllers;
 
@@ -11,12 +13,6 @@ public class HomeController : Controller
     public HomeController(ILogger<HomeController> logger)
     {
         _logger = logger;
-    }
-
-    [Route("history/popup")] // only test
-    public IActionResult HistoryPopup()
-    {
-        return View("~/Views/Home/History/HistoryPopup.cshtml");
     }
 
     public IActionResult Index()
@@ -40,6 +36,7 @@ public class HomeController : Controller
     }
 
     [Route("history/likes")]
+    [Authorize]
     public IActionResult LikesPost()
     {
         ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
@@ -47,6 +44,7 @@ public class HomeController : Controller
     }
 
     [Route("history/post")]
+    [Authorize]
     public IActionResult PostHistory()
     {
         ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
@@ -54,17 +52,11 @@ public class HomeController : Controller
     }
 
     [Route("history/application")]
+    [Authorize]
     public IActionResult ApplicationHistory()
     {
         ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
         return View("~/Views/Home/History/ApplicationHistory.cshtml");
-    }
-
-    [Route("user/likedpost")]
-    public IActionResult LikedPost()
-    {
-        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
-        return View("~/Views/Home/LikedPost.cshtml");
     }
 
     [Route("post")]
@@ -82,14 +74,18 @@ public class HomeController : Controller
     }
     
     [Route("report")]
+    [Authorize]
     public IActionResult Report()
     {
+        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
         return View("~/Views/Home/Report.cshtml");
     }
 
     [Route("review")]
+    [Authorize]
     public IActionResult Review()
     {
+        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
         return View("~/Views/Home/Review.cshtml");
     }
 
@@ -97,6 +93,9 @@ public class HomeController : Controller
     public IActionResult Login()
     {
         ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userId != null)
+            return RedirectToAction("Index", "Home");
         return View("~/Views/Auth/Login2.cshtml");
     }
 
@@ -104,25 +103,14 @@ public class HomeController : Controller
     public IActionResult SignUp()
     {
         ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userId != null)
+            return RedirectToAction("Index", "Home");
         return View("~/Views/Auth/SignUp2.cshtml");
     }
 
-    [Route("history/post2")]
-    public IActionResult PostHistory2()
-    {
-        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
-        return View("~/Views/Home/History/PostHistory2.cshtml");
-    }
-
-    [Route("history/application2")]
-    public IActionResult ApplicationHistory2()
-    {
-        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
-        return View("~/Views/Home/History/ApplicationHistory2.cshtml");
-    }
-
     [Route("Chat")]
-
+    [Authorize]
     public IActionResult Chat()
     {
         ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
@@ -130,19 +118,11 @@ public class HomeController : Controller
     }
 
     [Route("GlobalChat")]
-
+    [Authorize]
     public IActionResult GlobalChat()
     {
         ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
         return View("~/Views/Home/GlobalChathub.cshtml");
-    }
-
-    [Route("testpage")]
-
-    public IActionResult Testpage()
-    {
-        ViewBag.IsAuthorized = User.Identity?.IsAuthenticated ?? false;
-        return View("~/Views/Home/testpage.cshtml");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

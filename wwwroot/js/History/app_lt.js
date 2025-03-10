@@ -28,7 +28,6 @@ function addContent(appList, appType, appContainer){
         div.innerHTML = "<h3>No Activity</h3>"
         appContainer.appendChild(div)
     }
-    console.log("appList", appList)
     appList.forEach(app => {
         let post = app.post.post
         let activity = app.post.activity

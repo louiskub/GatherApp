@@ -3,7 +3,6 @@ import PopupHistory from '/js/components/popup_history.js';
 
 function getButtonsByType(type, hasAttachment, appliedStatus, isReviewed, isReported) {
   let textList = [];
-  console.log(`reviewed : ${isReviewed} , reported : ${isReported}`)
   if (type === "reportByOwner") {
       textList.push(isReviewed == 1 ? "Reviewed" : "Review")
       textList.push(isReported == 1 ? "Reported" : "Report")
@@ -24,7 +23,6 @@ function getButtonsByType(type, hasAttachment, appliedStatus, isReviewed, isRepo
       }
       else {
           textList = appliedStatus === false ? ["Rejected", "Approve"] : ["Approved", "Reject"];
-          console.log("adsd",appliedStatus, textList)
           if (hasAttachment)
             textList.splice(1, 0, "Attached File");
         }
@@ -374,7 +372,6 @@ export default class HistoryActivity {
             }
         })
       .catch((error) => {
-          console.log(error)
       })
     }) 
     return switchContainer;

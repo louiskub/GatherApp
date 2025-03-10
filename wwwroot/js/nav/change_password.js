@@ -336,8 +336,6 @@ resetForm() {
             const reqSpecial = overlay.querySelector("#req-special")
           
             // Open popup
-            console.log(
-                "trigger", triggerBtn)
             triggerBtn.addEventListener("click", () => {
               overlay.classList.add("active")
               resetForm()
