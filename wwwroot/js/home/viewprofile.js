@@ -52,8 +52,20 @@ function adjustTextareaHeight() {
 }
 
 async function toggleEdit() {
+  // var path = window.location.search;
+  // let response = await fetch(`api/user/profile${path}`, {
+  //   method: "GET",
+  //   credentials: "include",
+  // });
+  // response = await response.json();
+  // response = response.isGoogle
+  // console.log("Google",response)
+  // if (response == "Google") {
+  //   enableEditMode();
+  // } else {
   document.getElementById("popupContainer").style.display = "flex";
   document.getElementById("checkpassword").value = "";
+  // }
 }
 
 function togglePassword() {
@@ -519,6 +531,15 @@ function adjustLayoutForScreenSize() {
   } else {
   }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('upload_container').style.display = 'inline-block';
+  
+  // Make the container clickable to trigger the file input
+  document.getElementById('upload_container').addEventListener('click', function() {
+    document.getElementById('imageUpload').click();
+  });
+});
 
 window.addEventListener("DOMContentLoaded", adjustLayoutForScreenSize);
 window.addEventListener("resize", adjustLayoutForScreenSize);
