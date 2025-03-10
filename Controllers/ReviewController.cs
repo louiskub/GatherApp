@@ -183,7 +183,6 @@ namespace GatherApp.Controllers
 
             try
             {
-                // เพิ่ม Rating ใหม่ไปยังฐานข้อมูล
                 _db.RatingScores.Add(newRating);
                 await _db.SaveChangesAsync();
                 return Ok(new { message = "Rating submitted successfully." });

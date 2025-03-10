@@ -8,14 +8,11 @@ async function startConnection() {
             .withAutomaticReconnect()
             .build();
 
-        console.log("Connecting to SignalR...");
         await connection.start();
-        console.log("Connected to ChatHub");
 
         setupListeners();
         getUserChats();
     } catch (err) {
-        console.error("Connection failed: ", err);
         setTimeout(startConnection, 5000);
     }
 }
@@ -52,35 +49,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function setupListeners() {
     if (!connection) {
-        console.error("Connection is not initialized!");
+
         return;
     }
 
 
     connection.on("LoadUserChats", (posts) => {
-        console.log("[DEBUG] Joined Posts:", posts); // <-- เพิ่ม debug
         
         if (!Array.isArray(posts) || posts.length === 0) {
-            console.error("Invalid posts received:", posts);
             return;
         }
         let chatList = document.getElementById("chatList");
         if (!chatList) {
-            console.error("chatList not found! Make sure the element exists in HTML.");
             return;
         }
         chatList.innerHTML = "";
     
         if (posts.length === 0) {
-            chatList.innerHTML = "<li>No joined chats</li>";
             return;
         }
     
         posts.forEach( post => {
-            console.log("[DEBUG] Processing Post:", post);
 
             if (!post.id || isNaN(post.id) || !post.postName) {
-                console.error("Invalid Post ID:", post);
                 return;
             }
 
@@ -96,29 +87,24 @@ function setupListeners() {
             postText.classList.add("chatText");
 
             chatItem.onclick = () => {
-                console.log("🖱️ Clicked on Post ID:", post.id);
                 joinChat(parseInt(post.id));
             };
 
             chatItem.appendChild(coverImg);
             chatItem.appendChild(postText);
             
-            console.log("[DEBUG] Adding to chatList:", chatItem.innerText);
             chatList.appendChild(chatItem);
         });
     });
 
     function appendMessage(IsMine, username, message, sentAt, profileImageUrl) {
-        console.log("Adding message:", { IsMine, username, message, sentAt, profileImageUrl });
     
         let chatBox = document.getElementById("chatBox");
         if (!chatBox) {
-            console.error("chatBox not found!");
             return;
         }
     
         if (!username || !message || !sentAt) {
-            console.error("Missing data:", { username, message, sentAt });
             return;
         }
     
@@ -133,10 +119,10 @@ function setupListeners() {
                     hour12: false,
                 });
             } else {
-                console.error("Invalid Date Format:", sentAt);
+
             }
         } catch (error) {
-            console.error("Error parsing date:", error, "Raw value:", sentAt);
+
         }
         
         let isMine = Boolean(IsMine);
@@ -167,14 +153,12 @@ function setupListeners() {
     }
     
     connection.on("ReceiveMessage", (isMine,username, message, sentAt, profileImageUrl) => {
-        console.log("[DEBUG] ReceiveMessage:", { isMine, username, message, sentAt, profileImageUrl });
         appendMessage(isMine,username, message, sentAt, profileImageUrl);
     });
     
     connection.on("LoadPreviousMessages", (messages) => {
     
         if (!Array.isArray(messages)) {
-            console.error("Invalid response from server! Expected array but got:", messages);
             return;
         }
     
@@ -191,30 +175,23 @@ function setupListeners() {
         alert("Error: " + errorMessage);
     });
     
-    console.log("Listeners set up!");
     }   
 
     async function joinChat(postId) {
-        console.log("joinChat() called with PostID:", postId);
     
         if (!postId) {
             alert("No available chat to join.");
             return;
         }
     
-        console.log("Auto-joining Post ID:", postId);
-    
         try {
-            console.log("Calling JoinChat with PostID:", postId);
             await connection.invoke("JoinChat", postId.toString());
     
-            console.log("Successfully joined chat with PostID:", postId);
             currentPostId = postId;
             document.getElementById("chatBox").innerHTML = "";
     
             loadPreviousMessages(postId); 
         } catch (err) {
-            console.error("Failed to join chat:", err);
             alert("Failed to join chat: " + err);
         }
     }
@@ -262,11 +239,9 @@ function setupListeners() {
     }
 
 async function getUserChats() {
-    console.log("Fetching user chats...");
     try {
         await connection.invoke("GetUserChats");
     } catch (err) {
-        console.error("Failed to fetch user chats:", err);
     }
 }
 
@@ -278,7 +253,6 @@ document.getElementById("messageInput").addEventListener("keydown", function (ev
 });
 
 async function sendMessage() {
-    console.log("postId before sending:", currentPostId);
     if (!currentPostId) {
         alert("You must join a chat first.");
         return;
@@ -298,7 +272,7 @@ async function sendMessage() {
         document.getElementById("actionButton").innerHTML = '<i class="fa-solid fa-thumbs-up"></i>';
         document.getElementById("actionButton").classList.remove("active");
     } catch (err) {
-        console.error("Failed to send message: ", err);
+
     }
 
 }
@@ -328,7 +302,7 @@ async function sendEmoji(emoji) {
         await connection.invoke("SendMessage", currentPostId, emoji);
         document.getElementById("emojiPicker").style.display = "none"; 
     } catch (err) {
-        console.error("Failed to send emoji: ", err);
+
     }
 }
 
@@ -355,18 +329,17 @@ async function sendLike() {
     try {
         await connection.invoke("SendMessage", currentPostId, '<i class="fa-solid fa-thumbs-up"></i>');
     } catch (err) {
-        console.error("Failed to send like: ", err);
+
     }
 }
 
 async function loadPreviousMessages() {
     if (!currentPostId) return;
     try {
-        console.log("Sending LoadPreviousMessages request with postId:", currentPostId);
+
         await connection.invoke("LoadPreviousMessages", currentPostId);
     } catch (err) {
-        console.error("Failed to load messages:", err);
-        console.error("Full error details:", JSON.stringify(err, null, 2));
+
     }
 }
 

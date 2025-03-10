@@ -546,7 +546,7 @@ h1.top {
 }
 
 .chat-dropdown-container {
-    display: flex;
+    display: contents;
     justify-content: center;
     align-items: center;
     margin-bottom: 20px;
