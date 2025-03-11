@@ -6,24 +6,34 @@
 <link rel="stylesheet" href="~/css/History/post_history.css">
 <link rel="stylesheet" href="~/css/History/popup_history.css">
 
-
-<div class="pageContainer main">
-    @* <h1 class="top">Application History</h1> *@
-    <header class="post-history-header">
-        <div class="history-filter"></div>
-    </header>
-    <section class="post-history-content incoming">
-        <h2>Incoming</h2>
-    </section>
-    <section class="post-history-content pending">
-        <h2>Pending</h2>
-    </section>
-    <section class="post-history-content completed">
-        <h2>Completed</h2>
-    </section>
-    <section class="post-history-content fail">
-        <h2>Fail</h2>
-    </section>
-    <div class="popup-container"></div>
+<div class="main">
+    <div class="pageContainer">
+        @* <h1 class="top">Application History</h1> *@
+        <header class="post-history-header">
+            <h1 class="page-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#e91e63" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                </svg>
+                Application History
+            </h1>
+            <div class="history-filter"></div>
+        </header>
+        <div class="post-history-content">
+            <section class="post-history-content incoming">
+                <h2>Incoming</h2>
+            </section>
+            <section class="post-history-content pending">
+                <h2>Pending</h2>
+            </section>
+            <section class="post-history-content completed">
+                <h2>Completed</h2>
+            </section>
+            <section class="post-history-content fail">
+                <h2>Fail</h2>
+            </section>
+        </div>
+        <div class="popup-container"></div>
+    </div>
 </div>
+
 <script type="module" src="/js/History/app_lt.js"></script>
