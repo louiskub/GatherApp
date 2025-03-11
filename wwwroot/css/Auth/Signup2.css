@@ -9,6 +9,15 @@
     --signup-submit-hover: var(--bright-pink-crayola-2);
     --signup-input-text: var(--outer-space);
 
+    --signup-nav-bg: var(--antiflash-white);
+    --signup-nav-text: var(--french-gray);
+    --signup-prev-bg: var(--salmon-pink);
+    --signup-prev-hover-bg: var(--bright-pink-crayola-2);
+    /* --signup-prev-text: var(--eerie-black); */
+    --signup-next-bg: var(--bright-pink-crayola-2);
+    --signup-next-hover-bg: var(--bright-pink-crayola);
+    /* --signup-next-text: var(--seasalt); */
+
     --signup-google-bg: var(--seasalt);
     --signup-google-border: var(--french-gray);
     --signup-google-hover-bg: var(--antiflash-white);
@@ -31,6 +40,15 @@
     --signup-submit-color: var(--amaranth-purple);
     --signup-submit-hover: var(--rose-red);
     --signup-input-text: var(--french-gray);
+
+    --signup-nav-bg: var(--eerie-black);
+    --signup-nav-text: var(--outer-space);
+    --signup-prev-bg: var(--rose-red);
+    --signup-prev-hover-bg: var(--claret);
+    /* --signup-prev-text: var(--seasalt); */
+    --signup-next-bg: var(--bright-pink-crayola);
+    --signup-next-hover-bg: var(--rose-red);
+    /* --signup-next-text: var(--seasalt); */
 
     --signup-google-bg: var(--eerie-black);
     --signup-google-text: var(--seasalt);
@@ -69,6 +87,8 @@
     width: 100%;
     height: 80%;
     max-width: 800px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     /* overflow-y: auto; */
     /* align-items: center; */
     justify-content: center;
@@ -107,11 +127,13 @@
 .toggle-password {
     position: absolute;
     right: 15px;
+    top: 28%;
+    background-color: #e75480;
     border: none;
     background: none;
     cursor: pointer;
     display: flex;
-    align-items: center;
+    /* align-items: center; */
     height: 100%;
 }
 .toggle-password i {
@@ -168,51 +190,51 @@
 .signup-navigation {
     display: flex;
     justify-content: space-between;
-    gap: 1rem; /* ระยะห่างระหว่างปุ่ม */
+    gap: 1rem; 
     margin-bottom: 1rem;
+}
+
+#signupPrev,
+#signupNext {
+    background: var(--signup-nav-bg);
+    color: var(--signup-nav-text);
 }
 
 .signup-prev-button,
 .signup-next-button {
     padding: 10px;
-    font-size: 1rem;
+    font-size: 0.8rem;
     font-weight: bold;
     border: none;
     border-radius: 8px;
-    cursor: pointer;
-    width: 100px; /* กำหนดให้ปุ่มมีขนาดเท่ากัน */
+    width: 100px; 
     text-align: center;
     transition: all 0.3s ease-in-out;
 }
-
-/* ปุ่มก่อนหน้า */
 .signup-prev-button {
-    background-color: #ffb6c1; /* โทนชมพูอ่อน */
-    color: #fff;
+    /* background-color: #ffb6c1;  */
+    background-color: var(--signup-prev-bg);
+    color: white;
 }
-
-.signup-prev-button:hover {
-    background-color: #ff8aa8; /* โทนชมพูเข้มขึ้น */
+#signupPrevButton:hover {
+    background-color: var(--signup-prev-hover-bg); 
+    cursor: pointer;
     transform: scale(1.05);
 }
-
-/* ปุ่มถัดไป */
 .signup-next-button {
-    background-color: #fe86c2; /* โทนชมพูสด */
-    color: #fff;
+    background-color: var(--signup-next-bg); 
+    color: white;
 }
-
-.signup-next-button:hover {
-    background-color: #e75480; /* โทนชมพูเข้มขึ้น */
+#signupNextButton:hover {
+    background-color: var(--signup-next-hover-bg); 
+    cursor: pointer;
     transform: scale(1.05);
 }
-
-/* ปุ่มสมัคร */
 .signup-button {
     width: 100%;
-    max-width: 350px; /* กำหนดขนาดสูงสุดให้ไม่กว้างเกินไป */
+    max-width: 350px; 
     padding: 1rem;
-    background: #ff69b4; /* ชมพูสด */
+    background: var(--signup-submit-color); 
     color: white;
     border: none;
     border-radius: 8px;
@@ -228,7 +250,7 @@
 }
 
 .signup-button:hover {
-    background: #e75480; /* ชมพูเข้มขึ้น */
+    background: var(--signup-submit-hover);
     transform: scale(1.05);
     box-shadow: 0 6px 12px rgba(231, 84, 128, 0.4);
 }
@@ -286,7 +308,7 @@
 /* Password Strength Meter */
 .pw-strength-meter {
     height: 6px;
-    background-color: #f0f0f0;
+    background-color: var(--signup-input-bg);
     border-radius: 3px;
     margin: 8px 0;
 }
@@ -306,12 +328,14 @@
 }
   
 .pw-strength-meter-fill.pw-strength-strong {
-    background-color: #f48fb1;
+    /* background-color: #f48fb1; */
+    background-color: #ff6e9e;
 }
   
 /* Password Requirements */
 .pw-requirements-box {
-    background-color: #fff8f8;
+    /* background-color: #fff8f8; */
+    background-color: var(--signup-input-bg);
     border: 1px solid #ffcdd2;
     border-radius: 4px;
     padding: 10px 15px;
@@ -337,12 +361,44 @@
     color: #ff4d4f;
 }
   
-.pw-req-item.pw-req-met {
-    color: #52c41a;
-}
-  
 .pw-req-item i {
     margin-right: 8px;
+}
+
+.pw-req-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    color: #666;
+    font-size: 14px;
+}
+
+.pw-req-item.pw-req-met {
+    color: #e91e63;
+}
+
+.req-icon {
+    margin-right: 8px;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    position: relative;
+}
+
+.req-icon.req-not-met {
+    border-radius: 50%;
+    border: 1.5px solid #999;
+}
+
+.req-icon.req-met {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f472b6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 11.08V12a10 10 0 1 1-5.93-9.14'%3E%3C/path%3E%3Cpolyline points='22 4 12 14.01 9 11.01'%3E%3C/polyline%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.signup-confirm-password {
+    position: relative;
 }
 
 /* Media Queries สำหรับหน้าจอเล็ก */
@@ -350,10 +406,10 @@
     .signup-container {
         position: relative;
         /* top: 60px; */
-        width: 100%;
-        padding: 1rem; 
-        height: calc(100% - 60px);
-        border-radius: 0;
+        width: 90%;
+        /* padding: 1rem; */
+        height: calc(85% - 60px);
+        /* border-radius: 0; */
     }
     .signup-title {
         font-size: 1.9rem; 
@@ -382,23 +438,23 @@
 @media (max-width: 480px) {
 
     .inputBox {
-        font-size: 0.9rem; /* ลดขนาดตัวอักษรในกล่องกรอกข้อมูล */
+        font-size: 0.9rem; 
     }
 
     .signup-title {
-        font-size: 1.6rem; /* ลดขนาดฟอนต์สำหรับชื่อฟอร์ม */
+        font-size: 1.6rem; 
     }
 
     .signup-button {
-        padding: 0.8rem; /* ปรับขนาดปุ่ม */
-        font-size: 1rem; /* ลดขนาดฟอนต์ */
+        padding: 0.8rem; 
+        font-size: 1rem; 
     }
 
     .signup-google-link {
-        font-size: 1rem; /* ปรับขนาดฟอนต์ของลิงก์ Google */
+        font-size: 1rem; 
     }
 
     .toggle-password i {
-        font-size: 1.2rem; /* ปรับขนาดไอคอน */
+        font-size: 1.2rem; 
     }
 }
