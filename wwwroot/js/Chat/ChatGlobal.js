@@ -70,7 +70,9 @@ function setupGlobalChatListeners() {
     
         const chatBox = document.getElementById("globalChatBox");
         chatBox.innerHTML = ""; 
-    
+
+        console.log("Raw messages:", messages);
+
         const allItems = [
             ...messages.map(msg => ({
                 type: "message",
@@ -78,7 +80,7 @@ function setupGlobalChatListeners() {
                 username: msg.Username ?? msg.username ?? "Unknown",
                 message: msg.Message ?? msg.message ?? "[No Message]",
                 sentAt: msg.SentAt ?? msg.sentAt ?? new Date().toISOString(),
-                profileImageUrl: imgSelection(msg.ProfileImageUrl)
+                profileImageUrl: msg.profileImg
             })),
             ...postInvitations.map(inv => ({
                 type: "invitation",
@@ -102,6 +104,7 @@ function setupGlobalChatListeners() {
     
         allItems.forEach(item => {
             if (item.type === "message") {
+                console.log("Appending message - Profile Image URL:", item.profileImageUrl);
                 appendGlobalMessage(item.isMine, item.username, item.message, item.sentAt.toISOString(), item.profileImageUrl);
             } else if (item.type === "invitation") {
                 appendPostInvitation(item.postId, item.postName, item.postDetail, item.username);
@@ -233,7 +236,7 @@ function appendGlobalMessage(IsMine,username, message, sentAt, profileImageUrl) 
     }
 
     messageElement.innerHTML = `
-        <img src="${profileImageUrl}" alt="Profile" class="profile-pic">
+        <img src="${imgSelection(profileImageUrl)}" alt="Profile" class="profile-pic">
         <div class="message-details">
             <div class="message-header">
                 <strong class="username">${username}</strong>
