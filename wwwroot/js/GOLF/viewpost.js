@@ -369,7 +369,7 @@ async function initProvincesAndAmphures() {
   provinceSel.addEventListener('change', function() {
     if (provinceSel.value != "null") {
       const filteredAmp = filterAmphure(provinceSel.value);
-      const amphureSel = new Select(filteredAmp, "Amphure").render();
+      const amphureSel = new Select(filteredAmp, "District").render();
       elements.locationContainer.replaceChild(amphureSel, elements.locationContainer.lastChild);
     } else {
       elements.locationContainer.replaceChild(tempSpan, elements.locationContainer.lastChild);
@@ -436,7 +436,7 @@ async function validateForm() {
     // Only check location fields if event type is onsite
     if (eventType === 'onsite') {
         const provinceSelect = $('#Province');
-        const amphureSelect = $('#Amphure');
+        const amphureSelect = $('#District');
         const googleMapLink = $('.input_map_link input').value;
         
         if (!provinceSelect || provinceSelect.value === "null") {
@@ -497,7 +497,7 @@ async function editPost() {
   // Only get location data if event type is onsite
   if (!isOnline) {
     const provinceSelect = $('#Province');
-    const amphureSelect = $('#Amphure');
+    const amphureSelect = $('#District');
     const googleMapLink = $('.input_map_link input').value;
     
     provinceText = provinceSelect.options[provinceSelect.selectedIndex].text;
