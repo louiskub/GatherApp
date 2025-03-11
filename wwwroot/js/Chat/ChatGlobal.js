@@ -18,15 +18,14 @@ async function startGlobalChatConnection() {
 startGlobalChatConnection();
 
 
-function imgSelection(img, failed="https://tr.rbxcdn.com/30DAY-Avatar-310966282D3529E36976BF6B07B1DC90-Png/352/352/Avatar/Png/noFilter"){
-    if (img == "" || img == null) 
-        return failed
-    else if(img.length < 200) 
-        return img
+function imgSelection(coverImage){
+    if (coverImage == "" || coverImage == null) 
+        return "https://tr.rbxcdn.com/30DAY-Avatar-310966282D3529E36976BF6B07B1DC90-Png/352/352/Avatar/Png/noFilter"
+    else if(coverImage.length < 200) 
+        return coverImage
     else 
-        return "data:image/jpeg;base64," + img
+        return "data:image/jpeg;base64," + coverImage
 }
-
 
 function changeChatPage() {
     let selectedPage = document.getElementById("chatTypeDropdown").value;

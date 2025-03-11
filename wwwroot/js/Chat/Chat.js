@@ -19,7 +19,7 @@ async function startConnection() {
 
 function chooseImg(coverImage){
     if (coverImage == "" || coverImage == null) 
-        return "https://www.mcot.net/uploads/article/202409/fc9caee77c607de279ff9116c67c6ddf.jpeg"
+        return "https://tr.rbxcdn.com/30DAY-Avatar-310966282D3529E36976BF6B07B1DC90-Png/352/352/Avatar/Png/noFilter"
     else if(coverImage.length < 200) 
         return coverImage
     else 
