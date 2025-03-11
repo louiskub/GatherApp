@@ -1,5 +1,46 @@
 import loadCss from "/js/components/reuse_func.js"
 
+function validateNameInput(inputId, errorId) {
+  const input = document.getElementById(inputId);
+  const error = document.getElementById(errorId);
+  const nameRegex = /^[A-Za-z]+$/;
+
+  input.addEventListener("input", () => {
+    if (!nameRegex.test(input.value) && input.value.length > 0) {
+      input.style.borderColor = "red";
+      error.textContent = "Only alphabet characters are allowed.";
+      error.style.color = "red";
+      error.style.display = "block";
+    } else {
+      input.style.borderColor = "";
+      error.textContent = "";
+      error.style.display = "none";
+    }
+  });
+}
+
+function validateDateInput() {
+  const dobInput = document.getElementById("datePicker");
+  const error = document.getElementById("dobError");
+  
+  dobInput.addEventListener("change", () => {
+    const selectedDate = new Date(dobInput.value);
+    const today = new Date();
+    today.setDate(today.getDate() - 2); // วันนี้ - 2 วัน
+
+    if (selectedDate >= today) {
+      dobInput.style.borderColor = "red";
+      error.textContent = "Date of birth must be at least 2 days before today.";
+      error.style.color = "red";
+      error.style.display = "block";
+    } else {
+      dobInput.style.borderColor = "";
+      error.textContent = "";
+      error.style.display = "none";
+    }
+  });
+}
+
 // Password validation function
 function validatePassword() {
   const passwordInput = document.getElementById("password")
@@ -252,6 +293,11 @@ document.getElementById("signupButton").addEventListener("click", (event) => {
 document.addEventListener("DOMContentLoaded", () => {
   loadCss("/css/Auth/Signup2.css")
   loadCss("https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css")
+
+  // ใช้ฟังก์ชันตรวจสอบข้อมูล
+  validateNameInput("firstName", "firstNameError");
+  validateNameInput("lastName", "lastNameError");
+  validateDateInput();
 
   // Use the global flatpickr variable
   if (typeof window.flatpickr !== "undefined") {
