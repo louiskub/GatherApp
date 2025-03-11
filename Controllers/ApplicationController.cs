@@ -107,7 +107,6 @@ public class ApplicationController : Controller
         // return Json(new { status = "deleted" });
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var user = _db.Users.Where(u => u.Id == userId).FirstOrDefault();
-        // Console.WriteLine("\n\n{0} {1}\n\n", userId, "ets");
         if (user == null)
             return NotFound("User not found");
 
