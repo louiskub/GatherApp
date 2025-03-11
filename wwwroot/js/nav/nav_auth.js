@@ -197,6 +197,9 @@ async function setNotifications() {
             notificationContainer.classList.remove('show');
         }
     });
+    document.querySelector(".menu-toggle").addEventListener('click', () => 
+        notificationContainer.classList.remove('show')
+    );
 
     filterNotifications('all');
     updateFilterSlider();
