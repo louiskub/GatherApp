@@ -205,7 +205,7 @@ public async Task<IActionResult> CreateReport([FromBody] CreateReportRequest rep
 
         if (report == null)
         {
-            return NotFound("Report not found.");
+            return NotFound("Report not found. ");
         }
 
         if (DateTime.Now < post.Activity.ActDatetime)
