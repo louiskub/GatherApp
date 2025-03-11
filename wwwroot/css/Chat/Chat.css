@@ -589,11 +589,15 @@ h1.top {
         border-bottom: 1px solid var(--border-color);
     }
 
+    .chatList {
+        height: 250px;
+    }
+
     .chatMain {
         width: 100%;
     }
 
     .chatBox {
-        height: 300px;
+        height: 500px;
     }
 }
