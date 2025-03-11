@@ -94,50 +94,73 @@ public class GlobalChatHub : Hub
         await base.OnConnectedAsync();
     }
 
-    
+    private static Dictionary<string, (string Username, string ProfileImg)> _userCache = new();
+
     public async Task LoadGlobalMessages()
     {
         var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var currentUserId = userId; 
+        var currentUserId = userId;
 
-        var messages = await _db.ChatGlobals
+        var messagesList = await _db.ChatGlobals
             .OrderByDescending(m => m.SentAt)
             .Take(30)
             .OrderBy(m => m.SentAt)
+            .ToListAsync();
+
+        var userIds = messagesList.Select(m => m.UserId).Distinct().ToList();
+
+        var missingUserIds = userIds.Where(id => !_userCache.ContainsKey(id)).ToList();
+
+        if (missingUserIds.Any())
+        {
+            var userData = await _db.Users
+                .Where(u => missingUserIds.Contains(u.Id))
+                .Select(u => new { u.Id, u.Username, u.ProfileImg })
+                .ToListAsync();
+
+            foreach (var user in userData)
+            {
+                _userCache[user.Id] = (user.Username ?? "Unknown", user.ProfileImg ?? GetDefaultProfileImage());
+            }
+        }
+
+        var messages = messagesList
             .Select(m => new
             {
                 IsMine = (m.UserId == currentUserId),
-                Username = _db.Users
-                    .Where(u => u.Id == m.UserId)
-                    .Select(u => u.Username)
-                    .FirstOrDefault() ?? "Unknown",
+                Username = _userCache.ContainsKey(m.UserId) ? _userCache[m.UserId].Username : "Unknown",
                 Message = m.Message,
                 SentAt = m.SentAt.ToUniversalTime().ToString("o"),
-                ProfileImg = m.ProfileImg
+                ProfileImg = _userCache.ContainsKey(m.UserId) ? _userCache[m.UserId].ProfileImg : GetDefaultProfileImage()
             })
-            .ToListAsync(); 
-        
-        var postInvitations = await _db.PostInvitations
-        .OrderByDescending(p => p.SentAt)
-        .Take(30)
-        .OrderBy(p => p.SentAt)
-        .Select(p => new
-        {
-            PostId = p.PostId,
-            PostName = p.Post.PostName,
-            PostDetail = p.Post.Detail,
-            Username = _db.Users
-                .Where(u => u.Id == p.InviterUserId)
-                .Select(u => u.Username)
-                .FirstOrDefault() ?? "Unknown",
-            SentAt = p.SentAt.ToUniversalTime().ToString("o")
-        })
-        
-        .ToListAsync();
+            .ToList();
 
-        await Clients.All.SendAsync("LoadPreviousGlobalMessages", messages, postInvitations); 
-       
+        var postInvitations = await _db.PostInvitations
+            .OrderByDescending(p => p.SentAt)
+            .Take(30)
+            .OrderBy(p => p.SentAt)
+            .Select(p => new
+            {
+                PostId = p.PostId,
+                PostName = p.Post.PostName,
+                PostDetail = p.Post.Detail,
+                Username = _db.Users
+                    .Where(u => u.Id == p.InviterUserId)
+                    .Select(u => u.Username)
+                    .FirstOrDefault() ?? "Unknown",
+                SentAt = p.SentAt.ToUniversalTime().ToString("o")
+            })
+            .ToListAsync();
+
+        await Clients.All.SendAsync("LoadPreviousGlobalMessages", messages, postInvitations);
     }
+
+
+    private string GetDefaultProfileImage()
+    {
+        return "https://tr.rbxcdn.com/30DAY-Avatar-310966282D3529E36976BF6B07B1DC90-Png/352/352/Avatar/Png/noFilter";
+    }
+
 
 public async Task SendPostInvitation(int postId)
 {
