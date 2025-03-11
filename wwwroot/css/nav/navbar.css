@@ -214,6 +214,8 @@ input:checked + .switch .dark-text {
     height: 50px;
     background-color: var(--user-menu-a-bg);
     border: 2px solid var(--navbar-text);
+    object-fit: cover;
+    object-position: center;
 }
 .menu-toggle .close-icon {
     display: none;

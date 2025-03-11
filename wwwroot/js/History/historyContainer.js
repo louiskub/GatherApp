@@ -1,109 +1,121 @@
-import PopupUserList from '/js/components/popup_userlist.js';
-import PopupHistory from '/js/components/popup_history.js';
+import PopupUserList from "/js/components/popup_userlist.js";
+import PopupHistory from "/js/components/popup_history.js";
 
-function getButtonsByType(type, hasAttachment, appliedStatus, isReviewed, isReported) {
+function getButtonsByType(
+  type,
+  hasAttachment,
+  appliedStatus,
+  isReviewed,
+  isReported
+) {
   let textList = [];
   if (type === "reportByOwner") {
-      textList.push(isReviewed == 1 ? "Reviewed" : "Review")
-      textList.push(isReported == 1 ? "Reported" : "Report")
-      console.log(textList)
+    textList.push(isReviewed == 1 ? "Reviewed" : "Review");
+    textList.push(isReported == 1 ? "Reported" : "Report");
+    console.log(textList);
   }
 
-  if (type === "review"){
-      textList = isReviewed === 1 ? ["Reviewed"] : ["Review"];
+  if (type === "review") {
+    textList = isReviewed === 1 ? ["Reviewed"] : ["Review"];
   }
-  if (type === "report"){
-      textList = isReported === 1 ? ["Reported"] : ["Report"];
+  if (type === "report") {
+    textList = isReported === 1 ? ["Reported"] : ["Report"];
   }
   if (type === "view") {
-      if (appliedStatus === null) {
-          textList = ["Approve", "Reject"];
-          if (hasAttachment)
-            textList.unshift("Attached File");
-      }
-      else {
-          textList = appliedStatus === false ? ["Rejected", "Approve"] : ["Approved", "Reject"];
-          if (hasAttachment)
-            textList.splice(1, 0, "Attached File");
-        }
-      
+    if (appliedStatus === null) {
+      textList = ["Approve", "Reject"];
+      if (hasAttachment) textList.unshift("Attached File");
+    } else {
+      textList =
+        appliedStatus === false
+          ? ["Rejected", "Approve"]
+          : ["Approved", "Reject"];
+      if (hasAttachment) textList.splice(1, 0, "Attached File");
+    }
   }
   return textList || [];
 }
 
-
 // ฟังก์ชันเปิด popup
 function openPopup(type, users, postId) {
-  const popupContainer = document.querySelector('.popup-container');
+  const popupContainer = document.querySelector(".popup-container");
   popupContainer.innerHTML = ""; // ล้าง popup ก่อน render ใหม่
 
-  const userList = users.map(userData => {
-      const buttons = getButtonsByType(type, userData.isAttached, userData.appliedStatus, userData.isReviewed, userData.isReported);
-      return new PopupUserList(userData.profileImg, userData.username, buttons, postId, userData.isOwner);
+  const userList = users.map((userData) => {
+    const buttons = getButtonsByType(
+      type,
+      userData.isAttached,
+      userData.appliedStatus,
+      userData.isReviewed,
+      userData.isReported
+    );
+    return new PopupUserList(
+      userData.profileImg,
+      userData.username,
+      buttons,
+      postId,
+      userData.isOwner
+    );
   });
 
   const popupHeader = type === "view" ? "Registrants" : "Participants";
-  const popup = new PopupHistory(popupHeader, users.length, userList, postId).render();
+  const popup = new PopupHistory(
+    popupHeader,
+    users.length,
+    userList,
+    postId
+  ).render();
   popupContainer.appendChild(popup);
 
-  popup.style.display = 'grid';
+  popup.style.display = "grid";
   document.body.classList.add("no-scroll");
-  return popupContainer
+  return popupContainer;
 }
 
-
-async function fetchAllRegistrant(postId){
-    let response = await fetch(`/api/post/application?postId=${postId}`)
-    if (!response.ok){
-      response = await response.text()
-      window.showToast(response, "error")
-    }
-    else if (response.redirected)
-      window.changePage("Please Login First", "/login", "warning")
-    else {
-      response = await response.json()
-      return response
-    }
+async function fetchAllRegistrant(postId) {
+  let response = await fetch(`/api/post/application?postId=${postId}`);
+  if (!response.ok) {
+    response = await response.text();
+    window.showToast(response, "error");
+  } else if (response.redirected)
+    window.changePage("Please Login First", "/login", "warning");
+  else {
+    response = await response.json();
+    return response;
+  }
 }
 // for report or review
 async function fetchAllParticipant(postId) {
-  let response = await fetch(`/api/post/participant?postId=${postId}`)
-  if (!response.ok){
-    response = await response.text()
-    window.showToast(response, "error")
-  }
-  else if (response.redirected)
-    window.changePage("Please Login First", "/login", "warning")
+  let response = await fetch(`/api/post/participant?postId=${postId}`);
+  if (!response.ok) {
+    response = await response.text();
+    window.showToast(response, "error");
+  } else if (response.redirected)
+    window.changePage("Please Login First", "/login", "warning");
   else {
-    response = await response.json()
-    return response
+    response = await response.json();
+    return response;
   }
 }
 
-async function viewRegistrantByPostOwner(postId){
-  let userList = await fetchAllRegistrant(postId)
-  if (userList)
-    openPopup("view", userList, postId)
+async function viewRegistrantByPostOwner(postId) {
+  let userList = await fetchAllRegistrant(postId);
+  if (userList) openPopup("view", userList, postId);
 }
 
-async function viewParticipantsByPostOwner(postId){
-  let userList = await fetchAllParticipant(postId)
-  console.log(userList)
-  if (userList)
-    openPopup("reportByOwner", userList, postId)
+async function viewParticipantsByPostOwner(postId) {
+  let userList = await fetchAllParticipant(postId);
+  console.log(userList);
+  if (userList) openPopup("reportByOwner", userList, postId);
 }
 
-async function reportByParticipant(postId){
+async function reportByParticipant(postId) {}
 
+async function reviewByParticipant(postId) {
+  let userList = await fetchAllParticipant(postId);
+  if (userList) userList[0].isOwner = true;
+  openPopup("review", userList, postId);
 }
-
-async function reviewByParticipant(postId){
-  let userList = await fetchAllParticipant(postId)
-  if (userList)
-    userList[0].isOwner = true
-    openPopup("review", userList, postId)
-}
-
 
 export default class HistoryActivity {
   constructor(
@@ -115,7 +127,7 @@ export default class HistoryActivity {
     status,
     tag,
     isOpened,
-    isAttached=false
+    isAttached = false
   ) {
     this.postId = postId;
     this.curParticipant = curParticipant;
@@ -126,20 +138,23 @@ export default class HistoryActivity {
     this.checked = isOpened;
     this.isAttached = isAttached;
 
-    let formattedDate = new Date(date).toLocaleString('en-US', {
-        weekday: 'short',
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true
-    }).toUpperCase().split(" ")
-    formattedDate[2] = formattedDate[2].replace(",", " -")
-    formattedDate = formattedDate.join(" ")
+    let formattedDate = new Date(date)
+      .toLocaleString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+      })
+      .toUpperCase()
+      .split(" ");
+    formattedDate[2] = formattedDate[2].replace(",", " -");
+    formattedDate = formattedDate.join(" ");
     this.date = formattedDate ?? "Unknown Date";
 
     this.containerStyle = document.createElement("div");
-    this.containerStyle.id = "postId"+this.postId;
+    this.containerStyle.id = "postId" + this.postId;
     this.containerStyle.classList.add("containerStyle");
   }
 
@@ -202,7 +217,7 @@ export default class HistoryActivity {
         tagContainer.appendChild(tag);
       }
     };
-    this.tag.forEach(tag => {
+    this.tag.forEach((tag) => {
       addTag(tag);
     });
 
@@ -230,12 +245,12 @@ export default class HistoryActivity {
     statusContainer.appendChild(buttonContainer);
 
     reviewButton.addEventListener("click", () => {
-      reviewByParticipant(this.postId)
-    })
+      reviewByParticipant(this.postId);
+    });
 
     reportButton.addEventListener("click", () => {
-      window.location.href = `/report?postId=${this.postId}`
-    })
+      window.location.href = `/report?postId=${this.postId}`;
+    });
 
     return statusContainer;
   }
@@ -265,50 +280,72 @@ export default class HistoryActivity {
     statusContainer.classList.add("statusContainer");
 
     statusContainer.innerHTML = `
-      <div class="statusContainer">
         <p class="textStyle">Pending</p>
-        <div class="buttonContainer"></div>
-      </div>`
+        <div class="buttonContainer"></div>`;
     if (this.isAttached)
-      statusContainer.querySelector(".buttonContainer").innerHTML = `<button class="buttonStyle review">Attached File</button>`
+      statusContainer.querySelector(
+        ".buttonContainer"
+      ).innerHTML = `<button class="buttonStyle review">Attached File</button>`;
 
-    statusContainer.querySelector(".buttonContainer").innerHTML += `<button class="buttonStyle report">Cancel</button>`
-    statusContainer.querySelector(".report").addEventListener("click", async () => {
-      let head, cont, noText, yesText;
-      let apiPath, successMessage, failMessage, successRedirect;
-      head = "Cancel this registration?"
-      cont = "Are you sure you want to cancel this registration? This action cannot be undone."
-      noText = "Keep it"
-      yesText = "Cancel registration"
+    statusContainer.querySelector(
+      ".buttonContainer"
+    ).innerHTML += `<button class="buttonStyle report">Cancel</button>`;
+    statusContainer
+      .querySelector(".report")
+      .addEventListener("click", async () => {
+        let head, cont, noText, yesText;
+        let apiPath, successMessage, failMessage, successRedirect;
+        head = "Cancel this registration?";
+        cont =
+          "Are you sure you want to cancel this registration? This action cannot be undone.";
+        noText = "Keep it";
+        yesText = "Cancel registration";
 
-      apiPath = `api/user/applypost?postid=${this.postId}`
-      successMessage = "Post registration canceled successfully"
-      failMessage = "Failed to cancel post registration"
-      window.confirmAction(head,cont,noText,yesText,
-        async () => await fetch(`/api/user/applypost?postid=${this.postId}`, {
-            method: 'DELETE'
-          }).then(async (response) => {
-            if (response.ok) {
-              // non auth
-              if (response.redirected)
-                window.redirectToLogin();
-              else
-                window.changePage(successMessage, "/history/application", "success");
-            }
-            // error
-            else {
-              response = await response.text()
-              window.showToast(response, "error");
-            }
-          }).catch((e) => {throw e})
-      )
-    })
+        apiPath = `api/user/applypost?postid=${this.postId}`;
+        successMessage = "Post registration canceled successfully";
+        failMessage = "Failed to cancel post registration";
+        window.confirmAction(
+          head,
+          cont,
+          noText,
+          yesText,
+          async () =>
+            await fetch(`/api/user/applypost?postid=${this.postId}`, {
+              method: "DELETE",
+            })
+              .then(async (response) => {
+                if (response.ok) {
+                  // non auth
+                  if (response.redirected) window.redirectToLogin();
+                  else
+                    window.changePage(
+                      successMessage,
+                      "/history/application",
+                      "success"
+                    );
+                }
+                // error
+                else {
+                  response = await response.text();
+                  window.showToast(response, "error");
+                }
+              })
+              .catch((e) => {
+                throw e;
+              })
+        );
+      });
 
     if (this.isAttached)
-    statusContainer.querySelector(".review").addEventListener("click", () => {
-      if(window.userProfile.role != "visitor")
-        window.open(`/api/post/getfile?postId=${this.postId}&participantName=${window.userProfile.username}`,'_blank').focus();
-    })
+      statusContainer.querySelector(".review").addEventListener("click", () => {
+        if (window.userProfile.role != "visitor")
+          window
+            .open(
+              `/api/post/getfile?postId=${this.postId}&participantName=${window.userProfile.username}`,
+              "_blank"
+            )
+            .focus();
+      });
     return statusContainer;
   }
 
@@ -345,70 +382,74 @@ export default class HistoryActivity {
     const switchSlider = document.createElement("span");
     switchSlider.classList.add("activitySlider");
 
-
     switchBox.appendChild(switchInput);
     switchBox.appendChild(switchSlider);
     switchContainer.appendChild(switchLabel);
-    switchContainer.appendChild(switchBox);    
-    
-    switchInput.addEventListener("click", async() => {
+    switchContainer.appendChild(switchBox);
+
+    switchInput.addEventListener("click", async () => {
       await fetch(`/api/post/toggle?postid=${this.postId}`, {
-        method: 'PATCH',
+        method: "PATCH",
       })
         .then(async (response) => {
-            if (response.ok) {
-                if (response.redirected) {
-                    window.redirectToLogin();
-                }
-                else {
-                    response = await response.json();
-                    this.checked = response.isOpened;
-                    switchLabel.textContent = this.checked ? "Open" : "Close";
-                    switchInput.checked = this.checked;
-                }
+          if (response.ok) {
+            if (response.redirected) {
+              window.redirectToLogin();
             } else {
-                response = await response.text();
-                window.showToast(response, "error");
+              response = await response.json();
+              this.checked = response.isOpened;
+              switchLabel.textContent = this.checked ? "Open" : "Close";
+              switchInput.checked = this.checked;
             }
+          } else {
+            response = await response.text();
+            window.showToast(response, "error");
+          }
         })
-      .catch((error) => {
-      })
-    }) 
+        .catch((error) => {});
+    });
     return switchContainer;
   }
 
   //   post
   createActivityStatusOnGoing() {
-    async function cancelPost(postId){
-        let head, cont, noText, yesText;
-        let apiPath, successMessage, failMessage, successRedirect;
-        head = "Delete this post?"
-        cont = "Are you sure you want to delete this post? This action cannot be undone."
-        noText = "Keep it"
-        yesText = "Delete post"
-        apiPath = `/api/post?postid=${postId}`
-        successMessage = "Post deleted successfully"
-        failMessage = "Failed to delete post"
-        successRedirect = "/home"
-      window.confirmAction(head,cont,noText,yesText,
-        async () => await fetch(apiPath, {
-          method: 'DELETE',
-          headers: {'Content-Type': 'application/json'}
-        })
-          .then(response => {
+    async function cancelPost(postId) {
+      let head, cont, noText, yesText;
+      let apiPath, successMessage, failMessage, successRedirect;
+      head = "Delete this post?";
+      cont =
+        "Are you sure you want to delete this post? This action cannot be undone.";
+      noText = "Keep it";
+      yesText = "Delete post";
+      apiPath = `/api/post?postid=${postId}`;
+      successMessage = "Post deleted successfully";
+      failMessage = "Failed to delete post";
+      successRedirect = "/home";
+      window.confirmAction(
+        head,
+        cont,
+        noText,
+        yesText,
+        async () =>
+          await fetch(apiPath, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+          })
+            .then((response) => {
               if (response.ok) {
-                  if(response.redirected){
-                    window.redirectToLogin();
-                  }
-                  else {
-                    window.changePage(successMessage, "/history/post", "success");
-                  }
+                if (response.redirected) {
+                  window.redirectToLogin();
+                } else {
+                  window.changePage(successMessage, "/history/post", "success");
+                }
               } else {
-                  window.showToast(failMessage, "error");
+                window.showToast(failMessage, "error");
               }
-          }).catch(() => {
+            })
+            .catch(() => {
               window.showToast(failMessage, "error");
-          }))
+            })
+      );
     }
 
     const statusContainer = document.createElement("div");
@@ -432,11 +473,11 @@ export default class HistoryActivity {
 
     // รอแพรมาใส่ event ให้ปุ่ม
     viewButton.addEventListener("click", () => {
-      viewRegistrantByPostOwner(this.postId)
-    })
+      viewRegistrantByPostOwner(this.postId);
+    });
 
     cancelButton.addEventListener("click", () => {
-      cancelPost(this.postId)
+      cancelPost(this.postId);
     });
 
     return statusContainer;
@@ -450,7 +491,7 @@ export default class HistoryActivity {
     const statusName = document.createElement("p");
     statusName.textContent = "Success";
     statusName.classList.add("textStyle");
-    
+
     const buttonContainer = document.createElement("div");
     buttonContainer.classList.add("buttonContainer");
 
@@ -462,18 +503,17 @@ export default class HistoryActivity {
     statusContainer.appendChild(statusName);
     statusContainer.appendChild(buttonContainer);
 
-    reviewButton.addEventListener("click",() => {
-      viewParticipantsByPostOwner(this.postId)
-    })
-
+    reviewButton.addEventListener("click", () => {
+      viewParticipantsByPostOwner(this.postId);
+    });
 
     return statusContainer;
   }
 
-  initEventBtn(){
-    const toggleSwitch = this.containerStyle.querySelector("#toggleSwitch")
-    const view = this.containerStyle.querySelector(".view")
-    const cancel = this.containerStyle.querySelector(".report")
+  initEventBtn() {
+    const toggleSwitch = this.containerStyle.querySelector("#toggleSwitch");
+    const view = this.containerStyle.querySelector(".view");
+    const cancel = this.containerStyle.querySelector(".report");
   }
 
   render() {
@@ -497,7 +537,7 @@ export default class HistoryActivity {
         indicator.classList.add("indicator", "onGoing");
         this.containerStyle.appendChild(innerContainer);
         break;
-      
+
       case "future": //post
         innerContainer.appendChild(this.createActivityStatusOnGoing());
         indicator.classList.add("indicator", "future");
