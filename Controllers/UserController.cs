@@ -31,9 +31,15 @@ public class UserController : Controller
         var user = _db.Users.Include(u => u.BehaviorScores)
                             .Include(u => u.ActTypeProfile)
                             .Include(u => u.ReceivedRatings)
+                            .Include(u => u.CreatedPosts)
+                            .ThenInclude(p => p.Activity)
+                            .ThenInclude(a => a.ActTypes)
+                            .Include(u => u.ApplyHistories)
+                            .ThenInclude(ap => ap.Post)
+                            .ThenInclude(p => p.Activity)
+                            .ThenInclude(a => a.ActTypes)
                             .Where(u => u.Username == username).FirstOrDefault();
 
-        // var isGoogle = _db.UserLogins.Any(ul => ul.UserId == user.Id);
 
         var rating = _db.RatingScores.Where(r => r.RatedUserId == user.Id)
                                 .Select(r => r.Score)
@@ -43,11 +49,39 @@ public class UserController : Controller
             return NotFound("User not found");
 
         bool isOwner = user.Id == reqUserId;
+
+        var actTypes = new Dictionary<string, int>();
+        user.CreatedPosts.ForEach((p) => {
+            var actType = p.Activity.ActTypes.Select(a => a.ActType).ToList();
+            actType.ForEach((a) => {
+                if (actTypes.TryGetValue(a, out int value))
+                    actTypes[a] = value+1;
+                else
+                    actTypes[a] = 1;
+            });
+        });
+        user.ApplyHistories.ForEach((ap) => {
+            ap.Post.Activity.ActTypes
+            .Select(a => a.ActType)
+            .ToList().ForEach((a) => {
+                if (actTypes.TryGetValue(a, out int value))
+                    actTypes[a] = value+1;
+                else
+                    actTypes[a] = 1;
+            });
+            
+        });
+
+        var sortedActTypes = actTypes.OrderByDescending(a => a.Value)
+                                    .Select(a => a.Key)
+                                    .ToList().Take(5);
+        
         return Json(new
         {
             user = user.ToJson(isOwner),
             RatingScore = user.ReceivedRatings.Count == 0 ? 0 : user.ReceivedRatings.Average(r => r.Score),
-            isOwner
+            isOwner,
+            actTypes = sortedActTypes,
         });
     }
 

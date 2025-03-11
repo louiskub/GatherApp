@@ -22,6 +22,7 @@ async function fetchMyProfile() {
     });
     response = await response.json();
     let isOwner = response.isOwner;
+    let act = response.actTypes;
     response = response.user;
     document.getElementById(
       "profilepic"
@@ -49,6 +50,24 @@ async function fetchMyProfile() {
     if (!isOwner){
       document.querySelector(".edit-button").innerHTML = ""
     }
+
+    function rendersTags(postWrapper) {
+      const postsList = document.getElementById("tag-list");
+  
+      const actTypes = postWrapper && postWrapper.length > 0 ? postWrapper : [];
+      const postItem = document.createElement("profile-tags");
+  
+      postItem.innerHTML = `
+                          <span class="profile-tag">#${actTypes}</span>
+                      `;
+  
+      postsList.appendChild(postItem);
+    }
+  
+    act.forEach((actType) => {
+        rendersTags(actType);
+    });
+    
   } catch (error) {
     console.error("Logout error:", error);
   }
@@ -273,54 +292,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   document.querySelector(".toggle-password").addEventListener("click", togglePassword);
   document.getElementById("confirm-btn").addEventListener("click", confirmPassword);
   document.getElementById("close-pop-btn").addEventListener("click", closePopup);
-  async function fetchTags() {
-    try {
-      var path = window.location.search;
-      let response = await fetch(`/api/post/user${path}`, {
-        method: "GET",
-        credentials: "include",
-      });
-
-      if (!response.ok) throw new Error("Failed to fetch posts");
-
-      let data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Error loading posts:", error);
-      return [];
-    }
-  }
-
-  function rendersTags(postWrapper) {
-    const postsList = document.getElementById("tag-list");
-
-    const actTypes = postWrapper && postWrapper.length > 0 ? postWrapper : [];
-    const postItem = document.createElement("profile-tags");
-
-    postItem.innerHTML = `
-                        <span class="profile-tag">#${actTypes}</span>
-                    `;
-
-    postsList.appendChild(postItem);
-  }
-
-  const allTags = await fetchTags();
-  const existingTags = new Set();
-
-  if (Array.isArray(allTags)) {
-    allTags.forEach((postWrapper) => {
-      if (Array.isArray(postWrapper.actTypes)) {
-        postWrapper.actTypes.forEach((actType) => {
-          if (!existingTags.has(actType)) {
-            existingTags.add(actType);
-            rendersTags(actType);
-          }
-        });
-      }
-    });
-  } else {
-    console.error("Invalid posts structure:", allTags);
-  }
 });
 
 const starSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
