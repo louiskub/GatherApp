@@ -119,13 +119,8 @@ public async Task<IActionResult> GoogleResponse()
         }
     }
 
-    // สร้าง JWT Token
     var token = _jwtService.GenerateToken(existingUser.Id, existingUser.Username);
 
-    //  if (isFirstTimeLogin)
-    // {
-    //     return Redirect($"/user/myprofile?token={token}");
-    // }
 
     Response.Cookies.Append("token", token, new CookieOptions
     {
