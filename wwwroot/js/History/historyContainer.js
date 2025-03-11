@@ -67,7 +67,7 @@ function openPopup(type, users, postId) {
   ).render();
   popupContainer.appendChild(popup);
 
-  popup.style.display = "grid";
+  popup.style.display = "flex";
   document.body.classList.add("no-scroll");
   return popupContainer;
 }

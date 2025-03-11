@@ -29,11 +29,11 @@
 
     --popup-status-approved-bg: var(--cherry-blossom-pink);
     --popup-status-approved-border: var(--salmon-pink);
-    --popup-status-approved-text: var(--eerie-black);
+    --popup-status-approved-text: rgb(0, 48, 0);
 
     --popup-status-rejected-bg: var(--rose-red);
     --popup-status-rejected-border: var(--bright-pink-crayola);
-    --popup-status-rejected-text: var(--seasalt);
+    --popup-status-rejected-text: red;
 
     --popup-status-reviewed-bg: var(--amaranth-purple);
     --popup-status-reviewed-border: var(--rose-red);
@@ -72,11 +72,11 @@
 
     --popup-status-approved-bg: var(--salmon-pink);
     --popup-status-approved-border: var(--cherry-blossom-pink);
-    --popup-status-approved-text: var(--eerie-black);
+    --popup-status-approved-text: white;
 
     --popup-status-rejected-bg: var(--bright-pink-crayola);
     --popup-status-rejected-border: var(--rose-red);
-    --popup-status-rejected-text: var(--seasalt);
+    --popup-status-rejected-text: white;
 
     --popup-status-reviewed-bg: var(--amaranth-purple);
     --popup-status-reviewed-border: var(--rose-red);
@@ -253,7 +253,7 @@
 .popup-status-reported {
     font-size: 1rem;
     font-weight: normal;
-    padding: 0.4rem 1rem;
+    padding: 0.35rem 1rem;
     border-radius: 8px;
     opacity: 0.85;
     border-width: 1px;
@@ -262,16 +262,18 @@
 
 /* Status Approved */
 .popup-status-approved {
-    background-color: var(--popup-status-approved-bg);
+    /* background-color: var(--popup-status-approved-bg); */
+    /* color: var(--popup-status-approved-text); */
     color: var(--popup-status-approved-text);
-    border-color: var(--popup-status-approved-border);
+    /* border-color: var(--popup-status-approved-border); */
 }
 
 /* Status Rejected */
 .popup-status-rejected {
-    background-color: var(--popup-status-rejected-bg);
+    /* background-color: var(--popup-status-rejected-bg); */
+    /* color: var(--popup-status-rejected-border); */
     color: var(--popup-status-rejected-text);
-    border-color: var(--popup-status-rejected-border);
+    /* border-color: var(--popup-status-rejected-border); */
 }
 
 /* Status Reviewed */
@@ -332,11 +334,26 @@
         width: 90%;
     }
     .popup-button-group span {
-        width: 80%;
+        width: 90%;
+        padding: 0.4rem 1rem;
+        border-width: 1px;
     }
 }
 @media (max-width: 820px) {
     .popup-user-container {
         justify-content: center;
     }
+}
+
+.fa-circle{
+    font-size: 0.6rem;
+}
+
+.popup-status-approved, 
+.popup-status-rejected{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    border-width: 0px;
 }
