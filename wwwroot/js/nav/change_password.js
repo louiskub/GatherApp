@@ -244,7 +244,7 @@ export default class ChangePassword
         }, 2000);
       })
       .catch((error) => {
-          alert(error.message);
+          window.showToast(error.message, "error");
           errorMessage.textContent = error.message;
           errorMessage.classList.remove("hidden");
 
