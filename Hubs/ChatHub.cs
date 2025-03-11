@@ -134,7 +134,6 @@ public class ChatHub : Hub
         await base.OnDisconnectedAsync(exception);
     }
 
-
     public async Task SendMessage(int postId, string message)
     {
         try
