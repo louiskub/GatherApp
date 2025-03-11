@@ -128,6 +128,10 @@ function enableEditMode() {
   if (window.matchMedia("(max-width: 768px)").matches) {
     document.getElementById("usernamelabel").style.marginTop = "20px";
   }
+  if (window.matchMedia("(max-width: 576px)").matches) {
+    document.getElementById("imageUpload").style.marginTop = "30px";
+    document.getElementById("usernamelabel").style.marginTop = "-20px";
+  }
   const sexDropdown = document.getElementById("sex-dropdown");
   const standardSexes = ["Male", "Female", "Non-Binary", "Prefer not to say"];
 
