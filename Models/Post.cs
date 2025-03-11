@@ -144,6 +144,7 @@ public class Post{
 
     public object ToJsonSmall()
     {
+        CurParticipant = Applications.Count(a => a.AppliedStatus == true);
         return new{
             Post = new {
                 Id,
