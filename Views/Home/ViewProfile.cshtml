@@ -9,12 +9,12 @@
     <div class="sakura-bg" id="sakura-container"></div>
 
     <div class="container">
-        <img class="profile-pic" id="profilepic" src="" alt="Profile Picture">
+        <img class="profile-pic" id="profilepic" src="">
 
         <div class="edit-button">
-            <button id="editbtn" onclick="toggleEdit()">✏️ Edit</button>
-            <button id="savebtn" onclick="saveProfile()">✅ Save</button>
-            <button id="cancelbtn" onclick="cancelEdit()">❌ Cancel</button>
+            <button id="editbtn">✏️ Edit</button>
+            <button id="savebtn">✅ Save</button>
+            <button id="cancelbtn">❌ Cancel</button>
         </div>
 
         <div class="popup-container" id="popupContainer">
@@ -23,12 +23,12 @@
 
                 <div class="password-container">
                     <input type="password" id="checkpassword" placeholder="Enter password">
-                    <span class="toggle-password" onclick="togglePassword()">👁️‍🗨️</span>
+                    <span class="toggle-password">👁️‍🗨️</span>
                 </div>
 
                 <p id="error-message" style="color: red;"></p>
-                <button onclick="confirmPassword()">Confirm</button>
-                <button onclick="closePopup()">Cancel</button>
+                <button class="confirmpass" id="confirm-btn">Confirm</button>
+                <button class="cancelpass" id="close-pop-btn">Cancel</button>
             </div>
         </div>
 
@@ -44,7 +44,7 @@
         </div>
 
         <div class="form-container">
-            <div class="form-group">
+            <div class="form-group" id="usernamelabel">
                 <label>Username 🩷</label>
                 <input class="box" id="username" type="text" value="" disabled>
             </div>
@@ -112,6 +112,6 @@
         <p class="postfooter"></p>
     </div>
 
-    <script defer src="/js/Home/viewprofile.js"></script>
+    <script defer src="/js/Home/viewprofile.js" type="module"></script>
 
 </main>

@@ -31,8 +31,9 @@ public class UserController : Controller
         var user = _db.Users.Include(u => u.BehaviorScores)
                             .Include(u => u.ActTypeProfile)
                             .Include(u => u.ReceivedRatings)
-                            .Include(u => u.GivenRatings)
                             .Where(u => u.Username == username).FirstOrDefault();
+
+        // var isGoogle = _db.UserLogins.Any(ul => ul.UserId == user.Id);
 
         var rating = _db.RatingScores.Where(r => r.RatedUserId == user.Id)
                                 .Select(r => r.Score)
@@ -85,7 +86,8 @@ public class UserController : Controller
             profileImg = user.ProfileImg,
             notification = user.Notifications,
             totalBehaviorScore = user.BehaviorScores.Sum(b => b.Score),
-            RatingScore = user.ReceivedRatings.Count == 0 ? 0 : user.ReceivedRatings.Average(r => r.Score)
+            RatingScore = user.ReceivedRatings.Count == 0 ? 0 : user.ReceivedRatings.Average(r => r.Score),
+            isGoogle = _db.UserLogins.Any(ul => ul.UserId == user.Id),
         });
     }
     
