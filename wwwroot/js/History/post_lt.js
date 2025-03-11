@@ -22,9 +22,20 @@ function addContent(postList, postType, postContainer){
 
 async function fetchMyPost(){
     let response = await fetch('/api/user/myposts')
+    const postHistory = document.querySelector(".post-history-content")
+    const historyFilter = document.querySelector(".history-filter");
+    const postHistoryHeader = document.querySelector(".post-history-header")
+
     if (!response.ok){
         response = await response.text()
-        return window.showToast(response, "warning")
+        if (response == "Post not found") {
+            historyFilter.style.display = "none"
+            postHistory.style.display = "none"
+            postHistoryHeader.innerHTML += "<p class='no-post'>You haven't created any post yet.</p>"
+        }
+        else {
+            return window.showToast(response, "warning")
+        }
     }
     else if (response.redirected)
         return window.changePage("Please Login First", "/login", "warning")

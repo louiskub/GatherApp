@@ -4,9 +4,20 @@ var inComming, pending, completed, fail
 
 async function fetchMyApp(){
     let response = await fetch('/api/user/myapplication')
+    const postHistory = document.querySelector(".post-history-content")
+    const historyFilter = document.querySelector(".history-filter");
+    const postHistoryHeader = document.querySelector(".post-history-header")
+
     if (!response.ok){
         response = await response.text()
-        return window.showToast(response, "warning")
+        if (response == "Application not found") {
+            historyFilter.style.display = "none"
+            postHistory.style.display = "none"
+            postHistoryHeader.innerHTML += "<p class='no-post'>You haven't register in any post yet.</p>"
+        }
+        else {
+            return window.showToast(response, "warning")
+        }
     }
     else if (response.redirected)
         return window.changePage("Please Login First", "/login", "warning")

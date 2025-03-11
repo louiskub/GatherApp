@@ -84,36 +84,46 @@
         let password = document.getElementById('password').value.trim();
 
         if (!username || !password) {
-            alert("Please enter both username and password."); // แก้เป็นอย่างอื่นที่ไม่ใช่ alert
+            window.showToast("Please enter both username and password.", "error");
             return;
         }
 
-        try {
-            await $.ajax({
-                url: '/api/auth/login',
-                type: 'POST',
-                contentType: "application/json",
-                data: JSON.stringify({ 
-                    username: username, 
-                    password: password
-                }),
-                success: function (response) {
-                    if(response.status == "Login success") {
-                        // เมื่อ login success, browser จะเก็บ cookie โดยอัตโนมัติ
-                        window.location.href = "/home"; 
-                    } else {
-                        alert(response.status); // แก้เป็นอย่างอื่นที่ไม่ใช่ alert
-                    }
-                },
-                error: function (xhr) {
-                    let errorMessage = xhr.responseJSON?.errors || "Login failed";
-                    alert(errorMessage); // แก้เป็นอย่างอื่นที่ไม่ใช่ alert
+         await $.ajax({
+            url: '/api/auth/login',
+            type: 'POST',
+            contentType: "application/json",
+            data: JSON.stringify({ 
+                username: username, 
+                password: password
+            }),
+            success: function (response) {
+                if (response.status === "Login success") {
+                    window.location.href = "/home";
+                } else {
+                    window.showToast(response.message || "Login failed", "error");
                 }
-            });
-        } catch (err) {
-            alert("An unexpected error occurred."); // แก้เป็นอย่างอื่นที่ไม่ใช่ alert
-        }
+            },
+            error: function (xhr) {
+                let errorMessage = "Login failed";  
+                console.log(xhr.responseText); 
+
+                if (xhr.responseJSON) {
+                    errorMessage = xhr.responseJSON.message || "An unexpected error occurred";
+                } else if (xhr.responseText) {
+                    try {
+                        let responseObject = JSON.parse(xhr.responseText);
+                        errorMessage = responseObject.message || "An unexpected error occurred";
+                    } catch (e) {
+                        errorMessage = xhr.responseText || "An unexpected error occurred";
+                    }
+                }
+
+                window.showToast(errorMessage, "error");
+            }
+        });
+
     }
+
     
     async function togglePassword() {
         const passwordInput = document.getElementById('password');

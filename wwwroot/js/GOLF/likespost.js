@@ -84,7 +84,7 @@ function fetchLikedPosts() {
 function createPostComponent(post) {
     let div1 = 
     `
-        <a href="/post/${post.id}" class="like-card" data-post-id="${post.id}">
+        <a href="https://localhost:5174/post?postId=${post.id}" class="like-card" data-post-id="${post.id}">
             <img src="data:image/jpeg;base64,${post.image}" alt="${post.postname}">
             <div class="card-content">
                 <h2 class="card-title">${post.postname}</h2>

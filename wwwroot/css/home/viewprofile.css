@@ -439,6 +439,10 @@ main {
   transition: transform 0.3s ease-in-out;
 }
 
+.form-group label {
+  margin-bottom: 5px;
+}
+
 #usernamelabel label {
   margin-top: 20px
 }
@@ -570,8 +574,8 @@ textarea:focus {
 }
 
 #taglabel label {
-  margin-top: 10px;
-  margin-bottom: 25px;
+  margin-top: 15px;
+  margin-bottom: 20px;
 }
 
 #tag-list {
@@ -842,6 +846,28 @@ textarea:focus {
   }
 }
 
+@media (max-width: 880px) {
+  .container {
+    margin-top: 150px;
+  }
+
+  .edit-button {
+    left: 30px;
+  }
+
+  .upload_container {
+    margin-top: 80px;
+  }
+
+  .behavior-score {
+    right: 30px;
+  }
+
+  #behaviorscore {
+    font-size: 20px;
+  }
+}
+
 @media (max-width: 768px) {
   .container,
   .postcontainer {
@@ -880,12 +906,17 @@ textarea:focus {
     white-space: normal;
   }
 
+  .upload_container {
+    margin-top: -10px;
+    margin-bottom: -180px;
+  }
+
   #imageUpload {
     margin-top: 80px;
   }
 
   #usernamelabel {
-    margin-top: 40px;
+    margin-top: -20px;
   }
 
   .allnamebox {
@@ -945,19 +976,23 @@ textarea:focus {
   }
 
   .behavior-score {
-    margin-top: 80px;
-    margin-bottom: -40px;
+    margin-top: 20px;
+    margin-bottom: 10px;
     width: 100%;
   }
 
   .upload_container {
-    margin-top: -50px;
+    margin-top: -10px;
     margin-right: 100px;
     width: 400px;
   }
 
   .upload_text {
     margin-left: 100px;
+  }
+
+  #usernamelabel label {
+    margin-top: -50px;
   }
 
   .form-group input,

@@ -18,6 +18,16 @@ async function startGlobalChatConnection() {
 startGlobalChatConnection();
 
 
+function imgSelection(img, failed="https://tr.rbxcdn.com/30DAY-Avatar-310966282D3529E36976BF6B07B1DC90-Png/352/352/Avatar/Png/noFilter"){
+    if (img == "" || img == null) 
+        return failed
+    else if(img.length < 200) 
+        return img
+    else 
+        return "data:image/jpeg;base64," + img
+}
+
+
 function changeChatPage() {
     let selectedPage = document.getElementById("chatTypeDropdown").value;
     window.location.href = selectedPage; 
@@ -62,7 +72,6 @@ function setupGlobalChatListeners() {
         const chatBox = document.getElementById("globalChatBox");
         chatBox.innerHTML = ""; 
     
-        // ✅ รวม messages และ postInvitations เป็น array เดียว
         const allItems = [
             ...messages.map(msg => ({
                 type: "message",
@@ -70,7 +79,7 @@ function setupGlobalChatListeners() {
                 username: msg.Username ?? msg.username ?? "Unknown",
                 message: msg.Message ?? msg.message ?? "[No Message]",
                 sentAt: msg.SentAt ?? msg.sentAt ?? new Date().toISOString(),
-                profileImageUrl: msg.ProfileImg ?? msg.profileImg ?? "https://example.com/default-profile.jpg"
+                profileImageUrl: imgSelection(msg.ProfileImageUrl)
             })),
             ...postInvitations.map(inv => ({
                 type: "invitation",
@@ -186,7 +195,7 @@ connection.on("ReceivePostInvitation", (postId, postName, postDetail, username) 
 
 function viewPost(postId) {
     
-    window.location.href = `http://localhost:5174/post?postId=${postId}`;
+    window.location.href = `https://localhost:5174/post?postId=${postId}`;
 }
 
 

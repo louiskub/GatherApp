@@ -110,6 +110,7 @@ html, body {
     animation: sakuraMotion linear infinite;
 }
 
+
 @keyframes sakuraMotion {
     0% { 
         transform: translateY(-10vh) translateX(0) rotate(0deg) rotateY(0deg);
