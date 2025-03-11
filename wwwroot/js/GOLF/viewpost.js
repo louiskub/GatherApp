@@ -1,5 +1,5 @@
 import LikePostHandler from "/js/components/handler/like_post_handler.js";
-
+import ShowBigImage from "/js/components/handler/show_big_image.js";
 const urlParams = new URLSearchParams(window.location.search);
 const postId = urlParams.get('postid') || urlParams.get('postId');
 
@@ -118,6 +118,8 @@ async function showPostDetail() {
         tag.textContent = actType;
         tagContainer.appendChild(tag);
     })
+
+    new ShowBigImage();
 }
 
 
