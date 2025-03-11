@@ -287,7 +287,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       return data;
     } catch (error) {
       console.error("Error loading posts:", error);
-      return { posts: [] };
+      return [];
     }
   }
 
@@ -311,8 +311,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   const existingTags = new Set();
 
-  if (Array.isArray(allTags.posts)) {
-    allTags.posts.forEach((postWrapper) => {
+  if (Array.isArray(allTags)) {
+    allTags.forEach((postWrapper) => {
       if (Array.isArray(postWrapper.actTypes)) {
         postWrapper.actTypes.forEach((actType) => {
           if (!existingTags.has(actType)) {
@@ -421,10 +421,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   async function fetchPosts() {
     try {
       var path = window.location.search;
-      let response = await fetch(`/api/post/user${path}`, {
-        method: "GET",
-        credentials: "include",
-      });
+      let response = await fetch(`/api/post/user${path}`);
 
       if (!response.ok) throw new Error("Failed to fetch posts");
 
@@ -434,98 +431,103 @@ document.addEventListener("DOMContentLoaded", async function () {
       return data;
     } catch (error) {
       console.error("Error loading posts:", error);
-      return { posts: [] };
+      return [];
     }
   }
 
-  function renderPosts(postWrapper) {
-    const postsList = document.getElementById("posts-list");
+  async function renderPosts(){
+    let posts = await fetchPosts() 
+    let postList = []
+    let postCount = 0
+    const userPosts = document.getElementById("posts-list")
+    posts.forEach((post) => {
+                let owner = post.owner
+                let activity = post.activity
+                let actType = post.actTypes
+                post = post.post
+        
+                let formattedDate = new Date(activity.actDatetime).toLocaleString('en-US', {
+                    weekday: 'short',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: true
+                }).toUpperCase().split(" ")
+                formattedDate[2] = formattedDate[2].replace(",", " -")
+                formattedDate = formattedDate.join(" ")
+                postList.push(new Post(
+                    post.id, formattedDate, post.postName, activity.province +", "+ activity.district, 
+                    post.curParticipant, post.maxParticipant, post.totalApplicant, 
+                    actType, 
+                    post.coverPageImg, post.like, post.isLiked, activity.online
+                ).render());
+                postList.push(new Post(
+                  post.id, formattedDate, post.postName, activity.province +", "+ activity.district, 
+                  post.curParticipant, post.maxParticipant, post.totalApplicant, 
+                  actType, 
+                  post.coverPageImg, post.like, post.isLiked, activity.online
+              ).render())
+              postList.push(new Post(
+                post.id, formattedDate, post.postName, activity.province +", "+ activity.district, 
+                post.curParticipant, post.maxParticipant, post.totalApplicant, 
+                actType, 
+                post.coverPageImg, post.like, post.isLiked, activity.online
+            ).render())
+            postList.push(new Post(
+              post.id, formattedDate, post.postName, activity.province +", "+ activity.district, 
+              post.curParticipant, post.maxParticipant, post.totalApplicant, 
+              actType, 
+              post.coverPageImg, post.like, post.isLiked, activity.online
+          ).render())
+          postList.push(new Post(
+            post.id, formattedDate, post.postName, activity.province +", "+ activity.district, 
+            post.curParticipant, post.maxParticipant, post.totalApplicant, 
+            actType, 
+            post.coverPageImg, post.like, post.isLiked, activity.online
+        ).render())
+        postList.push(new Post(
+          post.id, formattedDate, post.postName, activity.province +", "+ activity.district, 
+          post.curParticipant, post.maxParticipant, post.totalApplicant, 
+          actType, 
+          post.coverPageImg, post.like, post.isLiked, activity.online
+      ).render())
+      postList.push(new Post(
+        post.id, formattedDate, post.postName, activity.province +", "+ activity.district, 
+        post.curParticipant, post.maxParticipant, post.totalApplicant, 
+        actType, 
+        post.coverPageImg, post.like, post.isLiked, activity.online
+    ).render())
+    postList.push(new Post(
+      post.id, formattedDate, post.postName, activity.province +", "+ activity.district, 
+      post.curParticipant, post.maxParticipant, post.totalApplicant, 
+      actType, 
+      post.coverPageImg, post.like, post.isLiked, activity.online
+  ).render())
+  postList.push(new Post(
+    post.id, formattedDate, post.postName, activity.province +", "+ activity.district, 
+    post.curParticipant, post.maxParticipant, post.totalApplicant, 
+    actType, 
+    post.coverPageImg, post.like, post.isLiked, activity.online
+).render())
+            })
+    postList.forEach((post) => {
+      postCount += 1
+      userPosts.appendChild(post)
+    })
 
-    const post = postWrapper.post;
-    const owner = postWrapper.owner || {
-      username: "Unknown",
-      profilePicture: "",
-    };
-    const activity = postWrapper.activity || {
-      province: "Unknown",
-      district: "Unknown",
-    };
-    const actTypes =
-      postWrapper.actTypes && postWrapper.actTypes.length > 0
-        ? postWrapper.actTypes
-        : [];
-
-    const postItem = document.createElement("div");
-    postItem.classList.add("post-card");
-    const postUrl = `http://localhost:5174/post?postId=${post.id}`;
-    postItem.onclick = function () {
-      window.location.href = postUrl;
-    };
-    document.body.appendChild(postItem);
-
-    if (post.isOpened === true) {
-      var status = open;
-    } else {
-      var status = completed;
+    //create view more
+    if (postCount > 6){
+      // if (postCount > 5)
+      //   post.style.display = "none"
     }
+    let div = document.createElement("div")
+    div.className = "view-more"
+    div.innerHTML = "View More"
+    document.querySelector(".postcontainer").appendChild(div)
 
-    const imageUrl = post.coverPageImg || "https://via.placeholder.com/300";
-    console.log("actdate :", postWrapper.post);
-
-    postItem.innerHTML = `
-                        <div class="post-image-container">
-                            <img src="data:image/jpeg;base64,${imageUrl}" alt="Post Image" class="post-image">
-                        </div>
-                        <div class="post-content">
-                            <span class="post-date">${new Date(
-                              activity.actDatetime
-                            ).toLocaleString("en-US", {
-                              weekday: "short",
-                              month: "short",
-                              day: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}</span>
-                            <h3 class="post-title">${post.postName}</h3>
-                            <p class="post-location">📍 <span>${
-                              activity.province
-                            }, ${activity.district}</span></p>
-                            <p class="post-status">Accepted: ${
-                              post.curParticipant || 0
-                            }/${post.maxParticipant || 5}</p>
-                            <p class="post-registered">Registered: ${
-                              post.totalApplicant || 0
-                            }</p>
-                            <div class="post-tags">
-                                ${actTypes
-                                  .map(
-                                    (tag) =>
-                                      `<span class="post-tag">#${tag}</span>`
-                                  )
-                                  .join("")}
-                            </div>
-                            <p class="status">Status : ${status.name}</p>
-                            <span class="post-likes">${post.like}</span>
-                            <div class="post-footer">
-                                <p class="space"></p>
-                                <button class="post-favorite">❤️</button>
-                            </div>
-                        </div>
-                    `;
-
-    postsList.appendChild(postItem);
   }
-
-  const allPosts = await fetchPosts();
-  console.log("All Posts Data:", allPosts);
-
-  if (Array.isArray(allPosts.posts)) {
-    allPosts.posts.forEach((postWrapper) => {
-      renderPosts(postWrapper);
-    });
-  } else {
-    console.error("Invalid posts structure:", allPosts);
-  }
+  renderPosts()
 });
 
 // window.addEventListener("DOMContentLoaded", arrangePostsLayout);

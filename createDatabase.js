@@ -11,10 +11,9 @@ async function createActType() {
     })
 }
 
-
 async function creteUser(){
     const randomSex = () => Math.random() < 0.5 ? "Male" : "Female";
-    const randImg = "https://picsum.photos/200"
+    const randImg = "https://picsum.photos/200?image="
     const firstNames = ["John", "Jane", "Alex", "Emily", "Chris", "Katie", "Michael", "Sarah", "David", "Laura", "James", "Emma", "Robert", "Olivia", "Daniel", "Sophia", "Matthew", "Isabella", "Andrew", "Mia"];
     const lastNames = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez", "Hernandez", "Lopez", "Gonzalez", "Wilson", "Anderson", "Thomas", "Taylor", "Moore", "Jackson", "Martin"];
     for(let i=1; i<=19; i++){

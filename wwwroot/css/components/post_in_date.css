@@ -19,7 +19,7 @@
     display: flex;
     flex-wrap: nowrap;
     justify-content: flex-start;
-    gap: 1rem;
+    gap: 1.2rem;
 
     /* ทำให้สามารถเลื่อนภายในกรอบ */
     max-width: 100%; /* กำหนดความสูงของ Scroll Frame */

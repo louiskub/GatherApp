@@ -13,7 +13,9 @@
 .post-container {
     display: flex;
     /* flex-direction: column; */
-    max-width: 300px;
+    /* width: 100%; */
+    max-width: min(300px,100%);
+    min-width: 300px;
     cursor: pointer;
     position: relative;
     flex-wrap: wrap;
@@ -33,6 +35,7 @@
     box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
 }
 .post {
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
@@ -113,6 +116,10 @@
     .post {
         flex-direction: column;
         gap: 1rem;
+        max-width: 100%;
+    }
+    .post-container{
+        min-width: 0;
     }
     .post img {
         width: 100%;

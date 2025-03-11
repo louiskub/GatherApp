@@ -700,7 +700,11 @@ textarea:focus {
   flex-wrap: wrap;
   justify-content: center;
   width: 100%;
-  gap: 80px;
+  gap: 15px;
+
+  .post-container{
+    text-align: left;
+  }
 }
 
 .post-card {
@@ -819,9 +823,9 @@ textarea:focus {
     padding: 60px 30px;
   }
 
-  #posts-list {
+  /* #posts-list {
     gap: 40px;
-  }
+  } */
 }
 
 @media (max-width: 992px) {
@@ -897,6 +901,16 @@ textarea:focus {
   .post-card {
     width: 100%;
     max-width: 340px;
+  }
+
+  #posts-list {
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: center;
+    .post-container{
+      width: 90%;
+    }
+    /* gap: 30px; */
   }
 }
 
@@ -985,9 +999,6 @@ textarea:focus {
     margin-bottom: 40px;
   }
 
-  #posts-list {
-    gap: 30px;
-  }
 
   .post-card {
     margin-top: 0;
@@ -1050,3 +1061,25 @@ textarea:focus {
   }
 }
 
+
+
+
+.search-more-user-btn {
+  background: var(--hover-bg-1);
+  color: var(--hover-text);
+  text-align: center;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  min-width: 200px;
+  max-width: 450px;
+  width: 100%;
+  /* max-height: 40px; */
+  cursor: pointer;
+  transition: all 0.3s ease, color 0.3s ease;
+}
+.search-more-user-btn:hover {
+  background: var(--hover-bg-2);
+  color: var(--hover-text);
+  transform: scale(1.03);
+  /* border: 1px solid var(--navbar-text); */
+}

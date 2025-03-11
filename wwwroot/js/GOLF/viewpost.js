@@ -53,7 +53,7 @@ async function showPostDetail() {
     postImg.src = `data:image/jpeg;base64, ${post.coverPageImg}`;
 
     const postDesc = document.querySelector(".act_descript");
-    postDesc.textContent = post.detail;
+    postDesc.innerHTML = post.detail.replace(/\n/g, "<br>");
 
     const googleMap = document.querySelector(".googlemap");
     if (activity.googleMapLink && activity.googleMapLink.includes("https://www.google.com/maps/embed?pb="))
