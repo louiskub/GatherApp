@@ -20,9 +20,7 @@ async function fetchMyProfile() {
       method: "GET",
       credentials: "include",
     });
-    console.log("res :", response)
     response = await response.json();
-    console.log("My profile:", response);
     let isOwner = response.isOwner;
     response = response.user;
     document.getElementById(
@@ -40,7 +38,6 @@ async function fetchMyProfile() {
     document.getElementById("bio").value = response.bio || "---";
 
     let receivedRatings = response.receivedRatings;
-    console.log("ratingscore", response.receivedRatings);
 
     setTimeout(() => {
       adjustTextareaHeight();
@@ -49,7 +46,6 @@ async function fetchMyProfile() {
     if (receivedRatings !== undefined) {
       renderStars(receivedRatings);
     }
-    console.log("res Owner :", isOwner)
     if (!isOwner){
       document.querySelector(".edit-button").innerHTML = ""
     }
@@ -106,7 +102,6 @@ async function confirmPassword() {
   });
 
   let result = await response.json();
-  console.log("passstatus", result);
   if (result.status === "success") {
     closePopup();
     enableEditMode();
@@ -116,7 +111,7 @@ async function confirmPassword() {
   }
 }
 
-function enableEditMode() {
+function enableEditMode() { 
   document.getElementById("editbtn").style.display = "none";
   document.getElementById("savebtn").style.display = "inline-block";
   document.getElementById("cancelbtn").style.display = "flex";
@@ -130,7 +125,13 @@ function enableEditMode() {
 
   document.getElementById("sex").style.display = "none";
   document.getElementById("sex-dropdown-container").style.display = "block";
-
+  if (window.matchMedia("(max-width: 768px)").matches) {
+    document.getElementById("usernamelabel").style.marginTop = "20px";
+  }
+  if (window.matchMedia("(max-width: 576px)").matches) {
+    document.getElementById("imageUpload").style.marginTop = "30px";
+    document.getElementById("usernamelabel").style.marginTop = "-20px";
+  }
   const sexDropdown = document.getElementById("sex-dropdown");
   const standardSexes = ["Male", "Female", "Non-Binary", "Prefer not to say"];
 
@@ -197,7 +198,6 @@ imageUpload.addEventListener("change", (event) => {
       document.getElementById("profilepic").src = base64Image;
       adjustTextareaHeight;
       base64Image = e.target.result.replace(/^data:image\/[a-z]+;base64,/, "");
-      console.log(base64Image);
     };
     reader.readAsDataURL(file);
   }
@@ -282,12 +282,10 @@ document.addEventListener("DOMContentLoaded", async function () {
       if (!response.ok) throw new Error("Failed to fetch posts");
 
       let data = await response.json();
-      console.log("Fetched data:", data);
-
       return data;
     } catch (error) {
       console.error("Error loading posts:", error);
-      return { posts: [] };
+      return [];
     }
   }
 
@@ -295,8 +293,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     const postsList = document.getElementById("tag-list");
 
     const actTypes = postWrapper && postWrapper.length > 0 ? postWrapper : [];
-    console.log("Tag", actTypes);
-
     const postItem = document.createElement("profile-tags");
 
     postItem.innerHTML = `
@@ -307,12 +303,10 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   const allTags = await fetchTags();
-  console.log("All Posts Data:", allTags);
-
   const existingTags = new Set();
 
-  if (Array.isArray(allTags.posts)) {
-    allTags.posts.forEach((postWrapper) => {
+  if (Array.isArray(allTags)) {
+    allTags.forEach((postWrapper) => {
       if (Array.isArray(postWrapper.actTypes)) {
         postWrapper.actTypes.forEach((actType) => {
           if (!existingTags.has(actType)) {
@@ -418,114 +412,97 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", async function () {
+  function createHidePost(posts){
+      const showMoreBtn = document.createElement("a");
+      const userPosts = document.getElementById("posts-list")
+      const postContainer = document.querySelector(".postcontainer")
+      const main = document.querySelector("main");
+
+      showMoreBtn.textContent = "More Posts";
+      showMoreBtn.classList.add("search-more-user-btn");
+  
+      const maxVisible = 6;
+      let isExpanded = false;
+      let postCount = posts.length;
+  
+      posts.forEach((post, index) => {
+          if (index >= maxVisible) 
+            post.style.display = "none";
+          userPosts.appendChild(post);
+      });
+  
+      if (postCount > maxVisible) {
+          if (!postContainer.contains(showMoreBtn)) {
+            postContainer.appendChild(showMoreBtn);
+          }
+  
+          showMoreBtn.addEventListener("click", function (event) {
+              event.preventDefault();
+              isExpanded = !isExpanded;
+              // ถ้ากด "More Users" จะต้องเพิ่ม card ที่ซ่อนไว้ลงใน DOM
+              if (isExpanded) {
+                  for (let i = maxVisible; i < postCount; i++) {
+                      posts[i].style.display = "block";
+                  }
+              } else {
+                  for (let i = maxVisible; i < postCount; i++) {
+                      posts[i].style.display = "none";
+                  }
+                  document.querySelector(".posttitle").scrollIntoView({
+                      behavior: "smooth",
+                      block: "start" 
+                  });
+              }
+  
+              showMoreBtn.textContent = isExpanded ? "Less Posts" : "More Posts";
+          });
+      }
+  }
+
   async function fetchPosts() {
     try {
       var path = window.location.search;
-      let response = await fetch(`/api/post/user${path}`, {
-        method: "GET",
-        credentials: "include",
-      });
+      let response = await fetch(`/api/post/user${path}`);
 
       if (!response.ok) throw new Error("Failed to fetch posts");
 
       let data = await response.json();
-      console.log("Fetched data:", data);
-
       return data;
     } catch (error) {
       console.error("Error loading posts:", error);
-      return { posts: [] };
+      return [];
     }
   }
 
-  function renderPosts(postWrapper) {
-    const postsList = document.getElementById("posts-list");
-
-    const post = postWrapper.post;
-    const owner = postWrapper.owner || {
-      username: "Unknown",
-      profilePicture: "",
-    };
-    const activity = postWrapper.activity || {
-      province: "Unknown",
-      district: "Unknown",
-    };
-    const actTypes =
-      postWrapper.actTypes && postWrapper.actTypes.length > 0
-        ? postWrapper.actTypes
-        : [];
-
-    const postItem = document.createElement("div");
-    postItem.classList.add("post-card");
-    const postUrl = `http://localhost:5174/post?postId=${post.id}`;
-    postItem.onclick = function () {
-      window.location.href = postUrl;
-    };
-    document.body.appendChild(postItem);
-
-    if (post.isOpened === true) {
-      var status = open;
-    } else {
-      var status = completed;
-    }
-
-    const imageUrl = post.coverPageImg || "https://via.placeholder.com/300";
-    console.log("actdate :", postWrapper.post);
-
-    postItem.innerHTML = `
-                        <div class="post-image-container">
-                            <img src="data:image/jpeg;base64,${imageUrl}" alt="Post Image" class="post-image">
-                        </div>
-                        <div class="post-content">
-                            <span class="post-date">${new Date(
-                              activity.actDatetime
-                            ).toLocaleString("en-US", {
-                              weekday: "short",
-                              month: "short",
-                              day: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}</span>
-                            <h3 class="post-title">${post.postName}</h3>
-                            <p class="post-location">📍 <span>${
-                              activity.province
-                            }, ${activity.district}</span></p>
-                            <p class="post-status">Accepted: ${
-                              post.curParticipant || 0
-                            }/${post.maxParticipant || 5}</p>
-                            <p class="post-registered">Registered: ${
-                              post.totalApplicant || 0
-                            }</p>
-                            <div class="post-tags">
-                                ${actTypes
-                                  .map(
-                                    (tag) =>
-                                      `<span class="post-tag">#${tag}</span>`
-                                  )
-                                  .join("")}
-                            </div>
-                            <p class="status">Status : ${status.name}</p>
-                            <span class="post-likes">${post.like}</span>
-                            <div class="post-footer">
-                                <p class="space"></p>
-                                <button class="post-favorite">❤️</button>
-                            </div>
-                        </div>
-                    `;
-
-    postsList.appendChild(postItem);
+  async function renderPosts(){
+    let posts = await fetchPosts() 
+    let postList = []
+    posts.forEach((post) => {
+                let owner = post.owner
+                let activity = post.activity
+                let actType = post.actTypes
+                post = post.post
+        
+                let formattedDate = new Date(activity.actDatetime).toLocaleString('en-US', {
+                    weekday: 'short',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: true
+                }).toUpperCase().split(" ")
+                formattedDate[2] = formattedDate[2].replace(",", " -")
+                formattedDate = formattedDate.join(" ")
+                postList.push(new Post(
+                    post.id, formattedDate, post.postName, activity.province +", "+ activity.district, 
+                    post.curParticipant, post.maxParticipant, post.totalApplicant, 
+                    actType, 
+                    post.coverPageImg, post.like, post.isLiked, activity.online
+                ).render());
+            })
+    createHidePost(postList)
   }
-
-  const allPosts = await fetchPosts();
-  console.log("All Posts Data:", allPosts);
-
-  if (Array.isArray(allPosts.posts)) {
-    allPosts.posts.forEach((postWrapper) => {
-      renderPosts(postWrapper);
-    });
-  } else {
-    console.error("Invalid posts structure:", allPosts);
-  }
+  renderPosts()
 });
 
 // window.addEventListener("DOMContentLoaded", arrangePostsLayout);
