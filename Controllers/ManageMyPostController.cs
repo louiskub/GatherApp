@@ -352,7 +352,8 @@ public class ManageMyPostController : Controller
             Type = "approved",
             Title = "Application accepted",
             UserId = application.User.Id,
-            Content = $"Your application({application.Post.PostName}) has been accepted"
+            Content = $"Your application({application.Post.PostName}) has been accepted",
+            CreatedAt = DateTime.Now
         });
         if (post.Activity.ActDatetime < DateTime.Now)
         {

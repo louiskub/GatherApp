@@ -27,32 +27,24 @@ public async Task<IActionResult> CreateReport([FromBody] CreateReportRequest rep
     var reporterId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     var reporter = await _db.Users.FirstOrDefaultAsync(u => u.Id == reporterId);
     var reported = await _db.Users.FirstOrDefaultAsync(u => u.Username == report.ReportedUsername);
+    Console.WriteLine($"Reported User ID: {report.ReportedUsername}");
     if (reporter == null || reported == null)
         return NotFound("User not found.");
 
-    var postOwner = await _db.Posts
-        .Where(p => p.Id == report.PostId && p.UserId == reporterId)
-        .FirstOrDefaultAsync();
-
-    if (postOwner == null)
-    {
-        return BadRequest("You must be the owner of the post to report users in it.");
-    }
-
-    if (reported.Id == reporter.Id)
-    {
-        return BadRequest("You cannot report yourself.");
-    }
-
-    var post = await _db.Posts.Include(p=> p.Activity).FirstOrDefaultAsync(p => p.Id == report.PostId);
+    var post = await _db.Posts.Include(p => p.Activity).FirstOrDefaultAsync(p => p.Id == report.PostId);
     if (post == null)
     {
         return NotFound("Post not found.");
     }
 
-    if(DateTime.Now < post.Activity.ActDatetime)
+    if (DateTime.Now < post.Activity.ActDatetime)
     {
         return BadRequest("Reports can only be made after the event date.");
+    }
+
+    if (reported.Id == reporterId)
+    {
+        return BadRequest("You cannot report yourself.");
     }
 
     bool alreadyReported = await _db.Reports
@@ -74,16 +66,68 @@ public async Task<IActionResult> CreateReport([FromBody] CreateReportRequest rep
 
     _db.Reports.Add(newReport);
 
-    var participantCount = await _db.Posts.CountAsync(p => p.Id == report.PostId);
-    var reportCount = await _db.Reports.CountAsync(r => r.PostId == report.PostId && r.ReportType == ReportType.Owner);
-    
-    if (reportCount >= participantCount /2)
-    {
+    var participantCount = await _db.Applications.CountAsync(p => p.PostId == report.PostId);
 
-        var reportedPostOwner = await _db.BehaviorScores.FirstOrDefaultAsync(s => s.UserId == post.UserId);
-        if (reportedPostOwner != null )
+    var reportCount = await _db.Reports.CountAsync(r =>
+        r.PostId == report.PostId &&
+        r.ReportType == ReportType.Owner &&
+        r.ReporterId != post.UserId
+    );
+
+if (reportCount >= participantCount / 2 && reporterId != post.UserId) 
+{
+    var reportedPostOwner = await _db.BehaviorScores.FirstOrDefaultAsync(s => s.UserId == post.UserId);
+    if (reportedPostOwner != null)
+    {
+        reportedPostOwner.Score -= 20;
+
+        _db.Notifications.Add(new Notification
         {
-            reportedPostOwner.Score -= 20;
+            Type = "report",
+            Title = "Behavior Score",
+            UserId = post.UserId,
+            Content = "Your behavior score has been reduced by 20 due to multiple reports on your post.",
+            CreatedAt = DateTime.Now
+        });
+
+        if (reportedPostOwner.Score <= 0)
+        {
+            reportedPostOwner.IsBanned = true;
+            reportedPostOwner.BannedUntil = null;
+
+            _db.Notifications.Add(new Notification
+            {
+                Type = "report",
+                Title = "Behavior Score",
+                UserId = post.UserId,
+                Content = "Your behavior score has reached 0, and you have been permanently banned.",
+                CreatedAt = DateTime.Now
+            });
+        }
+        else if (reportedPostOwner.Score < 50 && !reportedPostOwner.IsBanned)
+        {
+            reportedPostOwner.IsBanned = true;
+            reportedPostOwner.BannedUntil = DateTime.Now.AddDays(7);
+
+            _db.Notifications.Add(new Notification
+            {
+                Type = "report",
+                Title = "Behavior Score",
+                UserId = post.UserId,
+                Content = "Your behavior score is below 50, and you have been temporarily banned for 7 days.",
+                CreatedAt = DateTime.Now
+            });
+        }
+    }
+}
+
+
+    if (reported.Id != post.UserId)
+    {
+        var reportedUserScore = await _db.BehaviorScores.FirstOrDefaultAsync(s => s.UserId == reported.Id);
+        if (reportedUserScore != null)
+        {
+            reportedUserScore.Score -= 20;
 
             _db.Notifications.Add(new Notification
             {
@@ -94,25 +138,10 @@ public async Task<IActionResult> CreateReport([FromBody] CreateReportRequest rep
                 CreatedAt = DateTime.Now
             });
 
-            if (reportedPostOwner.Score < 50 && !reportedPostOwner.IsBanned)
+            if (reportedUserScore.Score <= 0)
             {
-                reportedPostOwner.IsBanned = true;
-                reportedPostOwner.BannedUntil = DateTime.Now.AddDays(7);
-
-                _db.Notifications.Add(new Notification
-                {
-                    Type = "report",
-                    Title = "Behavior Score",
-                    UserId = reported.Id,
-                    Content = "Your behavior score is below 50, and you have been temporarily banned for 7 days.",
-                    CreatedAt = DateTime.Now
-                });
-            }
-
-            if (reportedPostOwner.Score <= 0)
-            {
-                reportedPostOwner.IsBanned = true;
-                reportedPostOwner.BannedUntil = null;
+                reportedUserScore.IsBanned = true;
+                reportedUserScore.BannedUntil = null;
 
                 _db.Notifications.Add(new Notification
                 {
@@ -123,66 +152,33 @@ public async Task<IActionResult> CreateReport([FromBody] CreateReportRequest rep
                     CreatedAt = DateTime.Now
                 });
             }
-        }
-    }
-
-
-
-
-
-    var reportedUserScore = await _db.BehaviorScores.FirstOrDefaultAsync(s => s.UserId == reported.Id);
-
-    if (reportedUserScore != null)
-    {
-        reportedUserScore.Score -= 20;
-
-        _db.Notifications.Add(new Notification
-        {
-            Type = "report",
-            Title = "Behavior Score",
-            UserId = reported.Id,
-            Content = "Your behavior score has been reduced by 20 due to a report.",
-            CreatedAt = DateTime.Now
-        });
-
-        if (reportedUserScore.Score <= 0)
-        {
-            reportedUserScore.IsBanned = true;
-            reportedUserScore.BannedUntil = null;
-
-            _db.Notifications.Add(new Notification
+            else if (reportedUserScore.Score < 50 && !reportedUserScore.IsBanned)
             {
-                Type = "report",
-                Title = "Behavior Score",
-                UserId = reported.Id,
-                Content = "Your behavior score has reached 0, and you have been permanently banned.",
-                CreatedAt = DateTime.Now
-            });
-        }
-        else if (reportedUserScore.Score < 50 && !reportedUserScore.IsBanned)
-        {
-            reportedUserScore.IsBanned = true;
-            reportedUserScore.BannedUntil = DateTime.Now.AddDays(7);
+                reportedUserScore.IsBanned = true;
+                reportedUserScore.BannedUntil = DateTime.Now.AddDays(7);
 
-            _db.Notifications.Add(new Notification
-            {
-                Type = "report",
-                Title = "Behavior Score",
-                UserId = reported.Id,
-                Content = "Your behavior score is below 50, and you have been temporarily banned for 7 days.",
-                CreatedAt = DateTime.Now
-            });
+                _db.Notifications.Add(new Notification
+                {
+                    Type = "report",
+                    Title = "Behavior Score",
+                    UserId = reported.Id,
+                    Content = "Your behavior score is below 50, and you have been temporarily banned for 7 days.",
+                    CreatedAt = DateTime.Now
+                });
+            }
         }
-    }
-    else
-    {
-        return NotFound("Behavior score not found for reported user.");
+        else
+        {
+            return NotFound("Behavior score not found for reported user.");
+        }
     }
 
     await _db.SaveChangesAsync();
     return Ok(new { message = "Report submitted successfully." });
+}
 
-    }   
+
+
 
     [HttpPut]
     [Route("api/reports/update/{postId}/{reportedUserId}")]
