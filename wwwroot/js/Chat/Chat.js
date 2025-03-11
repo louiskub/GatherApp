@@ -136,13 +136,13 @@ function setupListeners() {
         }
     
         messageElement.innerHTML = `
-        <img src="${profileImageUrl}" alt="Profile" class="profile-pic">
+        <img src="${chooseImg(profileImageUrl)}" alt="Profile" class="profile-pic">
         <div class="message-details">
             <div class="${isMine ? 'my-message-header' : 'other-message-header'}">
                 <strong class="username">${username}</strong>
                 <small class="message-time">${formattedTime}</small>
             </div>
-            <div class="message-content">
+            <div class="message-content">   
                 <p class="message-text">${message}</p>
             </div>
         </div>
