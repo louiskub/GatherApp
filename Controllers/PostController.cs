@@ -95,7 +95,7 @@ public class PostController : Controller
         if (posts == null || posts.Count == 0) 
             return NotFound("Post not found" );
         var result = posts.Select(p => p.ToJson(reqUserId)).ToList();
-        return Json(new{posts = result, isOwner=true});
+        return Json(result);
     }
 
 
