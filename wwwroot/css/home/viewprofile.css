@@ -760,15 +760,12 @@ textarea:focus {
   .behavior-score {
     position: static;
     margin: 10px auto;
+    width: 100%;
     justify-content: center;
   }
 
   .edit-button {
     margin-top: 80px;
-  }
-
-  #editbtn {
-    width: 300px;
   }
 
   .behavior-score {
@@ -806,6 +803,16 @@ textarea:focus {
   .post-card {
     width: 100%;
     max-width: 340px;
+  }
+
+  #posts-list {
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: center;
+    .post-container{
+      width: 90%;
+    }
+    /* gap: 30px; */
   }
 }
 
