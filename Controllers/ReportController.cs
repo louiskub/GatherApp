@@ -141,7 +141,6 @@ public async Task<IActionResult> CreateReport([FromBody] CreateReportRequest rep
             Content = $"Your behavior score has been reduced by 20 due to a report."
         });
 
-        // **ถ้าคะแนนต่ำกว่า 50 → แบน 7 วัน**
         if (reportedUserScore.Score < 50 && !reportedUserScore.IsBanned)
         {
             reportedUserScore.IsBanned = true;
