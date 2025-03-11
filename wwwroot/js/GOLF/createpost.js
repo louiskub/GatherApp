@@ -267,7 +267,7 @@ async function ProvincesAndAmphures(){
     provinceSel.addEventListener('change', function() {
         if (provinceSel.value != "null"){
             filterAmphure(provinceSel.value)
-            let amphureSel = new Select(filteredAmp, "Amphure").render()
+            let amphureSel = new Select(filteredAmp, "District").render()
             test.replaceChild(amphureSel, test.lastChild)
         }
         else
