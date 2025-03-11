@@ -68,6 +68,7 @@ async function toggleEdit() {
   else {
     document.getElementById("popupContainer").style.display = "flex";
     document.getElementById("checkpassword").value = "";
+    document.body.style.overflow = "hidden";
   }
 }
 
@@ -150,6 +151,7 @@ function enableEditMode() {
 function closePopup() {
   document.getElementById("popupContainer").style.display = "none";
   document.getElementById("checkpassword").value = "";
+  document.body.style.overflow = "";
 }
 
 function cancelEdit() {
