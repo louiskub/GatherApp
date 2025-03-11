@@ -41,15 +41,29 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap:2rem;
+  gap: 2rem;
   align-items: center;
   width: 100%;
+}
+
+.noContent {
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  margin: 5px;
+  align-self: center;
+  width: 90%;
+  font-size: 1.3rem;
 }
 
 .displayIcon {
   display: flex;
   flex-direction: row;
   gap: 8px;
+}
+
+.displayIcon p {
+  font-size: 1rem;
 }
 
 .activityIcon svg {
@@ -60,15 +74,6 @@
   background-color: var(--container-bg);
   border-radius: 0.5rem;
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.15);
-  display: flex;
-  flex-direction: row;
-  margin: 5px;
-  align-self: center;
-  width: 90%;
-}
-
-.noContent{
-  border-radius: 0.5rem;
   display: flex;
   flex-direction: row;
   margin: 5px;
@@ -118,12 +123,15 @@
   color: var(--slate-gray);
 }
 
-.activityTitle{
-  a{color: var(--text-color);}
+.activityTitle {
+  a {
+    color: var(--text-color);
+  }
   transition: transform 0.4s ease;
+  font-size: 1.5rem;
 }
 
-.activityTitle:hover{
+.activityTitle:hover {
   transform: scale(1.01);
 }
 
@@ -148,6 +156,7 @@
   transition: background-color 0.3s ease, transform 0.2s ease;
   display: inline-block;
   text-align: center;
+  font-size: 1rem;
   /* cursor: pointer; */
 }
 
@@ -173,7 +182,7 @@
 }
 
 .textStyle {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: bold;
 }
 
@@ -190,7 +199,7 @@
   width: fit-content;
   min-width: 6rem;
   height: 3.2rem;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   padding: 0.6rem;
   cursor: pointer;
   font-weight: bold;

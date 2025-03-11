@@ -1,58 +1,57 @@
 @import url("/css/src.css");
 
 :root {
-    --container-shadow: rgba(0, 0, 0, 0.15);
-    --card-bg: var(--lavender-blush);
+  --container-shadow: rgba(0, 0, 0, 0.15);
+  --card-bg: var(--lavender-blush);
 }
 
 [data-theme="dark"] {
-    --container-shadow: rgba(255, 255, 255, 0.15);
-    --card-bg: var(--outer-space);
+  --container-shadow: rgba(255, 255, 255, 0.15);
+  --card-bg: var(--outer-space);
 }
 
 /* Post History Container */
 .post-history-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    padding: 1.5rem;
-    gap: 3rem;
-    background: var(--bg-color);
-    color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 1.5rem;
+  gap: 3rem;
+  background: var(--bg-color);
+  color: var(--text-color);
 }
 
 /* Post History Header & Content */
 .post-history-header {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    text-align: left;
-    align-items: center;
-    margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  text-align: left;
+  align-items: center;
+  margin-top: 0.5rem;
 }
 .post-history-content {
-    display: flex;
-    flex-direction: column;
-    /* display: grid;
+  display: flex;
+  flex-direction: column;
+  /* display: grid;
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); */
-    /* justify-content: center; */
-    /* align-items: center; */
-    /* background-color: var(--card-bg); */
-    padding: 1rem;
-    border-radius: 15px;
-    /* box-shadow: 4px 4px 8px var(--container-shadow); */
-    max-width: 1400px;
-    width: 95%;
-    gap: 1rem;
-    font-size: 1.4rem;
-    transition: background 0.3s ease-in-out;
+  /* justify-content: center; */
+  /* align-items: center; */
+  /* background-color: var(--card-bg); */
+  padding: 1rem;
+  border-radius: 15px;
+  /* box-shadow: 4px 4px 8px var(--container-shadow); */
+  max-width: 1400px;
+  width: 95%;
+  gap: 1rem;
+  font-size: 1.3rem;
+  transition: background 0.3s ease-in-out;
 }
-
 
 /* Responsive Design */
 @media (max-width: 800px) {
-    .post-history-content {
-        padding: 0.75rem;
-    }
+  .post-history-content {
+    padding: 0.75rem;
+  }
 }
