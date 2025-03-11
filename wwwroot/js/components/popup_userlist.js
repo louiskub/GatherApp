@@ -43,7 +43,12 @@ class PopupUserList {
     createButtonOrText(text, buttonGroup) {
         if (text === "Reviewed" || text === "Reported" || text === "Rejected" || text === "Approved") {
             const span = document.createElement("span");
-            span.textContent = text;
+            if (text === "Approved")
+                span.innerHTML = `<i class="fa-solid fa-circle" style="color: #00ff00;"></i>Approved`;
+            else if (text === "Rejected")
+                span.innerHTML = `<i class="fa-solid fa-circle" style="color: #ff0000;"></i>Rejected`;
+            else 
+                span.textContent = text;
             span.className = `popup-status-${text.toLowerCase()}`; 
             return span;
         } else {
