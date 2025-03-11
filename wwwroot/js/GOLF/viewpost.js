@@ -381,7 +381,7 @@ async function initProvincesAndAmphures() {
       return p.eng == activity.province
     }).id;
     const filteredAmp = filterAmphure(provinceSel.value);
-    const amphureSel = new Select(filteredAmp, "Amphure").render();
+    const amphureSel = new Select(filteredAmp, "District").render();
     elements.locationContainer.replaceChild(amphureSel, elements.locationContainer.lastChild);
     if (activity.district){
       amphureSel.value = filteredAmp.find((a) => {
