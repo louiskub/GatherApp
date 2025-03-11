@@ -326,7 +326,7 @@ async function validateForm() {
     // ตรวจสอบการเลือก Province และ Amphure เฉพาะเมื่อเลือก Onsite
     if (eventType === 'onsite') {
         const provinceSelect = document.querySelector('#Province');
-        const amphureSelect = document.querySelector('#Amphure');
+        const amphureSelect = document.querySelector('#District');
         
         if (provinceSelect && provinceSelect.value === "null") {
             window.showToast("Please select a province.", "warning");
@@ -377,7 +377,7 @@ async function validateForm() {
         
         if (!isOnline) {
             const provinceSelect = document.querySelector('#Province');
-            const amphureSelect = document.querySelector('#Amphure');
+            const amphureSelect = document.querySelector('#District');
             provinceText = provinceSelect.options[provinceSelect.selectedIndex].text;
             amphureText = amphureSelect.options[amphureSelect.selectedIndex].text;
 
