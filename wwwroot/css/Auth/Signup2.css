@@ -401,6 +401,19 @@
     position: relative;
 }
 
+.error-message {
+    display: none;
+    color: #ff4d4f;
+    font-size: 0.8rem;
+}
+.error-message.active {
+    display: flex;
+    color: #ff4d4f;
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+}
+
+
 /* Media Queries สำหรับหน้าจอเล็ก */
 @media (max-width: 768px) {
     .signup-container {

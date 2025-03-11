@@ -22,16 +22,19 @@
                     <div class="signup-firstname">
                         <label class="label" for="firstName">First Name</label>
                         <input type="text" id="firstName" class="inputBox" placeholder="Enter your first name" required />
+                        <span id="firstNameError" class="error-message"></span>
                     </div>
                     <div class="signup-lastname">
                         <label class="label" for="lastName">Last Name</label>
                         <input type="text" id="lastName" class="inputBox" placeholder="Enter your last name" required />
+                        <span id="lastNameError" class="error-message"></span>
                     </div>
                 </div>
                 <div class="signup-birthdate">
                     <label class="label" for="datePicker">Date of Birth</label>
                     @* <input type="date" id="dob" class="inputBox" required /> *@
                     <input type="text" id="datePicker" class="inputBox" placeholder="Select your birthday" required />
+                    <span id="dobError" class="error-message" style="display:none;"></span>
                 </div>
                 <div class="signup-gender">
                     <label class="label" for="gender">Gender</label>
