@@ -75,7 +75,6 @@ public class ChatHub : Hub
                 return;
             }
 
-
             var isPostOwner = _db.Posts.Any(p => p.Id == postIdInt && p.UserId == userId);
             var isAcceptedUser = _db.Applications.Any(pu => pu.PostId == postIdInt && pu.UserId == userId && pu.AppliedStatus == true);
 
