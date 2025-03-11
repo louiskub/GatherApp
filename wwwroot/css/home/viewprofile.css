@@ -842,6 +842,28 @@ textarea:focus {
   }
 }
 
+@media (max-width: 880px) {
+  .container {
+    margin-top: 150px;
+  }
+
+  .edit-button {
+    left: 30px;
+  }
+
+  .upload_container {
+    margin-top: 80px;
+  }
+
+  .behavior-score {
+    right: 30px;
+  }
+
+  #behaviorscore {
+    font-size: 20px;
+  }
+}
+
 @media (max-width: 768px) {
   .container,
   .postcontainer {
@@ -890,7 +912,7 @@ textarea:focus {
   }
 
   #usernamelabel {
-    margin-top: 40px;
+    margin-top: -20px;
   }
 
   .allnamebox {
