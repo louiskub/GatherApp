@@ -103,8 +103,9 @@
 }
 
 
-.signup-content .label {
+.label {
     font-size: 1.2rem;
+    margin-top: 1rem;
 }
 .inputWrapper {
     position: relative;
@@ -192,6 +193,7 @@
     justify-content: space-between;
     gap: 1rem; 
     margin-bottom: 1rem;
+    margin-top: 1rem;
 }
 
 #signupPrev,
@@ -405,13 +407,15 @@
     display: none;
     color: #ff4d4f;
     font-size: 0.8rem;
+    margin-bottom: 1rem;
 }
-.error-message.active {
+/* .error-message.active {
     display: flex;
     color: #ff4d4f;
     font-size: 0.8rem;
     margin-top: 0.2rem;
-}
+    margin-bottom: 1rem;
+} */
 
 
 /* Media Queries สำหรับหน้าจอเล็ก */

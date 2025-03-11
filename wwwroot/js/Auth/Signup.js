@@ -19,16 +19,30 @@ function validateNameInput(inputId, errorId) {
   });
 }
 
+function formatDateToDDMMYYYY(date) {
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+}
+
 function validateDateInput() {
   const dobInput = document.getElementById("datePicker");
   const error = document.getElementById("dobError");
   
   dobInput.addEventListener("change", () => {
-    const selectedDate = new Date(dobInput.value);
+    const selectedDate = dobInput.value;
     const today = new Date();
-    today.setDate(today.getDate() - 2); // วันนี้ - 2 วัน
+    today.setDate(today.getDate() - 2);
 
-    if (selectedDate >= today) {
+    const formattedToday = formatDateToDDMMYYYY(today);
+
+    if (!dobInput.value) {
+      dobInput.style.borderColor = "red";
+      error.textContent = "Please enter your date of birth.";
+      error.style.color = "red";
+      error.style.display = "block";
+    } else if (selectedDate >= formattedToday) {
       dobInput.style.borderColor = "red";
       error.textContent = "Date of birth must be at least 2 days before today.";
       error.style.color = "red";
@@ -213,8 +227,29 @@ document.getElementById("signupNextButton").addEventListener("click", () => {
         return
       }
     }
+    const nameRegex = /^[A-Za-z]+$/;
+    if (!nameRegex.test(firstName))
+      return window.showToast("First name should only contain alphabetic characters.", "warning");
+    if (!nameRegex.test(lastName))
+      return window.showToast("Last name should only contain alphabetic characters.", "warning");
 
-    // ซ่อน signup-first-step และแสดง signup-last-step
+    if (!dob)
+      return window.showToast("Please enter your date of birth.", "warning")
+    // Check if date of birth is less than 3 days ago
+    const selectedDate = dob;
+    const today = new Date();
+    today.setDate(today.getDate() - 2);
+
+    const formattedToday = formatDateToDDMMYYYY(today);
+    
+    console.log(selectedDate)
+    console.log(formattedToday)
+
+    if (selectedDate >= formattedToday) {
+      return window.showToast("Date of birth must be at least 3 days in the past.", "warning");
+    }
+
+    // Hide first step and show last step
     document.querySelector(".signup-first-step").style.display = "none"
     document.querySelector(".signup-last-step").style.display = "block"
   } else {
