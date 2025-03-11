@@ -17,21 +17,24 @@
                 <img src="https://cdn-icons-png.flaticon.com/512/84/84380.png" alt="Write">
             </div> *@
 
-            <div class="floating-menu-button" onclick="toggleFloatingMenu()">
-                <i class="fas fa-plus floating-menu-icon"></i> 
+            <div id="floatingMenuContainer">
+                <div class="floating-menu-button" onclick="toggleFloatingMenu()">
+                    <i class="fas fa-plus floating-menu-icon"></i> 
+                </div>
+
+                <div class="floating-menu" id="floatingMenu">
+                    <div class="floating-menu-item" data-tooltip="About Us" id="menu-aboutus-button">
+                        <i class="fas fa-info-circle aboutus-item-icon"></i>
+                    </div>
+                    <div class="floating-menu-item" data-tooltip="Chat Hub" id="menu-chat-button">
+                        <i class="fas fa-comments chat-item-icon"></i>
+                    </div>
+                    <div class="floating-menu-item" data-tooltip="Create Post" id="menu-write-button">
+                        <i class="fas fa-pencil-alt createpost-item-icon"></i>
+                    </div>  
+                </div>
             </div>
 
-            <div class="floating-menu" id="floatingMenu">
-                <div class="floating-menu-item" data-tooltip="About Us" id="menu-aboutus-button">
-                    <i class="fas fa-info-circle aboutus-item-icon"></i>
-                </div>
-                <div class="floating-menu-item" data-tooltip="Chat Hub" id="menu-chat-button">
-                    <i class="fas fa-comments chat-item-icon"></i>
-                </div>
-                <div class="floating-menu-item" data-tooltip="Create Post" id="menu-write-button">
-                    <i class="fas fa-pencil-alt createpost-item-icon"></i>
-                </div>
-            </div>
 
 
             <div class="popup_create" id="createPostPopup">
@@ -128,6 +131,33 @@
             const menu = document.getElementById('floatingMenu');
             menu.classList.toggle('active');
         } *@
+
+
+    document.addEventListener("DOMContentLoaded", async function () {
+    const menuContainer = document.getElementById("floatingMenuContainer");
+
+    try {
+        const response = await fetch("/api/auth/check", { 
+            method: "GET", 
+        });
+
+        if (!response.ok) {
+            throw new Error("API request failed");
+        }
+
+        const data = await response.json(); 
+
+        if (data.isLoggedIn) {
+            menuContainer.style.display = "block";
+        } else {
+            throw new Error("User is not logged in");
+        }
+
+    } catch (error) {
+        menuContainer.style.display = "none";
+    }
+});
+
 
         function toggleFloatingMenu() {
             document.getElementById('floatingMenu').classList.toggle('show');

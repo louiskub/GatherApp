@@ -79,8 +79,6 @@ public class AuthController : Controller
         return Ok(new { status = "Login success", token = token });
     }
 
-
-
     [HttpPost]
     [Route("api/auth/logout")]
     public IActionResult Logout()
@@ -90,6 +88,22 @@ public class AuthController : Controller
         // await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return Json(new { status = "Logout success" });
     }
+
+    [HttpGet]
+    [Route("api/auth/check")]
+    public IActionResult CheckLogin()
+    {
+        var isAuthenticated = User.Identity?.IsAuthenticated ?? false;
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        
+        if (!isAuthenticated || string.IsNullOrEmpty(userId))
+        {
+            return Ok(new { isLoggedIn = false });
+        }
+
+        return Ok(new { isLoggedIn = true, userId });
+    }
+
 
     [HttpPost]
     [Route("api/auth/register")]
