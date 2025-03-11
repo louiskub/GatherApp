@@ -138,7 +138,7 @@ function setupGlobalChatListeners() {
     
 
     connection.on("Error", (errorMessage) => {
-        alert("Error: " + errorMessage);
+        window.showToast("Error: " + errorMessage, "error");
     });
 
 }
@@ -170,7 +170,7 @@ function SendPostInvitation() {
     let postId = dropdown.value;
 
     if (!postId) {
-        alert("Please select a post first!");
+        window.showToast("Please select a post first!", "error");
         return;
     }
 
@@ -266,7 +266,7 @@ function appendGlobalMessage(IsMine,username, message, sentAt, profileImageUrl) 
 
 async function sendGlobalMessage() {
     if (connection.state !== signalR.HubConnectionState.Connected) {
-        alert("Cannot send message. Not connected to the chat server.");
+        window.showToast("Cannot send message. Not connected to the chat server.", "error");
         return;
     }
 
@@ -335,7 +335,7 @@ function toggleEmojiPicker() {
 async function sendEmoji(emoji) {
 
     if (connection.state !== signalR.HubConnectionState.Connected) {
-        alert("Cannot send message. Not connected to the chat server.");
+        window.showToast("Cannot send message. Not connected to the chat server.", "error");
         return;
     }
 
@@ -359,7 +359,7 @@ document.addEventListener("click", function (event) {
 async function sendLike() {
 
     if (connection.state !== signalR.HubConnectionState.Connected) {
-        alert("Cannot send message. Not connected to the chat server.");
+        showToast("Cannot send message. Not connected to the chat server.", "error");
         return;
     }
 

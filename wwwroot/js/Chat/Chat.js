@@ -172,7 +172,7 @@ function setupListeners() {
     });
     
     connection.on("Error", (errorMessage) => {
-        alert("Error: " + errorMessage);
+        window.showToast("Error: " + errorMessage, "error");
     });
     
     }   
@@ -180,7 +180,7 @@ function setupListeners() {
     async function joinChat(postId) {
     
         if (!postId) {
-            alert("No available chat to join.");
+            window.showToast("No available chat to join.", "error");
             return;
         }
     
@@ -192,7 +192,7 @@ function setupListeners() {
     
             loadPreviousMessages(postId); 
         } catch (err) {
-            alert("Failed to join chat: " + err);
+            window.showToast("Failed to join chat: " + err, "error");
         }
     }
 
@@ -254,12 +254,12 @@ document.getElementById("messageInput").addEventListener("keydown", function (ev
 
 async function sendMessage() {
     if (!currentPostId) {
-        alert("You must join a chat first.");
+        window.showToast("You must join a chat first.", "warning");
         return;
     }
 
     if (connection.state !== signalR.HubConnectionState.Connected) {
-        alert("Cannot send message. Not connected to the chat server.");
+        window.showToast("Cannot send message. Not connected to the chat server.", "error");
         return;
     }
 
@@ -289,12 +289,12 @@ function toggleEmojiPicker() {
 
 async function sendEmoji(emoji) {
     if (!currentPostId) {
-        alert("You must join a chat first.");
+        window.showToast("You must join a chat first.", "warning");
         return;
     }
 
     if (connection.state !== signalR.HubConnectionState.Connected) {
-        alert("Cannot send message. Not connected to the chat server.");
+        window.showToast("Cannot send message. Not connected to the chat server.", "error");
         return;
     }
 
@@ -317,12 +317,12 @@ document.addEventListener("click", function (event) {
 
 async function sendLike() {
     if (!currentPostId) {
-        alert("You must join a chat first.");
+        window.showToast("You must join a chat first.", "warning");
         return;
     }
 
     if (connection.state !== signalR.HubConnectionState.Connected) {
-        alert("Cannot send message. Not connected to the chat server.");
+        window.showToast("Cannot send message. Not connected to the chat server.", "error");
         return;
     }
 

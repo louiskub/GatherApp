@@ -27,7 +27,6 @@ public async Task<IActionResult> CreateReport([FromBody] CreateReportRequest rep
     var reporterId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     var reporter = await _db.Users.FirstOrDefaultAsync(u => u.Id == reporterId);
     var reported = await _db.Users.FirstOrDefaultAsync(u => u.Username == report.ReportedUsername);
-    Console.WriteLine($"Reported User ID: {report.ReportedUsername}");
     if (reporter == null || reported == null)
         return NotFound("User not found.");
 
@@ -61,18 +60,18 @@ public async Task<IActionResult> CreateReport([FromBody] CreateReportRequest rep
         ReportedUserId = reported.Id,
         PostId = report.PostId,
         Reason = report.Reason,
-        ReportType = reported.Id == post.UserId ? ReportType.Owner : ReportType.User,
+        ReportType = (reported.Id == post.UserId) ? ReportType.Owner : ReportType.User
     };
 
     _db.Reports.Add(newReport);
 
     var participantCount = await _db.Applications.CountAsync(p => p.PostId == report.PostId);
 
-    var reportCount = await _db.Reports.CountAsync(r =>
+        var reportCount = await _db.Reports.CountAsync(r =>
         r.PostId == report.PostId &&
-        r.ReportType == ReportType.Owner &&
-        r.ReporterId != post.UserId
+        r.ReportType == ReportType.Owner
     );
+
 
 if (reportCount >= participantCount / 2 && reporterId != post.UserId) 
 {
