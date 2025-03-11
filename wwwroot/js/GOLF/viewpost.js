@@ -1,5 +1,5 @@
 import LikePostHandler from "/js/components/handler/like_post_handler.js";
-
+import ShowBigImage from "/js/components/handler/show_big_image.js";
 const urlParams = new URLSearchParams(window.location.search);
 const postId = urlParams.get('postid') || urlParams.get('postId');
 
@@ -118,6 +118,8 @@ async function showPostDetail() {
         tag.textContent = actType;
         tagContainer.appendChild(tag);
     })
+
+    new ShowBigImage();
 }
 
 
@@ -674,7 +676,7 @@ async function userButtonHandler(){
         if (post.isAttached){
             let fileInput = document.getElementById("fileInput").files[0]
             if (!fileInput) 
-                return alert("Please attach a file before submitting.")
+                return window.showToast("Please attach a file before submitting.", "error")
             apiSettings.body = JSON.stringify(
                 { fileAttached: await fileToBase64(fileInput)}
             )

@@ -23,7 +23,7 @@ async function logOut(content="Logout successfully") {
         method: "POST",
         credentials: 'include'
     });
-    window.changeToast(content, "/home")
+    window.changePage(content, "/home", "success");
 }
 
 async function getMyProfile() {

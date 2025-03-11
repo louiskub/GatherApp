@@ -117,6 +117,54 @@ async function reviewByParticipant(postId) {
   openPopup("review", userList, postId);
 }
 
+
+async function cancelApp(postId) {
+  {
+    let head, cont, noText, yesText;
+    let apiPath, successMessage, failMessage, successRedirect;
+    head = "Cancel this registration?";
+    cont =
+      "Are you sure you want to cancel this registration? This action cannot be undone.";
+    noText = "Keep it";
+    yesText = "Cancel registration";
+
+    apiPath = `api/user/applypost?postid=${postId}`;
+    successMessage = "Post registration canceled successfully";
+    failMessage = "Failed to cancel post registration";
+    window.confirmAction(
+      head,
+      cont,
+      noText,
+      yesText,
+      async () =>
+        await fetch(`/api/user/applypost?postid=${postId}`, {
+          method: "DELETE",
+        })
+          .then(async (response) => {
+            if (response.ok) {
+              // non auth
+              if (response.redirected) window.redirectToLogin();
+              else
+                window.changePage(
+                  successMessage,
+                  "/history/application",
+                  "success"
+                );
+            }
+            // error
+            else {
+              response = await response.text();
+              window.showToast(response, "error");
+            }
+          })
+          .catch((e) => {
+            throw e;
+          })
+    );
+  }
+}
+
+
 export default class HistoryActivity {
   constructor(
     postId,
@@ -267,10 +315,12 @@ export default class HistoryActivity {
     const cancelButton = document.createElement("button");
     cancelButton.classList.add("buttonStyle", "report");
     cancelButton.textContent = "Cancel";
+    cancelButton.addEventListener("click", async () => cancelApp(this.postId));
 
     statusContainer.appendChild(statusName);
     statusContainer.appendChild(cancelButton);
 
+    
     return statusContainer;
   }
 
@@ -287,54 +337,8 @@ export default class HistoryActivity {
         ".buttonContainer"
       ).innerHTML = `<button class="buttonStyle review">Attached File</button>`;
 
-    statusContainer.querySelector(
-      ".buttonContainer"
-    ).innerHTML += `<button class="buttonStyle report">Cancel</button>`;
-    statusContainer
-      .querySelector(".report")
-      .addEventListener("click", async () => {
-        let head, cont, noText, yesText;
-        let apiPath, successMessage, failMessage, successRedirect;
-        head = "Cancel this registration?";
-        cont =
-          "Are you sure you want to cancel this registration? This action cannot be undone.";
-        noText = "Keep it";
-        yesText = "Cancel registration";
-
-        apiPath = `api/user/applypost?postid=${this.postId}`;
-        successMessage = "Post registration canceled successfully";
-        failMessage = "Failed to cancel post registration";
-        window.confirmAction(
-          head,
-          cont,
-          noText,
-          yesText,
-          async () =>
-            await fetch(`/api/user/applypost?postid=${this.postId}`, {
-              method: "DELETE",
-            })
-              .then(async (response) => {
-                if (response.ok) {
-                  // non auth
-                  if (response.redirected) window.redirectToLogin();
-                  else
-                    window.changePage(
-                      successMessage,
-                      "/history/application",
-                      "success"
-                    );
-                }
-                // error
-                else {
-                  response = await response.text();
-                  window.showToast(response, "error");
-                }
-              })
-              .catch((e) => {
-                throw e;
-              })
-        );
-      });
+    statusContainer.querySelector(".buttonContainer").innerHTML += `<button class="buttonStyle report">Cancel</button>`;
+    statusContainer.querySelector(".report").addEventListener("click", async () => cancelApp(this.postId));
 
     if (this.isAttached)
       statusContainer.querySelector(".review").addEventListener("click", () => {
