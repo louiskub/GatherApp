@@ -676,7 +676,7 @@ async function userButtonHandler(){
         if (post.isAttached){
             let fileInput = document.getElementById("fileInput").files[0]
             if (!fileInput) 
-                return alert("Please attach a file before submitting.")
+                return window.showToast("Please attach a file before submitting.", "error")
             apiSettings.body = JSON.stringify(
                 { fileAttached: await fileToBase64(fileInput)}
             )

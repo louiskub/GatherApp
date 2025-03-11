@@ -257,7 +257,7 @@ async function saveProfile() {
       }
       originalSexValue = currentSexValue;
     } else {
-      alert("Profile update failed");
+      window.showToast("Profile update failed", "error");
     }
 
     document.getElementById("editbtn").style.display = "inline-block";
@@ -276,7 +276,7 @@ async function saveProfile() {
     location.reload();
   } catch (error) {
     console.error("Error updating profile:", error);
-    alert("Error updating profile: " + error.message);
+    window.showToast("Error updating profile: " + error.message, "error");
   }
 }
 
