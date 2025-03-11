@@ -195,6 +195,17 @@ connection.on("ReceivePostInvitation", (postId, postName, postDetail, username) 
     chatBox.appendChild(inviteContainer);
 });
 
+function toggleReadMore(postId) {
+    const detail = document.getElementById(`detail-${postId}`);
+    if (detail.classList.contains("truncate")) {
+        detail.classList.remove("truncate");
+        detail.classList.add("expanded");
+    } else {
+        detail.classList.remove("expanded");
+        detail.classList.add("truncate");
+    }
+}
+
 function viewPost(postId) {
     
     window.location.href = `https://localhost:5174/post?postId=${postId}`;

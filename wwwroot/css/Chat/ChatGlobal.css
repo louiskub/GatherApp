@@ -537,7 +537,7 @@ h1.top {
 
 .post-details {
     background: rgba(255, 255, 255, 0.15);
-    padding: 15px;
+    padding: 8px;
     border-radius: 12px;
     border-left: 4px solid #00d0ff;
     backdrop-filter: blur(12px);
@@ -557,10 +557,17 @@ h1.top {
 }
 
 .post-details p {
-    font-size: 14px;
+    font-size: 14px; 
     color: var(--text-color);
     font-weight: 500;
     margin-bottom: 8px;
+
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+
+    height: 24px;
+    line-height: 24px; 
 }
 
 .post-details button {
