@@ -963,7 +963,7 @@ textarea:focus {
 
   .behavior-score {
     margin-top: 20px;
-    margin-bottom: -40px;
+    margin-bottom: 10px;
     width: 100%;
   }
 
