@@ -20,9 +20,7 @@ async function fetchMyProfile() {
       method: "GET",
       credentials: "include",
     });
-    console.log("res :", response)
     response = await response.json();
-    console.log("My profile:", response);
     let isOwner = response.isOwner;
     response = response.user;
     document.getElementById(
@@ -40,7 +38,6 @@ async function fetchMyProfile() {
     document.getElementById("bio").value = response.bio || "---";
 
     let receivedRatings = response.receivedRatings;
-    console.log("ratingscore", response.receivedRatings);
 
     setTimeout(() => {
       adjustTextareaHeight();
@@ -49,7 +46,6 @@ async function fetchMyProfile() {
     if (receivedRatings !== undefined) {
       renderStars(receivedRatings);
     }
-    console.log("res Owner :", isOwner)
     if (!isOwner){
       document.querySelector(".edit-button").innerHTML = ""
     }
@@ -106,7 +102,6 @@ async function confirmPassword() {
   });
 
   let result = await response.json();
-  console.log("passstatus", result);
   if (result.status === "success") {
     closePopup();
     enableEditMode();
@@ -116,7 +111,7 @@ async function confirmPassword() {
   }
 }
 
-function enableEditMode() {
+function enableEditMode() { 
   document.getElementById("editbtn").style.display = "none";
   document.getElementById("savebtn").style.display = "inline-block";
   document.getElementById("cancelbtn").style.display = "flex";
@@ -130,7 +125,9 @@ function enableEditMode() {
 
   document.getElementById("sex").style.display = "none";
   document.getElementById("sex-dropdown-container").style.display = "block";
-
+  if (window.matchMedia("(max-width: 768px)").matches) {
+    document.getElementById("usernamelabel").style.marginTop = "20px";
+  }
   const sexDropdown = document.getElementById("sex-dropdown");
   const standardSexes = ["Male", "Female", "Non-Binary", "Prefer not to say"];
 
@@ -197,7 +194,6 @@ imageUpload.addEventListener("change", (event) => {
       document.getElementById("profilepic").src = base64Image;
       adjustTextareaHeight;
       base64Image = e.target.result.replace(/^data:image\/[a-z]+;base64,/, "");
-      console.log(base64Image);
     };
     reader.readAsDataURL(file);
   }
@@ -282,8 +278,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       if (!response.ok) throw new Error("Failed to fetch posts");
 
       let data = await response.json();
-      console.log("Fetched data:", data);
-
       return data;
     } catch (error) {
       console.error("Error loading posts:", error);
@@ -295,8 +289,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     const postsList = document.getElementById("tag-list");
 
     const actTypes = postWrapper && postWrapper.length > 0 ? postWrapper : [];
-    console.log("Tag", actTypes);
-
     const postItem = document.createElement("profile-tags");
 
     postItem.innerHTML = `
@@ -307,8 +299,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   const allTags = await fetchTags();
-  console.log("All Posts Data:", allTags);
-
   const existingTags = new Set();
 
   if (Array.isArray(allTags.posts)) {
@@ -429,8 +419,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       if (!response.ok) throw new Error("Failed to fetch posts");
 
       let data = await response.json();
-      console.log("Fetched data:", data);
-
       return data;
     } catch (error) {
       console.error("Error loading posts:", error);
@@ -470,8 +458,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     const imageUrl = post.coverPageImg || "https://via.placeholder.com/300";
-    console.log("actdate :", postWrapper.post);
-
     postItem.innerHTML = `
                         <div class="post-image-container">
                             <img src="data:image/jpeg;base64,${imageUrl}" alt="Post Image" class="post-image">
@@ -517,8 +503,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   const allPosts = await fetchPosts();
-  console.log("All Posts Data:", allPosts);
-
   if (Array.isArray(allPosts.posts)) {
     allPosts.posts.forEach((postWrapper) => {
       renderPosts(postWrapper);
