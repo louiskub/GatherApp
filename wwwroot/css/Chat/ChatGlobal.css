@@ -167,7 +167,7 @@ h1.top {
     flex-direction: column;
     gap: 15px;
 }
-
+    
 .chatMessage {
     display: flex;
     align-items: flex-start;
@@ -705,6 +705,10 @@ h1.top {
     .chatBox {
         height: 300px;
     }
+
+    .chatInput{
+        width: 100%;
+    }
 }
 
 @media (min-width: 600px) {
@@ -717,5 +721,5 @@ h1.top {
 @media (max-width: 400px) {
     #actionButton {
         font-size: 24px; 
-    }
+    }   
 }

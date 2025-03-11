@@ -169,7 +169,7 @@ document.getElementById("signupNextButton").addEventListener("click", () => {
     document.querySelector(".signup-first-step").style.display = "none"
     document.querySelector(".signup-last-step").style.display = "block"
   } else {
-    alert("Please fill out all the fields in the first section.") // แจ้งเตือนให้กรอกข้อมูลให้ครบ
+    window.showToast("Please fill out all the fields in the first section.", "warning")
   }
 })
 
@@ -199,7 +199,7 @@ document.getElementById("signupButton").addEventListener("click", (event) => {
   dob = dob.split("-").reverse().join("-") + "T00:00:00" // Change date format to yyyy-mm-dd
   // Validate the passwords match
   if (password !== confirmPassword) {
-    alert("Passwords do not match!") // change to display password errors
+    window.showToast("Passwords do not match!", "warning")
     return
   }
 
@@ -211,7 +211,7 @@ document.getElementById("signupButton").addEventListener("click", (event) => {
   const hasSpecialChar = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)
 
   if (!hasEightChars || !hasUpperCase || !hasLowerCase || !hasNumber || !hasSpecialChar) {
-    alert("Password does not meet all requirements")
+    window.showToast("Password does not meet all requirements", "warning")
     return
   }
 
@@ -238,14 +238,14 @@ document.getElementById("signupButton").addEventListener("click", (event) => {
       if (data.status === "Registration successful") {
         window.changePage("Registration successful.", "/", "success")
       } else if (data.errors) {
-        alert("Registration failed: " + data.errors.join("\n")) // change to display all errors
+        window.showToast("Registration failed: " + data.errors.join("\n"), "error")
       } else {
-        alert("Registration failed: " + data.status) // change to display all errors
+        window.showToast("Registration failed: " + data.status, "error")
       }
     })
     .catch((error) => {
       console.error(error)
-      alert("Registration failed: " + error.message) // change to display all errors
+      window.showToast("Registration failed: " + error.message, "error")
     })
 })
 

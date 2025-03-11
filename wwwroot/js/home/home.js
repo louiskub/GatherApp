@@ -31,7 +31,7 @@ async function createDropDown(){
     const dropdowns = [
         new Dropdown("Any day", ["Today", "Tomorrow", "This week", "Next week", "This month"], "Any day").render(),
         new Dropdown("Any category", actTypes, "Any category").render(),
-        new Dropdown("Any type", ["Online", "In person"], "Any type").render()
+        new Dropdown("Any type", ["Online", "Onsite"], "Any type").render()
     ];
     dropdowns.forEach(dropdown => sidenav.appendChild(dropdown));
     
@@ -272,7 +272,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         if (!provinceDropdown || !districtDropdown) return;
 
-        if (dropdownValue === "In person") {
+        if (dropdownValue === "Onsite") {
             provinceDropdown.style.display = "flex";
         } else {
 

@@ -290,11 +290,10 @@ public class ChatHub : Hub
     public async Task GetUserChats()    
     {
         var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        Console.WriteLine($"[DEBUG] Retrieved userId: {userId}");
-
+    
         if (string.IsNullOrEmpty(userId))
         {
-            Console.WriteLine("Error: Unauthorized access - userId is null");
+           
             await Clients.Caller.SendAsync("Error", "Unauthorized: User ID not found.");
             return;
         }
@@ -310,12 +309,6 @@ public class ChatHub : Hub
                     CoverImage = string.IsNullOrEmpty(p.CoverPageImg) ? "https://www.mcot.net/uploads/article/202409/fc9caee77c607de279ff9116c67c6ddf.jpeg" : p.CoverPageImg})
             )
             .ToList();
-
-        Console.WriteLine($"[DEBUG] Retrieved {posts.Count} post(s) for user {userId}");
-        foreach (var post in posts)
-        {
-            Console.WriteLine($"[DEBUG] Post ID: {post.Id}, Name: {post.PostName}, Detail: {post.Detail}, Cover: {post.CoverImage}");
-        }
 
         await Clients.Caller.SendAsync("LoadUserChats", posts);
     }    
