@@ -418,6 +418,53 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", async function () {
+  function createHidePost(posts){
+      const showMoreBtn = document.createElement("a");
+      const userPosts = document.getElementById("posts-list")
+      const postContainer = document.querySelector(".postcontainer")
+      const main = document.querySelector("main");
+
+      showMoreBtn.textContent = "More Posts";
+      showMoreBtn.classList.add("search-more-user-btn");
+  
+      const maxVisible = 6;
+      let isExpanded = false;
+      let postCount = posts.length;
+  
+      posts.forEach((post, index) => {
+          if (index >= maxVisible) 
+            post.style.display = "none";
+          userPosts.appendChild(post);
+      });
+  
+      if (postCount > maxVisible) {
+          if (!postContainer.contains(showMoreBtn)) {
+            postContainer.appendChild(showMoreBtn);
+          }
+  
+          showMoreBtn.addEventListener("click", function (event) {
+              event.preventDefault();
+              isExpanded = !isExpanded;
+              // ถ้ากด "More Users" จะต้องเพิ่ม card ที่ซ่อนไว้ลงใน DOM
+              if (isExpanded) {
+                  for (let i = maxVisible; i < postCount; i++) {
+                      posts[i].style.display = "block";
+                  }
+              } else {
+                  for (let i = maxVisible; i < postCount; i++) {
+                      posts[i].style.display = "none";
+                  }
+                  document.querySelector(".posttitle").scrollIntoView({
+                      behavior: "smooth",
+                      block: "start" 
+                  });
+              }
+  
+              showMoreBtn.textContent = isExpanded ? "Less Posts" : "More Posts";
+          });
+      }
+  }
+
   async function fetchPosts() {
     try {
       var path = window.location.search;
@@ -438,8 +485,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   async function renderPosts(){
     let posts = await fetchPosts() 
     let postList = []
-    let postCount = 0
-    const userPosts = document.getElementById("posts-list")
     posts.forEach((post) => {
                 let owner = post.owner
                 let activity = post.activity
@@ -462,69 +507,8 @@ document.addEventListener("DOMContentLoaded", async function () {
                     actType, 
                     post.coverPageImg, post.like, post.isLiked, activity.online
                 ).render());
-                postList.push(new Post(
-                  post.id, formattedDate, post.postName, activity.province +", "+ activity.district, 
-                  post.curParticipant, post.maxParticipant, post.totalApplicant, 
-                  actType, 
-                  post.coverPageImg, post.like, post.isLiked, activity.online
-              ).render())
-              postList.push(new Post(
-                post.id, formattedDate, post.postName, activity.province +", "+ activity.district, 
-                post.curParticipant, post.maxParticipant, post.totalApplicant, 
-                actType, 
-                post.coverPageImg, post.like, post.isLiked, activity.online
-            ).render())
-            postList.push(new Post(
-              post.id, formattedDate, post.postName, activity.province +", "+ activity.district, 
-              post.curParticipant, post.maxParticipant, post.totalApplicant, 
-              actType, 
-              post.coverPageImg, post.like, post.isLiked, activity.online
-          ).render())
-          postList.push(new Post(
-            post.id, formattedDate, post.postName, activity.province +", "+ activity.district, 
-            post.curParticipant, post.maxParticipant, post.totalApplicant, 
-            actType, 
-            post.coverPageImg, post.like, post.isLiked, activity.online
-        ).render())
-        postList.push(new Post(
-          post.id, formattedDate, post.postName, activity.province +", "+ activity.district, 
-          post.curParticipant, post.maxParticipant, post.totalApplicant, 
-          actType, 
-          post.coverPageImg, post.like, post.isLiked, activity.online
-      ).render())
-      postList.push(new Post(
-        post.id, formattedDate, post.postName, activity.province +", "+ activity.district, 
-        post.curParticipant, post.maxParticipant, post.totalApplicant, 
-        actType, 
-        post.coverPageImg, post.like, post.isLiked, activity.online
-    ).render())
-    postList.push(new Post(
-      post.id, formattedDate, post.postName, activity.province +", "+ activity.district, 
-      post.curParticipant, post.maxParticipant, post.totalApplicant, 
-      actType, 
-      post.coverPageImg, post.like, post.isLiked, activity.online
-  ).render())
-  postList.push(new Post(
-    post.id, formattedDate, post.postName, activity.province +", "+ activity.district, 
-    post.curParticipant, post.maxParticipant, post.totalApplicant, 
-    actType, 
-    post.coverPageImg, post.like, post.isLiked, activity.online
-).render())
             })
-    postList.forEach((post) => {
-      postCount += 1
-      userPosts.appendChild(post)
-    })
-
-    //create view more
-    if (postCount > 6){
-      // if (postCount > 5)
-      //   post.style.display = "none"
-    }
-    let div = document.createElement("div")
-    div.className = "view-more"
-    div.innerHTML = "View More"
-    document.querySelector(".postcontainer").appendChild(div)
+    createHidePost(postList)
 
   }
   renderPosts()
