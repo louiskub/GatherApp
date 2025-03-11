@@ -26,14 +26,24 @@ public async Task<IActionResult> CreateReport([FromBody] CreateReportRequest rep
 {
     var reporterId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     var reporter = await _db.Users.FirstOrDefaultAsync(u => u.Id == reporterId);
-    var reported = await _db.Users.FirstOrDefaultAsync(u => u.Username == report.ReportedUsername);
-    if (reporter == null || reported == null)
+    Console.WriteLine($"Reported User ID: {report.ReportedUsername}");
+    if (reporter == null)
         return NotFound("User not found.");
 
-    var post = await _db.Posts.Include(p => p.Activity).FirstOrDefaultAsync(p => p.Id == report.PostId);
+    var post = await _db.Posts.Include(p => p.Activity).Include(p => p.User).FirstOrDefaultAsync(p => p.Id == report.PostId);
     if (post == null)
     {
         return NotFound("Post not found.");
+    }
+
+    User? reported = null;
+    if (post.UserId != reporterId)
+        reported = post.User;
+    else
+        reported = await _db.Users.FirstOrDefaultAsync(u => u.Username == report.ReportedUsername);
+    if (reported == null)
+    {
+        return NotFound("Reported user not found.");
     }
 
     if (DateTime.Now < post.Activity.ActDatetime)
