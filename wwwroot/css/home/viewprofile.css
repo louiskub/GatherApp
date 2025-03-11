@@ -739,25 +739,80 @@ textarea:focus {
   }
 }
 
-@media (max-width: 880px) {
+@media (max-width: 900px) {
+  .container,
+  .postcontainer {
+    width: 95vw;
+    padding: 40px 20px;
+  }
+
   .container {
-    margin-top: 150px;
+    margin-top: 120px;
+  }
+
+  .profile-pic {
+    width: 150px;
+    height: 150px;
+    top: -75px;
+  }
+
+  .edit-button,
+  .behavior-score {
+    position: static;
+    margin: 10px auto;
+    width: 100%;
+    justify-content: center;
   }
 
   .edit-button {
-    left: 30px;
-  }
-
-  .upload_container {
     margin-top: 80px;
   }
 
   .behavior-score {
-    right: 30px;
+    margin-bottom: -40px;
   }
 
-  #behaviorscore {
-    font-size: 20px;
+  .rating-container label {
+    font-size: 26px;
+    white-space: normal;
+  }
+
+  .upload_container {
+    margin-top: -10px;
+    margin-bottom: -180px;
+  }
+
+  #imageUpload {
+    margin-top: 80px;
+  }
+
+  #usernamelabel {
+    margin-top: -20px;
+  }
+
+  .allnamebox {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .form-group label,
+  .namebox label {
+    font-size: 18px;
+  }
+
+  .post-card {
+    width: 100%;
+    max-width: 340px;
+  }
+
+  #posts-list {
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: center;
+    .post-container{
+      width: 90%;
+    }
+    /* gap: 30px; */
   }
 }
 
@@ -965,6 +1020,10 @@ textarea:focus {
   .behavior-score {
     margin-bottom: -50px;
     width: 100%;
+  }
+
+  #usernamelabel label {
+    margin-top: 10px;
   }
 
   .popup {
