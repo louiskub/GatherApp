@@ -62,7 +62,6 @@ function setupGlobalChatListeners() {
         const chatBox = document.getElementById("globalChatBox");
         chatBox.innerHTML = ""; 
     
-        // ✅ รวม messages และ postInvitations เป็น array เดียว
         const allItems = [
             ...messages.map(msg => ({
                 type: "message",

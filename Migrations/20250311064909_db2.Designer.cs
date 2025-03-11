@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GatherApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250307103956_db2")]
+    [Migration("20250311064909_db2")]
     partial class db2
     {
         /// <inheritdoc />
