@@ -39,7 +39,7 @@ public class GlobalChatHub : Hub
 
         var user = await _db.Users.FindAsync(userId);
         string username = user?.Username ?? "Unknown";
-        string profileImageUrl = user?.ProfileImg ?? "https://www.mcot.net/uploads/article/202409/fc9caee77c607de279ff9116c67c6ddf.jpeg";
+        string profileImageUrl = user?.ProfileImg ?? "https://tr.rbxcdn.com/30DAY-Avatar-310966282D3529E36976BF6B07B1DC90-Png/352/352/Avatar/Png/noFilter";
 
         var globalMessage = new ChatGlobal
         {
@@ -81,10 +81,6 @@ public class GlobalChatHub : Hub
             {
                 _userConnections[Context.ConnectionId] = userId;
             }
-            else
-            {
-        
-            }
 
             await Groups.AddToGroupAsync(Context.ConnectionId, "GlobalChat");
 
@@ -98,13 +94,15 @@ public class GlobalChatHub : Hub
         await base.OnConnectedAsync();
     }
 
-
+    
     public async Task LoadGlobalMessages()
     {
         var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var currentUserId = userId; 
 
         var messages = await _db.ChatGlobals
+            .OrderByDescending(m => m.SentAt)
+            .Take(30)
             .OrderBy(m => m.SentAt)
             .Select(m => new
             {
@@ -117,9 +115,11 @@ public class GlobalChatHub : Hub
                 SentAt = m.SentAt.ToUniversalTime().ToString("o"),
                 ProfileImg = m.ProfileImg
             })
-            .ToListAsync();
+            .ToListAsync(); 
         
         var postInvitations = await _db.PostInvitations
+        .OrderByDescending(p => p.SentAt)
+        .Take(30)
         .OrderBy(p => p.SentAt)
         .Select(p => new
         {
