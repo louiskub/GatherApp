@@ -186,7 +186,7 @@ connection.on("ReceivePostInvitation", (postId, postName, postDetail, username) 
 
 function viewPost(postId) {
     
-    window.location.href = `http://localhost:5174/post?postId=${postId}`;
+    window.location.href = `https://localhost:5174/post?postId=${postId}`;
 }
 
 
