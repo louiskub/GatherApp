@@ -305,87 +305,87 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Add CSS for password validation
-    const style = document.createElement("style")
-    style.textContent = `
-    /* Password Requirements Box */
-    .pw-requirements-box {
-        background-color: #fff8f8;
-        border: 1px solid #ffcdd2;
-        border-radius: 4px;
-        padding: 10px 15px;
-        margin-top: 8px;
-        margin-bottom: 12px;
-        font-size: 14px;
-    }
+//     const style = document.createElement("style")
+//     style.textContent = `
+//     /* Password Requirements Box */
+//     .pw-requirements-box {
+//         background-color: #fff8f8;
+//         border: 1px solid #ffcdd2;
+//         border-radius: 4px;
+//         padding: 10px 15px;
+//         margin-top: 8px;
+//         margin-bottom: 12px;
+//         font-size: 14px;
+//     }
     
-    .pw-requirements-box p {
-        margin: 0 0 8px 0;
-        font-weight: 500;
-        color: #e91e63;
-    }
+//     .pw-requirements-box p {
+//         margin: 0 0 8px 0;
+//         font-weight: 500;
+//         color: #e91e63;
+//     }
     
-    .pw-requirements-box ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
+//     .pw-requirements-box ul {
+//         list-style: none;
+//         padding: 0;
+//         margin: 0;
+//     }
     
-    .pw-req-item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 5px;
-        color: #666;
-        font-size: 14px;
-    }
+//     .pw-req-item {
+//         display: flex;
+//         align-items: center;
+//         margin-bottom: 5px;
+//         color: #666;
+//         font-size: 14px;
+//     }
     
-    .pw-req-item.pw-req-met {
-        color: #e91e63;
-    }
+//     .pw-req-item.pw-req-met {
+//         color: #e91e63;
+//     }
     
-    .req-icon {
-        margin-right: 8px;
-        display: inline-block;
-        width: 16px;
-        height: 16px;
-        position: relative;
-    }
+//     .req-icon {
+//         margin-right: 8px;
+//         display: inline-block;
+//         width: 16px;
+//         height: 16px;
+//         position: relative;
+//     }
     
-    .req-icon.req-not-met {
-        border-radius: 50%;
-        border: 1.5px solid #999;
-    }
+//     .req-icon.req-not-met {
+//         border-radius: 50%;
+//         border: 1.5px solid #999;
+//     }
     
-    .req-icon.req-met {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f472b6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 11.08V12a10 10 0 1 1-5.93-9.14'%3E%3C/path%3E%3Cpolyline points='22 4 12 14.01 9 11.01'%3E%3C/polyline%3E%3C/svg%3E");
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
+//     .req-icon.req-met {
+//         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f472b6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 11.08V12a10 10 0 1 1-5.93-9.14'%3E%3C/path%3E%3Cpolyline points='22 4 12 14.01 9 11.01'%3E%3C/polyline%3E%3C/svg%3E");
+//         background-size: contain;
+//         background-repeat: no-repeat;
+//         background-position: center;
+//     }
     
-    /* Password Match/Mismatch */
-    #password-mismatch {
-        color: #ff4d4f;
-        font-size: 14px;
-        margin-top: -8px;
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
+//     /* Password Match/Mismatch */
+//     #password-mismatch {
+//         color: #ff4d4f;
+//         font-size: 14px;
+//         margin-top: -8px;
+//         margin-bottom: 10px;
+//         display: flex;
+//         align-items: center;
+//         gap: 5px;
+//     }
     
-    .password-match {
-        color: #e91e63 !important;
-    }
+//     .password-match {
+//         color: #e91e63 !important;
+//     }
     
-    .password-mismatch {
-        color: #ff4d4f !important;
-    }
+//     .password-mismatch {
+//         color: #ff4d4f !important;
+//     }
     
-    .signup-confirm-password {
-        position: relative;
-    }
-`
-    document.head.appendChild(style)
+//     .signup-confirm-password {
+//         position: relative;
+//     }
+// `
+//     document.head.appendChild(style)
 
     // Add event listeners for password validation
     const passwordInput = document.getElementById("password")
