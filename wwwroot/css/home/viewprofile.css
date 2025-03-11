@@ -439,6 +439,10 @@ main {
   transition: transform 0.3s ease-in-out;
 }
 
+.form-group label {
+  margin-bottom: 5px;
+}
+
 #usernamelabel label {
   margin-top: 20px
 }
@@ -570,8 +574,8 @@ textarea:focus {
 }
 
 #taglabel label {
-  margin-top: 10px;
-  margin-bottom: 25px;
+  margin-top: 15px;
+  margin-bottom: 20px;
 }
 
 #tag-list {

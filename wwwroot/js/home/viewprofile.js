@@ -457,7 +457,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const postItem = document.createElement("div");
     postItem.classList.add("post-card");
-    const postUrl = `http://localhost:5174/post?postId=${post.id}`;
+    const postUrl = `https://localhost:5174/post?postId=${post.id}`;
     postItem.onclick = function () {
       window.location.href = postUrl;
     };
