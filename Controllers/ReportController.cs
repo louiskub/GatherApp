@@ -90,7 +90,8 @@ public async Task<IActionResult> CreateReport([FromBody] CreateReportRequest rep
                 Type = "report",
                 Title = "Behavior Score",
                 UserId = reported.Id,
-                Content = "Your behavior score has been reduced by 20 due to a report."
+                Content = "Your behavior score has been reduced by 20 due to a report.",
+                CreatedAt = DateTime.Now
             });
 
             if (reportedPostOwner.Score < 50 && !reportedPostOwner.IsBanned)
@@ -103,7 +104,8 @@ public async Task<IActionResult> CreateReport([FromBody] CreateReportRequest rep
                     Type = "report",
                     Title = "Behavior Score",
                     UserId = reported.Id,
-                    Content = "Your behavior score is below 50, and you have been temporarily banned for 7 days."
+                    Content = "Your behavior score is below 50, and you have been temporarily banned for 7 days.",
+                    CreatedAt = DateTime.Now
                 });
             }
 
@@ -117,7 +119,8 @@ public async Task<IActionResult> CreateReport([FromBody] CreateReportRequest rep
                     Type = "report",
                     Title = "Behavior Score",
                     UserId = reported.Id,
-                    Content = "Your behavior score has reached 0, and you have been permanently banned."
+                    Content = "Your behavior score has reached 0, and you have been permanently banned.",
+                    CreatedAt = DateTime.Now
                 });
             }
         }
@@ -138,37 +141,38 @@ public async Task<IActionResult> CreateReport([FromBody] CreateReportRequest rep
             Type = "report",
             Title = "Behavior Score",
             UserId = reported.Id,
-            Content = $"Your behavior score has been reduced by 20 due to a report."
+            Content = "Your behavior score has been reduced by 20 due to a report.",
+            CreatedAt = DateTime.Now
         });
-
-        if (reportedUserScore.Score < 50 && !reportedUserScore.IsBanned)
-        {
-            reportedUserScore.IsBanned = true;
-            reportedUserScore.BannedUntil = DateTime.Now.AddDays(7);
-        }
-
-        _db.Notifications.Add(new Notification
-            {
-                Type = "report",
-                Title = "Behavior Score",
-                UserId = reported.Id,
-                Content = "Your behavior score is below 50, and you have been temporarily banned for 7 days."
-            });
 
         if (reportedUserScore.Score <= 0)
         {
             reportedUserScore.IsBanned = true;
             reportedUserScore.BannedUntil = null;
-        }
 
-        _db.Notifications.Add(new Notification
+            _db.Notifications.Add(new Notification
             {
                 Type = "report",
                 Title = "Behavior Score",
                 UserId = reported.Id,
-                Content = "Your behavior score has reached 0, and you have been permanently banned."
+                Content = "Your behavior score has reached 0, and you have been permanently banned.",
+                CreatedAt = DateTime.Now
             });
-        
+        }
+        else if (reportedUserScore.Score < 50 && !reportedUserScore.IsBanned)
+        {
+            reportedUserScore.IsBanned = true;
+            reportedUserScore.BannedUntil = DateTime.Now.AddDays(7);
+
+            _db.Notifications.Add(new Notification
+            {
+                Type = "report",
+                Title = "Behavior Score",
+                UserId = reported.Id,
+                Content = "Your behavior score is below 50, and you have been temporarily banned for 7 days.",
+                CreatedAt = DateTime.Now
+            });
+        }
     }
     else
     {
@@ -177,6 +181,7 @@ public async Task<IActionResult> CreateReport([FromBody] CreateReportRequest rep
 
     await _db.SaveChangesAsync();
     return Ok(new { message = "Report submitted successfully." });
+
     }   
 
     [HttpPut]

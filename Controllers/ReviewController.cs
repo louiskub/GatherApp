@@ -33,7 +33,7 @@ namespace GatherApp.Controllers
             if (rating.RatedUsername == null)
                 return BadRequest("RatedUsername cannot be null.");
             if (rating.Score < 0 || rating.Score > 5)
-                return BadRequest("Score must be between 0 and 5.");
+                return BadRequest("Score must be between 1 and 5.");
             if (rating.Comment != null && rating.Comment.Length > 300)
                 return BadRequest("Comment must be less than 300 characters.");
 
@@ -67,7 +67,7 @@ namespace GatherApp.Controllers
                 UserId = rater.Id,
                 Score = rating.Score,
                 Comment = rating.Comment,
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.Now,
             };
             
             _ = _db.Notifications.Add(new Notification
@@ -75,7 +75,8 @@ namespace GatherApp.Controllers
                 Type = "review",
                 Title = "New Rating",
                 UserId = ratedUser.Id,
-                Content = $"You have received a new rating for the post"
+                Content = $"You have received a new rating for the post",
+                CreatedAt = DateTime.Now
             });
 
             try
@@ -114,7 +115,7 @@ namespace GatherApp.Controllers
 
             if (rating.Score < 0 || rating.Score > 5)
             {
-                return BadRequest("Score must be between 0 and 5.");
+                return BadRequest("Score must be between 1 and 5.");
             }
 
             var post = await _db.Activities.FindAsync(rating.PostId);
@@ -123,12 +124,12 @@ namespace GatherApp.Controllers
                 return BadRequest("Invalid post.");
             }
 
-            if (post.ActDatetime > DateTime.UtcNow)
+            if (post.ActDatetime > DateTime.Now)
             {
                 return BadRequest("You can only rate after the event has ended.");
             }
 
-            if (DateTime.UtcNow > post.ActDatetime.AddDays(7))
+            if (DateTime.Now > post.ActDatetime.AddDays(7))
             {
                 return BadRequest("You can only rate within 7 days after the event has ended.");
             }
@@ -170,7 +171,7 @@ namespace GatherApp.Controllers
                 UserId = raterId,
                 Score = rating.Score,
                 Comment = rating.Comment,
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.Now,
             };
             
             _ = _db.Notifications.Add(new Notification
@@ -178,7 +179,8 @@ namespace GatherApp.Controllers
                 Type = "review",
                 Title = "New Rating",
                 UserId = ratedUser.Id,
-                Content = $"You have received a new rating for the post"
+                Content = $"You have received a new rating for the post",
+                CreatedAt = DateTime.Now
             });
 
             try
@@ -211,14 +213,14 @@ namespace GatherApp.Controllers
                 return Unauthorized("You can only update your own ratings.");
             }
 
-            if (updatedRating.Score < 0 || updatedRating.Score > 5) 
+            if (updatedRating.Score <= 1 || updatedRating.Score > 5) 
             {
-                return BadRequest("Score must be between 0 and 5.");
+                return BadRequest("Score must be between 1 and 5.");
             }
 
             rating.Score = updatedRating.Score;
             rating.Comment = !string.IsNullOrWhiteSpace(updatedRating.Comment) ? updatedRating.Comment : rating.Comment;
-            rating.CreatedAt = DateTime.UtcNow;
+            rating.CreatedAt = DateTime.Now;
             
             _db.RatingScores.Update(rating);
             await _db.SaveChangesAsync();

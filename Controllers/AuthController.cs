@@ -156,7 +156,7 @@ public class AuthController : Controller
                     Password = BCrypt.Net.BCrypt.HashPassword(obj.Password),
                     FirstName = obj.FirstName  ?? "Unknown",
                     LastName = obj.LastName ?? "Unknown",
-                    DateOfBirth = obj.DateOfBirth ?? DateTime.UtcNow.AddDays(-2),
+                    DateOfBirth = obj.DateOfBirth ?? DateTime.Now.AddDays(-2),
                     Sex = obj.Sex ?? "Unknown",
                 };
 
@@ -196,7 +196,7 @@ public class AuthController : Controller
                     HttpOnly = true,
                     Secure = true,
                     SameSite = SameSiteMode.Strict,
-                    Expires = DateTime.UtcNow.AddDays(1)
+                    Expires = DateTime.Now.AddDays(1)
                 });
 
                 return Ok(new { status = "Registration successful", token = token });

@@ -14,6 +14,10 @@
     --postedby-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
+.app_but:hover, .reg_but:hover, .edit_but:hover, .view_but:hover, .cancel_post_but:hover{
+    transform: scale(1.05);
+}
+
 
 /* @media สำหรับหน้าจอที่มีความกว้างต่ำกว่า 1200px */
 @media (max-width: 1200px) {

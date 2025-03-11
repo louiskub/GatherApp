@@ -378,7 +378,7 @@ public class ManageMyPostController : Controller
         }  
 
         _db.SaveChanges();
-        _chathubContext.Clients.Group(postId.ToString()).SendAsync("ReceiveMessage", "Post", $"User {username} has been accepted to join the chat.",DateTime.UtcNow);
+        _chathubContext.Clients.Group(postId.ToString()).SendAsync("ReceiveMessage", "Post", $"User {username} has been accepted to join the chat.",DateTime.Now);
         post.CurParticipant = post.Applications.Count(a => a.AppliedStatus == true);
         _db.SaveChanges();
         return Json(new {status = "accepted", curParticipant = post.CurParticipant});
@@ -410,7 +410,8 @@ public class ManageMyPostController : Controller
             Type = "rejected",
             Title = "Application rejected",
             UserId = application.User.Id,
-            Content = $"Your application({application.Post.PostName}) has been rejected"
+            Content = $"Your application({application.Post.PostName}) has been rejected",
+            CreatedAt = DateTime.Now
         });
         post.CurParticipant = post.Applications.Count(a => a.AppliedStatus == true);
         _db.SaveChanges();
