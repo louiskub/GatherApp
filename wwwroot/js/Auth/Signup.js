@@ -206,6 +206,14 @@ document.getElementById("signupNextButton").addEventListener("click", () => {
 
   // ตรวจสอบว่าทุกช่องกรอกข้อมูลใน section แรกครบหรือไม่
   if (firstName && lastName && dob && gender !== "Null") {
+    if (gender === "Custom") {
+      const customGender = document.getElementById("customGenderInput").value
+      if (!customGender) {
+        window.showToast("Please enter a custom gender.", "warning")
+        return
+      }
+    }
+
     // ซ่อน signup-first-step และแสดง signup-last-step
     document.querySelector(".signup-first-step").style.display = "none"
     document.querySelector(".signup-last-step").style.display = "block"
@@ -233,7 +241,7 @@ document.getElementById("signupButton").addEventListener("click", (event) => {
   const confirmPassword = document.getElementById("confirm-password").value
   const gender =
     document.getElementById("genderSelecter").value === "Custom"
-      ? document.getElementById("customgenderInput").value
+      ? document.getElementById("customGenderInput").value
       : document.getElementById("genderSelecter").value
 
   // 02-03-2025   dd mm yyyy to 2025-02-12T14:30:00
