@@ -174,7 +174,7 @@ public class PostController : Controller
         bool? actTypeFilter = null;
         if (actType == "Online") 
             actTypeFilter = true;
-        else if (actType == "In person") 
+        else if (actType == "Onsite") 
             actTypeFilter = false;
 
         if (actTypeFilter.HasValue)
@@ -284,7 +284,7 @@ public class PostController : Controller
         bool? actTypeFilter = null;
         if (actType == "Online") 
             actTypeFilter = true;
-        else if (actType == "In person") 
+        else if (actType == "Onsite") 
             actTypeFilter = false;
 
         if (actTypeFilter.HasValue)

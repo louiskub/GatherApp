@@ -213,12 +213,16 @@ public class ApplicationController : Controller
         if (voter.Username == participant.Username)
             return BadRequest("You cannot review yourself4");
 
-        if (type == "review")
+        Console.WriteLine("voterId2: " + type);
+        if (type == "review"){
             if (_db.RatingScores.Any(r => r.PostId == postId && r.RaterId == voter.Id && r.RatedUserId == participant.Id))
                 return BadRequest("You have already reviewed this participant.5");
-        else 
+        }
+        else {
             if (_db.Reports.Any(r => r.PostId == postId && r.ReporterId == voter.Id && r.ReportedUserId == participant.Id))
                 return BadRequest("You have already reported this participant.6");
+        }
+            
         
         return Json(new{
             postId,
