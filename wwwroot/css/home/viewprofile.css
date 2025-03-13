@@ -702,15 +702,17 @@ textarea:focus {
 #posts-list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: start;
   width: 100%;
   gap: 15px;
-
+  flex-grow: 1;
   .post-container{
     text-align: left;
+    flex-grow: 1;
+    max-width: none;
+    width: 300px;
   }
 }
-
 
 
 @media (max-width: 1200px) {
@@ -718,6 +720,14 @@ textarea:focus {
   .postcontainer {
     width: 90vw;
     padding: 60px 30px;
+  }
+
+  #imageUpload {
+    margin-top: 40px;
+  }
+
+  #usernamelabel {
+    margin-top: 20px;
   }
 
   /* #posts-list {
@@ -783,11 +793,11 @@ textarea:focus {
   }
 
   #imageUpload {
-    margin-top: 80px;
+    margin-top: 120px;
   }
 
   #usernamelabel {
-    margin-top: -20px;
+    margin-top: 20px;
   }
 
   .allnamebox {
@@ -939,6 +949,10 @@ textarea:focus {
     margin-left: 100px;
   }
 
+  #imageUpload {
+    margin-top: 20px;
+  }
+
   #usernamelabel label {
     margin-top: -50px;
   }
@@ -1020,6 +1034,14 @@ textarea:focus {
   .behavior-score {
     margin-bottom: -50px;
     width: 100%;
+  }
+
+  .upload_container {
+    margin-top: 50px;
+  }
+
+  #imageUpload {
+    margin-top: 40px;
   }
 
   #usernamelabel label {

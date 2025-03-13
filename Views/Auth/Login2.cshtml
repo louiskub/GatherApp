@@ -62,24 +62,17 @@
 </div>
 
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
 
-    document.getElementById('googleLogin').addEventListener('click', () => {
+     document.getElementById('googleLogin').addEventListener('click', () => {
         window.location.href = "/api/auth/google-login"; 
     });
 
     if (window.location.search.includes("refresh=true")) {
-    window.location.href = "/home";
+        window.location.href = "/home";
     }
-    
 
-
-    async function loginClick() {
-        @* let username = $("#username").val();
-        let password = $("#password").val(); *@
-
+    function loginClick() {
         let username = document.getElementById('username').value.trim();
         let password = document.getElementById('password').value.trim();
 
@@ -88,40 +81,38 @@
             return;
         }
 
-         await $.ajax({
-            url: '/api/auth/login',
-            type: 'POST',
-            contentType: "application/json",
-            data: JSON.stringify({ 
-                username: username, 
-                password: password
-            }),
-            success: function (response) {
-                if (response.status === "Login success") {
-                    window.location.href = "/home";
-                } else {
-                    window.showToast(response.message || "Login failed", "error");
-                }
-            },
-            error: function (xhr) {
-                let errorMessage = "Login failed";  
-                console.log(xhr.responseText); 
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "/api/auth/login", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
 
-                if (xhr.responseJSON) {
-                    errorMessage = xhr.responseJSON.message || "An unexpected error occurred";
-                } else if (xhr.responseText) {
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    let response = JSON.parse(xhr.responseText);
+                    if (response.status === "Login success") {
+                        window.location.href = "/home";
+                    } else {
+                        window.showToast(response.message || "Login failed", "error");
+                    }
+                } else {
+                    let errorMessage = "Login failed";
                     try {
-                        let responseObject = JSON.parse(xhr.responseText);
-                        errorMessage = responseObject.message || "An unexpected error occurred";
+                        let response = JSON.parse(xhr.responseText);
+                        errorMessage = response.message || "An unexpected error occurred";
                     } catch (e) {
                         errorMessage = xhr.responseText || "An unexpected error occurred";
                     }
+                    window.showToast(errorMessage, "error");
                 }
-
-                window.showToast(errorMessage, "error");
             }
+        };
+
+        let data = JSON.stringify({ 
+            username: username, 
+            password: password
         });
 
+        xhr.send(data);
     }
 
     

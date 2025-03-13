@@ -145,12 +145,16 @@ function enableEditMode() {
 
   document.getElementById("sex").style.display = "none";
   document.getElementById("sex-dropdown-container").style.display = "block";
+  document.getElementById("usernamelabel").style.marginTop = "20px";
   if (window.matchMedia("(max-width: 768px)").matches) {
     document.getElementById("usernamelabel").style.marginTop = "20px";
   }
   if (window.matchMedia("(max-width: 576px)").matches) {
     document.getElementById("imageUpload").style.marginTop = "30px";
     document.getElementById("usernamelabel").style.marginTop = "-20px";
+  }
+  if (window.matchMedia("(max-width: 400px)").matches) {
+    document.getElementById("usernamelabel").style.marginTop = "-50px";
   }
   const sexDropdown = document.getElementById("sex-dropdown");
   const standardSexes = ["Male", "Female", "Non-Binary", "Prefer not to say"];
