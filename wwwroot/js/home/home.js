@@ -217,7 +217,6 @@ async function filterPostInDate(){
     const elementsToDelete = document.querySelectorAll(".home-content .post-in-date");
     elementsToDelete.forEach(element => element.remove());
     let filterPosts = await fetchFilterPosts();
-    console.log(filterPosts)
     showPost(filterPosts)
 }
 

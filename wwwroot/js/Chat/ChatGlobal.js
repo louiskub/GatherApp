@@ -71,7 +71,6 @@ function setupGlobalChatListeners() {
         const chatBox = document.getElementById("globalChatBox");
         chatBox.innerHTML = ""; 
 
-        console.log("Raw messages:", messages);
 
         const allItems = [
             ...messages.map(msg => ({
@@ -104,7 +103,6 @@ function setupGlobalChatListeners() {
     
         allItems.forEach(item => {
             if (item.type === "message") {
-                console.log("Appending message - Profile Image URL:", item.profileImageUrl);
                 appendGlobalMessage(item.isMine, item.username, item.message, item.sentAt.toISOString(), item.profileImageUrl);
             } else if (item.type === "invitation") {
                 appendPostInvitation(item.postId, item.postName, item.postDetail, item.username);

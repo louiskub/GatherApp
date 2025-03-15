@@ -12,7 +12,6 @@ function getButtonsByType(
   if (type === "reportByOwner") {
     textList.push(isReviewed == 1 ? "Reviewed" : "Review");
     textList.push(isReported == 1 ? "Reported" : "Report");
-    console.log(textList);
   }
 
   if (type === "review") {
@@ -105,7 +104,6 @@ async function viewRegistrantByPostOwner(postId) {
 
 async function viewParticipantsByPostOwner(postId) {
   let userList = await fetchAllParticipant(postId);
-  console.log(userList);
   if (userList) openPopup("reportByOwner", userList, postId);
 }
 
