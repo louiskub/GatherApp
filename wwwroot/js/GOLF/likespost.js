@@ -57,7 +57,6 @@ function fetchLikedPosts() {
         if (!contentType || !contentType.includes("application/json")) {
             throw new Error("Invalid response format: Expected JSON but got " + contentType);
         }
-        console.log("res",response)
         return response.json();
     })
     .then(posts => {

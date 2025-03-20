@@ -1,23 +1,17 @@
-## Install Tool
+### โปรแกรมที่ต้องการ
 ```
-dotnet tool install --global dotnet-ef
-```
-
-### Install Dependencies
-```
-dotnet restore 
-dotnet ef database update
+- dotnet8
+- docker
 ```
 
-### How to Run it
-```
-dotnet run
-หรือ
-dotnet watch run
-```
-
-### Connect Database
-Database Manager = localhost:8888
+### วิธีการติดตั้ง
 ```
 docker compose up -d
+dotnet tool install --global dotnet-ef
+dotnet restore 
+dotnet ef database update
+dotnet run
 ```
+
+### 
+Database Manager = localhost:8888

@@ -242,9 +242,6 @@ document.getElementById("signupNextButton").addEventListener("click", () => {
 
     const formattedToday = formatDateToDDMMYYYY(today);
     
-    console.log(selectedDate)
-    console.log(formattedToday)
-
     if (selectedDate >= formattedToday) {
       return window.showToast("Date of birth must be at least 3 days in the past.", "warning");
     }

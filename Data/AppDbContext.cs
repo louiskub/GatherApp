@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using GatherApp.Models;
+using GatherApp.Migrations;
 
 
 namespace GatherApp.Data;
@@ -139,5 +140,36 @@ public class AppDbContext : DbContext
             entity.HasKey(e => new { e.UserId, e.CreatedAt });
         });
 
+        var activities = new List<ActivityType>();
+        var actArr = new string[] {
+            "Running",
+            "Swimming",
+            "Cycling",
+            "Hiking",
+            "Yoga",
+            "Dancing",
+            "Weightlifting",
+            "Boxing",
+            "Martial Arts",
+            "Rock Climbing",
+            "Food",
+            "Kayaking",
+            "Canoeing",
+            "Rowing",
+            "Sailing",
+            "Surfing",
+            "Windsurfing",
+            "Kitesurfing",
+            "Paddleboarding",
+            "Snorkeling",
+            "Scuba Diving",
+            "Others",
+            };
+        int id = 1; // เริ่มต้น ID ที่ 1
+        foreach (var act in actArr)
+        {
+            activities.Add(new ActivityType { Id = id++, ActType = act });
+        }
+        modelBuilder.Entity<ActivityType>().HasData(activities);
     }
 }
