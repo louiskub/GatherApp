@@ -161,7 +161,6 @@ function loadUserPosts() {
                 dropdown.appendChild(option);
             });
         })
-        // .catch(error => console.error("Error loading posts:", error));
 }
 
 
