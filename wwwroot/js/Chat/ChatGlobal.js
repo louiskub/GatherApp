@@ -131,10 +131,6 @@ function setupGlobalChatListeners() {
     
         chatBox.appendChild(inviteContainer);
     }
-    
-
-    
-
     connection.on("Error", (errorMessage) => {
         window.showToast("Error: " + errorMessage, "error");
     });
