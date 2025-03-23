@@ -128,7 +128,6 @@ function setupGlobalChatListeners() {
                 <button onclick="viewPost('${postId}')">Apply</button>
             </div>
         `;
-    
         chatBox.appendChild(inviteContainer);
     }
     connection.on("Error", (errorMessage) => {
