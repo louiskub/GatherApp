@@ -91,7 +91,6 @@ function setupGlobalChatListeners() {
             }))
         ];
     
-    
         allItems.forEach(item => item.sentAt = new Date(item.sentAt));
     
         allItems.forEach(item => {
