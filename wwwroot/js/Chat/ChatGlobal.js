@@ -64,7 +64,6 @@ function setupGlobalChatListeners() {
     connection.on("LoadPreviousGlobalMessages", (messages , postInvitations) => {
     
         if (!Array.isArray(messages) || !Array.isArray(postInvitations)) {
-            // console.error("Invalid response from server! Messages or Post Invitations are not arrays.");
             return;
         }
     
