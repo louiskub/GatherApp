@@ -1,9 +1,9 @@
 :root {
     --text-color: #333;
-    --chat-bg-color: #f9f9f9;
+    --chat-bg-color: #f3f4f6;
     --text-in-hover-color: #ffffff;
     --chat-hover-color: #007bff;
-    --border-color: #ccc;
+    --border-color: #ddd;
     --button-bg: #007bff;
     --button-hover-bg: #0056b3;
 }
@@ -11,9 +11,9 @@
 [data-theme="dark"] {
     --text-color: #fff;
     --text-in-hover-color: #000;
-    --chat-bg-color: #222;
+    --chat-bg-color: #2a2a2a;
     --chat-hover-color: #a4d0ff;
-    --border-color: #555;
+    --border-color: #444;
     --button-bg: #0056b3;
     --button-hover-bg: #003d80;
 }
